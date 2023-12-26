@@ -1,0 +1,526 @@
+s:34566:"<!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+
+	<base href="http://www.fanbing.net/">
+	<title>XDash Weblog</title>
+
+	<meta name="viewport" content="width=320.1, initial-scale=1.0, user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+	<link rel="shortcut icon" href="http://www.fanbing.net/wp-content/uploads/wiziapp_data_files/resources/icons/95d7da1a1c2a5c5a04087b7f9569dff0_57.png">
+	<link rel="apple-touch-icon" href="http://www.fanbing.net/wp-content/uploads/wiziapp_data_files/resources/icons/95d7da1a1c2a5c5a04087b7f9569dff0_57.png">
+	<link rel="apple-touch-startup-image" href="http://www.fanbing.net/wp-content/uploads/wiziapp_data_files/resources/default.png">
+	<link rel="profile" href="http://gmpg.org/xfn/11">
+	<link rel="pingback" href="http://www.fanbing.net/xmlrpc.php">
+
+	<link rel="stylesheet" href="http://www.fanbing.net/wp-content/plugins/wiziapp-create-your-own-native-iphone-app/themes/webapp/style.css" type="text/css">
+	<link rel="stylesheet" href="http://www.fanbing.net/wp-content/uploads/wiziapp_data_files/resources/style_aux.css" type="text/css">
+	<link rel="stylesheet" href="http://www.fanbing.net/wp-content/uploads/wiziapp_data_files/resources/main.css" type="text/css">
+	<link rel="stylesheet" href="http://www.fanbing.net/wp-content/plugins/wiziapp-create-your-own-native-iphone-app/themes/webapp/jquery.mobile-1.1.1.css" type="text/css">
+	<link rel="stylesheet" href="https://api.wiziapp.com/application/postViewCss/135288?v=v2.1.2a&c=0" type="text/css" id="themeCss">
+	<link rel="stylesheet" href="http://www.fanbing.net/wp-content/plugins/wiziapp-create-your-own-native-iphone-app/themes/iphone/default.css" type="text/css">
+	<link rel="stylesheet" href="http://www.fanbing.net/wp-content/plugins/wiziapp-create-your-own-native-iphone-app/themes/iphone/style.css" type="text/css">
+
+	<script type="text/javascript" src="http://www.fanbing.net/wp-content/uploads/wiziapp_data_files/resources/handshake.js"></script>
+	<script type="text/javascript" src="http://www.fanbing.net/wp-content/uploads/wiziapp_data_files/resources/config.js"></script>
+	<script type="text/javascript">
+		window.WiziappPlatformVersion = '2.1.2';
+		window.WiziappAccessPoint = 'http://www.fanbing.net';
+		window.isSingle = false;
+	</script>
+	<!-- wp_head start -->
+	<link rel='stylesheet' id='codebox-css'  href='http://www.fanbing.net/wp-content/plugins/wp-codebox/css/codebox.css?ver=0.1' type='text/css' media='screen' />
+<script type='text/javascript' src='http://www.fanbing.net/wp-includes/js/jquery/jquery.js?ver=1.10.2'></script>
+<script type='text/javascript' src='http://www.fanbing.net/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.2.1'></script>
+<script type='text/javascript' src='http://www.fanbing.net/wp-content/plugins/wiziapp-create-your-own-native-iphone-app/themes/webapp/scripts/jquery.easing.1.3.js?ver=2.1.2'></script>
+<script type='text/javascript' src='http://www.fanbing.net/wp-content/plugins/wiziapp-create-your-own-native-iphone-app/themes/webapp/scripts/jquery.mousewheel.min.js?ver=2.1.2'></script>
+<script type='text/javascript' src='http://www.fanbing.net/wp-content/plugins/wiziapp-create-your-own-native-iphone-app/themes/webapp/scripts/jquery.mobile-1.1.1.js?ver=2.1.2'></script>
+<script type='text/javascript' src='http://www.fanbing.net/wp-content/uploads/wiziapp_data_files/resources/effects_config.js?ver=2.1.2'></script>
+<script type='text/javascript' src='http://www.fanbing.net/wp-content/plugins/wiziapp-create-your-own-native-iphone-app/themes/webapp/scripts/jquery.mobile.simpledialog.js?ver=2.1.2'></script>
+<script type='text/javascript' src='http://www.fanbing.net/wp-content/plugins/wiziapp-create-your-own-native-iphone-app/themes/webapp/scripts/webapp.js?ver=2.1.2'></script>
+<script type='text/javascript' src='http://www.fanbing.net/wp-content/plugins/wiziapp-create-your-own-native-iphone-app/themes/webapp/scripts/favorites.js?ver=2.1.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var wiziapp_name_space = {"home_url":"http:\/\/www.fanbing.net","wiziapp_android_app":"72dcc186a8d3d7b3d8554a14256389a4"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='http://www.fanbing.net/wp-content/plugins/wiziapp-create-your-own-native-iphone-app/themes/webapp/scripts/wiziapp.js?ver=2.1.2'></script>
+<script type='text/javascript' src='http://www.fanbing.net/wp-content/plugins/wp-codebox/js/codebox.js?ver=0.1'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://www.fanbing.net/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://www.fanbing.net/wp-includes/wlwmanifest.xml" /> 
+<meta name="generator" content="WordPress 3.8.3" />
+<script type="text/javascript" src="http://www.fanbing.net/wp-content/plugins/lifestream/lifestream.js"></script><link rel="stylesheet" type="text/css" media="screen" href="http://www.fanbing.net/wp-content/plugins/lifestream/themes/boxy/media/lifestream.css"/>	<link type="text/css" rel="stylesheet" href="http://www.fanbing.net/wp-content/plugins/syntax-highlighter-and-code-prettifier/styles/shCore.css" />
+	<link type="text/css" rel="stylesheet" href="http://www.fanbing.net/wp-content/plugins/syntax-highlighter-and-code-prettifier/styles/shThemeDefault.css" />
+	<script type="text/javascript" src="http://www.fanbing.net/wp-content/plugins/syntax-highlighter-and-code-prettifier/scripts/shCore.js"></script>
+	<script type="text/javascript" src="http://www.fanbing.net/wp-content/plugins/syntax-highlighter-and-code-prettifier/scripts/shBrushBash.js"></script>
+	<script type="text/javascript" src="http://www.fanbing.net/wp-content/plugins/syntax-highlighter-and-code-prettifier/scripts/shBrushCpp.js"></script>
+	<script type="text/javascript" src="http://www.fanbing.net/wp-content/plugins/syntax-highlighter-and-code-prettifier/scripts/shBrushCSharp.js"></script>
+	<script type="text/javascript" src="http://www.fanbing.net/wp-content/plugins/syntax-highlighter-and-code-prettifier/scripts/shBrushCss.js"></script>
+	<script type="text/javascript" src="http://www.fanbing.net/wp-content/plugins/syntax-highlighter-and-code-prettifier/scripts/shBrushDelphi.js"></script>
+	<script type="text/javascript" src="http://www.fanbing.net/wp-content/plugins/syntax-highlighter-and-code-prettifier/scripts/shBrushDiff.js"></script>
+	<script type="text/javascript" src="http://www.fanbing.net/wp-content/plugins/syntax-highlighter-and-code-prettifier/scripts/shBrushGroovy.js"></script>
+	<script type="text/javascript" src="http://www.fanbing.net/wp-content/plugins/syntax-highlighter-and-code-prettifier/scripts/shBrushJava.js"></script>
+	<script type="text/javascript" src="http://www.fanbing.net/wp-content/plugins/syntax-highlighter-and-code-prettifier/scripts/shBrushJScript.js"></script>
+	<script type="text/javascript" src="http://www.fanbing.net/wp-content/plugins/syntax-highlighter-and-code-prettifier/scripts/shBrushPerl.js"></script>
+	<script type="text/javascript" src="http://www.fanbing.net/wp-content/plugins/syntax-highlighter-and-code-prettifier/scripts/shBrushPhp.js"></script>
+	<script type="text/javascript" src="http://www.fanbing.net/wp-content/plugins/syntax-highlighter-and-code-prettifier/scripts/shBrushPlain.js"></script>
+	<script type="text/javascript" src="http://www.fanbing.net/wp-content/plugins/syntax-highlighter-and-code-prettifier/scripts/shBrushPython.js"></script>
+	<script type="text/javascript" src="http://www.fanbing.net/wp-content/plugins/syntax-highlighter-and-code-prettifier/scripts/shBrushRuby.js"></script>
+	<script type="text/javascript" src="http://www.fanbing.net/wp-content/plugins/syntax-highlighter-and-code-prettifier/scripts/shBrushScala.js"></script>
+	<script type="text/javascript" src="http://www.fanbing.net/wp-content/plugins/syntax-highlighter-and-code-prettifier/scripts/shBrushSql.js"></script>
+	<script type="text/javascript" src="http://www.fanbing.net/wp-content/plugins/syntax-highlighter-and-code-prettifier/scripts/shBrushVb.js"></script>
+	<script type="text/javascript" src="http://www.fanbing.net/wp-content/plugins/syntax-highlighter-and-code-prettifier/scripts/shBrushXml.js"></script>
+	<script type="text/javascript">		
+		SyntaxHighlighter.config.clipboardSwf = 'http://www.fanbing.net/wp-content/plugins/syntax-highlighter-and-code-prettifier/scripts/clipboard.swf';
+		SyntaxHighlighter.all();
+	</script>
+	
+	<!-- Clean Archives Reloaded v3.2.0 | http://www.viper007bond.com/wordpress-plugins/clean-archives-reloaded/ -->
+	<style type="text/css">.car-collapse .car-yearmonth { cursor: s-resize; } </style>
+	<script type="text/javascript">
+		/* <![CDATA[ */
+			jQuery(document).ready(function() {
+				jQuery('.car-collapse').find('.car-monthlisting').hide();
+				jQuery('.car-collapse').find('.car-monthlisting:first').show();
+				jQuery('.car-collapse').find('.car-yearmonth').click(function() {
+					jQuery(this).next('ul').slideToggle('fast');
+				});
+				jQuery('.car-collapse').find('.car-toggler').click(function() {
+					if ( 'Expand All' == jQuery(this).text() ) {
+						jQuery(this).parent('.car-container').find('.car-monthlisting').show();
+						jQuery(this).text('Collapse All');
+					}
+					else {
+						jQuery(this).parent('.car-container').find('.car-monthlisting').hide();
+						jQuery(this).text('Expand All');
+					}
+					return false;
+				});
+			});
+		/* ]]> */
+	</script>
+
+	<!-- wp_head end -->
+</head>
+<body class="home blog iphone_general">
+	<div data-role="page" data-theme="c" class="recent_loaded_event">
+		<div data-role="header" data-id="header" data-position="fixed" class="navigation">
+			
+			<h1>XDash Weblog</h1>
+
+					</div><!-- /header -->
+
+		<div data-role="content" data-scroll="true" class="screen" data-footer-id="tabbar">
+			<ul data-role="listview">
+		<li class="postDescriptionCellItem featured_post cellItem default" data-post-id="post_5339">
+			<a href="nav://post/http%3A%2F%2Fwww.fanbing.net%2Fbeat-superstition-by-superstition.html" class="actionURL featured_post" data-ajax="false">
+				<div class="attribute imageURL featured_post_image webapp_image_overriding" data-image-src="http://www.fanbing.net/?wiziapp/getthumb/5339&type=featured_post_thumb">
+					<img class="hidden ignore_effect" src="http://www.fanbing.net/wp-content/plugins/wiziapp-create-your-own-native-iphone-app/themes/webapp/images/pixel.png" data-class=""/>
+				</div>
+				<div class="attribute webapp_post_title featured_post_title_webapp">迷信只能用迷信来打败</div>
+				<span class="attribute hidden">微博微信上流传着一则鸡汤段子，大体是讲，一名老僧执意徒手打捞一只掉进水坑的蝎子，几番被蛰，...</span>
+				<span class="attribute featured_post_rating">0</span>
+				<div class="combined_attributes webapp_post_details">
+					<span class="webapp_post_date featured_post_date_webapp">Today</span>
+					<span class="webapp_post_date featured_post_author"> xdash</span>
+				</div>
+				<span class="attribute valign_attribute numOfComments hidden">1</span>
+			</a>
+		</li>
+		
+</ul>
+<ul data-role="listview">
+		<li class="postDescriptionCellItem general_post cellItem default" data-post-id="post_5332">
+			<a href="nav://post/http%3A%2F%2Fwww.fanbing.net%2Falfred-workflow-programming-tutorial.html" class="actionURL general_post" data-ajax="false">
+				<div class="attribute imageURL general_post_image" data-image-src="http://www.fanbing.net/?wiziapp/getthumb/5332&type=posts_thumb">
+					<img class="hidden ignore_effect" src="http://www.fanbing.net/wp-content/plugins/wiziapp-create-your-own-native-iphone-app/themes/webapp/images/pixel.png" data-class=""/>
+				</div>
+				<div class="attribute webapp_post_title general_post_title_webapp">使用 Alfred Workflow 制作日文单词翻译器</div>
+				<span class="attribute hidden">Alfred 是  Mac 下一款强悍的系统增强工具，可以快速启动+搜索本地和网络任意内容...</span>
+				<span class="attribute hidden">0</span>
+				<div class="combined_attributes webapp_post_details">
+					<span class="webapp_post_date general_post_date_webapp">4 weeks ago</span>
+					<span class="webapp_post_date general_post_author"> xdash</span>
+				</div>
+				<span class="attribute valign_attribute numOfComments general_post_numOfComments_webapp">0</span>
+			</a>
+		</li>
+		
+
+		<li class="postDescriptionCellItem general_post cellItem default" data-post-id="post_5321">
+			<a href="nav://post/http%3A%2F%2Fwww.fanbing.net%2Fmake-users-saying-one-thing-and-doing-another.html" class="actionURL general_post" data-ajax="false">
+				<div class="attribute imageURL general_post_image" data-image-src="http://www.fanbing.net/?wiziapp/getthumb/5321&type=posts_thumb">
+					<img class="hidden ignore_effect" src="http://www.fanbing.net/wp-content/plugins/wiziapp-create-your-own-native-iphone-app/themes/webapp/images/pixel.png" data-class=""/>
+				</div>
+				<div class="attribute webapp_post_title general_post_title_webapp">让用户「说一套，做一套」</div>
+				<span class="attribute hidden">人性复杂，但需求无出马斯洛，欲念难逃七宗罪。于是最近做产品过程中，我考虑任何细节都尽量为深...</span>
+				<span class="attribute hidden">0</span>
+				<div class="combined_attributes webapp_post_details">
+					<span class="webapp_post_date general_post_date_webapp">Mar, 4, 14</span>
+					<span class="webapp_post_date general_post_author"> xdash</span>
+				</div>
+				<span class="attribute valign_attribute numOfComments general_post_numOfComments_webapp">0</span>
+			</a>
+		</li>
+		
+
+		<li class="postDescriptionCellItem general_post cellItem default" data-post-id="post_5317">
+			<a href="nav://post/http%3A%2F%2Fwww.fanbing.net%2Fmy-thinking-patterns-and-models-part-1.html" class="actionURL general_post" data-ajax="false">
+				<div class="attribute imageURL general_post_image" data-image-src="http://www.fanbing.net/?wiziapp/getthumb/5317&type=posts_thumb">
+					<img class="hidden ignore_effect" src="http://www.fanbing.net/wp-content/plugins/wiziapp-create-your-own-native-iphone-app/themes/webapp/images/pixel.png" data-class=""/>
+				</div>
+				<div class="attribute webapp_post_title general_post_title_webapp">分享一些我的抽象思维模型及方法论（一）</div>
+				<span class="attribute hidden">饱经风霜的长者，时常会劝解不谙世事的新人，喏，这个世界的真理前人已阐发过无数遍，其实就是这...</span>
+				<span class="attribute hidden">0</span>
+				<div class="combined_attributes webapp_post_details">
+					<span class="webapp_post_date general_post_date_webapp">Feb, 26, 14</span>
+					<span class="webapp_post_date general_post_author"> xdash</span>
+				</div>
+				<span class="attribute valign_attribute numOfComments general_post_numOfComments_webapp">2</span>
+			</a>
+		</li>
+		
+
+		<li class="postDescriptionCellItem general_post cellItem default" data-post-id="post_5306">
+			<a href="nav://post/http%3A%2F%2Fwww.fanbing.net%2Fhearth-stone-cards-db-for-wechat-on-github.html" class="actionURL general_post" data-ajax="false">
+				<div class="attribute imageURL general_post_image" data-image-src="http://www.fanbing.net/?wiziapp/getthumb/5306&type=posts_thumb">
+					<img class="hidden ignore_effect" src="http://www.fanbing.net/wp-content/plugins/wiziapp-create-your-own-native-iphone-app/themes/webapp/images/pixel.png" data-class=""/>
+				</div>
+				<div class="attribute webapp_post_title general_post_title_webapp">[开源项目]基于新浪SAE的《炉石传说》微信卡牌查询器</div>
+				<span class="attribute hidden">《炉石传说：魔兽英雄传》是暴雪娱乐开发的首款休闲卡牌游戏，在魔兽的世界观基础上吸纳借鉴了万...</span>
+				<span class="attribute hidden">0</span>
+				<div class="combined_attributes webapp_post_details">
+					<span class="webapp_post_date general_post_date_webapp">Feb, 3, 14</span>
+					<span class="webapp_post_date general_post_author"> xdash</span>
+				</div>
+				<span class="attribute valign_attribute numOfComments general_post_numOfComments_webapp">0</span>
+			</a>
+		</li>
+		
+
+		<li class="postDescriptionCellItem general_post cellItem default" data-post-id="post_5299">
+			<a href="nav://post/http%3A%2F%2Fwww.fanbing.net%2Flsevent%2Flifestream-event-58" class="actionURL general_post" data-ajax="false">
+				<div class="attribute imageURL general_post_image" data-image-src="http://www.fanbing.net/?wiziapp/getthumb/5299&type=posts_thumb">
+					<img class="hidden ignore_effect" src="http://www.fanbing.net/wp-content/plugins/wiziapp-create-your-own-native-iphone-app/themes/webapp/images/pixel.png" data-class=""/>
+				</div>
+				<div class="attribute webapp_post_title general_post_title_webapp">Lifestream Event</div>
+				<span class="attribute hidden"></span>
+				<span class="attribute hidden">0</span>
+				<div class="combined_attributes webapp_post_details">
+					<span class="webapp_post_date general_post_date_webapp">Jan, 21, 14</span>
+					<span class="webapp_post_date general_post_author"> xdash</span>
+				</div>
+				<span class="attribute valign_attribute numOfComments general_post_numOfComments_webapp">0</span>
+			</a>
+		</li>
+		
+
+		<li class="postDescriptionCellItem general_post cellItem default" data-post-id="post_5298">
+			<a href="nav://post/http%3A%2F%2Fwww.fanbing.net%2Flsevent%2Flifestream-event-57" class="actionURL general_post" data-ajax="false">
+				<div class="attribute imageURL general_post_image" data-image-src="http://www.fanbing.net/?wiziapp/getthumb/5298&type=posts_thumb">
+					<img class="hidden ignore_effect" src="http://www.fanbing.net/wp-content/plugins/wiziapp-create-your-own-native-iphone-app/themes/webapp/images/pixel.png" data-class=""/>
+				</div>
+				<div class="attribute webapp_post_title general_post_title_webapp">Lifestream Event</div>
+				<span class="attribute hidden"></span>
+				<span class="attribute hidden">0</span>
+				<div class="combined_attributes webapp_post_details">
+					<span class="webapp_post_date general_post_date_webapp">Jan, 19, 14</span>
+					<span class="webapp_post_date general_post_author"> xdash</span>
+				</div>
+				<span class="attribute valign_attribute numOfComments general_post_numOfComments_webapp">0</span>
+			</a>
+		</li>
+		
+
+		<li class="postDescriptionCellItem general_post cellItem default" data-post-id="post_5297">
+			<a href="nav://post/http%3A%2F%2Fwww.fanbing.net%2Flsevent%2Flifestream-event-56" class="actionURL general_post" data-ajax="false">
+				<div class="attribute imageURL general_post_image" data-image-src="http://www.fanbing.net/?wiziapp/getthumb/5297&type=posts_thumb">
+					<img class="hidden ignore_effect" src="http://www.fanbing.net/wp-content/plugins/wiziapp-create-your-own-native-iphone-app/themes/webapp/images/pixel.png" data-class=""/>
+				</div>
+				<div class="attribute webapp_post_title general_post_title_webapp">Lifestream Event</div>
+				<span class="attribute hidden"></span>
+				<span class="attribute hidden">0</span>
+				<div class="combined_attributes webapp_post_details">
+					<span class="webapp_post_date general_post_date_webapp">Jan, 18, 14</span>
+					<span class="webapp_post_date general_post_author"> xdash</span>
+				</div>
+				<span class="attribute valign_attribute numOfComments general_post_numOfComments_webapp">0</span>
+			</a>
+		</li>
+		
+
+		<li class="postDescriptionCellItem general_post cellItem default" data-post-id="post_5295">
+			<a href="nav://post/http%3A%2F%2Fwww.fanbing.net%2Flsevent%2Flifestream-event-54" class="actionURL general_post" data-ajax="false">
+				<div class="attribute imageURL general_post_image" data-image-src="http://www.fanbing.net/?wiziapp/getthumb/5295&type=posts_thumb">
+					<img class="hidden ignore_effect" src="http://www.fanbing.net/wp-content/plugins/wiziapp-create-your-own-native-iphone-app/themes/webapp/images/pixel.png" data-class=""/>
+				</div>
+				<div class="attribute webapp_post_title general_post_title_webapp">Lifestream Event</div>
+				<span class="attribute hidden"></span>
+				<span class="attribute hidden">0</span>
+				<div class="combined_attributes webapp_post_details">
+					<span class="webapp_post_date general_post_date_webapp">Jan, 18, 14</span>
+					<span class="webapp_post_date general_post_author"> xdash</span>
+				</div>
+				<span class="attribute valign_attribute numOfComments general_post_numOfComments_webapp">0</span>
+			</a>
+		</li>
+		
+
+		<li class="postDescriptionCellItem general_post cellItem default" data-post-id="post_5296">
+			<a href="nav://post/http%3A%2F%2Fwww.fanbing.net%2Flsevent%2Flifestream-event-55" class="actionURL general_post" data-ajax="false">
+				<div class="attribute imageURL general_post_image" data-image-src="http://www.fanbing.net/?wiziapp/getthumb/5296&type=posts_thumb">
+					<img class="hidden ignore_effect" src="http://www.fanbing.net/wp-content/plugins/wiziapp-create-your-own-native-iphone-app/themes/webapp/images/pixel.png" data-class=""/>
+				</div>
+				<div class="attribute webapp_post_title general_post_title_webapp">Lifestream Event</div>
+				<span class="attribute hidden"></span>
+				<span class="attribute hidden">0</span>
+				<div class="combined_attributes webapp_post_details">
+					<span class="webapp_post_date general_post_date_webapp">Jan, 18, 14</span>
+					<span class="webapp_post_date general_post_author"> xdash</span>
+				</div>
+				<span class="attribute valign_attribute numOfComments general_post_numOfComments_webapp">0</span>
+			</a>
+		</li>
+		
+
+<li class="showMoreCellItem more cellItem default" data-icon="false">
+                            <a class="showMore actionURL full" href="nav://list/http%3A%2F%2Fwww.fanbing.net%2F%3Fwiziapp%2Fcontent%2Flist%2Fposts%2Frecent%26wizi_ver%3D2.1.2%26ap%3D1%26output%3Dhtml%26back%3D0%26webapp%3D1%26wizipage%3D1" rel="inlineUpdate">
+                                <span class="more_title title attribute text_attribute">Load 10 more items...</span>
+                                <span class="more_activity"></span>
+                            </a>
+                            </li>
+</ul>
+		</div><!-- /content -->
+
+				<div data-id="tabbar" data-role="footer" data-position="fixed" data-tap-toggle="false" class="nav-tabbar">
+			<div data-role="navbar" class="nav-tabbar" data-grid="d">
+				<ul>
+											<li>
+							<a href="http://www.fanbing.net/?wiziapp/content/list/posts/recent&amp;wizi_ver=2.1.2&amp;webapp=1&amp;ap=1&amp;output=html&amp;back=0" class="list_tabbar tabbar-tab-74383136383930 ui-btn-active ui-state-persist" data-icon="custom" data-page-type="" >
+								Latest
+							</a>
+						</li>
+												<li>
+							<a href="http://www.fanbing.net/?wiziapp/content/list/categories&amp;wizi_ver=2.1.2&amp;webapp=1&amp;ap=1&amp;output=html&amp;back=0" class="list_tabbar tabbar-tab-74383136383931" data-icon="custom" data-page-type="" >
+								Categories
+							</a>
+						</li>
+												<li>
+							<a href="http://www.fanbing.net/?wiziapp/content/list/links&amp;wizi_ver=2.1.2&amp;webapp=1&amp;ap=1&amp;output=html&amp;back=0" class="list_tabbar tabbar-tab-74383136383932" data-icon="custom" data-page-type="" >
+								Links
+							</a>
+						</li>
+												<li>
+							<a href="http://www.fanbing.net/?wiziapp/content/list/pages&amp;wizi_ver=2.1.2&amp;webapp=1&amp;ap=1&amp;output=html&amp;back=0" class="list_tabbar tabbar-tab-74383136383933" data-icon="custom" data-page-type="" >
+								Pages
+							</a>
+						</li>
+												<li>
+							<a href="#moreScreen" class="list_tabbar tabbar-tab-more-tab" data-icon="custom" data-page-type="expendedList">
+								More
+							</a>
+						</li>
+										</ul>
+			</div><!-- /tabbar-->
+		</div><!-- /footer -->
+			</div><!-- /page -->
+
+	<div data-role="page" id="moreScreen" data-theme="z">
+	<div data-role="header" data-id="header" data-position="fixed">
+		<h1>More</h1>
+	</div><!-- /header -->
+
+	<div data-role="content" class="screen" data-footer-id="tabbar">
+				<ul data-role="listview">
+							<li>
+					<a href="#search" class="tabbar-tab-74383136383934" data-icon="custom" data-page-type="">
+						Search
+					</a>
+				</li>
+				<li style="background-color: #bbbbbb;" class="sep"></li>
+								<li>
+					<a href="nav://list/http%3A%2F%2Fwww.fanbing.net%2F%3Fwiziapp%2Fcontent%2Flist%2Farchive%26wizi_ver%3D2.1.2%26webapp%3D1%26ap%3D1%26output%3Dhtml" class="tabbar-tab-74383136383935" data-icon="custom" data-page-type="">
+						Archive
+					</a>
+				</li>
+				<li style="background-color: #bbbbbb;" class="sep"></li>
+								<li>
+					<a href="nav://list/http%3A%2F%2Fwww.fanbing.net%2F%3Fwiziapp%2Fcontent%2Flist%2Ftags%26wizi_ver%3D2.1.2%26webapp%3D1%26ap%3D1%26output%3Dhtml" class="tabbar-tab-74383136383936" data-icon="custom" data-page-type="">
+						Tags
+					</a>
+				</li>
+				<li style="background-color: #bbbbbb;" class="sep"></li>
+						</ul>
+			</div><!-- /content -->
+
+			<div data-id="tabbar" data-role="footer" data-position="fixed" data-tap-toggle="false" class="nav-tabbar">
+			<div data-role="navbar" class="nav-tabbar" data-grid="d">
+				<ul>
+											<li>
+							<a href="http://www.fanbing.net/?wiziapp/content/list/posts/recent&amp;wizi_ver=2.1.2&amp;webapp=1&amp;ap=1&amp;output=html&amp;back=0" class="list_tabbar tabbar-tab-74383136383930" data-icon="custom" data-page-type=""  data-direction="reverse">
+								Latest
+							</a>
+						</li>
+												<li>
+							<a href="http://www.fanbing.net/?wiziapp/content/list/categories&amp;wizi_ver=2.1.2&amp;webapp=1&amp;ap=1&amp;output=html&amp;back=0" class="list_tabbar tabbar-tab-74383136383931" data-icon="custom" data-page-type=""  data-direction="reverse">
+								Categories
+							</a>
+						</li>
+												<li>
+							<a href="http://www.fanbing.net/?wiziapp/content/list/links&amp;wizi_ver=2.1.2&amp;webapp=1&amp;ap=1&amp;output=html&amp;back=0" class="list_tabbar tabbar-tab-74383136383932" data-icon="custom" data-page-type=""  data-direction="reverse">
+								Links
+							</a>
+						</li>
+												<li>
+							<a href="http://www.fanbing.net/?wiziapp/content/list/pages&amp;wizi_ver=2.1.2&amp;webapp=1&amp;ap=1&amp;output=html&amp;back=0" class="list_tabbar tabbar-tab-74383136383933" data-icon="custom" data-page-type=""  data-direction="reverse">
+								Pages
+							</a>
+						</li>
+												<li>
+							<a href="#moreScreen" class="list_tabbar tabbar-tab-more-tab ui-btn-active ui-state-persist" data-icon="custom" data-page-type="expendedList">
+								More
+							</a>
+						</li>
+										</ul>
+			</div><!-- /tabbar-->
+		</div><!-- /footer -->
+		</div><!-- /page -->
+
+
+<div data-role="page" id="search" class="got_empty_state" data-class="search_screen">
+	<div data-role="header" data-id="header" data-position="fixed">
+		<h1>Search</h1>
+	</div><!-- /header -->
+
+	<div data-role="content" data-footer-id="tabbar">
+		<form action="http://www.fanbing.net/?wiziapp/search&#038;category=all&#038;search=1&#038;wizi_ver=2.1.2&#038;webapp=1&#038;ap=1&#038;output=html" method="get">
+			<label for="webapp_search_field">
+				<input id="webapp_search_field" type="text" name="keyword" value="" />
+			</label>
+			<input name="submit" type="submit" value="Search" data-theme="a" />
+		</form>
+	</div><!-- /content -->
+
+			<div data-id="tabbar" data-role="footer" data-position="fixed" data-tap-toggle="false" class="nav-tabbar">
+			<div data-role="navbar" class="nav-tabbar" data-grid="d">
+				<ul>
+											<li>
+							<a href="http://www.fanbing.net/?wiziapp/content/list/posts/recent&amp;wizi_ver=2.1.2&amp;webapp=1&amp;ap=1&amp;output=html&amp;back=0" class="list_tabbar tabbar-tab-74383136383930" data-icon="custom" data-page-type=""  data-direction="reverse">
+								Latest
+							</a>
+						</li>
+												<li>
+							<a href="http://www.fanbing.net/?wiziapp/content/list/categories&amp;wizi_ver=2.1.2&amp;webapp=1&amp;ap=1&amp;output=html&amp;back=0" class="list_tabbar tabbar-tab-74383136383931" data-icon="custom" data-page-type=""  data-direction="reverse">
+								Categories
+							</a>
+						</li>
+												<li>
+							<a href="http://www.fanbing.net/?wiziapp/content/list/links&amp;wizi_ver=2.1.2&amp;webapp=1&amp;ap=1&amp;output=html&amp;back=0" class="list_tabbar tabbar-tab-74383136383932" data-icon="custom" data-page-type=""  data-direction="reverse">
+								Links
+							</a>
+						</li>
+												<li>
+							<a href="http://www.fanbing.net/?wiziapp/content/list/pages&amp;wizi_ver=2.1.2&amp;webapp=1&amp;ap=1&amp;output=html&amp;back=0" class="list_tabbar tabbar-tab-74383136383933" data-icon="custom" data-page-type=""  data-direction="reverse">
+								Pages
+							</a>
+						</li>
+												<li>
+							<a href="#moreScreen" class="list_tabbar tabbar-tab-more-tab" data-icon="custom" data-page-type="expendedList">
+								More
+							</a>
+						</li>
+										</ul>
+			</div><!-- /tabbar-->
+		</div><!-- /footer -->
+		</div><!-- /page -->
+
+
+<div data-role="dialog" id="sharing_menu">
+	<div data-role="content">
+		<p>
+			<a href="" data-role="button" target="_blank">Facebook</a>
+		</p>
+		<p>
+			<a href="" data-role="button" data-post-title="Lifestream+Event%0A%0A" target="_blank">Twitter</a>
+		</p>
+		<p>
+			<a href="" data-role="button">Email</a>
+		</p>
+		<p>
+			<a href="" data-role="button" target="_blank">Google+</a>
+		</p>
+		<p>
+			<a href="#" data-rel="back" data-theme="e" data-role="button">Cancel</a>
+		</p>
+	</div><!-- /content -->
+</div><!-- /page -->
+
+<div id="image_viewer_template">
+	<div data-role="page" data-theme="z" class="image_viewer">
+		<div data-role="header" data-id="header" data-position="fixed" class="navigation">
+				<a data-role="button" data-corners="false" data-theme="z" href="#" class="navigation_back_button_wrapper ui-btn-left" data-direction="reverse">
+		<span class="navigation_back_button">Back</span>
+		<span class="navigation_back_button_closer"></span>
+	</a>
+				<h1></h1>
+		</div><!-- /header -->
+
+		<div data-role="content" class="content">
+			<div class="all-wrapper">
+				<div class="template">
+					<div class="single-wrapper single-wrapper-displaced">
+						<div class="direct-wrapper ui-loading">
+							<img class="thumbnail" src="http://www.fanbing.net/wp-content/plugins/wiziapp-create-your-own-native-iphone-app/themes/webapp/images/pixel.png" border="0" />
+							<div class="ui-loader ui-corner-all ui-body-a ui-loader-default" style="position: absolute">
+								<span class="ui-icon ui-icon-loading"></span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="single-wrapper single-wrapper-displaced">
+					<div class="direct-wrapper">
+						<img class="fullsize" src="http://www.fanbing.net/wp-content/plugins/wiziapp-create-your-own-native-iphone-app/themes/webapp/images/pixel.png" border="0" />
+					</div>
+				</div>
+			</div>
+		</div><!-- /content -->
+
+		<div data-id="image-viewer-tabbar" data-role="footer" data-position="fixed" data-tap-toggle="false" class="nav-tabbar image_viewer_tabbar">
+			<div data-role="navbar" class="nav-tabbar" data-grid="d">
+				<ul>
+					<li>
+						<a href="#sharing_menu" class="image-viewer-share" data-icon="custom" data-rel="dialog" data-transition="pop"></a>
+					</li>
+					<li>
+						<a href="#" class="image-viewer-back" data-icon="custom" data-transition="slide" data-direction="reverse"></a>
+					</li>
+					<li>
+						<a href="#" class="image-viewer-play" data-icon="custom" data-transition="slide"></a>
+					</li>
+					<li>
+						<a href="#" class="image-viewer-forward" data-icon="custom" data-transition="slide"></a>
+					</li>
+					<li>
+						<a href="#" class="image-viewer-post" data-icon="custom" data-transition="slide" data-direction="reverse"></a>
+					</li>
+				</ul>
+			</div><!-- /tabbar-->
+		</div><!-- /footer -->
+	</div><!-- /page -->
+</div><!-- /template -->
+
+<!--
+<div class="hidden"><a href="#" id="webview_links_handler"></a></div>
+<div id="dialogs" class="hidden"></div>
+-->
+<div id="sandbox" class="hidden"></div>
+
+
+<style type="text/css">
+	.tabbar-tab-74383136383930 .ui-icon{background:url("http://admin.wiziapp.com/images/app/tabicons/iconRecent_grey.png") 50% 50% no-repeat;}.tabbar-tab-74383136383930.ui-btn-active .ui-icon,.tabbar-tab-74383136383930.ui-btn-hover-a .ui-icon{background:url("http://admin.wiziapp.com/images/app/tabicons/iconRecent_on.png") 50% 50% no-repeat;}.tabbar-tab-74383136383931 .ui-icon{background:url("http://admin.wiziapp.com/images/app/tabicons/iconCategories_grey.png") 50% 50% no-repeat;}.tabbar-tab-74383136383931.ui-btn-active .ui-icon,.tabbar-tab-74383136383931.ui-btn-hover-a .ui-icon{background:url("http://admin.wiziapp.com/images/app/tabicons/iconCategories_on.png") 50% 50% no-repeat;}.tabbar-tab-74383136383932 .ui-icon{background:url("http://admin.wiziapp.com/images/app/tabicons/iconLinks_grey.png") 50% 50% no-repeat;}.tabbar-tab-74383136383932.ui-btn-active .ui-icon,.tabbar-tab-74383136383932.ui-btn-hover-a .ui-icon{background:url("http://admin.wiziapp.com/images/app/tabicons/iconLinks_on.png") 50% 50% no-repeat;}.tabbar-tab-74383136383933 .ui-icon{background:url("http://admin.wiziapp.com/images/app/tabicons/iconPages_grey.png") 50% 50% no-repeat;}.tabbar-tab-74383136383933.ui-btn-active .ui-icon,.tabbar-tab-74383136383933.ui-btn-hover-a .ui-icon{background:url("http://admin.wiziapp.com/images/app/tabicons/iconPages_on.png") 50% 50% no-repeat;}.tabbar-tab-more-tab .ui-icon{background:url(http://www.fanbing.net/wp-content/uploads/wiziapp_data_files/resources/icons/iconMore_grey.png) 50% 50% no-repeat;}.tabbar-tab-more-tab.ui-btn-active .ui-icon, .tabbar-tab-more-tab.ui-btn-hover-a .ui-icon{background:url(http://www.fanbing.net/wp-content/uploads/wiziapp_data_files/resources/icons/iconMore_on.png) 50% 50% no-repeat;}.tabbar-tab-74383136383934{background:url("http://admin.wiziapp.com/images/app/tabicons/iconSearch_black.png") 10px 50% no-repeat;}.ui-btn-active .tabbar-tab-74383136383934{background:url("http://admin.wiziapp.com/images/app/tabicons/iconSearch_white.png") 10px 50% no-repeat;}.tabbar-tab-74383136383935{background:url("http://admin.wiziapp.com/images/app/tabicons/iconArchive_black.png") 10px 50% no-repeat;}.ui-btn-active .tabbar-tab-74383136383935{background:url("http://admin.wiziapp.com/images/app/tabicons/iconArchive_white.png") 10px 50% no-repeat;}.tabbar-tab-74383136383936{background:url("http://admin.wiziapp.com/images/app/tabicons/12_black.png") 10px 50% no-repeat;}.ui-btn-active .tabbar-tab-74383136383936{background:url("http://admin.wiziapp.com/images/app/tabicons/12_white.png") 10px 50% no-repeat;}
+</style>
+</body>
+</html>";
