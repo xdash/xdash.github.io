@@ -1,0 +1,34 @@
+---
+title: 从 WordPress 迁移到 Github Pages
+author: XDash
+type: post
+date: 2023-12-26T15:21:55+00:00
+url: /from-WordPress-to-Github-Pages.html
+categories:
+  - Diary
+tags:
+  - 写作
+  - 创作
+
+---
+为何搬迁：
+
+- 从「椒盐豆豉」这篇博文获得启发：https://blog.douchi.space/static-blog-half-year/#gsc.tab=0
+
+- 遵循「Setup and Forget」原则，在博客这件事上减少折腾，提升动力。避免每年空间续费、时不时被动迁移 IP、需要打开浏览器写誊写博文等麻烦；以后可在任意设备 Markdown 写 + Git 提交 + Github Actions 完成 hugo 渲染生成。
+
+- 静态，既加速读者访问，也让我自己不要动辄去想装插件、widget 的花活了。
+
+- Github backed by Microsoft，稳定可靠。
+
+- 简单，专注在输出，尤其是输出文字之美本身。
+
+参照资料 & 资源：
+
+- WordPress 转换成 Hugo 格式：WordPress-to-Hugo-Exporter 插件 https://github.com/SchumacherFM/wordpress-to-hugo-exporter （ChatGPT4 告诉我的）
+
+- Hugo Quick Start: https://gohugo.io/getting-started/quick-start/
+
+- 当前选择的主题： https://themes.gohugo.io/themes/hugo-theme-hello-friend-ng/
+
+- 所有官方主题库： https://themes.gohugo.io/
