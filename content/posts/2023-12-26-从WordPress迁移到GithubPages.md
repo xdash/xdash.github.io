@@ -11,6 +11,11 @@ tags:
   - 创作
 
 ---
+当前独立 Blog 方案：
+- 从老的 WordPress 迁移出历史数据，文本和页面均导出 Markdown，但暂时考虑放弃恢复历史图片（反正时效性强 / 有黑历史 / 可能有如今不想呈现的隐私）。
+- 本地 Markdown 草稿 + Hugo 渲染 + Github Actions 自动发布到 Github Pages。
+- 后续将慢慢手动搬迁近两年发布在各种渠道的内容，到独立 Blog。
+
 为何搬迁：
 
 - 从「椒盐豆豉」这篇博文获得启发：https://blog.douchi.space/static-blog-half-year/#gsc.tab=0
