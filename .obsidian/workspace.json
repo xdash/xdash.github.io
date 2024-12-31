@@ -1,0 +1,169 @@
+{
+  "main": {
+    "id": "cea88557135af744",
+    "type": "split",
+    "children": [
+      {
+        "id": "e97714aff997a5e7",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "b52a761cb7054891",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "content/posts/2024-12-31-2025 值得我花时间研究的五件事.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "2024-12-31-2025 值得我花时间研究的五件事"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "8f9cd70dfce12cb9",
+    "type": "split",
+    "children": [
+      {
+        "id": "6555eae602fe00cb",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "1ccc1e550f8e7239",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "495de75164042f9b",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "2dd31a0225a821e8",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "5a5ff6132e5dd8e8",
+    "type": "split",
+    "children": [
+      {
+        "id": "3c043088ef604168",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "88fa4d9e2125aa76",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "content/posts/2024-12-31-2025 值得我花时间研究的五件事.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for 2024-12-31-2025 值得我花时间研究的五件事"
+            }
+          },
+          {
+            "id": "fa4b859ac7791eeb",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "content/posts/2024-12-31-2025 值得我花时间研究的五件事.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from 2024-12-31-2025 值得我花时间研究的五件事"
+            }
+          },
+          {
+            "id": "c30d754db2875948",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "d79e8a215bad39f8",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "content/posts/2024-12-31-2025 值得我花时间研究的五件事.md"
+              },
+              "icon": "lucide-list",
+              "title": "Outline of 2024-12-31-2025 值得我花时间研究的五件事"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "b52a761cb7054891",
+  "lastOpenFiles": [
+    "content/posts/2024-12-31-2025 值得我花时间研究的五件事.md"
+  ]
+}
