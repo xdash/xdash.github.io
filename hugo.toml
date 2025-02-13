@@ -38,7 +38,7 @@ paginate     = 10
     keywords = "xdash, 范冰, homepage, blog"
     copyright = '<a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
     readOtherPosts = "Read other posts"
-    defaultPage = "/about"
+    defaultPage = "/posts"
 
   [languages.en.params]
     subtitle  = "XDash Weblog"
