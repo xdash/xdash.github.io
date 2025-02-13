@@ -62,3 +62,9 @@ paginate     = 10
     name       = "About"
     url        = "/about"
     weight     = 1
+
+  [[menu.main]]
+    identifier = "rss"
+    name       = "RSS"
+    url        = "/index.xml"
+    weight     = 99
