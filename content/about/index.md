@@ -5,18 +5,11 @@ type: page
 date: 2020-12-17T01:54:52+00:00
 
 ---
-<p class="has-text-align-center">
-  I&#8217;m Fan Bing (范冰, @XDash).
-</p>
+My name is Evan You.
+I am the founder of VoidZero, a company building the next generation toolchain for JavaScript and TypeScript. I am currently based in Singapore working with a globally remote team.
 
-<p class="has-text-align-center">
-  Product Creator, Growth Hacker and <a href="http://zengzhangheike.mysxl.cn/">Bestseller Author</a>.
-</p>
+Before founding VoidZero, I had been working as an independent open source developer since 2016. I am the creator of the JavaScript framework Vue.js and the frontend build tool Vite. Most of my work is open source and publicly available on GitHub. If you happen to benefit from my OSS work, you can support me financially via GitHub Sponsors.
 
-<p class="has-text-align-center">
-  Email: <a href="mailto:fanbingx@gmail.com">fanbingx@gmail.com</a>
-</p>
+You can follow me on X and Bluesky where I mostly post about Vue and frontend technologies. If you happen to speak Chinese, my Chinese name is 尤雨溪 (yóu yǔ xī) and I have a Chinese-only X alt for non-tech-focused musings.
 
-<div class="wp-block-image">
-  <figure class="aligncenter size-large"><img loading="lazy" decoding="async" width="715" height="568" src="http://xdash.one/wp-content/uploads/2020/12/截屏2020-12-17-09.53.54.png" alt="" class="wp-image-5691" srcset="http://xdash.one/wp-content/uploads/2020/12/截屏2020-12-17-09.53.54.png 715w, http://xdash.one/wp-content/uploads/2020/12/截屏2020-12-17-09.53.54-500x397.png 500w" sizes="(max-width: 715px) 100vw, 715px" /></figure>
-</div>
+Outside of programming and helping my wife take care of our two kids, I enjoy video games (soulsborne & roguelikes are my favorite), karaoke, Japanese food, playing badminton, watching UFC/NBA/F1, and collecting watches.
