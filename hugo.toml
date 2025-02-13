@@ -20,11 +20,11 @@ paginate     = 10
   enableSharingButtons = true
   
   # Show a global language switcher in the navigation bar
-  enableGlobalLanguageMenu = true
+  enableGlobalLanguageMenu = false
 
   # Metadata mostly used in document's head
-  description = "My new homepage or blog"
-  keywords = "homepage, blog"
+  description = "范冰的博客（XDash Weblog）"
+  keywords = "xdash, 范冰, homepage, blog"
   images = [""]
 
 [taxonomies]
@@ -35,13 +35,13 @@ paginate     = 10
 [languages]
   [languages.en]
     title = "XDash Weblog"
-    keywords = ""
+    keywords = "xdash, 范冰, homepage, blog"
     copyright = '<a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
     readOtherPosts = "Read other posts"
     defaultPage = "/about"
 
   [languages.en.params]
-    subtitle  = "A simple theme for Hugo"
+    subtitle  = "XDash Weblog"
 
     [languages.en.params.logo]
       logoText = "Hi there"
