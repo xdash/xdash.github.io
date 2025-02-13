@@ -44,7 +44,7 @@ paginate     = 10
     subtitle  = "XDash Weblog"
 
     [languages.en.params.logo]
-      logoText = "Hi there"
+      logoText = "xdash@home: ~$"
       logoHomeLink = "/"
     # or
     #
@@ -53,8 +53,8 @@ paginate     = 10
 
   # And you can even create generic menu
   [[menu.main]]
-    identifier = "posts"
-    name       = "Posts"
+    identifier = "blog"
+    name       = "Blog"
     url        = "/posts"
     weight     = 10
 
