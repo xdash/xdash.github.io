@@ -5,11 +5,14 @@ type: page
 date: 2020-12-17T01:54:52+00:00
 
 ---
-My name is Evan You.
-I am the founder of VoidZero, a company building the next generation toolchain for JavaScript and TypeScript. I am currently based in Singapore working with a globally remote team.
+我是范冰，江苏南通人，定居上海。
 
-Before founding VoidZero, I had been working as an independent open source developer since 2016. I am the creator of the JavaScript framework Vue.js and the frontend build tool Vite. Most of my work is open source and publicly available on GitHub. If you happen to benefit from my OSS work, you can support me financially via GitHub Sponsors.
+《增长黑客》作者，创业者，投资者，宅男奶爸。
 
-You can follow me on X and Bluesky where I mostly post about Vue and frontend technologies. If you happen to speak Chinese, my Chinese name is 尤雨溪 (yóu yǔ xī) and I have a Chinese-only X alt for non-tech-focused musings.
-
-Outside of programming and helping my wife take care of our two kids, I enjoy video games (soulsborne & roguelikes are my favorite), karaoke, Japanese food, playing badminton, watching UFC/NBA/F1, and collecting watches.
+联系我：
+- 微信：ifanbing（注明来意）
+- X: https://x.com/xdash
+- 即刻：https://okjk.co/hg0L8M
+- 播客《冰镇电波》：https://podcasts.apple.com/cn/podcast/%E5%86%B0%E9%95%87%E7%94%B5%E6%B3%A2/id1628065494
+- 豆瓣：https://www.douban.com/people/xdash/
+- YouTube 频道：https://www.youtube.com/@fanbing
