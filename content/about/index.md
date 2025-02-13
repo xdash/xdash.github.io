@@ -11,8 +11,8 @@ date: 2020-12-17T01:54:52+00:00
 
 联系我：
 - 微信：ifanbing（注明来意）
-- X: https://x.com/xdash
-- 即刻：https://okjk.co/hg0L8M
-- 播客《冰镇电波》：https://podcasts.apple.com/cn/podcast/冰镇电波/id1628065494
-- 豆瓣：https://www.douban.com/people/xdash/
-- YouTube 频道：https://www.youtube.com/@fanbing
+- X(@XDash): [https://x.com/xdash](https://x.com/xdash)
+- 即刻：[okjk.co/hg0L8M](https://okjk.co/hg0L8M)
+- 播客《冰镇电波》：[https://podcasts.apple.com/cn/podcast/冰镇电波/id1628065494](https://podcasts.apple.com/cn/podcast/冰镇电波/id1628065494)
+- 豆瓣：[https://www.douban.com/people/xdash/](https://www.douban.com/people/xdash/)
+- YouTube 频道：[https://www.youtube.com/@fanbing](https://www.youtube.com/@fanbing)

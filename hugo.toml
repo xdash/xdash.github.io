@@ -56,15 +56,15 @@ paginate     = 10
     identifier = "posts"
     name       = "Posts"
     url        = "/posts"
-    
+    weight     = 10
+
   [[menu.main]]
     identifier = "about"
     name       = "About"
     url        = "/about"
-    weight     = 1
-
+    weight     = 30
   [[menu.main]]
     identifier = "rss"
     name       = "RSS"
     url        = "/index.xml"
-    weight     = 99
+    weight     = 20
