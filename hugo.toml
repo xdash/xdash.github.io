@@ -44,7 +44,7 @@ paginate     = 10
     subtitle  = "XDash Weblog"
 
     [languages.en.params.logo]
-      logoText = "xdash@home: ~$"
+      logoText = "xdash@weblog: ~$"
       logoHomeLink = "/"
     # or
     #
