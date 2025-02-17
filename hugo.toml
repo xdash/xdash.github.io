@@ -58,6 +58,19 @@ paginate     = 10
     name       = "About"
     url        = "/about"
     weight     = 30
+
+  [[menu.main]]
+    identifier = "podcast"
+    name       = "Podcast"
+    url        = "https://www.xiaoyuzhoufm.com/podcast/61df010313704eb05c10dece"
+    weight     = 40
+
+  [[menu.main]]
+    identifier = "youtube"
+    name       = "YouTube"
+    url        = "https://www.youtube.com/@fanbing"
+    weight     = 50
+
   [[menu.main]]
     identifier = "rss"
     name       = "RSS"
