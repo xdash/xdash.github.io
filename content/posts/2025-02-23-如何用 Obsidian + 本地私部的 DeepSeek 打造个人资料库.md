@@ -12,7 +12,7 @@ tags:
   - AI
   - gadget
 ---
-1. （作为前置准备，确保你本地已经部署了 DeepSeek。我是用 Ollama 的方式跑在改版 Mac Mini M4 上，最常用 14b 模型。）
+1. （作为前置准备，确保你本地已经部署了 DeepSeek。我是用 Ollama 的方式跑在丐版 Mac Mini M4 上，最常用 14b 模型。）
 2. 打开 Obsidian，去社区插件（Community plugins）安装 Copilot 并启用它。
 3. 进入社区插件->Copilot 页面（标题是 「Copilot Settings」，会带版本号，截图时是 v2.8.6），顶上切换到 「Models」选项卡，再点击右下角的「+ Ade Custom Model」，会弹出「Add Custom Chat Model」界面。如下图：
 
