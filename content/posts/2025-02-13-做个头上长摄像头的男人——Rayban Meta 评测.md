@@ -1,12 +1,15 @@
 ---
 title: 做个头上长摄像头的男人——Rayban Meta 评测
-author: XDash
+author:
+  - XDash
 type: post
 date: 2025-02-13T00:08:00+08:00
 url: /rayban-meta-wayfarer-review
 categories:
   - Geeky
 tags:
+  - AI
+  - gadget
 ---
 分享下最近购买 Ray-Ban Meta（雷朋和 Facebook 联名出的）AI 智能眼镜两周的体验。
 
