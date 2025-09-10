@@ -3,7 +3,7 @@ title: 不要「Build in public」
 author:
   - XDash
 type: post
-date: 2025-09-11T08:08:00+08:00
+date: 2025-09-11T00:06:00+08:00
 url: /do-not-build-in-public
 categories:
   - Geeky
