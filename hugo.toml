@@ -2,7 +2,7 @@ baseurl      = "localhost"
 title        = "XDash Weblog"
 languageCode = "en-us"
 theme        = "hello-friend-ng"
-paginate     = 10
+paginate     = 20
 
 [params]
   dateform        = "Jan 2, 2006"
