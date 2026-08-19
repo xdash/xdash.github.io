@@ -27,6 +27,11 @@ paginate     = 20
   keywords = "xdash, 范冰, homepage, blog"
   images = [""]
 
+  [params.footer]
+    bottomText = [
+      '友情链接：<a href="https://diy-jarvis.com" target="_blank" rel="noopener">diy-jarvis.com</a> · <a href="https://fde4.ai" target="_blank" rel="noopener">fde4.ai</a> · <a href="https://www.zengzhangheike.com" target="_blank" rel="noopener">zengzhangheike.com</a>',
+    ]
+
 [taxonomies]
     category = "blog"
     tag      = "tags"
