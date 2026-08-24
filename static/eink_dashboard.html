@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>XDASH · MYAI TELEMETRY</title>
+<!-- 墨水屏炫耀墙 · 生成于 2026-08-25 07:30 · 数据为构建时快照 -->
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { height:100%; }
+  body {
+    background:#fff; color:#000; overflow:hidden;
+    display:flex; flex-direction:column;
+    font-family:"Helvetica Neue", Helvetica, Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+    -webkit-font-smoothing:none;
+  }
+  .mono { font-family:ui-monospace, Menlo, Consolas, "Courier New", monospace; }
+
+  /* ── 顶部反色带 ── */
+  header {
+    background:#000; color:#fff;
+    display:flex; justify-content:space-between; align-items:stretch;
+    flex:0 0 auto; min-height:9vh;
+  }
+  .h-left { padding:1.2vh 2.5vw; display:flex; flex-direction:column; justify-content:center; min-width:0; }
+  .h-title { font-weight:900; font-size:4.4vmin; letter-spacing:.4vmin; line-height:1; white-space:nowrap; }
+  .h-sub { font-family:ui-monospace, Menlo, monospace; font-size:1.8vmin; letter-spacing:.3vmin; margin-top:.8vh; opacity:.85; white-space:nowrap; }
+  .h-right {
+    border-left:2px dotted #fff; padding:1.2vh 2vw;
+    display:flex; flex-direction:column; justify-content:center; text-align:right;
+    font-family:ui-monospace, Menlo, monospace; font-size:1.8vmin; letter-spacing:.15vmin; line-height:1.7;
+    white-space:nowrap; flex:0 0 auto;
+  }
+
+  /* ── 主英雄数字 ── */
+  .hero { flex:1.15 1 0; display:flex; border-bottom:2px solid #000; min-height:0; }
+  .hero-cell {
+    flex:1; display:flex; flex-direction:column; justify-content:center;
+    padding:0 2vw; min-width:0;
+  }
+  .hero-num { font-weight:900; font-size:9.2vmin; line-height:.95; letter-spacing:-.2vmin; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .hero-label { font-family:ui-monospace, Menlo, monospace; font-weight:700; font-size:2.3vmin; letter-spacing:.25vmin; margin-top:1vh; white-space:nowrap; }
+  .hero-sub { font-size:2vmin; margin-top:.4vh; white-space:nowrap; }
+
+  /* ── 30 天提交柱状 ── */
+  .spark { flex:.62 1 0; display:flex; flex-direction:column; border-bottom:2px solid #000; min-height:0; }
+  .spark-head {
+    display:flex; justify-content:space-between;
+    font-family:ui-monospace, Menlo, monospace; font-weight:700;
+    font-size:2vmin; letter-spacing:.25vmin; padding:.8vh 2vw .6vh;
+  }
+  .spark-bars { flex:1; display:flex; align-items:flex-end; padding:0 2vw 1vh; min-height:0; }
+  .bar { flex:1; background:#000; margin-right:1px; }
+
+  /* ── 指标网格 ── */
+  .grid { flex:1.5 1 0; display:flex; flex-wrap:wrap; min-height:0; }
+  .cell {
+    width:50%; display:flex; flex-direction:column; justify-content:center;
+    padding:0 2.5vw; min-height:0; overflow:hidden;
+  }
+  .cell-border { border-left:2px dotted #000; }
+  .cell-top { border-top:2px dotted #000; }
+  .cell-num { font-weight:900; font-size:6.4vmin; line-height:1; font-variant-numeric:tabular-nums; letter-spacing:-.1vmin; }
+  .cell-label { font-family:ui-monospace, Menlo, monospace; font-weight:700; font-size:2.1vmin; letter-spacing:.28vmin; margin-top:.7vh; white-space:nowrap; }
+
+  /* ── 底部反色带 ── */
+  footer {
+    background:#000; color:#fff; flex:0 0 auto;
+    display:flex; justify-content:space-between; gap:2vw;
+    font-family:ui-monospace, Menlo, monospace; font-weight:700;
+    font-size:1.9vmin; letter-spacing:.2vmin;
+    padding:1.1vh 2.5vw; white-space:nowrap; overflow:hidden;
+  }
+
+  /* ── 横屏 ── */
+  @media (orientation: landscape) {
+    .cell { width:25%; }
+    .cell-top { border-top:none; }
+    .cell:nth-child(n+5) { border-top:2px dotted #000; }
+    .cell:nth-child(4n+2), .cell:nth-child(4n+3), .cell:nth-child(4n+4) { border-left:2px dotted #000; }
+    .cell:nth-child(4n+1) { border-left:none; }
+    .cell-label { font-size:1.7vmin; letter-spacing:.18vmin; }
+  }
+</style>
+</head>
+<body>
+  <header>
+    <div class="h-left">
+      <div class="h-title">XDASH·MYAI</div>
+      <div class="h-sub">PERSONAL AI INFRA · TELEMETRY</div>
+    </div>
+    <div class="h-right">
+      <div>范冰 ·《增长黑客》作者</div>
+      <div>2026-08-25 · NOMINAL ▲</div>
+    </div>
+  </header>
+
+  <section class="hero">
+      <div class="hero-cell">
+        <div class="hero-num">15,134</div>
+        <div class="hero-label">NEWSLETTER 订阅者</div>
+        <div class="hero-sub">SUBSCRIBERS · 增长黑客周刊</div>
+      </div>
+      <div class="hero-cell" style="border-left:2px dotted #000">
+        <div class="hero-num">1,041</div>
+        <div class="hero-label">近 30 天代码提交</div>
+        <div class="hero-sub">COMMITS / 30D · 日均 35+</div>
+      </div>
+      <div class="hero-cell" style="border-left:2px dotted #000">
+        <div class="hero-num">2,536</div>
+        <div class="hero-label">个人藏书</div>
+        <div class="hero-sub">BOOKS · 17 知识域</div>
+      </div>
+  </section>
+
+    <section class="spark">
+      <div class="spark-head">
+        <span>COMMITS / LAST 30 DAYS · 近 30 天提交节奏</span>
+        <span>PEAK 169/DAY</span>
+      </div>
+      <div class="spark-bars"><div class="bar" style="height:14%"></div><div class="bar" style="height:5%"></div><div class="bar" style="height:9%"></div><div class="bar" style="height:19%"></div><div class="bar" style="height:3%"></div><div class="bar" style="height:3%"></div><div class="bar" style="height:14%"></div><div class="bar" style="height:26%"></div><div class="bar" style="height:27%"></div><div class="bar" style="height:10%"></div><div class="bar" style="height:4%"></div><div class="bar" style="height:100%"></div><div class="bar" style="height:23%"></div><div class="bar" style="height:70%"></div><div class="bar" style="height:60%"></div><div class="bar" style="height:53%"></div><div class="bar" style="height:52%"></div><div class="bar" style="height:14%"></div><div class="bar" style="height:44%"></div><div class="bar" style="height:3%"></div><div class="bar" style="height:7%"></div><div class="bar" style="height:28%"></div><div class="bar" style="height:3%"></div><div class="bar" style="height:15%"></div><div class="bar" style="height:5%"></div><div class="bar" style="height:3%"></div><div class="bar" style="height:3%"></div><div class="bar" style="height:3%"></div><div class="bar" style="height:9%"></div><div class="bar" style="height:3%"></div></div>
+    </section>
+  <section class="grid">
+      <div class="cell">
+        <div class="cell-num">116</div>
+        <div class="cell-label">自动化任务 · CRON JOBS</div>
+      </div>
+      <div class="cell cell-border">
+        <div class="cell-num">103</div>
+        <div class="cell-label">AI 技能库 · SKILLS</div>
+      </div>
+      <div class="cell cell-top">
+        <div class="cell-num">77</div>
+        <div class="cell-label">自研工具 · TOOLS</div>
+      </div>
+      <div class="cell cell-border cell-top">
+        <div class="cell-num">1,339</div>
+        <div class="cell-label">写作文章 · ESSAYS</div>
+      </div>
+      <div class="cell cell-top">
+        <div class="cell-num">752</div>
+        <div class="cell-label">RSS 订阅源 · FEEDS</div>
+      </div>
+      <div class="cell cell-border cell-top">
+        <div class="cell-num">1,506</div>
+        <div class="cell-label">兴趣画像标签 · TAGS</div>
+      </div>
+      <div class="cell cell-top">
+        <div class="cell-num">5,748</div>
+        <div class="cell-label">周报总点击 · CLICKS</div>
+      </div>
+      <div class="cell cell-border cell-top">
+        <div class="cell-num">93.1</div>
+        <div class="cell-label">系统健康度 · 30D AVG</div>
+      </div>
+  </section>
+
+  <footer><span>WATCHING 13 PODCASTS + 5 BILIBILI · TAGGED 3,185 ARTICLES</span><span>无人值守每日运行</span></footer>
+</body>
+</html>
