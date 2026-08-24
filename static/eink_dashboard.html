@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>XDASH · MYAI TELEMETRY</title>
 <!-- 墨水屏炫耀墙 · 数据为构建时快照（确定性输出，供 publish 内容 diff） -->
-<noscript><meta http-equiv="refresh" content="300"></noscript>
+<noscript><meta http-equiv="refresh" content="86400"></noscript>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
   html, body { height:100%; }
@@ -158,11 +158,11 @@
 
   <footer><span>WATCHING 13 PODCASTS + 5 BILIBILI · TAGGED 3,185 ARTICLES</span><span>无人值守每日运行</span></footer>
 <script>
-/* 5 分钟自动刷新；加时间戳参数穿透 GitHub Pages CDN 缓存（max-age=600）。
+/* 每日自动刷新一次；加时间戳参数穿透 GitHub Pages CDN 缓存（max-age=600）。
    纯静态展示，无任何动画——每次刷新等同一次整页重载。 */
 setTimeout(function() {
   location.replace(location.pathname + '?t=' + Date.now());
-}, 300000);
+}, 86400000);
 </script>
 </body>
 </html>
