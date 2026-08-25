@@ -73,13 +73,13 @@
     padding:1.1vh 2.5vw; white-space:nowrap; overflow:hidden;
   }
 
-  /* ── 横屏 ── */
+  /* ── 横屏（6 格 → 3 列 × 2 行） ── */
   @media (orientation: landscape) {
-    .cell { width:25%; }
+    .cell { width:33.3333%; }
     .cell-top { border-top:none; }
-    .cell:nth-child(n+5) { border-top:2px dotted #000; }
-    .cell:nth-child(4n+2), .cell:nth-child(4n+3), .cell:nth-child(4n+4) { border-left:2px dotted #000; }
-    .cell:nth-child(4n+1) { border-left:none; }
+    .cell:nth-child(n+4) { border-top:2px dotted #000; }
+    .cell:nth-child(3n+2), .cell:nth-child(3n) { border-left:2px dotted #000; }
+    .cell:nth-child(3n+1) { border-left:none; }
     .cell-label { font-size:1.7vmin; letter-spacing:.18vmin; }
   }
 </style>
@@ -103,7 +103,7 @@
         <div class="hero-sub">SUBSCRIBERS · 增长黑客周刊</div>
       </div>
       <div class="hero-cell" style="border-left:2px dotted #000">
-        <div class="hero-num">1,043</div>
+        <div class="hero-num">1,044</div>
         <div class="hero-label">近 30 天代码提交</div>
         <div class="hero-sub">COMMITS / 30D · 日均 35+</div>
       </div>
@@ -127,20 +127,12 @@
         <div class="cell-label">自动化任务 · CRON JOBS</div>
       </div>
       <div class="cell cell-border">
-        <div class="cell-num">103</div>
-        <div class="cell-label">AI 技能库 · SKILLS</div>
+        <div class="cell-num">7.9M</div>
+        <div class="cell-label">KIMI 今日 TOKENS</div>
       </div>
       <div class="cell cell-top">
-        <div class="cell-num">77</div>
-        <div class="cell-label">自研工具 · TOOLS</div>
-      </div>
-      <div class="cell cell-border cell-top">
-        <div class="cell-num">1,339</div>
-        <div class="cell-label">写作文章 · ESSAYS</div>
-      </div>
-      <div class="cell cell-top">
-        <div class="cell-num">752</div>
-        <div class="cell-label">RSS 订阅源 · FEEDS</div>
+        <div class="cell-num">11.3M</div>
+        <div class="cell-label">KIMI 本周 TOKENS</div>
       </div>
       <div class="cell cell-border cell-top">
         <div class="cell-num">1,506</div>
@@ -156,7 +148,7 @@
       </div>
   </section>
 
-  <footer><span>WATCHING 13 PODCASTS + 5 BILIBILI · TAGGED 3,185 ARTICLES</span><span>无人值守每日运行</span></footer>
+  <footer><span>WATCHING 752 FEEDS + 13 PODCASTS + 5 BILIBILI</span><span>无人值守每日运行</span></footer>
 <script>
 /* 每日自动刷新一次；加时间戳参数穿透 GitHub Pages CDN 缓存（max-age=600）。
    纯静态展示，无任何动画——每次刷新等同一次整页重载。 */
