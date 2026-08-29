@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>长安 CS75 修车知识交互原型</title>
+<style>
+:root{
+  --bg:#0e1319; --panel:#171e28; --panel2:#1e2733; --line:#2a3646;
+  --txt:#e8eef5; --sub:#9db0c3; --accent:#2e7dff; --hot:#ffb020; --ok:#37c978;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--txt);font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;font-size:15px;line-height:1.65}
+header{padding:18px 24px;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;align-items:center;gap:14px}
+header h1{font-size:20px;font-weight:700}
+header .tag{font-size:12px;color:var(--sub);background:var(--panel2);border:1px solid var(--line);border-radius:99px;padding:2px 10px}
+nav.main-tabs{display:flex;gap:8px;padding:12px 24px 0}
+nav.main-tabs button{background:var(--panel);color:var(--sub);border:1px solid var(--line);border-radius:10px 10px 0 0;padding:9px 18px;font-size:15px;cursor:pointer}
+nav.main-tabs button.on{background:var(--panel2);color:var(--txt);border-bottom-color:var(--panel2);font-weight:600}
+.section{display:none;padding:20px 24px 40px;border-top:1px solid var(--line)}
+.section.on{display:block}
+/* 透视看车 */
+.view-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.view-tabs button{background:var(--panel2);color:var(--sub);border:1px solid var(--line);border-radius:99px;padding:6px 16px;font-size:14px;cursor:pointer}
+.view-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600}
+.stage{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:18px}
+@media(max-width:960px){.stage{grid-template-columns:1fr}}
+.canvas{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px;min-height:340px}
+.canvas svg{width:100%;height:auto;display:block}
+.hint{color:var(--sub);font-size:13px;margin-top:6px;text-align:center}
+/* SVG 元素 */
+.car-body{fill:#273344;stroke:#3d4f68;stroke-width:2}
+.car-glass{fill:#12233a;stroke:#31517a;stroke-width:1.5}
+.car-part{fill:#33425a;stroke:#4a6079;stroke-width:1.5}
+.car-wheel{fill:#141a22;stroke:#3d4f68;stroke-width:2}
+.car-hub{fill:#3d4f68}
+.hotspot{cursor:pointer}
+.hotspot circle.pulse{fill:rgba(255,176,32,.16);stroke:var(--hot);stroke-width:2;animation:pl 1.8s infinite}
+.hotspot circle.core{fill:var(--hot)}
+.hotspot line.lead{stroke:var(--hot);stroke-width:1;opacity:.5}
+.hotspot text{fill:var(--hot);font-size:12.5px;font-weight:600;paint-order:stroke;stroke:#0e1319;stroke-width:3.5px;pointer-events:none}
+.hotspot:hover circle.pulse{fill:rgba(255,176,32,.4)}
+.hotspot.sel circle.pulse{fill:rgba(46,125,255,.3);stroke:var(--accent)}
+.hotspot.sel circle.core{fill:var(--accent)}
+.hotspot.sel text{fill:#7db1ff}
+@keyframes pl{0%{r:12;opacity:1}70%{r:19;opacity:.3}100%{r:12;opacity:1}}
+/* 详情面板 */
+.detail{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;align-self:start;position:sticky;top:16px}
+.detail h2{font-size:18px;margin-bottom:2px}
+.detail .cat{color:var(--sub);font-size:12px;margin-bottom:12px}
+.detail h3{font-size:14px;color:var(--accent);margin:14px 0 4px}
+.detail p,.detail li{color:var(--txt);font-size:14px}
+.detail ul{padding-left:18px}
+.detail .price-grid{display:grid;grid-template-columns:88px 1fr;gap:4px 10px;font-size:14px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:6px}
+.detail .price-grid b{color:var(--hot);font-weight:600}
+.detail .note{margin-top:12px;font-size:12.5px;color:var(--sub);border-left:3px solid var(--hot);padding-left:10px}
+.detail .empty{color:var(--sub);text-align:center;padding:60px 10px;font-size:14px}
+.btn{display:inline-block;margin-top:10px;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:13.5px;cursor:pointer;text-decoration:none}
+.btn.ghost{background:var(--panel2);border:1px solid var(--line);color:var(--txt)}
+/* 按系统浏览索引 */
+.sys-index{margin-top:18px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.sys-index h2{font-size:16px;margin-bottom:12px}
+.sys-group{display:flex;flex-wrap:wrap;align-items:baseline;margin-bottom:8px}
+.sys-group>b{flex:0 0 96px;color:var(--accent);font-size:13.5px}
+.sys-group .chips{flex:1;display:flex;flex-wrap:wrap;gap:6px}
+.chip{background:var(--panel2);border:1px solid var(--line);border-radius:99px;padding:2px 12px;font-size:13px;color:var(--txt);cursor:pointer}
+.chip:hover{border-color:var(--accent);color:#7db1ff}
+/* 教程 */
+.tut-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+.tut{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px}
+.tut h3{font-size:16px;margin-bottom:2px}
+.tut .meta{color:var(--sub);font-size:12.5px;margin-bottom:10px}
+.tut ol{padding-left:20px}
+.tut ol li{margin-bottom:8px;font-size:14px}
+.tut .warn{background:rgba(255,176,32,.08);border:1px solid rgba(255,176,32,.35);border-radius:10px;padding:10px 12px;font-size:13px;color:#ffd58a;margin-top:10px}
+.tut.full{grid-column:1/-1}
+/* 价格表 */
+table{width:100%;border-collapse:collapse;background:var(--panel);border-radius:12px;overflow:hidden;font-size:14px}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line)}
+th{background:var(--panel2);color:var(--sub);font-weight:600;white-space:nowrap}
+tr:hover td{background:var(--panel2)}
+td b{color:var(--hot);font-weight:600}
+.linklike{color:var(--accent);cursor:pointer}
+footer{padding:16px 24px;color:var(--sub);font-size:12.5px;border-top:1px solid var(--line)}
+/* 价格表横向滚动容器（窄屏防溢出） */
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:12px}
+/* 热点隐形触控区 */
+.hotspot circle.hit{fill:rgba(0,0,0,0);stroke:none}
+.canvas svg{touch-action:manipulation}
+/* ============ 移动端适配（≤768px） ============ */
+@media(max-width:768px){
+  header{padding:14px 16px;gap:10px}
+  header h1{font-size:17px}
+  nav.main-tabs{padding:10px 16px 0}
+  nav.main-tabs button{padding:8px 12px;font-size:14px}
+  .section{padding:14px 14px 32px}
+  /* 视角选项卡横向滚动 */
+  .view-tabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+  .view-tabs::-webkit-scrollbar{display:none}
+  .view-tabs button{flex:0 0 auto;white-space:nowrap}
+  .canvas{padding:6px}
+  .hint{font-size:12px}
+  .detail{padding:14px;position:static}
+  /* 热点触控放大（transform-box 保证以自身圆心缩放不跑偏） */
+  .hotspot circle.pulse,.hotspot circle.core,.hotspot circle.hit{transform-box:fill-box;transform-origin:center}
+  .hotspot circle.pulse,.hotspot circle.core{transform:scale(1.8)}
+  .hotspot circle.hit{transform:scale(1.7)}
+  .hotspot text{font-size:19px}
+  /* 系统索引窄屏纵向排布 */
+  .sys-group{flex-direction:column;gap:4px}
+  .sys-group>b{flex:none}
+  .tut-grid{grid-template-columns:1fr}
+  th,td{padding:8px 10px;font-size:13px;white-space:nowrap}
+  td:last-child{white-space:normal;min-width:120px}
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>🔧 长安 CS75 修车知识交互原型</h1>
+  <span class="tag">透视看车 · 86 个零件热点 · DIY 教程 · 市场价格参考</span>
+</header>
+
+<nav class="main-tabs">
+  <button class="on" data-sec="explore">🚙 透视看车</button>
+  <button data-sec="tut">🛠️ DIY 教程</button>
+  <button data-sec="price">💰 零件价格速查</button>
+</nav>
+
+<!-- 透视看车 -->
+<div class="section on" id="sec-explore">
+  <div class="view-tabs" id="viewTabs"></div>
+  <div class="stage">
+    <div>
+      <div class="canvas" id="canvas"></div>
+      <p class="hint">💡 点击图上橙色标记查看零件详情；支持 URL 定位，如 #view=engine&part=battery</p>
+    </div>
+    <div class="detail" id="detail"><div class="empty">👈 点击左侧图中的零件标记<br>查看功能、自检方法、更换周期与参考价格</div></div>
+  </div>
+  <div class="sys-index">
+    <h2>🗂 按系统浏览零件（点击跳转对应视角）</h2>
+    <div id="sysGroups"></div>
+  </div>
+</div>
+
+<!-- DIY 教程 -->
+<div class="section" id="sec-tut"><div class="tut-grid" id="tutGrid"></div></div>
+
+<!-- 价格表 -->
+<div class="section" id="sec-price">
+  <p style="color:var(--sub);font-size:13px;margin-bottom:10px">以下为国内市场常见参考价（副厂/品牌件为主，4S 店原厂件通常贵 50%–150%），仅供预算参考，实际以当地行情与车型年款为准。点击零件名可跳转到透视图详情。</p>
+  <div class="table-wrap"><table id="priceTable"><thead><tr><th>零件/项目</th><th>零件参考价</th><th>工时参考</th><th>建议周期</th></tr></thead><tbody></tbody></table></div>
+</div>
+
+<footer>
+  本页为个人修车知识原型 · 车型：长安 CS75（含 PLUS 各年款可能有差异，参数以实车与《用户手册》为准）· 价格为市场参考区间，非实时报价
+</footer>
+
+<script>
+/* ================= 零件数据库 =================
+   sys 取值：engine 发动机 / brake 制动 / susp 悬挂·行走 / elec 电气 / fluid 油液 / body 外观内饰 */
+const PARTS = {
+/* ---------- 原有零件（文案保留微调） ---------- */
+wiper:{name:"前雨刮片",cat:"外观 · 易损件",sys:"body",
+  desc:"清除前挡风玻璃雨水与污物，直接影响雨天视线。CS75 主驾侧约 24 英寸、副驾侧约 18 英寸（部分年款不同，购买前量一下或报车架号），U 型钩接口。",
+  check:["刮完留水痕/条纹","胶条发硬、开裂、跳动异响","雨天越刮越糊"],
+  cycle:"6–12 个月",price:"30–150 元/对（博世/法雷奥/3M）",labor:"0 元（DIY，5 分钟）；店里换 20–50 元",
+  tut:"tut-wiper",
+  note:"别干刮！玻璃干燥时开雨刮会加速胶条磨损，先喷玻璃水。"},
+rear_wiper:{name:"后雨刮片",cat:"外观 · 易损件",sys:"body",
+  desc:"SUV 两厢结构尾部易积灰，后雨刮保证后视清晰。尺寸约 12–14 英寸。",
+  check:["刮不净、异响","胶条脱落"],cycle:"12 个月左右",price:"20–60 元/支",labor:"0 元（DIY）",tut:"tut-wiper"},
+washer:{name:"玻璃水 / 洗涤液",cat:"油液 · 消耗品",sys:"fluid",
+  desc:"配合雨刮清洁风挡。夏季用普通型，冬季必须换防冻型（按当地最低温选 -15℃/-25℃/-40℃），否则水壶和管路会冻裂。",
+  check:["喷水无力或不喷（可能没水、喷嘴堵、电机坏）","仪表提示洗涤液不足"],
+  cycle:"用完即加，入冬前换防冻型",price:"10–25 元/瓶（2L）",labor:"0 元（DIY，1 分钟）",tut:"tut-washer",
+  note:"不建议长期加自来水：水垢会堵喷嘴，且冬季会结冰。"},
+nozzle:{name:"玻璃水喷嘴",cat:"外观 · 小件",sys:"body",
+  desc:"机盖前缘的两个小喷头，把水喷成扇形。堵塞可用细针轻捅，角度歪了可用针拨调。",
+  check:["喷水偏/不成扇形","一侧不喷"],cycle:"坏了再换",price:"10–30 元/个",labor:"0–30 元"},
+headlight:{name:"前大灯",cat:"灯光",sys:"elec",
+  desc:"CS75 低配卤素、高配 LED。卤素灯泡（常见 H7/H1，以手册为准）可自己动手换；LED 多为总成，单灯不亮先查保险丝。",
+  check:["单灯不亮：先查保险丝，再查灯泡","灯罩发黄可翻新（100–200 元）"],
+  cycle:"灯泡坏了即换",price:"卤素灯泡 30–80 元/只；LED 总成 800–2000 元",labor:"灯泡 DIY 0 元；总成工时 100–300 元"},
+taillight:{name:"尾灯 / 刹车灯",cat:"灯光",sys:"elec",
+  desc:"刹车灯不亮极易被追尾，还会被处罚。定期检查：倒车贴近墙面踩刹车，看反光判断。",
+  check:["刹车灯单侧不亮","转向灯闪烁变快（说明有灯珠烧了）"],
+  cycle:"坏了即换",price:"灯泡 10–30 元；总成 400–1000 元",labor:"0–100 元"},
+tire:{name:"轮胎",cat:"行走系统",sys:"susp",
+  desc:"CS75 常见规格 225/65 R17 或 225/60 R18（以实车胎壁标识为准）。胎纹低于 1.6mm（磨损标记齐平）必须换；侧面鼓包立刻换。",
+  check:["硬币插胎纹看深度","侧壁鼓包/裂纹","偏磨（做四轮定位，200–400 元）","胎压：约 2.3–2.5 bar（B 柱标签为准）"],
+  cycle:"5–6 年或 6–8 万 km；每 1–2 万 km 前后换位",price:"国产 400–600 元/条；合资 600–900 元/条",labor:"换胎+动平衡 30–50 元/条"},
+brake_pad:{name:"刹车片",cat:"制动系统",sys:"brake",
+  desc:"摩擦制动的核心部件。剩余厚度 <3mm 必须更换。多数车带磨损报警：轻刹有尖锐金属声就该查了。",
+  check:["刹车尖叫","刹车变软、行程变长","方向盘刹车时抖动（可能刹车盘变形）"],
+  cycle:"前片 3–5 万 km，后片 5–8 万 km",price:"前片 200–400 元/对，后片 150–300 元/对（博世/布雷博/国产）",labor:"100–200 元",
+  note:"换片时让师傅顺手检查刹车盘和刹车油。带电子手刹的后轮需用电脑收回电机。"},
+mirror:{name:"外后视镜",cat:"外观",sys:"body",
+  desc:"带电调/加热。镜片单独碎了可单换镜片，整耳撞坏换总成。",
+  check:["调节失灵","加热不除雾"],cycle:"坏了再换",price:"镜片 30–80 元；总成 300–800 元",labor:"50–150 元"},
+battery:{name:"蓄电池（电瓶）",cat:"发动机舱",sys:"elec",
+  desc:"常见 60Ah 规格（如 6-QW-60，以原车为准）。寿命到了的典型症状：冷启动无力、大灯变暗、启停失效。长期短途行驶最伤电瓶。",
+  check:["启动「咔咔」无力","静置电压 <12.2V","观察窗变色（部分型号）"],
+  cycle:"3–5 年",price:"400–800 元（瓦尔塔/骆驼/风帆）",labor:"0–50 元，很多商家以旧换新包安装",
+  note:"断电换电瓶会清怠速学习和电台记忆，属正常现象。"},
+washer_tank:{name:"玻璃水壶（加注口）",cat:"发动机舱",sys:"fluid",
+  desc:"发动机舱内带「喷水」标志的蓝色/黑色盖子，CS75 一般在右前角附近（打开发动机舱找带喷水图案的盖）。壶体约 3–4L。",
+  check:["加满很快又没了 → 查壶体/管路渗漏","喷水电机无声 → 查保险丝/电机"],
+  cycle:"——",price:"壶体总成 100–300 元",labor:"50–150 元",tut:"tut-washer"},
+oil:{name:"机油 + 机油滤芯",cat:"发动机舱 · 保养核心",sys:"fluid",
+  desc:"CS75 1.5T/2.0 一般加注约 4–4.5L，推荐 SN/SP 级 5W-30（以手册为准）。涡轮机建议全合成。加注口在发动机装饰盖上（黑色旋盖）。",
+  check:["机油尺：冷车平地，液位在 MIN–MAX 之间","机油发黑正常，乳化发白要查（可能进水）"],
+  cycle:"矿物/半合成 5000–7500 km，全合成 8000–10000 km",price:"全合成机油 300–500 元/4L；机滤 20–60 元",labor:"50–100 元",
+  tut:"tut-dipstick",
+  note:"换油必换机滤；旧机油属危废，交给店里回收。"},
+air_filter:{name:"空气滤芯",cat:"发动机舱 · 易换件",sys:"engine",
+  desc:"发动机的「口罩」，在发动机舱的黑色塑料盒内，卡扣或螺丝固定，打开发动机盖就能换，DIY 零门槛。",
+  check:["取出对着光看，发黑/堵塞就换","加速无力、油耗升高可能是它"],
+  cycle:"1–2 万 km（多尘环境缩短）",price:"30–80 元",labor:"0 元（DIY，3 分钟）",tut:"tut-air"},
+cabin_filter:{name:"空调滤芯",cat:"驾驶舱 · 易换件",sys:"body",
+  desc:"过滤进车厢的空气，藏在副驾手套箱后方。拆下手套箱（两侧卡扣内压）即可抽出旧滤芯。注意滤芯上的气流方向箭头。",
+  check:["空调风量变小","出风有霉味（也可考虑蒸发箱清洗 100–300 元）"],
+  cycle:"6–12 个月",price:"40–120 元（带活性炭的贵些）",labor:"0 元（DIY，5 分钟）",tut:"tut-cabin"},
+coolant:{name:"防冻液（冷却液）",cat:"发动机舱",sys:"fluid",
+  desc:"膨胀壶上有 MIN/MAX 刻度，冷车检查。不同颜色配方不要混加。应急可加蒸馏水，事后尽快更换。",
+  check:["冷车液位低于 MIN","水温表偏高","壶底有粉色/绿色结晶（渗漏）"],
+  cycle:"2 年或 4 万 km",price:"60–150 元/桶（4L）",labor:"50–100 元",
+  tut:"tut-coolant",
+  note:"热车千万别开水箱盖，高温蒸汽会烫伤！"},
+brake_fluid:{name:"刹车油（DOT4）",cat:"发动机舱",sys:"brake",
+  desc:"刹车油吸水性强，含水率高了沸点下降，长下坡容易刹车失灵。油壶在发动机舱靠近驾驶位一侧。",
+  check:["液位下降快 → 查渗漏或刹车片磨损","检测笔测含水率 >3% 必须换"],
+  cycle:"2 年或 4 万 km",price:"80–150 元（1L）",labor:"100–200 元（需排空气）"},
+spark:{name:"火花塞",cat:"发动机内部",sys:"engine",
+  desc:"点火部件。老化症状：冷启动困难、怠速抖动、加速顿挫、油耗升高。涡轮机对火花塞更苛刻。",
+  check:["怠速方向盘抖动","加速「喘气」"],
+  cycle:"普通镍合金 2–3 万 km；铂金/铱金 4–6 万 km（涡轮机取下限）",price:"40–150 元/支 × 4 支",labor:"80–200 元"},
+fuse:{name:"保险丝盒",cat:"电气",sys:"elec",
+  desc:"发动机舱和驾驶舱各有一个。电器失灵先查对应保险丝（盒盖上有对照图），换上同安培数的即可。",
+  check:["某电器突然罢工 → 先查保险丝","换上又烧 → 线路有问题，别加大安培数硬扛"],
+  cycle:"——",price:"1–5 元/只",labor:"0 元（DIY）",tut:"tut-fuse"},
+obd:{name:"OBD 检测口",cat:"驾驶舱 · 电气",sys:"elec",
+  desc:"方向盘左下方的 16 针接口，插 OBD 检测仪（蓝牙款 30–80 元配手机 App）可自己读/清故障码，修车不被忽悠的第一步。",
+  check:["发动机故障灯亮 → 先读码再决定去不去修"],cycle:"——",price:"检测仪 30–80 元",labor:"0 元"},
+dash:{name:"仪表盘警示灯",cat:"驾驶舱",sys:"elec",
+  desc:"红灯 = 立即停车检查（机油压力、水温、刹车）；黄灯 = 尽快检修（发动机、胎压、ABS）；绿/蓝 = 状态提示。",
+  check:["机油压力红灯亮：立刻熄火，查机油","胎压黄灯：查四轮胎压，补到标准后复位"],
+  cycle:"——",price:"——",labor:"——"},
+catalyst:{name:"三元催化器",cat:"底盘 · 排气",sys:"engine",
+  desc:"净化尾气。堵塞症状：加速无力、油耗高、尾气臭鸡蛋味。长期加劣质油、烧机油会毁三元。",
+  check:["年检尾气不过","排气异响（内部碎裂）"],cycle:"正常 10 万 km 以上",price:"1500–3000 元（原厂更贵）",labor:"200–500 元"},
+exhaust:{name:"排气管 / 消音器",cat:"底盘 · 排气",sys:"engine",
+  desc:"尾段潮湿易锈。烂穿后会明显变吵。吊装胶垫老化会导致排气晃动异响。",
+  check:["排气声变大","怠速时底盘「突突」共振"],cycle:"——",price:"尾段 300–800 元；吊耳胶垫 10–30 元/个",labor:"100–300 元"},
+suspension:{name:"减震器 / 悬挂",cat:"底盘",sys:"susp",
+  desc:"减震漏油或老化：过坎「哐当」、车身余震多、轮胎偏磨。按压车头松手，回弹超过 1–2 次就该查了。",
+  check:["减震筒渗油","过减速带松散异响","高速发飘"],
+  cycle:"8–10 万 km 检查",price:"减震器 300–800 元/支",labor:"150–300 元/支（换完做四轮定位）"},
+trans_oil:{name:"变速箱油",cat:"底盘 · 传动",sys:"fluid",
+  desc:"CS75 自动挡多为爱信 6AT/8AT（年款不同）。重力换油换得少但便宜，循环机换得彻底但贵。",
+  check:["换挡顿挫加剧","冷车挂挡延迟"],cycle:"4–6 万 km（以手册为准）",price:"重力 300–500 元；循环机 600–1000 元",labor:"含在上价内",
+  note:"千万别信「终身免维护」就不换，变速箱大修 5000 元起步。"},
+engine:{name:"发动机本体（1.5T/2.0）",cat:"发动机舱",sys:"engine",
+  desc:"长安蓝鲸系列。日常注意：冷启动后缓行热车、涡轮车跑完高速怠速 1 分钟再熄火、按时换机油。积碳多了可做清洗（200–500 元）。",
+  check:["烧机油（尾气蓝烟、机油消耗快）","异响、抖动"],cycle:"按保养周期",price:"积碳清洗 200–500 元",labor:"——"},
+fuel:{name:"油箱 / 燃油系统",cat:"外观 · 车身",sys:"fluid",
+  desc:"CS75 加 92# 即可（油箱盖内侧有标注）。油量灯亮再跑 30–50km 没问题，但常开到见底伤油泵（靠汽油散热）。",
+  check:["加油跳枪频繁（碳罐问题）","油味大（查碳罐/管路）"],cycle:"燃油滤清器 2–4 万 km（年款不同有差异）",price:"汽油滤 50–150 元",labor:"50–150 元"},
+radar:{name:"倒车雷达 / 影像",cat:"电气",sys:"elec",
+  desc:"后保险杠上的圆点是雷达探头。某个探头被泥糊住会误报或失灵，先擦洗干净再怀疑坏了。",
+  check:["误报 → 先清洁探头","影像模糊 → 擦摄像头"],cycle:"——",price:"探头 50–150 元/个",labor:"50–150 元"},
+trunk:{name:"后备箱 / 随车工具",cat:"车身",sys:"body",
+  desc:"备胎（部分年款为非全尺寸/补胎工具包）、千斤顶、三角警示牌、拖车钩一般都在后备箱底板下。定期检查备胎胎压，用的时候才不会抓瞎。",
+  check:["备胎胎压每半年查一次","三角牌、千斤顶是否齐全"],cycle:"——",price:"备胎 300–600 元；千斤顶+扳手 100–200 元",labor:"——"},
+bumper:{name:"保险杠",cat:"外观",sys:"body",
+  desc:"塑料件，小刮蹭抛光即可（100–200 元）；剐蹭露底补漆 300–500 元/面；裂了可塑焊修复，不必急着换总成。",
+  check:["卡扣松脱可单独换卡扣（几块钱）"],cycle:"——",price:"补漆 300–500 元/面；总成 800–2000 元",labor:"含喷漆工时"},
+
+/* ---------- 新增：侧面 ---------- */
+door_handle:{name:"车门把手",cat:"外观 · 车身",sys:"body",
+  desc:"外拉手，高配带无钥匙进入感应区。拉手松垮、不回位多为内部拉线/卡爪磨损；无钥匙进入失灵先换钥匙电池（CR2032，5–15 元）再怀疑拉手模块。",
+  check:["拉手松垮、回位无力","无钥匙感应时灵时不灵（先换钥匙电池）"],
+  cycle:"坏了再换",price:"拉手总成 80–250 元/个；感应拉手 200–500 元",labor:"50–150 元（需拆门饰板）"},
+window_seal:{name:"车窗密封条 / 玻璃泥槽",cat:"外观 · 易损件",sys:"body",
+  desc:"玻璃四周的橡胶条，防风噪、防漏水、引导玻璃升降。老化发硬后高速风噪变大、升降玻璃「吱吱」响、洗车漏水。",
+  check:["高速 80km/h 以上口哨风噪","玻璃升降卡顿异响","雨后门框内积水"],
+  cycle:"5–8 年或老化即换",price:"30–100 元/条（四门一套 150–400 元）",labor:"0–80 元（外压条可 DIY）"},
+roof_rack:{name:"车顶行李架",cat:"外观 · 车身",sys:"body",
+  desc:"纵轨式行李架，装饰为主。装行李箱/横杆前查手册承重（一般动态 50–75kg），螺丝固定的比胶粘的靠谱。",
+  check:["纵轨两端饰盖丢失/开裂","固定螺丝松动、底座渗水"],
+  cycle:"——",price:"加装横杆 200–600 元；行李箱 800–2500 元",labor:"100–300 元"},
+sunroof:{name:"天窗",cat:"外观 · 车身",sys:"body",
+  desc:"天窗本身很少坏，出问题 90% 是排水孔堵：水从 A 柱流下，顶棚水渍、地毯积水。每半年清理导轨泥沙并倒水测试排水。",
+  check:["开关卡顿、异响（导轨缺润滑）","雨后顶棚/地毯水渍（排水孔堵）"],
+  cycle:"每半年清理排水孔、润滑导轨",price:"密封条 100–300 元；电机/总成 800–2000 元",labor:"清理 DIY 0 元；换件工时 200–600 元",
+  tut:"tut-sunroof",
+  note:"导轨润滑用硅脂，别用黄油（粘灰更严重）。"},
+wheel_rim:{name:"轮毂",cat:"行走系统",sys:"susp",
+  desc:"铝合金 17/18 英寸。过坑撞击后可能失圆（高速方向盘抖、动平衡怎么都做不好）；边缘刮伤可修复翻新。",
+  check:["高速抖动、动平衡反复超标（失圆）","裂纹、变形（必须换）","剐蹭可修复，不必换新"],
+  cycle:"坏了再换",price:"修复翻新 200–400 元/只；副厂新件 400–800 元/只；原厂 800–1500 元/只",labor:"含换胎工时"},
+brake_disc:{name:"刹车盘 + 卡钳",cat:"制动系统",sys:"brake",
+  desc:"刹车盘有最小厚度（刻在盘缘，以实车为准），磨损到限必须换；刹车时方向盘抖多为盘面变形，可「光盘」车削修复。卡钳导向销缺油会导致偏磨。",
+  check:["刹车抖动（光盘 50–100 元/只试修）","盘面沟槽深、边缘凸棱高","卡钳回位不良（单轮发烫、偏磨）"],
+  cycle:"6–10 万 km（约为两套刹车片的寿命）",price:"刹车盘 200–500 元/只；卡钳总成 400–900 元/只",labor:"100–300 元"},
+fender_liner:{name:"轮拱内衬 / 挡泥板",cat:"外观 · 小件",sys:"body",
+  desc:"轮拱内的塑料护板，挡泥沙、防石击、降胎噪。烂洞后泥水会甩进发动机舱和车灯后背，卡扣断了换卡扣即可。",
+  check:["内衬破洞、脱落","行驶中轮拱内「哗啦」异响"],
+  cycle:"坏了再换",price:"内衬 50–150 元/只；挡泥板 30–80 元/套；卡扣几块钱",labor:"20–80 元"},
+side_step:{name:"侧裙 / 迎宾踏板",cat:"外观 · 车身",sys:"body",
+  desc:"SUV 离地高，加装侧踏板方便老人小孩上下车，也能挡部分侧面剐蹭。注意：会降低一点通过性，劣质支架生锈异响。",
+  check:["支架松动、踩踏异响","固定点生锈"],
+  cycle:"——",price:"加装踏板 300–1000 元/套（电动款 2000+）",labor:"100–300 元"},
+door_beam:{name:"车门防撞梁",cat:"车身 · 被动安全",sys:"body",
+  desc:"藏在车门内饰板里的高强度钢管/冲压件，侧面碰撞时保护乘员。用户平时接触不到，事故维修时确认没被「以修代换」即可。",
+  check:["侧碰事故后检查是否变形","车门开关顺畅度（变形会导致门框错位）"],
+  cycle:"——",price:"200–500 元/根（一般含在事故维修内）",labor:"随车门维修",
+  note:"属于结构安全件，维修必须去正规店，勿用副厂劣质件。"},
+fender:{name:"翼子板",cat:"外观 · 车身",sys:"body",
+  desc:"前轮上方的覆盖件。剐蹭凹陷优先钣金修复（保留原车漆），只有撕裂、锈穿才换。",
+  check:["剐蹭露底漆尽快处理（防锈）","轮眉塑料饰板可单换"],
+  cycle:"——",price:"钣金喷漆 300–600 元/面；总成 500–1200 元",labor:"含喷漆工时"},
+
+/* ---------- 新增：正面 ---------- */
+grille:{name:"中网 / 车标",cat:"外观 · 前脸",sys:"body",
+  desc:"塑料电镀/钢琴烤漆件，高速石子击打易裂。注意：车标背面常固定 ACC 雷达或前摄像头，拆装中网别硬拽线束。",
+  check:["格栅断裂、电镀层起泡","车标松动（里面可能有雷达/摄像头线束）"],
+  cycle:"坏了再换",price:"中网 200–600 元；车标 30–100 元",labor:"50–200 元"},
+acc_radar:{name:"ACC 毫米波雷达",cat:"电气 · 驾驶辅助",sys:"elec",
+  desc:"自适应巡航/主动刹车的「眼睛」，藏在前杠内（车标后方或下格栅处）。前杠碰撞、拆装后必须重新校准，否则误刹或不刹。",
+  check:["仪表 ACC/预碰撞故障灯","自适应巡航无法激活"],
+  cycle:"——",price:"雷达 1000–3000 元（原厂，以实车配置为准）",labor:"校准 200–500 元",
+  note:"别在雷达覆盖区域贴车贴/加装牌照架，会干扰信号。"},
+drl:{name:"日间行车灯",cat:"灯光",sys:"elec",
+  desc:"LED 灯带，集成在大灯总成内（灯眉位置）。白天自动点亮提高辨识度。局部不亮部分年款可单换驱动模块，多数需换总成。",
+  check:["灯带局部发暗/不亮","大灯进水起雾（会烧 LED 驱动）"],
+  cycle:"坏了再换",price:"驱动模块 100–400 元；随大灯总成 800–2000 元",labor:"100–300 元"},
+fog_light:{name:"前雾灯",cat:"灯光",sys:"elec",
+  desc:"前杠两侧的低位灯，雨雾天穿透力强。卤素灯泡可 DIY 更换；改装高亮 LED 注意别刺眼违规。",
+  check:["单侧不亮（先查保险丝）","灯罩破裂进水"],
+  cycle:"坏了即换",price:"灯泡 20–60 元/只；总成 150–400 元/只",labor:"0–100 元"},
+wiper_arm:{name:"雨刮臂",cat:"外观 · 易损件",sys:"body",
+  desc:"换新雨刮片还是刮不净？可能是雨刮臂弹簧老化、下压力不足，或臂杆角度歪了（可用扳手微调）。",
+  check:["新片仍刮不净、跳动","雨刮臂回位后翘起不贴玻璃"],
+  cycle:"坏了再换",price:"50–150 元/支",labor:"0–50 元（DIY 可换，注意别弹回打玻璃）"},
+hood:{name:"发动机舱盖（机盖）",cat:"外观 · 车身",sys:"body",
+  desc:"撑杆老化机盖会「塌腰」，换撑杆是最简单 DIY 之一。铰链和活动部位每年抹一次润滑脂；机盖锁扣定期紧固。",
+  check:["机盖举不住、缓降（换撑杆）","开关生涩（润滑铰链）"],
+  cycle:"撑杆 5–8 年",price:"撑杆 50–150 元/对",labor:"0–50 元（DIY）"},
+front_cam:{name:"前视摄像头",cat:"电气 · 驾驶辅助",sys:"elec",
+  desc:"360 全景影像的前摄像头，一般在中网车标附近。画面模糊先擦镜头；前杠拆装后全景画面拼接错位需要重新标定。",
+  check:["全景影像前方模糊/黑屏","拼接画面错位（需标定）"],
+  cycle:"——",price:"150–600 元（以实车配置为准）",labor:"100–300 元（标定另计 100–300 元）"},
+tow_cover:{name:"拖车钩盖板",cat:"外观 · 小件",sys:"body",
+  desc:"前杠上的小方盖，用钥匙/卡片撬开就能看到拖车螺纹孔，旋入随车拖车钩（在后备箱工具包）即可拖车。",
+  check:["盖板卡扣断裂丢失（可单配）"],
+  cycle:"——",price:"盖板 20–50 元",labor:"0 元（DIY）",
+  note:"拖车时软绳/硬杠固定牢靠，被拖车挂 N 挡、松手刹。"},
+
+/* ---------- 新增：尾部 ---------- */
+third_brake:{name:"高位刹车灯",cat:"灯光",sys:"elec",
+  desc:"尾翼内的 LED 灯带，位置高、识别度强，刹车灯不全亮会被处罚。部分年款可单换灯板，多数随尾翼总成。",
+  check:["踩刹车让家人在后看是否全亮","灯带进水汽"],
+  cycle:"坏了再换",price:"100–400 元（以年款为准）",labor:"50–150 元"},
+rear_glass:{name:"后风挡玻璃",cat:"外观 · 玻璃",sys:"body",
+  desc:"带电热除雾丝。贴膜、放吸盘摆件时别划伤电热丝；后雨刮臂弹回最容易砸裂它，换后雨刮片时垫毛巾。",
+  check:["除雾局部不热（电热丝断，可导电银漆修补）","裂纹扩散及时换"],
+  cycle:"坏了再换",price:"500–1200 元（含玻璃胶，以实车为准）",labor:"含工时"},
+light_bar:{name:"贯穿式尾灯",cat:"灯光",sys:"elec",
+  desc:"CS75 PLUS 的标志性设计，尾门正中一条 LED 灯带。局部不亮多为灯板/驱动问题，多数情况需换总成。",
+  check:["灯带局部断亮","灯罩内水汽凝结"],
+  cycle:"坏了再换",price:"800–1800 元（总成，以年款为准）",labor:"100–300 元"},
+shark_fin:{name:"鲨鱼鳍天线",cat:"电气 · 小件",sys:"elec",
+  desc:"车顶尾部的小鳍，集成 FM/AM、GPS 天线。收音机信号差、导航定位飘先检查它是否松动进水。逆时针拧下即可更换。",
+  check:["收音机杂音变大","过自动洗车机后松动"],
+  cycle:"坏了再换",price:"30–100 元",labor:"0 元（DIY，手拧）"},
+rear_cam:{name:"后视摄像头",cat:"电气 · 驾驶辅助",sys:"elec",
+  desc:"牌照上方的倒车影像摄像头。画面模糊 90% 是镜头脏了，先擦；进水起雾、夜视雪花多才需要换。",
+  check:["影像模糊（先擦镜头）","画面发黑/花屏"],
+  cycle:"——",price:"150–500 元",labor:"100–300 元"},
+reflector:{name:"后反光条（回复反射器）",cat:"灯光 · 被动安全",sys:"body",
+  desc:"后杠两侧的红色反光片，夜间被后车灯光照亮时反射提示车宽，纯被动安全件。碎了及时换，很便宜。",
+  check:["碎裂、脱落"],
+  cycle:"坏了再换",price:"20–60 元/只",labor:"0–30 元"},
+trunk_strut:{name:"后备箱液压撑杆",cat:"车身 · 易损件",sys:"body",
+  desc:"SUV 尾门重，靠两根液压撑杆举升。老化后尾门举不到顶、缓缓下坠，冬天更明显。DIY 可换：撑住尾门，撬开两头卡簧拔下即可。",
+  check:["尾门举不高、自动缓降","开尾门「吱」声"],
+  cycle:"3–5 年",price:"60–200 元/对",labor:"0–50 元（DIY 10 分钟）"},
+
+/* ---------- 新增：发动机舱 ---------- */
+dipstick:{name:"机油尺",cat:"发动机舱 · 检查点",sys:"fluid",
+  desc:"发动机侧面的黄色/橙色拉环。每月查一次：冷车平地，抽出擦净、插到底再抽出，油膜在 MIN–MAX 之间即正常。",
+  check:["液位低于 MIN → 补同型号机油（每次 0.5L 少量多次）","机油乳化发白/有汽油味 → 尽快检修"],
+  cycle:"每月自查一次",price:"机油尺 20–50 元（丢失更换）",labor:"0 元",
+  tut:"tut-dipstick"},
+turbo:{name:"涡轮增压器",cat:"发动机 · 增压系统",sys:"engine",
+  desc:"1.5T 的动力核心，靠废气驱动，转速可达十几万转。怕两件事：冷车大油门（机油没上来）和跑完高速立刻熄火（热量散不掉）。",
+  check:["动力明显下降、加速「哨声」变大","烧机油、进气管内有油渍","急加速冒蓝烟"],
+  cycle:"正常使用 10 万 km 以上，坏在习惯",price:"1500–4000 元（品牌/原厂，以实车为准）",labor:"500–1000 元",
+  note:"涡轮车跑完高速/山路，怠速 1 分钟再熄火，让涡轮降温。"},
+ignition_coil:{name:"点火线圈",cat:"发动机 · 点火",sys:"engine",
+  desc:"每缸一个，插在火花塞上方。坏一个就缺缸：怠速狂抖、加速无力、故障灯闪烁。可与邻缸对调验证（故障跟着线圈走就是它）。",
+  check:["怠速抖动、故障灯亮/闪","加速顿挫无力"],
+  cycle:"6–10 万 km（常与火花塞同换）",price:"80–250 元/支",labor:"50–150 元"},
+alternator:{name:"发电机",cat:"发动机 · 电气",sys:"elec",
+  desc:"发动机运转时发电并给电瓶充电。怠速电压约 13.8–14.5V 为正常；轴承老化会「啸叫」，碳刷磨损则发电不足。",
+  check:["仪表电瓶灯亮（行驶中亮 = 不发电）","怠速「吱吱/嗡嗡」随转速变化","电瓶频繁亏电（先查它再换电瓶）"],
+  cycle:"10 万 km 以上检查",price:"600–1500 元（再制造件更便宜）",labor:"200–400 元"},
+ac_compressor:{name:"空调压缩机",cat:"发动机 · 空调",sys:"elec",
+  desc:"空调制冷的动力源，皮带驱动。不制冷先查漏冷媒（最常见），别一上来就换压缩机。冬季每月开一次 AC 10 分钟，防止内部密封老化。",
+  check:["AC 打开无「咔哒」吸合声","制冷差（先测冷媒压力）","皮带侧异响"],
+  cycle:"坏了再换",price:"800–2000 元（以实车为准）",labor:"300–600 元（含抽真空加冷媒）"},
+belt:{name:"发电机皮带 / 张紧轮",cat:"发动机 · 传动",sys:"engine",
+  desc:"一根蛇形皮带带动发电机、水泵、空调压缩机。冷启动「吱吱」尖叫多为皮带老化打滑；张紧轮轴承响是「嗡嗡」连续声。建议皮带+张紧轮一起换。",
+  check:["冷启动/开 AC 时尖叫","皮带裂纹、掉渣（掀开看内侧）","张紧轮晃动、异响"],
+  cycle:"6–8 万 km",price:"皮带 80–200 元；张紧轮 100–300 元",labor:"100–200 元"},
+radiator_fan:{name:"电子冷却风扇",cat:"发动机 · 冷却",sys:"engine",
+  desc:"水箱后方的大风扇，水温高或开空调时自动启动。水温表偏高先停车看它转不转：不转查保险丝/继电器/电机，别硬开（拉缸大修 5000+）。",
+  check:["怠速水温升高但跑起来正常（风扇不转特征）","开空调风扇不转","风扇异响、扇叶破损"],
+  cycle:"坏了再换",price:"300–800 元（总成）",labor:"150–300 元"},
+condenser:{name:"空调冷凝器",cat:"发动机 · 空调",sys:"engine",
+  desc:"水箱前方的散热网，冷凝器脏堵（虫尸、柳絮）是空调不凉的常见原因。每年入夏前用低压水枪从内向外冲洗（高压会打歪散热片）。",
+  check:["空调制冷逐年变差","散热片糊满虫尸柳絮"],
+  cycle:"每年入夏前清洗检查",price:"清洗 0–50 元；更换 400–900 元",labor:"清洗 DIY 0 元；换件 200–400 元（含冷媒）"},
+abs_pump:{name:"ABS 泵 / ESP 模块",cat:"制动 · 电子控制",sys:"brake",
+  desc:"发动机舱里带一圈金属硬管的铝块。仪表 ABS/ESP 灯亮别急着换泵——八成是几十元的轮速传感器脏了或坏了，先读故障码。",
+  check:["ABS/ESP 故障灯亮 → 先 OBD 读码","急刹时踏板弹脚（正常介入，不是故障）"],
+  cycle:"——",price:"轮速传感器 50–150 元/只；泵总成 1500–4000 元",labor:"传感器 50–100 元；泵 300–500 元（需排空气）",
+  note:"先读码再换件，这个项目最容易被「小病大修」。"},
+strut_top:{name:"减震塔顶（顶胶/平面轴承）",cat:"悬挂 · 易损件",sys:"susp",
+  desc:"减震器顶端与车身的连接缓冲件。老化后打方向「咯噔」、过坎「哐当」。塔顶螺丝连接着预紧的弹簧，切勿自行拆卸（会弹出伤人）。",
+  check:["原地打方向「咯噔」响","过减速带前舱松散发散"],
+  cycle:"8 万 km 左右检查",price:"顶胶 50–150 元/只；平面轴承 50–120 元",labor:"100–200 元/侧",
+  note:"拆装必须压弹簧，交给店里做，别 DIY。"},
+wiper_motor:{name:"雨刮电机 / 连杆机构",cat:"电气",sys:"elec",
+  desc:"藏在风挡下沿集雨板内。雨刮不动先查保险丝；能动但回不去原位、刮程变乱多为连杆机构松旷或电机回位触点问题。",
+  check:["雨刮完全不动作（先查保险丝）","停机位置不对、刮程异常","电机空转（连杆脱开）"],
+  cycle:"坏了再换",price:"电机 200–500 元；连杆总成 100–300 元",labor:"100–200 元"},
+intake_pipe:{name:"进气管路",cat:"发动机 · 进气",sys:"engine",
+  desc:"空滤盒到节气门的管路。裂纹、卡箍松脱会让未过滤的灰尘直接进入发动机，还会造成怠速不稳、加速「吹口哨」。",
+  check:["怠速不稳、加速有哨音","管壁裂纹、卡箍松旷"],
+  cycle:"每次保养顺手捏一捏检查",price:"100–300 元/段",labor:"50–150 元"},
+
+/* ---------- 新增：驾驶舱 ---------- */
+steering:{name:"方向盘（含安全气囊）",cat:"驾驶舱 · 安全",sys:"body",
+  desc:"带多功能按键和主驾安全气囊。喇叭不响、多功能键集体失灵多为「游丝（时钟弹簧）」断了。气囊相关拆装务必断电并交给专业店。",
+  check:["喇叭+多功能键同时失灵（查游丝）","气囊故障灯亮"],
+  cycle:"——",price:"游丝 100–300 元；方向盘总成 800–2000 元",labor:"100–400 元",
+  note:"方向盘正中是气囊，勿自行撬盖、勿在气囊区域粘装饰。"},
+pedal:{name:"油门 / 刹车踏板",cat:"驾驶舱",sys:"brake",
+  desc:"电子油门无拉线，踏板内含位置传感器。刹车踏板「软、行程长」查刹车油和刹车片；急刹时踏板弹脚抖动是 ABS 正常工作。",
+  check:["油门迟滞、加速不平顺","刹车踏板软/低（查制动系统，别拖）"],
+  cycle:"——",price:"油门踏板总成 200–500 元",labor:"100–300 元"},
+epb:{name:"电子手刹（EPB）",cat:"制动 · 驻车",sys:"brake",
+  desc:"取代机械手刹的按钮，部分年款挂 P 挡自动拉起。换后刹车片时必须用诊断电脑把电机收回，硬压会烧电机。",
+  check:["驻车制动力不足、坡道溜车","EPB 故障灯亮"],
+  cycle:"——",price:"开关 80–200 元；制动钳电机 300–800 元/只",labor:"100–300 元",
+  note:"带 EPB 的后轮刹车片 DIY 门槛高，建议店里换。"},
+seat:{name:"座椅",cat:"驾驶舱 · 车身",sys:"body",
+  desc:"高配电动调节。前后调节卡滞先清理导轨异物（硬币、发卡最常见）再润滑。儿童座椅 ISOFIX 接口在靠背与坐垫缝隙内。",
+  check:["电动调节失灵（先查保险丝和导轨异物）","导轨异响（清洁+润滑）"],
+  cycle:"——",price:"调节电机 200–600 元；总成 1500–4000 元",labor:"100–300 元"},
+seatbelt:{name:"安全带",cat:"驾驶舱 · 被动安全",sys:"body",
+  desc:"每月拉一次做「猛拉锁止」测试：快速拽应立刻锁死。碰撞后预紧器触发过必须更换总成。卡扣掉进 crumbs 异物会插不上。",
+  check:["猛拉不锁止（必须换）","回收无力、织带发硬起毛","卡扣插入困难（清异物）"],
+  cycle:"事故后必换；平时坏了即换",price:"总成 300–800 元/套",labor:"100–300 元"},
+rearview:{name:"内后视镜",cat:"驾驶舱",sys:"body",
+  desc:"手动/自动防眩目。底座粘胶脱落可用专用后视镜胶重粘（普通 502 不行）。调整时握住底座，别直接掰镜面。",
+  check:["夜间后车大灯眩目（拨防眩目杆/自动款查传感器）","镜面松动脱落"],
+  cycle:"坏了再换",price:"专用胶 20–50 元；总成 100–400 元",labor:"0–100 元"},
+sun_visor:{name:"遮阳板",cat:"驾驶舱 · 小件",sys:"body",
+  desc:"带化妆镜和照明（高配）。可以翻转到侧窗挡侧面阳光——很多人不知道。卡扣断了可单换卡扣。",
+  check:["翻转卡不住、下垂","卡扣断裂"],
+  cycle:"坏了再换",price:"50–200 元/只；卡扣 5–20 元",labor:"0–50 元（DIY）"},
+reading_light:{name:"阅读灯 / 顶棚灯",cat:"驾驶舱 · 电气",sys:"elec",
+  desc:"前排车顶的阅读灯与车内照明。卤素款可换同尺寸 LED（更亮更省电）。关门后常亮不灭查门控开关和延时设置。",
+  check:["个别不亮（换灯泡/灯板）","关门常亮（查门控开关）"],
+  cycle:"坏了再换",price:"LED 灯泡 20–50 元；总成 100–300 元",labor:"0–100 元"},
+usb_port:{name:"点烟器 / USB 充电口",cat:"驾驶舱 · 电气",sys:"elec",
+  desc:"点烟器座最大支持约 120W，别接大功率逆变器。不通电先查保险丝（最常见的烧了）；USB 口松动接触不良可换模块。",
+  check:["不通电 → 查保险丝","USB 充电断断续续（换模块）"],
+  cycle:"——",price:"USB 模块 30–100 元；点烟器座 20–60 元",labor:"0–100 元"},
+window_switch:{name:"车窗升降按键",cat:"驾驶舱 · 电气",sys:"elec",
+  desc:"主驾总控四门。单个车窗失灵先查该门开关，再查升降电机。断电换电瓶后一键升降失效属正常：拉住按键升到顶保持 10 秒重新初始化。",
+  check:["某窗失灵（对调开关验证）","一键升降失效（重新初始化）"],
+  cycle:"坏了再换",price:"主驾总控 100–300 元；单门开关 30–80 元",labor:"50–150 元"},
+air_vent:{name:"空调出风口",cat:"驾驶舱",sys:"body",
+  desc:"叶片断了可单换出风口总成。调风向时「咔咔」响是风向伺服电机齿轮打滑（常见小毛病，不影响制冷）。",
+  check:["叶片断裂、风向调不动","调风向「咔咔」异响"],
+  cycle:"坏了再换",price:"出风口总成 50–200 元；伺服电机 50–150 元",labor:"50–200 元"},
+
+/* ---------- 新增：底盘 ---------- */
+oil_pan:{name:"油底壳",cat:"发动机 · 下部",sys:"engine",
+  desc:"发动机最底部的机油储存壳，走烂路易被托底磕碰。每次换机油让师傅检查放油螺丝垫片（几毛钱的东西，不换易渗油）。",
+  check:["停车地面有油渍","放油螺丝渗油（换垫片）","托底后检查变形"],
+  cycle:"每次换机油时检查",price:"放油垫片 5–20 元；油底壳总成 200–500 元",labor:"100–300 元"},
+half_shaft:{name:"传动半轴（球笼）",cat:"底盘 · 传动",sys:"susp",
+  desc:"把动力传到前轮。球笼防尘套破裂会甩油进泥沙——此时换套几十元就能解决；拖到转弯「咔咔」响，就得换整根半轴了。",
+  check:["打死方向起步「咔咔」响（外球笼）","防尘套破裂甩油（立刻换套）"],
+  cycle:"防尘套每次保养检查",price:"防尘套修理包 30–80 元/套；半轴总成 300–800 元/根",labor:"换套 80–150 元；换总成 150–300 元",
+  note:"防尘套破裂是「小病快治」的典型案例，别拖。"},
+control_arm:{name:"下摆臂 / 控制臂球头",cat:"底盘 · 悬挂",sys:"susp",
+  desc:"连接车轮与副车身的三角形摆臂，球头和胶套是易损点。症状：过坎「咯噔」、刹车点头跑偏、方向变贼。",
+  check:["颠簸路前舱「咯噔」响","轮胎偏磨","举升机撬棍检查球头松旷"],
+  cycle:"8–10 万 km 检查",price:"球头 80–200 元/只；摆臂总成 200–500 元/根",labor:"100–250 元（换完做四轮定位）"},
+sway_link:{name:"防倾杆连杆（李子串）",cat:"底盘 · 悬挂",sys:"susp",
+  desc:"连接防倾杆与减震的小吊杆。低速过减速带「咚咚」闷响、车身松散感，多半是它球头松了——便宜好换，别被忽悠换减震。",
+  check:["低速颠簸「咚咚」响","过弯侧倾突然变大"],
+  cycle:"6–8 万 km 检查",price:"40–120 元/根",labor:"50–100 元"},
+o2_sensor:{name:"氧传感器",cat:"发动机 · 排气",sys:"engine",
+  desc:"三元催化前后各一只，监测排气氧含量修正喷油。故障后油耗升高、故障灯亮。可拆下来用化清剂浸泡清洗试试，不行再换。",
+  check:["发动机故障灯亮（读码确认）","油耗莫名升高 10%+"],
+  cycle:"8–10 万 km 检查",price:"150–400 元/只",labor:"50–150 元"},
+canister:{name:"碳罐（燃油蒸发回收）",cat:"底盘 · 燃油",sys:"engine",
+  desc:"回收油箱汽油蒸汽的活性炭罐，一般在油箱附近。症状很典型：加油频繁跳枪、打开油箱盖有「吸气声」、车内闻到汽油味。",
+  check:["加油总是跳枪","开油箱盖明显吸气声","车内/车尾汽油味"],
+  cycle:"——",price:"碳罐 100–300 元；电磁阀 80–200 元",labor:"50–150 元"},
+multilink:{name:"后多连杆悬挂",cat:"底盘 · 悬挂",sys:"susp",
+  desc:"后轮由多根连杆定位，操控和舒适性好于扭力梁。连杆胶套老化会导致后轮偏磨（吃胎）、尾部松散异响；换件后必须做四轮定位。",
+  check:["后轮内侧偏磨","过坎尾部「哐当」松散","直线行驶方向盘不正"],
+  cycle:"8 万 km 检查胶套",price:"胶套 30–100 元/个；连杆 150–400 元/根",labor:"100–300 元（含四轮定位 200–400 元）"},
+tie_rod:{name:"转向拉杆 / 外球头",cat:"底盘 · 转向",sys:"susp",
+  desc:"方向机到车轮的连接杆。球头松旷后方向盘虚位变大、过坎前轮「哐哐」。换完必须做四轮定位，否则吃胎。",
+  check:["方向盘自由行程变大","举升后左右晃车轮有松旷"],
+  cycle:"8–10 万 km 检查",price:"100–300 元/根",labor:"80–200 元（另加四轮定位）"},
+under_shield:{name:"底盘护板",cat:"底盘 · 防护",sys:"body",
+  desc:"发动机下方的护板，防托底和泥浆。原厂多为树脂/钢板，常走烂路可换锰钢或铝合金款。安装后注意固定牢靠，松动会共振异响。",
+  check:["护板螺丝缺失、松旷异响","托底后变形剐蹭油底壳"],
+  cycle:"——",price:"树脂 100–200 元；锰钢/铝 200–500 元",labor:"0–100 元（DIY 可装）"},
+};
+</script>
+
+<script>
+/* ================= DIY 教程 ================= */
+const TUTORIALS = [
+{id:"tut-washer",full:true,title:"💧 加注玻璃水（1 分钟搞定）",meta:"难度 ★☆☆☆☆ · 工具：无 · 花费：10–25 元",
+ steps:[
+  "车辆停平地、熄火。驾驶位左下方拉发动机舱盖开关（带机盖图案的拉手），听到「砰」一声。",
+  "到车头，手指伸进机盖缝隙，拨动二次锁扣，抬起机盖并用撑杆撑稳。",
+  "找到带「喷水💦」标志的加注盖（CS75 一般在发动机舱右前角，蓝色或黑色盖子）——认准图案，别加成冷却液或机油！",
+  "打开盖子，直接倒入玻璃水。瓶口不稳就插个漏斗（或把饮料瓶剪一半当漏斗）。加到接近满即可，一般能加 2–3L。",
+  "盖紧盖子，放下撑杆，机盖在距锁扣约 20cm 高度松手落下按紧。",
+  "上车通电，拨雨刮喷水开关（右侧拨杆向怀里拨）测试喷水是否正常。"],
+ warn:"⚠️ 冬季（气温可能低于 0℃）必须换防冻型玻璃水，按当地最低温选标号；旧水没用完也别混加太多自来水稀释，会降冰点。"},
+{id:"tut-wiper",full:true,title:"🌧️ 更换前雨刮片（5 分钟，U 型钩）",meta:"难度 ★★☆☆☆ · 工具：毛巾一条 · 花费：30–150 元",
+ steps:[
+  "买对尺寸：CS75 主驾约 24 英寸 + 副驾约 18 英寸（不同年款可能有差异，拆下旧片量长度最稳妥），接口选「U 型钩」。",
+  "（可选）维修模式：通电不打火，再断电，然后向下拨一下雨刮拨杆，雨刮会停在风挡中间方便操作；没有此功能的年款直接熄火后手动抬起雨刮臂。",
+  "在风挡上垫一条毛巾（防止雨刮臂弹回打裂玻璃！），把雨刮臂立起到垂直。",
+  "找到雨刮片与 U 型钩连接处的小卡扣，按住卡扣，同时把旧雨刮片向下一推/一滑，从钩子里脱出。",
+  "把新雨刮片的卡槽对准 U 型钩，向上推入，听到「咔哒」一声锁紧，轻拽确认不松脱。",
+  "把雨刮臂轻轻放回玻璃（先拿走毛巾）。副驾侧同样操作。",
+  "喷玻璃水试刮：无条纹、无异响即成功。刮不净先检查玻璃是否有油膜（可用油膜去除剂清洗）。"],
+ warn:"⚠️ 全程别让金属雨刮臂直接接触玻璃——弹回去可能把风挡打出裂纹，换玻璃要 800–2000 元！"},
+{id:"tut-dipstick",full:true,title:"🛢️ 检查机油尺（每月 2 分钟）",meta:"难度 ★☆☆☆☆ · 工具：纸巾/抹布 · 花费：0 元",
+ steps:[
+  "车停平地，熄火后等 5–10 分钟（让机油回流油底壳）。冷车最准。",
+  "打开发动机舱，找到发动机侧面的黄色/橙色拉环——那就是机油尺。",
+  "抽出机油尺，用纸巾擦干净。",
+  "重新插到底，再抽出来平举着看：油膜应在 MIN 与 MAX 两个刻度之间。",
+  "低于 MIN：打开机油加注盖（发动机装饰盖上的黑色旋盖），补同型号机油，每次 0.5L，等 1 分钟再测，少量多次。",
+  "顺便看油质：发黑正常；乳化发白（像奶茶）或有浓烈汽油味 → 尽快去检修。"],
+ warn:"⚠️ 机油加多比加少更伤车（增加曲轴阻力、可能烧机油），液位绝不超过 MAX。"},
+{id:"tut-coolant",full:true,title:"🧊 检查 / 添加防冻液（冷车操作）",meta:"难度 ★☆☆☆☆ · 工具：无 · 花费：0–60 元",
+ steps:[
+  "必须冷车！停车至少 30 分钟（热车开盖会被高温蒸汽烫伤）。",
+  "找到发动机舱里的半透明膨胀壶（壶身有 MIN/MAX 刻度，液体多为粉色或绿色）。",
+  "看液位：在 MIN–MAX 之间即正常。低于 MIN 才需要补。",
+  "补加时拧开壶盖，加到 MAX 刻度以下。必须用同颜色/同规格产品，不确定就买与原厂相同型号的。",
+  "应急没防冻液可加少量蒸馏水（不是自来水/矿泉水），事后尽快全换。",
+  "加完几天内留意液位是否再降：连续下降说明有渗漏，去店里查漏点。"],
+ warn:"⚠️ 不同颜色（粉/绿/蓝）配方不能混加，会产生沉淀堵水道；热车严禁开盖！"},
+{id:"tut-fuse",title:"⚡ 换保险丝",meta:"难度 ★☆☆☆☆ · 5 分钟 · 1–5 元",
+ steps:["电器失灵先看《用户手册》保险丝对照表，找到对应编号","打开发动机舱或驾驶舱保险盒（盖内侧也有对照图）","用盒内白色小夹子竖直拔出保险丝","对着光看：内部金属丝断了 = 烧了","换上同颜色同安培数的新保险丝（盒内一般有备用）","换上又烧 → 线路短路，去店里查，别加大安培数硬扛"],
+ warn:"⚠️ 严禁用铜丝/铁丝代替，严禁超安培数，会烧线束甚至自燃。"},
+{id:"tut-sunroof",title:"🪟 天窗排水孔清理",meta:"难度 ★★☆☆☆ · 15 分钟 · 0 元",
+ steps:["打开天窗，用湿布擦掉导轨上的泥沙","找到天窗导轨前角的两个排水孔（左右各一）","倒一小杯水进去，到车底看前轮后方是否顺畅流出","不出水 = 堵了：用软塑料条/电话线轻轻捅，或气枪低压吹","导轨涂一层硅脂润滑（别用黄油，粘灰）","顺便检查天窗密封条是否开裂"],
+ warn:"⚠️ 雨后顶棚水渍、地毯积水，八成是排水孔堵，别先去换天窗总成。"},
+{id:"tut-cabin",title:"🌬️ 换空调滤芯",meta:"难度 ★☆☆☆☆ · 5 分钟 · 40–120 元",
+ steps:["清空副驾手套箱，两侧向内挤压卡扣放下手套箱","抽出旧滤芯（记住方向箭头）","新滤芯按同样方向推入，装回手套箱"]},
+{id:"tut-air",title:"💨 换空气滤芯",meta:"难度 ★☆☆☆☆ · 3 分钟 · 30–80 元",
+ steps:["打开发动机舱，找到黑色塑料空滤盒","松开卡扣/螺丝打开上盖","换入新滤芯（注意正反面），扣紧盖子"]},
+{id:"tut-tire",title:"🛞 换备胎（应急）",meta:"难度 ★★★☆☆ · 20 分钟 · 0 元",
+ steps:["停平地、拉手刹、挂 P 挡、开双闪、车后放三角牌","先松半圈轮胎螺栓（不下地时松）","千斤顶顶在底盘指定支撑点，抬到轮胎离地","卸下螺栓换备胎，对角线顺序上紧","落地后再按规定扭矩紧一遍，尽快去补胎"]},
+{id:"tut-jump",title:"🔋 电瓶亏电搭电",meta:"难度 ★★☆☆☆ · 10 分钟 · 0 元",
+ steps:["红线接亏电车正极，再接救援车正极","黑线接救援车负极，再接亏电车发动机金属搭铁（别直接接负极）","救援车启动怠速几分钟，再启动亏电车","拆线顺序相反；搭电后跑 30 分钟以上给电瓶充电，频繁亏电就换电瓶"]},
+];
+</script>
+<script>
+/* ================= 六个视角的 SVG =================
+   hs(part,x,y[,label,dx,dy,anchor])：默认标签在圆点上方；给 dx,dy 时画引线并把标签放在偏移处 */
+function hs(part,x,y,label,dx,dy,anchor){
+  const nm=label||PARTS[part].name;
+  let inner=`<circle class="pulse" r="12"/><circle class="core" r="4.5"/>`;
+  if(dx!==undefined&&dy!==undefined){
+    inner+=`<line class="lead" x1="0" y1="0" x2="${dx*0.8}" y2="${dy*0.8}"/><text x="${dx}" y="${dy}" text-anchor="${anchor||"middle"}" dominant-baseline="central">${nm}</text>`;
+  }else{
+    inner+=`<text y="-21" text-anchor="middle">${nm}</text>`;
+  }
+  inner+=`<circle class="hit" r="26"/>`;
+  return `<g class="hotspot" data-part="${part}" transform="translate(${x},${y})">${inner}</g>`;
+}
+
+const VIEWS = [
+/* ========== 侧面外观 ========== */
+{id:"side",label:"🚙 侧面外观",svg:`
+<svg viewBox="0 0 940 560">
+<defs>
+  <linearGradient id="s_body" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#55677f"/><stop offset=".42" stop-color="#35455f"/><stop offset=".78" stop-color="#232f42"/><stop offset="1" stop-color="#1a2330"/>
+  </linearGradient>
+  <linearGradient id="s_glass" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#46638c"/><stop offset=".45" stop-color="#1a2c46"/><stop offset="1" stop-color="#0e1b2e"/>
+  </linearGradient>
+  <linearGradient id="s_chrome" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#f2f6fb"/><stop offset=".5" stop-color="#93a6bd"/><stop offset="1" stop-color="#dbe3ee"/>
+  </linearGradient>
+  <radialGradient id="s_tire" cx=".5" cy=".5" r=".55">
+    <stop offset=".6" stop-color="#1c232e"/><stop offset=".88" stop-color="#0b0f15"/><stop offset="1" stop-color="#28303d"/>
+  </radialGradient>
+  <radialGradient id="s_hub" cx=".42" cy=".36" r=".85">
+    <stop offset="0" stop-color="#d6dfea"/><stop offset=".55" stop-color="#8494a9"/><stop offset="1" stop-color="#3c4a5e"/>
+  </radialGradient>
+  <linearGradient id="s_tail" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#6e121c"/><stop offset="1" stop-color="#e04545"/>
+  </linearGradient>
+  <linearGradient id="s_head" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#dbe6f2"/><stop offset="1" stop-color="#5c7391"/>
+  </linearGradient>
+</defs>
+
+<!-- 地面与车影 -->
+<line x1="60" y1="472" x2="880" y2="472" stroke="#2a3646" stroke-width="2"/>
+<ellipse cx="470" cy="474" rx="350" ry="14" fill="rgba(0,0,0,.45)"/>
+<text x="836" y="60" fill="#9db0c3" font-size="14" text-anchor="middle">车头方向 →</text>
+
+<!-- 车身主轮廓（高离地间隙 SUV 剪影） -->
+<path fill="url(#s_body)" stroke="#5d7191" stroke-width="1.5" d="M108 428 L112 345 Q115 312 140 300 L168 246 Q176 226 200 220 L236 176 Q246 162 272 160 L622 160 Q648 162 660 174 L706 222 Q718 232 742 236 L792 246 Q812 252 815 272 L818 330 Q818 344 808 348 L812 400 Q810 424 786 428 L738 428 A68 68 0 0 0 602 428 L328 428 A68 68 0 0 0 192 428 L128 428 Q108 428 108 428 Z"/>
+<!-- 肩线高光与下方曲面 -->
+<path d="M132 302 L798 290" stroke="rgba(255,255,255,.22)" stroke-width="2" fill="none"/>
+<path d="M150 382 L782 372" stroke="rgba(0,0,0,.35)" stroke-width="2.5" fill="none"/>
+<path d="M120 330 L800 322" stroke="rgba(0,0,0,.12)" stroke-width="14" fill="none"/>
+
+<!-- 车顶行李架 -->
+<rect x="300" y="146" width="300" height="6" rx="3" fill="url(#s_chrome)" opacity=".85"/>
+<rect x="318" y="150" width="10" height="8" fill="#55677f"/><rect x="572" y="150" width="10" height="8" fill="#55677f"/>
+<!-- 天窗（侧面剪影） -->
+<rect x="468" y="161" width="120" height="5" rx="2.5" fill="#0e1b2e" stroke="#6f8db4" stroke-width=".8"/>
+
+<!-- 玻璃区域 -->
+<polygon points="255,168 638,168 698,226 686,246 282,246 218,240" fill="url(#s_glass)" stroke="#6f8db4" stroke-width="1.5"/>
+<!-- 玻璃高光 -->
+<polygon points="290,174 480,172 420,240 300,242" fill="rgba(255,255,255,.07)"/>
+<!-- A/B/C 柱 -->
+<polygon points="612,166 642,166 690,246 656,246" fill="#26334a"/>
+<rect x="468" y="168" width="20" height="80" fill="#26334a"/>
+<polygon points="332,166 358,166 344,246 320,246" fill="#26334a"/>
+<!-- 窗框镀铬条 -->
+<polyline points="258,166 640,166 696,226" fill="none" stroke="url(#s_chrome)" stroke-width="3.5"/>
+<line x1="285" y1="248" x2="685" y2="248" stroke="url(#s_chrome)" stroke-width="4"/>
+
+<!-- 车门缝与把手 -->
+<line x1="470" y1="252" x2="462" y2="424" stroke="rgba(0,0,0,.4)" stroke-width="2"/>
+<line x1="618" y1="252" x2="610" y2="420" stroke="rgba(0,0,0,.4)" stroke-width="2"/>
+<line x1="150" y1="252" x2="146" y2="420" stroke="rgba(0,0,0,.4)" stroke-width="2"/>
+<rect x="418" y="264" width="38" height="9" rx="4.5" fill="url(#s_chrome)" stroke="#2a3646" stroke-width=".8"/>
+<rect x="546" y="264" width="38" height="9" rx="4.5" fill="url(#s_chrome)" stroke="#2a3646" stroke-width=".8"/>
+
+<!-- 外后视镜 -->
+<polygon points="622,224 644,208 646,220 626,234" fill="#26334a"/>
+<rect x="634" y="194" width="32" height="22" rx="9" fill="url(#s_body)" stroke="#5d7191" stroke-width="1.2"/>
+<rect x="634" y="198" width="5" height="14" rx="2" fill="url(#s_glass)"/>
+
+<!-- 前后灯组侧面轮廓、转向灯 -->
+<polygon points="784,252 812,262 814,292 780,286" fill="url(#s_head)" stroke="#5d7191" stroke-width="1.2"/>
+<line x1="788" y1="260" x2="810" y2="268" stroke="#eaf4ff" stroke-width="2.5"/>
+<polygon points="112,252 142,248 146,288 114,292" fill="url(#s_tail)" stroke="#5d7191" stroke-width="1.2"/>
+<rect x="700" y="296" width="18" height="8" rx="4" fill="#d98a2b" stroke="#8a5a1a" stroke-width=".8"/>
+
+<!-- 油箱盖 -->
+<circle cx="188" cy="302" r="15" fill="none" stroke="#5d7191" stroke-width="1.5"/>
+<circle cx="188" cy="302" r="10" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+
+<!-- 轮拱描边 -->
+<path d="M600 428 A70 70 0 0 1 740 428" fill="none" stroke="#5d7191" stroke-width="3"/>
+<path d="M190 428 A70 70 0 0 1 330 428" fill="none" stroke="#5d7191" stroke-width="3"/>
+
+<!-- 侧踏板 / 侧裙 -->
+<rect x="345" y="428" width="250" height="13" rx="6" fill="#161d28" stroke="#3d4f68" stroke-width="1.2"/>
+<line x1="352" y1="431" x2="588" y2="431" stroke="rgba(255,255,255,.12)" stroke-width="1.5"/>
+
+<!-- 挡泥板 -->
+<rect x="186" y="432" width="14" height="26" rx="4" fill="#10151d"/>
+<rect x="722" y="432" width="14" height="26" rx="4" fill="#10151d"/>
+
+<!-- 车轮（刹车盘+卡钳+五辐轮毂） -->
+<g>
+  <circle cx="260" cy="415" r="55" fill="url(#s_tire)" stroke="#05080c" stroke-width="2"/>
+  <circle cx="260" cy="415" r="46" fill="none" stroke="#161c26" stroke-width="5"/>
+  <circle cx="260" cy="415" r="27" fill="#6b7686" stroke="#2a3342" stroke-width="2"/>
+  <rect x="276" y="398" width="13" height="26" rx="4" fill="#a03040"/>
+  <g stroke="url(#s_hub)" stroke-width="9" stroke-linecap="round">
+    <line x1="260" y1="415" x2="260" y2="380"/><line x1="260" y1="415" x2="293" y2="404"/>
+    <line x1="260" y1="415" x2="280" y2="445"/><line x1="260" y1="415" x2="240" y2="445"/>
+    <line x1="260" y1="415" x2="227" y2="404"/>
+  </g>
+  <circle cx="260" cy="415" r="34" fill="none" stroke="url(#s_hub)" stroke-width="5"/>
+  <circle cx="260" cy="415" r="7" fill="#1c2634" stroke="#8fa3ba" stroke-width="1.5"/>
+</g>
+<g>
+  <circle cx="670" cy="415" r="55" fill="url(#s_tire)" stroke="#05080c" stroke-width="2"/>
+  <circle cx="670" cy="415" r="46" fill="none" stroke="#161c26" stroke-width="5"/>
+  <circle cx="670" cy="415" r="27" fill="#6b7686" stroke="#2a3342" stroke-width="2"/>
+  <rect x="686" y="398" width="13" height="26" rx="4" fill="#a03040"/>
+  <g stroke="url(#s_hub)" stroke-width="9" stroke-linecap="round">
+    <line x1="670" y1="415" x2="670" y2="380"/><line x1="670" y1="415" x2="703" y2="404"/>
+    <line x1="670" y1="415" x2="690" y2="445"/><line x1="670" y1="415" x2="650" y2="445"/>
+    <line x1="670" y1="415" x2="637" y2="404"/>
+  </g>
+  <circle cx="670" cy="415" r="34" fill="none" stroke="url(#s_hub)" stroke-width="5"/>
+  <circle cx="670" cy="415" r="7" fill="#1c2634" stroke="#8fa3ba" stroke-width="1.5"/>
+</g>
+
+${hs("roof_rack",382,143)}
+${hs("sunroof",528,158)}
+${hs("mirror",650,205,"后视镜",34,-16,"start")}
+${hs("window_seal",400,206,"车窗密封条")}
+${hs("door_handle",566,268,"车门把手",10,-36)}
+${hs("door_beam",522,345,"车门防撞梁",0,44)}
+${hs("wiper",702,228,"前雨刮",30,-10,"start")}
+${hs("fender",758,266,"翼子板",26,-26,"start")}
+${hs("fuel",188,302,"油箱盖",-30,-18,"end")}
+${hs("taillight",126,268,"尾灯",-28,-10,"end")}
+${hs("rear_wiper",228,200,"后雨刮",-26,-20,"end")}
+${hs("fender_liner",206,382,"轮拱内衬",-30,4,"end")}
+${hs("tire",230,448,"轮胎",-22,32,"end")}
+${hs("brake_pad",290,402,"刹车片",32,-10,"start")}
+${hs("wheel_rim",670,415,"轮毂",0,58)}
+${hs("brake_disc",700,398,"刹车盘/卡钳",36,-16,"start")}
+${hs("side_step",470,434,"侧踏板",0,42)}
+${hs("exhaust",150,452,"排气管",-16,32,"end")}
+</svg>`},
+/* ========== 正面视角 ========== */
+{id:"front",label:"🚗 正面视角",svg:`
+<svg viewBox="0 0 900 540">
+<defs>
+  <linearGradient id="f_body" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#55677f"/><stop offset=".5" stop-color="#33425c"/><stop offset="1" stop-color="#1c2634"/>
+  </linearGradient>
+  <linearGradient id="f_glass" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#425f88"/><stop offset=".5" stop-color="#17293f"/><stop offset="1" stop-color="#0e1b2e"/>
+  </linearGradient>
+  <linearGradient id="f_grille" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#202b3c"/><stop offset="1" stop-color="#101722"/>
+  </linearGradient>
+  <linearGradient id="f_chrome" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#f2f6fb"/><stop offset=".5" stop-color="#93a6bd"/><stop offset="1" stop-color="#dbe3ee"/>
+  </linearGradient>
+  <linearGradient id="f_lens" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#31435f"/><stop offset="1" stop-color="#141e2e"/>
+  </linearGradient>
+  <linearGradient id="f_led" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#bfe0ff"/><stop offset="1" stop-color="#eaf6ff"/>
+  </linearGradient>
+  <linearGradient id="f_plate" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#eef3f8"/><stop offset="1" stop-color="#c3cfdd"/>
+  </linearGradient>
+</defs>
+
+<ellipse cx="450" cy="512" rx="310" ry="12" fill="rgba(0,0,0,.45)"/>
+<line x1="120" y1="512" x2="780" y2="512" stroke="#2a3646" stroke-width="2"/>
+
+<!-- 外后视镜 -->
+<rect x="148" y="188" width="44" height="28" rx="11" fill="url(#f_body)" stroke="#5d7191" stroke-width="1.5"/>
+<rect x="150" y="193" width="8" height="18" rx="3" fill="url(#f_glass)"/>
+<polygon points="192,196 210,206 210,214 192,210" fill="#26334a"/>
+<rect x="708" y="188" width="44" height="28" rx="11" fill="url(#f_body)" stroke="#5d7191" stroke-width="1.5"/>
+<rect x="742" y="193" width="8" height="18" rx="3" fill="url(#f_glass)"/>
+<polygon points="708,196 690,206 690,214 708,210" fill="#26334a"/>
+
+<!-- 车身正面轮廓 -->
+<path fill="url(#f_body)" stroke="#5d7191" stroke-width="1.5" d="M205 490 L198 320 Q196 250 240 222 L288 138 Q302 112 338 108 L562 108 Q598 112 612 138 L660 222 Q704 250 702 320 L695 490 Q695 502 683 502 L217 502 Q205 502 205 490 Z"/>
+<path d="M212 300 L688 300" stroke="rgba(255,255,255,.14)" stroke-width="2"/>
+
+<!-- 风挡玻璃 -->
+<polygon points="296,124 604,124 652,210 248,210" fill="url(#f_glass)" stroke="#6f8db4" stroke-width="1.5"/>
+<polygon points="320,130 470,128 420,206 290,206" fill="rgba(255,255,255,.07)"/>
+<rect x="435" y="132" width="30" height="14" rx="4" fill="#141b26" stroke="#4a6079" stroke-width="1"/>
+<!-- 雨刮臂与刮片 -->
+<line x1="352" y1="216" x2="330" y2="196" stroke="#10151d" stroke-width="4" stroke-linecap="round"/>
+<line x1="296" y1="206" x2="402" y2="199" stroke="#10151d" stroke-width="6" stroke-linecap="round"/>
+<line x1="548" y1="216" x2="566" y2="197" stroke="#10151d" stroke-width="4" stroke-linecap="round"/>
+<line x1="496" y1="200" x2="604" y2="206" stroke="#10151d" stroke-width="6" stroke-linecap="round"/>
+
+<!-- 机盖前沿 -->
+<path d="M250 220 Q450 236 650 220" stroke="rgba(0,0,0,.35)" stroke-width="2.5" fill="none"/>
+
+<!-- 大灯（带灯眉日行灯与双透镜） -->
+<polygon points="215,240 324,248 318,304 228,296 212,268" fill="url(#f_lens)" stroke="#5d7191" stroke-width="1.5"/>
+<polyline points="224,252 316,259" fill="none" stroke="url(#f_led)" stroke-width="5" stroke-linecap="round"/>
+<circle cx="256" cy="276" r="14" fill="#22314a" stroke="#7f95b5" stroke-width="2"/>
+<circle cx="294" cy="279" r="10" fill="#22314a" stroke="#7f95b5" stroke-width="1.5"/>
+<polygon points="685,240 576,248 582,304 672,296 688,268" fill="url(#f_lens)" stroke="#5d7191" stroke-width="1.5"/>
+<polyline points="676,252 584,259" fill="none" stroke="url(#f_led)" stroke-width="5" stroke-linecap="round"/>
+<circle cx="644" cy="276" r="14" fill="#22314a" stroke="#7f95b5" stroke-width="2"/>
+<circle cx="606" cy="279" r="10" fill="#22314a" stroke="#7f95b5" stroke-width="1.5"/>
+
+<!-- 中网格栅 -->
+<path d="M330 250 L570 250 L586 342 L314 342 Z" fill="url(#f_grille)" stroke="url(#f_chrome)" stroke-width="3"/>
+<line x1="334" y1="256" x2="566" y2="256" stroke="url(#f_chrome)" stroke-width="5"/>
+<line x1="336" y1="272" x2="564" y2="272" stroke="#3a4b63" stroke-width="8" stroke-linecap="round"/>
+<line x1="338" y1="292" x2="562" y2="292" stroke="#3a4b63" stroke-width="8" stroke-linecap="round"/>
+<line x1="340" y1="312" x2="560" y2="312" stroke="#3a4b63" stroke-width="8" stroke-linecap="round"/>
+<line x1="342" y1="330" x2="558" y2="330" stroke="#3a4b63" stroke-width="6" stroke-linecap="round"/>
+<!-- 车标 V -->
+<polygon points="426,290 450,316 474,290 474,304 450,330 426,304" fill="url(#f_chrome)" stroke="#8fa3ba" stroke-width="1"/>
+<!-- 前视摄像头 -->
+<circle cx="450" cy="338" r="6" fill="#0c121b" stroke="#8fa3ba" stroke-width="1.5"/>
+<circle cx="450" cy="338" r="2.5" fill="#31517a"/>
+
+<!-- 保险杠与下部 -->
+<path d="M222 358 Q450 348 678 358" stroke="rgba(0,0,0,.3)" stroke-width="2" fill="none"/>
+<!-- 雾灯区 -->
+<rect x="260" y="368" width="76" height="54" rx="14" fill="#1b2431" stroke="#3d4f68" stroke-width="1.5"/>
+<circle cx="298" cy="395" r="16" fill="#2b3b52" stroke="#7f95b5" stroke-width="2"/>
+<circle cx="298" cy="395" r="7" fill="#425f88"/>
+<rect x="564" y="368" width="76" height="54" rx="14" fill="#1b2431" stroke="#3d4f68" stroke-width="1.5"/>
+<circle cx="602" cy="395" r="16" fill="#2b3b52" stroke="#7f95b5" stroke-width="2"/>
+<circle cx="602" cy="395" r="7" fill="#425f88"/>
+<!-- 下格栅 -->
+<rect x="378" y="362" width="144" height="66" rx="10" fill="#141c27" stroke="#3d4f68" stroke-width="1.5"/>
+<g stroke="#26313f" stroke-width="5">
+  <line x1="394" y1="368" x2="394" y2="422"/><line x1="412" y1="368" x2="412" y2="422"/>
+  <line x1="430" y1="368" x2="430" y2="422"/><line x1="470" y1="368" x2="470" y2="422"/>
+  <line x1="488" y1="368" x2="488" y2="422"/><line x1="506" y1="368" x2="506" y2="422"/>
+</g>
+<!-- ACC 雷达 -->
+<rect x="433" y="376" width="34" height="26" rx="4" fill="#0c121b" stroke="#4a6079" stroke-width="1.5"/>
+<path d="M442 384 a8 8 0 0 1 16 0" fill="none" stroke="#4a6079" stroke-width="1.5"/>
+<path d="M439 388 a12 12 0 0 1 22 0" fill="none" stroke="#4a6079" stroke-width="1.5"/>
+<!-- 车牌位 -->
+<rect x="388" y="438" width="124" height="36" rx="5" fill="url(#f_plate)" stroke="#3d4f68" stroke-width="1.5"/>
+<text x="450" y="462" fill="#5a6b80" font-size="15" text-anchor="middle" font-weight="700">渝 A · CS75</text>
+<!-- 拖车钩盖板 -->
+<rect x="578" y="442" width="30" height="26" rx="4" fill="#26334a" stroke="#3d4f68" stroke-width="1.2" stroke-dasharray="4 3"/>
+<!-- 下护板 -->
+<polygon points="360,482 540,482 520,502 380,502" fill="#3a4658" stroke="#55677f" stroke-width="1.2"/>
+<!-- 轮胎侧边 -->
+<rect x="192" y="472" width="32" height="40" rx="8" fill="#0c1016" stroke="#2a3646" stroke-width="1"/>
+<rect x="676" y="472" width="32" height="40" rx="8" fill="#0c1016" stroke="#2a3646" stroke-width="1"/>
+
+${hs("mirror",168,200,"后视镜",-28,-12,"end")}
+${hs("hood",640,224,"机盖",28,-8,"start")}
+${hs("wiper",340,196,"前雨刮",-30,-6,"end")}
+${hs("wiper_arm",556,196,"雨刮臂",0,-26)}
+${hs("nozzle",470,232,"喷水嘴",0,-24)}
+${hs("headlight",268,278,"前大灯",-32,0,"end")}
+${hs("drl",272,248,"日行灯",-26,-24,"end")}
+${hs("grille",450,296,"中网/车标",0,-32)}
+${hs("front_cam",450,338,"前摄像头",36,4,"start")}
+${hs("fog_light",298,395,"雾灯",-36,4,"end")}
+${hs("acc_radar",450,389,"ACC 雷达",44,-8,"start")}
+${hs("tow_cover",593,455,"拖车钩盖",30,4,"start")}
+${hs("bumper",300,470,"保险杠",-32,20,"end")}
+${hs("tire",208,488,"轮胎",-26,14,"end")}
+</svg>`},
+
+/* ========== 尾部视角 ========== */
+{id:"rear",label:"🚘 尾部视角",svg:`
+<svg viewBox="0 0 900 540">
+<defs>
+  <linearGradient id="r_body" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#55677f"/><stop offset=".5" stop-color="#33425c"/><stop offset="1" stop-color="#1c2634"/>
+  </linearGradient>
+  <linearGradient id="r_glass" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#425f88"/><stop offset=".5" stop-color="#17293f"/><stop offset="1" stop-color="#0e1b2e"/>
+  </linearGradient>
+  <linearGradient id="r_red" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#e05050"/><stop offset=".5" stop-color="#a01c28"/><stop offset="1" stop-color="#6e121c"/>
+  </linearGradient>
+  <linearGradient id="r_chrome" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#f2f6fb"/><stop offset=".5" stop-color="#93a6bd"/><stop offset="1" stop-color="#dbe3ee"/>
+  </linearGradient>
+  <linearGradient id="r_plate" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#eef3f8"/><stop offset="1" stop-color="#c3cfdd"/>
+  </linearGradient>
+</defs>
+
+<ellipse cx="450" cy="510" rx="300" ry="12" fill="rgba(0,0,0,.45)"/>
+<line x1="130" y1="510" x2="770" y2="510" stroke="#2a3646" stroke-width="2"/>
+
+<!-- 鲨鱼鳍天线 -->
+<path d="M438 88 L450 60 L462 88 Z" fill="url(#r_body)" stroke="#5d7191" stroke-width="1.5"/>
+<!-- 尾翼 + 高位刹车灯 -->
+<rect x="318" y="86" width="264" height="20" rx="9" fill="url(#r_body)" stroke="#5d7191" stroke-width="1.5"/>
+<rect x="360" y="91" width="180" height="9" rx="4.5" fill="#e04545"/>
+<rect x="360" y="91" width="180" height="9" rx="4.5" fill="none" stroke="#ff8a8a" stroke-width=".8"/>
+
+<!-- 车身尾部轮廓 -->
+<path fill="url(#r_body)" stroke="#5d7191" stroke-width="1.5" d="M208 486 L202 300 Q200 240 244 214 L292 132 Q306 108 340 104 L560 104 Q594 108 608 132 L656 214 Q700 240 698 300 L692 486 Q692 498 680 498 L220 498 Q208 498 208 486 Z"/>
+
+<!-- 后风挡玻璃 + 电热丝 -->
+<polygon points="300,116 600,116 644,204 256,204" fill="url(#r_glass)" stroke="#6f8db4" stroke-width="1.5"/>
+<g stroke="rgba(255,255,255,.12)" stroke-width="1.5">
+  <line x1="292" y1="138" x2="608" y2="138"/><line x1="282" y1="160" x2="620" y2="160"/><line x1="272" y1="182" x2="630" y2="182"/>
+</g>
+<polygon points="330,122 470,120 424,200 300,200" fill="rgba(255,255,255,.06)"/>
+<!-- 后雨刮 -->
+<circle cx="450" cy="200" r="5" fill="#10151d" stroke="#4a6079" stroke-width="1.2"/>
+<line x1="450" y1="200" x2="472" y2="172" stroke="#10151d" stroke-width="4" stroke-linecap="round"/>
+<line x1="442" y1="170" x2="502" y2="168" stroke="#10151d" stroke-width="6" stroke-linecap="round"/>
+
+<!-- 贯穿式尾灯 -->
+<rect x="226" y="238" width="448" height="32" rx="15" fill="url(#r_red)" stroke="#5c1420" stroke-width="1.5"/>
+<line x1="240" y1="246" x2="660" y2="246" stroke="rgba(255,255,255,.35)" stroke-width="2"/>
+<g stroke="rgba(0,0,0,.3)" stroke-width="2">
+  <line x1="300" y1="240" x2="300" y2="268"/><line x1="360" y1="240" x2="360" y2="268"/>
+  <line x1="540" y1="240" x2="540" y2="268"/><line x1="600" y1="240" x2="600" y2="268"/>
+</g>
+<!-- 尾部车标 -->
+<polygon points="438,288 450,302 462,288 462,297 450,311 438,297" fill="url(#r_chrome)"/>
+<!-- 尾门缝线 -->
+<path d="M244 226 L656 226 M240 280 L660 280" stroke="rgba(0,0,0,.25)" stroke-width="1.5"/>
+
+<!-- 牌照区 -->
+<rect x="386" y="316" width="128" height="44" rx="6" fill="#1a2330" stroke="#3d4f68" stroke-width="1.5"/>
+<rect x="392" y="322" width="116" height="32" rx="4" fill="url(#r_plate)"/>
+<text x="450" y="344" fill="#5a6b80" font-size="14" text-anchor="middle" font-weight="700">渝 A · CS75</text>
+<!-- 后视摄像头 -->
+<circle cx="528" cy="312" r="6" fill="#0c121b" stroke="#8fa3ba" stroke-width="1.5"/>
+<circle cx="528" cy="312" r="2.5" fill="#31517a"/>
+
+<!-- 后保险杠 -->
+<path d="M224 372 Q450 362 676 372" stroke="rgba(0,0,0,.3)" stroke-width="2" fill="none"/>
+<!-- 反光条 -->
+<rect x="258" y="402" width="46" height="15" rx="7" fill="#a01c28" stroke="#5c1420" stroke-width="1.2"/>
+<rect x="596" y="402" width="46" height="15" rx="7" fill="#a01c28" stroke="#5c1420" stroke-width="1.2"/>
+<!-- 倒车雷达 -->
+<circle cx="330" cy="452" r="4.5" fill="#3d4f68" stroke="#55677f"/>
+<circle cx="415" cy="458" r="4.5" fill="#3d4f68" stroke="#55677f"/>
+<circle cx="485" cy="458" r="4.5" fill="#3d4f68" stroke="#55677f"/>
+<circle cx="570" cy="452" r="4.5" fill="#3d4f68" stroke="#55677f"/>
+<!-- 扩散器与排气尾喉 -->
+<polygon points="300,470 600,470 580,496 320,496" fill="#161d28" stroke="#2a3646" stroke-width="1"/>
+<rect x="600" y="462" width="54" height="22" rx="10" fill="url(#r_chrome)" stroke="#3d4f68" stroke-width="1.2"/>
+<ellipse cx="646" cy="473" rx="7" ry="9" fill="#0c1016"/>
+<!-- 轮胎侧边 -->
+<rect x="196" y="470" width="30" height="38" rx="8" fill="#0c1016" stroke="#2a3646"/>
+<rect x="674" y="470" width="30" height="38" rx="8" fill="#0c1016" stroke="#2a3646"/>
+
+${hs("third_brake",398,95,"高位刹车灯",-28,-20,"end")}
+${hs("shark_fin",492,70,"鲨鱼鳍天线",28,-14,"start")}
+${hs("rear_glass",350,158,"后风挡",-30,-6,"end")}
+${hs("rear_wiper",468,178,"后雨刮",30,-10,"start")}
+${hs("taillight",276,254,"尾灯",-30,0,"end")}
+${hs("light_bar",562,254,"贯穿尾灯",34,0,"start")}
+${hs("trunk",330,304,"后备箱",-30,0,"end")}
+${hs("rear_cam",528,312,"后摄像头",30,18,"start")}
+${hs("trunk_strut",664,300,"尾门撑杆",26,-8,"start")}
+${hs("reflector",281,410,"反光条",-30,6,"end")}
+${hs("radar",415,458,"倒车雷达",0,28)}
+${hs("bumper",300,482,"保险杠",-26,18,"end")}
+${hs("exhaust",627,473,"排气管",28,10,"start")}
+</svg>`},
+/* ========== 发动机舱（俯视） ========== */
+{id:"engine",label:"🔩 发动机舱（俯视）",svg:`
+<svg viewBox="0 0 900 520">
+<defs>
+  <linearGradient id="e_bay" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#232e3f"/><stop offset="1" stop-color="#141b26"/>
+  </linearGradient>
+  <radialGradient id="e_metal" cx=".4" cy=".35" r=".85">
+    <stop offset="0" stop-color="#aab8ca"/><stop offset=".6" stop-color="#5f7089"/><stop offset="1" stop-color="#36435a"/>
+  </radialGradient>
+  <linearGradient id="e_engine" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#3a4a63"/><stop offset="1" stop-color="#232f42"/>
+  </linearGradient>
+  <radialGradient id="e_turbo" cx=".45" cy=".4" r=".8">
+    <stop offset="0" stop-color="#9a8a68"/><stop offset="1" stop-color="#4a4034"/>
+  </radialGradient>
+</defs>
+
+<text x="450" y="28" fill="#9db0c3" font-size="14" text-anchor="middle">↑ 车头方向</text>
+
+<!-- 舱体 -->
+<rect x="100" y="40" width="700" height="440" rx="26" fill="url(#e_bay)" stroke="#3d4f68" stroke-width="2"/>
+<!-- 左右纵梁 -->
+<rect x="104" y="52" width="26" height="420" fill="#222d3d" stroke="#31415a"/>
+<rect x="770" y="52" width="26" height="420" fill="#222d3d" stroke="#31415a"/>
+<!-- 水箱框架 -->
+<rect x="150" y="46" width="600" height="14" fill="#222d3d" stroke="#31415a"/>
+<!-- 集雨板/防火墙（底部，靠驾驶舱） -->
+<rect x="104" y="424" width="692" height="52" fill="#1a2330" stroke="#31415a"/>
+<line x1="120" y1="436" x2="780" y2="436" stroke="rgba(255,255,255,.06)" stroke-width="2"/>
+
+<!-- 冷凝器（水箱前） -->
+<rect x="235" y="62" width="430" height="42" rx="6" fill="#26303f" stroke="#3d4f68" stroke-width="1.5"/>
+<g stroke="#31415a" stroke-width="2">
+  <line x1="255" y1="66" x2="255" y2="100"/><line x1="285" y1="66" x2="285" y2="100"/><line x1="315" y1="66" x2="315" y2="100"/>
+  <line x1="345" y1="66" x2="345" y2="100"/><line x1="375" y1="66" x2="375" y2="100"/><line x1="405" y1="66" x2="405" y2="100"/>
+  <line x1="435" y1="66" x2="435" y2="100"/><line x1="465" y1="66" x2="465" y2="100"/><line x1="495" y1="66" x2="495" y2="100"/>
+  <line x1="525" y1="66" x2="525" y2="100"/><line x1="555" y1="66" x2="555" y2="100"/><line x1="585" y1="66" x2="585" y2="100"/>
+  <line x1="615" y1="66" x2="615" y2="100"/><line x1="645" y1="66" x2="645" y2="100"/>
+</g>
+<!-- 电子风扇（水箱后方） -->
+<rect x="328" y="106" width="244" height="54" fill="none" stroke="#31415a" stroke-dasharray="6 4"/>
+<g>
+  <circle cx="372" cy="132" r="26" fill="#1a2330" stroke="#4a6079" stroke-width="1.5"/>
+  <g stroke="#3d4f68" stroke-width="5" stroke-linecap="round">
+    <line x1="372" y1="132" x2="372" y2="110"/><line x1="372" y1="132" x2="393" y2="126"/>
+    <line x1="372" y1="132" x2="385" y2="152"/><line x1="372" y1="132" x2="359" y2="152"/><line x1="372" y1="132" x2="351" y2="126"/>
+  </g>
+  <circle cx="372" cy="132" r="6" fill="#31415a"/>
+  <circle cx="528" cy="132" r="26" fill="#1a2330" stroke="#4a6079" stroke-width="1.5"/>
+  <g stroke="#3d4f68" stroke-width="5" stroke-linecap="round">
+    <line x1="528" y1="132" x2="528" y2="110"/><line x1="528" y1="132" x2="549" y2="126"/>
+    <line x1="528" y1="132" x2="541" y2="152"/><line x1="528" y1="132" x2="515" y2="152"/><line x1="528" y1="132" x2="507" y2="126"/>
+  </g>
+  <circle cx="528" cy="132" r="6" fill="#31415a"/>
+</g>
+
+<!-- 皮带（发电机-曲轴-压缩机） -->
+<path d="M300 152 L420 168 L560 156" fill="none" stroke="#0d1118" stroke-width="7" stroke-linecap="round"/>
+<circle cx="452" cy="164" r="8" fill="#222d3d" stroke="#8fa3ba" stroke-width="1.5"/>
+
+<!-- 发动机装饰盖 -->
+<rect x="330" y="178" width="240" height="142" rx="14" fill="url(#e_engine)" stroke="#55677f" stroke-width="2"/>
+<line x1="348" y1="214" x2="552" y2="214" stroke="rgba(255,255,255,.08)" stroke-width="3"/>
+<line x1="348" y1="262" x2="552" y2="262" stroke="rgba(0,0,0,.25)" stroke-width="3"/>
+<text x="450" y="245" fill="#9db0c3" font-size="14" text-anchor="middle" font-weight="600">蓝鲸 NE 1.5T</text>
+<!-- 机油加注盖 -->
+<circle cx="385" cy="196" r="11" fill="#11161f" stroke="#8fa3ba" stroke-width="2"/>
+<rect x="379" y="191" width="12" height="4" rx="2" fill="#8fa3ba"/>
+<!-- 点火线圈（一缸一个） -->
+<g fill="#1a2330" stroke="#4a6079" stroke-width="1.5">
+  <rect x="356" y="182" width="14" height="22" rx="3"/><rect x="446" y="182" width="14" height="22" rx="3"/>
+  <rect x="491" y="182" width="14" height="22" rx="3"/><rect x="536" y="182" width="14" height="22" rx="3"/>
+</g>
+<!-- 机油尺（黄色拉环） -->
+<circle cx="552" cy="292" r="9" fill="none" stroke="#e8c33a" stroke-width="3.5"/>
+<line x1="548" y1="299" x2="540" y2="312" stroke="#e8c33a" stroke-width="2.5"/>
+
+<!-- 发电机（左前） -->
+<circle cx="300" cy="152" r="22" fill="url(#e_metal)" stroke="#55677f" stroke-width="1.5"/>
+<circle cx="300" cy="152" r="10" fill="none" stroke="#222d3d" stroke-width="3"/>
+<circle cx="300" cy="152" r="4" fill="#222d3d"/>
+<!-- 空调压缩机（右下侧） -->
+<circle cx="592" cy="332" r="21" fill="url(#e_metal)" stroke="#55677f" stroke-width="1.5"/>
+<circle cx="592" cy="332" r="8" fill="none" stroke="#222d3d" stroke-width="3"/>
+<path d="M571 318 Q560 300 566 285" fill="none" stroke="#4a6079" stroke-width="3"/>
+
+<!-- 涡轮增压器（发动机后侧） -->
+<circle cx="505" cy="352" r="20" fill="url(#e_turbo)" stroke="#6b5d45" stroke-width="1.5"/>
+<rect x="516" y="344" width="16" height="12" rx="4" fill="#4a4034" stroke="#6b5d45"/>
+<path d="M500 372 Q494 396 488 416" fill="none" stroke="#4a4034" stroke-width="8" stroke-linecap="round"/>
+
+<!-- 空滤盒 + 进气管 -->
+<rect x="615" y="118" width="140" height="82" rx="10" fill="#1e2733" stroke="#4a6079" stroke-width="1.5"/>
+<line x1="625" y1="134" x2="745" y2="134" stroke="rgba(255,255,255,.07)" stroke-width="2"/>
+<rect x="632" y="112" width="12" height="8" fill="#3d4f68"/><rect x="726" y="112" width="12" height="8" fill="#3d4f68"/>
+<path d="M615 158 Q585 175 575 205" fill="none" stroke="#2b3547" stroke-width="16" stroke-linecap="round"/>
+<circle cx="573" cy="208" r="11" fill="#222d3d" stroke="#55677f" stroke-width="1.5"/>
+
+<!-- 电瓶 -->
+<rect x="140" y="115" width="120" height="82" rx="8" fill="#141b26" stroke="#4a6079" stroke-width="1.5"/>
+<line x1="148" y1="132" x2="252" y2="132" stroke="rgba(255,255,255,.08)" stroke-width="2"/>
+<rect x="152" y="103" width="16" height="14" rx="3" fill="#b34040"/>
+<text x="160" y="114" fill="#fff" font-size="11" text-anchor="middle" font-weight="700">+</text>
+<rect x="232" y="103" width="16" height="14" rx="3" fill="#2a3342" stroke="#55677f"/>
+<text x="240" y="114" fill="#9db0c3" font-size="11" text-anchor="middle" font-weight="700">−</text>
+<text x="200" y="172" fill="#9db0c3" font-size="12" text-anchor="middle">60Ah</text>
+
+<!-- 保险丝盒 -->
+<rect x="145" y="215" width="95" height="55" rx="8" fill="#1e2733" stroke="#4a6079" stroke-width="1.5"/>
+<line x1="152" y1="228" x2="233" y2="228" stroke="#31415a" stroke-width="2"/>
+<line x1="152" y1="240" x2="233" y2="240" stroke="#31415a" stroke-width="2"/>
+
+<!-- ABS 泵（带硬管） -->
+<rect x="150" y="300" width="80" height="58" rx="6" fill="#4a5568" stroke="#6b7d94" stroke-width="1.5"/>
+<g fill="none" stroke="#8fa3ba" stroke-width="1.5">
+  <path d="M158 300 Q160 280 175 272"/><path d="M168 300 Q172 278 190 270"/>
+  <path d="M178 300 Q184 276 205 268"/><path d="M188 300 Q196 274 218 266"/>
+  <path d="M200 300 Q210 276 228 266"/>
+</g>
+
+<!-- 减震塔顶 -->
+<circle cx="118" cy="250" r="19" fill="#222d3d" stroke="#55677f" stroke-width="2"/>
+<circle cx="118" cy="250" r="5" fill="#4a6079"/>
+<circle cx="109" cy="242" r="2.5" fill="#8fa3ba"/><circle cx="127" cy="242" r="2.5" fill="#8fa3ba"/><circle cx="118" cy="260" r="2.5" fill="#8fa3ba"/>
+<circle cx="782" cy="250" r="19" fill="#222d3d" stroke="#55677f" stroke-width="2"/>
+<circle cx="782" cy="250" r="5" fill="#4a6079"/>
+<circle cx="773" cy="242" r="2.5" fill="#8fa3ba"/><circle cx="791" cy="242" r="2.5" fill="#8fa3ba"/><circle cx="782" cy="260" r="2.5" fill="#8fa3ba"/>
+
+<!-- 冷却液膨胀壶（粉色） -->
+<rect x="630" y="230" width="100" height="70" rx="12" fill="rgba(214,90,140,.22)" stroke="#d65a8c" stroke-width="1.5"/>
+<rect x="636" y="258" width="88" height="36" rx="8" fill="rgba(214,90,140,.3)"/>
+<line x1="640" y1="248" x2="680" y2="248" stroke="#d65a8c" stroke-width="1.2"/>
+<text x="716" y="252" fill="#e89ab8" font-size="9" text-anchor="start">MAX</text>
+<line x1="640" y1="278" x2="680" y2="278" stroke="#d65a8c" stroke-width="1.2"/>
+<text x="716" y="282" fill="#e89ab8" font-size="9" text-anchor="start">MIN</text>
+<circle cx="668" cy="224" r="9" fill="#11161f" stroke="#8fa3ba" stroke-width="1.5"/>
+
+<!-- 玻璃水壶（蓝色盖） -->
+<rect x="630" y="360" width="120" height="58" rx="10" fill="#1a2330" stroke="#3d4f68" stroke-width="1.5"/>
+<circle cx="700" cy="352" r="10" fill="#2e7dff" stroke="#7db1ff" stroke-width="2"/>
+
+<!-- 刹车油壶（黄色盖）+ 真空助力泵 -->
+<circle cx="368" cy="442" r="24" fill="#222d3d" stroke="#55677f" stroke-width="1.5"/>
+<rect x="280" y="428" width="72" height="40" rx="8" fill="rgba(230,215,160,.16)" stroke="#d8cf9a" stroke-width="1.5"/>
+<rect x="286" y="446" width="60" height="18" fill="rgba(230,215,160,.25)"/>
+<circle cx="316" cy="422" r="8" fill="#d8b93a" stroke="#8a7a2a" stroke-width="1.2"/>
+
+<!-- 雨刮电机 -->
+<rect x="430" y="440" width="70" height="26" rx="8" fill="#1e2733" stroke="#4a6079" stroke-width="1.5"/>
+<line x1="500" y1="453" x2="560" y2="446" stroke="#3d4f68" stroke-width="3"/>
+
+${hs("condenser",300,82,"冷凝器",0,-24)}
+${hs("radiator_fan",372,132,"电子风扇",-40,-8,"end")}
+${hs("battery",200,158,"电瓶",-42,-44,"end")}
+${hs("fuse",192,242,"保险丝盒",-34,2,"end")}
+${hs("abs_pump",190,330,"ABS 泵",-32,10,"end")}
+${hs("strut_top",782,250,"减震塔顶",20,-32,"start")}
+${hs("air_filter",685,158,"空气滤芯",0,-28)}
+${hs("intake_pipe",600,178,"进气管",26,-24,"start")}
+${hs("engine",450,235,"发动机",0,-34)}
+${hs("oil",385,196,"机油加注口",-36,-16,"end")}
+${hs("ignition_coil",470,168,"点火线圈",30,-18,"start")}
+${hs("spark",410,200,"火花塞",-32,24,"end")}
+${hs("belt",420,150,"皮带/张紧轮",0,-26)}
+${hs("alternator",300,152,"发电机",-32,-12,"end")}
+${hs("dipstick",552,292,"机油尺",26,4,"start")}
+${hs("ac_compressor",592,332,"空调压缩机",28,14,"start")}
+${hs("turbo",505,352,"涡轮增压器",-8,36)}
+${hs("coolant",680,266,"防冻液",38,-8,"start")}
+${hs("washer_tank",690,390,"玻璃水加注",44,6,"start")}
+${hs("brake_fluid",316,446,"刹车油",-32,-10,"end")}
+${hs("wiper_motor",465,452,"雨刮电机",38,8,"start")}
+</svg>`},
+/* ========== 驾驶舱 ========== */
+{id:"cockpit",label:"🎛️ 驾驶舱",svg:`
+<svg viewBox="0 0 900 540">
+<defs>
+  <linearGradient id="c_glass" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#3d5a80"/><stop offset=".6" stop-color="#15263c"/><stop offset="1" stop-color="#0e1b2e"/>
+  </linearGradient>
+  <linearGradient id="c_dash" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#2c3a50"/><stop offset="1" stop-color="#1a2330"/>
+  </linearGradient>
+  <linearGradient id="c_screen" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#16283f"/><stop offset="1" stop-color="#0a1424"/>
+  </linearGradient>
+  <radialGradient id="c_wheel" cx=".5" cy=".5" r=".55">
+    <stop offset=".7" stop-color="#232e3f"/><stop offset="1" stop-color="#141b26"/>
+  </radialGradient>
+</defs>
+
+<!-- 前风挡 -->
+<polygon points="90,34 810,34 856,168 44,168" fill="url(#c_glass)" stroke="#31517a" stroke-width="2"/>
+<polygon points="140,44 380,42 320,160 90,160" fill="rgba(255,255,255,.05)"/>
+<!-- A 柱 -->
+<polygon points="44,168 90,34 124,34 88,168" fill="#1c2634"/>
+<polygon points="856,168 810,34 776,34 812,168" fill="#1c2634"/>
+<!-- 遮阳板 -->
+<polygon points="150,40 302,40 286,80 162,76" fill="#2a3547" stroke="#3d4f68" stroke-width="1.2"/>
+<polygon points="598,40 750,40 738,76 614,80" fill="#2a3547" stroke="#3d4f68" stroke-width="1.2"/>
+<!-- 阅读灯/车顶控制区 -->
+<rect x="412" y="40" width="76" height="16" rx="6" fill="#222d3d" stroke="#4a6079" stroke-width="1.2"/>
+<circle cx="432" cy="48" r="4" fill="#d8cf9a" opacity=".8"/><circle cx="468" cy="48" r="4" fill="#d8cf9a" opacity=".8"/>
+<!-- 内后视镜 -->
+<line x1="450" y1="56" x2="450" y2="66" stroke="#4a6079" stroke-width="3"/>
+<rect x="414" y="66" width="72" height="24" rx="6" fill="#141b26" stroke="#4a6079" stroke-width="1.5"/>
+<rect x="418" y="70" width="64" height="16" rx="4" fill="#1a2c46"/>
+
+<!-- 仪表台 -->
+<rect x="50" y="168" width="800" height="142" rx="20" fill="url(#c_dash)" stroke="#3d4f68" stroke-width="2"/>
+<path d="M70 190 L830 190" stroke="rgba(255,255,255,.08)" stroke-width="2"/>
+<!-- 副驾气囊区域缝线 -->
+<rect x="648" y="196" width="184" height="72" rx="8" fill="none" stroke="rgba(0,0,0,.3)" stroke-width="1.5" stroke-dasharray="6 5"/>
+
+<!-- 双联屏：仪表 + 中控 -->
+<rect x="184" y="188" width="432" height="82" rx="10" fill="rgba(46,125,255,.07)"/>
+<rect x="190" y="194" width="420" height="70" rx="8" fill="url(#c_screen)" stroke="#31517a" stroke-width="2"/>
+<line x1="400" y1="198" x2="400" y2="260" stroke="#31517a" stroke-width="1.5"/>
+<!-- 仪表内容 -->
+<path d="M232 246 A28 28 0 0 1 288 246" fill="none" stroke="#37c978" stroke-width="3"/>
+<path d="M302 246 A28 28 0 0 1 358 246" fill="none" stroke="#ffb020" stroke-width="3"/>
+<g stroke="#4a6079" stroke-width="1.5">
+  <line x1="238" y1="240" x2="242" y2="234"/><line x1="260" y1="222" x2="260" y2="228"/><line x1="282" y1="240" x2="278" y2="234"/>
+</g>
+<line x1="260" y1="246" x2="274" y2="232" stroke="#e05050" stroke-width="2.5" stroke-linecap="round"/>
+<text x="330" y="252" fill="#ffb020" font-size="10" text-anchor="middle">120</text>
+<circle cx="372" cy="212" r="4" fill="#e05050" opacity=".9"/>
+<!-- 中控内容 -->
+<rect x="414" y="202" width="88" height="54" rx="4" fill="#12233a" stroke="#31517a"/>
+<path d="M420 244 L440 222 L456 234 L470 212 L496 240" fill="none" stroke="#2e7dff" stroke-width="1.5" opacity=".8"/>
+<g fill="#1c3049">
+  <rect x="512" y="202" width="40" height="16" rx="3"/><rect x="512" y="222" width="40" height="16" rx="3"/><rect x="512" y="242" width="40" height="14" rx="3"/>
+  <rect x="560" y="202" width="40" height="16" rx="3"/><rect x="560" y="222" width="40" height="16" rx="3"/><rect x="560" y="242" width="40" height="14" rx="3"/>
+</g>
+
+<!-- 空调出风口 -->
+<g>
+  <rect x="100" y="206" width="58" height="28" rx="9" fill="#1e2733" stroke="#4a6079" stroke-width="1.5"/>
+  <line x1="112" y1="210" x2="112" y2="230" stroke="#31415a" stroke-width="3"/>
+  <line x1="124" y1="210" x2="124" y2="230" stroke="#31415a" stroke-width="3"/>
+  <line x1="136" y1="210" x2="136" y2="230" stroke="#31415a" stroke-width="3"/>
+  <rect x="640" y="206" width="58" height="28" rx="9" fill="#1e2733" stroke="#4a6079" stroke-width="1.5"/>
+  <line x1="652" y1="210" x2="652" y2="230" stroke="#31415a" stroke-width="3"/>
+  <line x1="664" y1="210" x2="664" y2="230" stroke="#31415a" stroke-width="3"/>
+  <line x1="676" y1="210" x2="676" y2="230" stroke="#31415a" stroke-width="3"/>
+  <rect x="756" y="206" width="58" height="28" rx="9" fill="#1e2733" stroke="#4a6079" stroke-width="1.5"/>
+  <line x1="768" y1="210" x2="768" y2="230" stroke="#31415a" stroke-width="3"/>
+  <line x1="780" y1="210" x2="780" y2="230" stroke="#31415a" stroke-width="3"/>
+  <line x1="792" y1="210" x2="792" y2="230" stroke="#31415a" stroke-width="3"/>
+</g>
+
+<!-- 驾驶舱下沿 / 地板 -->
+<polygon points="50,310 850,310 860,520 40,520" fill="#141b26"/>
+<!-- 驾驶侧门板 -->
+<rect x="6" y="296" width="54" height="196" rx="10" fill="#1e2733" stroke="#3d4f68" stroke-width="1.5"/>
+<g fill="#222d3d" stroke="#4a6079" stroke-width="1">
+  <rect x="16" y="320" width="34" height="11" rx="3"/><rect x="16" y="337" width="34" height="11" rx="3"/>
+  <rect x="16" y="354" width="34" height="11" rx="3"/><rect x="16" y="371" width="34" height="11" rx="3"/>
+</g>
+<rect x="16" y="418" width="36" height="10" rx="5" fill="#31415a"/>
+<!-- 驾驶舱保险丝盒盖（仪表台左端） -->
+<rect x="98" y="286" width="42" height="30" rx="5" fill="#1e2733" stroke="#4a6079" stroke-width="1.2" stroke-dasharray="4 3"/>
+
+<!-- 方向盘（带多功能键与气囊盖） -->
+<circle cx="265" cy="392" r="84" fill="url(#c_wheel)" stroke="#0d1118" stroke-width="3"/>
+<circle cx="265" cy="392" r="84" fill="none" stroke="#31415a" stroke-width="1.5"/>
+<polygon points="255,392 200,378 200,406 255,398" fill="#222d3d" stroke="#4a6079" stroke-width="1.2"/>
+<polygon points="275,392 330,378 330,406 275,398" fill="#222d3d" stroke="#4a6079" stroke-width="1.2"/>
+<polygon points="258,400 272,400 270,452 260,452" fill="#222d3d" stroke="#4a6079" stroke-width="1.2"/>
+<circle cx="265" cy="392" r="34" fill="#1a2330" stroke="#4a6079" stroke-width="1.5"/>
+<text x="265" y="396" fill="#4a6079" font-size="10" text-anchor="middle">AIRBAG</text>
+<g fill="#31415a">
+  <rect x="206" y="382" width="14" height="6" rx="2"/><rect x="206" y="394" width="14" height="6" rx="2"/>
+  <rect x="310" y="382" width="14" height="6" rx="2"/><rect x="310" y="394" width="14" height="6" rx="2"/>
+</g>
+
+<!-- 踏板区 -->
+<polygon points="160,432 400,426 400,514 160,514" fill="#10151d"/>
+<rect x="182" y="462" width="28" height="46" rx="6" fill="#2a3547" stroke="#4a6079" stroke-width="1.5"/>
+<rect x="230" y="472" width="20" height="38" rx="5" fill="#2a3547" stroke="#4a6079" stroke-width="1.5"/>
+<!-- OBD 接口 -->
+<rect x="330" y="420" width="26" height="16" rx="3" fill="#141b26" stroke="#4a6079" stroke-width="1.2"/>
+
+<!-- 中控台 / 换挡区 -->
+<polygon points="430,308 620,308 644,514 406,514" fill="#1e2733" stroke="#3d4f68" stroke-width="1.5"/>
+<ellipse cx="498" cy="332" rx="26" ry="15" fill="#141b26" stroke="#4a6079" stroke-width="1.5"/>
+<rect x="492" y="306" width="14" height="24" rx="6" fill="#2a3547" stroke="#55677f" stroke-width="1.2"/>
+<rect x="544" y="334" width="28" height="18" rx="4" fill="#222d3d" stroke="#4a6079" stroke-width="1.2"/>
+<text x="558" y="347" fill="#9db0c3" font-size="11" text-anchor="middle" font-weight="700">P</text>
+<rect x="452" y="318" width="32" height="12" rx="3" fill="#0c121b" stroke="#4a6079" stroke-width="1.2"/>
+<circle cx="468" cy="402" r="17" fill="#141b26" stroke="#31415a" stroke-width="1.5"/>
+<circle cx="534" cy="402" r="17" fill="#141b26" stroke="#31415a" stroke-width="1.5"/>
+<rect x="442" y="442" width="168" height="58" rx="10" fill="#222d3d" stroke="#3d4f68" stroke-width="1.2"/>
+
+<!-- 手套箱 -->
+<rect x="658" y="318" width="180" height="88" rx="10" fill="#222d3d" stroke="#3d4f68" stroke-width="1.5"/>
+<rect x="716" y="330" width="64" height="10" rx="5" fill="#31415a"/>
+
+<!-- 座椅 -->
+<polygon points="66,322 152,306 160,520 66,520" fill="#232e3f" stroke="#3d4f68" stroke-width="1.5"/>
+<rect x="82" y="282" width="52" height="28" rx="9" fill="#232e3f" stroke="#3d4f68" stroke-width="1.5"/>
+<polygon points="748,306 834,322 834,520 740,520" fill="#232e3f" stroke="#3d4f68" stroke-width="1.5"/>
+<rect x="766" y="282" width="52" height="28" rx="9" fill="#232e3f" stroke="#3d4f68" stroke-width="1.5"/>
+<!-- 安全带 -->
+<line x1="72" y1="316" x2="122" y2="462" stroke="#3a4658" stroke-width="9" stroke-linecap="round"/>
+<rect x="114" y="458" width="18" height="26" rx="4" fill="#8a2a2a" stroke="#5c1420" stroke-width="1.2"/>
+
+${hs("rearview",450,80,"内后视镜",0,-28)}
+${hs("sun_visor",226,60,"遮阳板",-32,-12,"end")}
+${hs("reading_light",520,50,"阅读灯",32,-10,"start")}
+${hs("dash",300,232,"仪表警示灯",0,-34)}
+${hs("air_vent",670,220,"空调出风口",0,-28)}
+${hs("steering",265,392,"方向盘/气囊",-98,-44,"end")}
+${hs("window_switch",33,336,"车窗按键",-2,-34)}
+${hs("pedal",208,474,"踏板",-36,12,"end")}
+${hs("obd",343,428,"OBD 接口",28,16,"start")}
+${hs("fuse",119,300,"保险丝盒",0,-26)}
+${hs("epb",558,343,"电子手刹",30,2,"start")}
+${hs("usb_port",468,324,"USB/点烟器",-30,-14,"end")}
+${hs("cabin_filter",748,362,"空调滤芯",36,0,"start")}
+${hs("seat",792,430,"座椅",0,-28)}
+${hs("seatbelt",96,388,"安全带",-24,-22,"end")}
+</svg>`},
+
+/* ========== 底盘（仰视） ========== */
+{id:"under",label:"🔧 底盘（仰视）",svg:`
+<svg viewBox="0 0 900 520">
+<defs>
+  <linearGradient id="u_body" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#2a3648"/><stop offset="1" stop-color="#1a2330"/>
+  </linearGradient>
+  <linearGradient id="u_exh" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#8a94a6"/><stop offset=".5" stop-color="#5f6b80"/><stop offset="1" stop-color="#3d4757"/>
+  </linearGradient>
+</defs>
+
+<text x="450" y="24" fill="#9db0c3" font-size="14" text-anchor="middle">↑ 车头方向</text>
+
+<!-- 车身底部轮廓 -->
+<rect x="280" y="34" width="340" height="452" rx="60" fill="url(#u_body)" stroke="#3d4f68" stroke-width="2"/>
+
+<!-- 四轮 -->
+<rect x="238" y="70" width="40" height="84" rx="10" fill="#0c1016" stroke="#3d4f68" stroke-width="1.5"/>
+<rect x="622" y="70" width="40" height="84" rx="10" fill="#0c1016" stroke="#3d4f68" stroke-width="1.5"/>
+<rect x="238" y="370" width="40" height="84" rx="10" fill="#0c1016" stroke="#3d4f68" stroke-width="1.5"/>
+<rect x="622" y="370" width="40" height="84" rx="10" fill="#0c1016" stroke="#3d4f68" stroke-width="1.5"/>
+<line x1="258" y1="76" x2="258" y2="148" stroke="#1c232e" stroke-width="4"/>
+<line x1="642" y1="76" x2="642" y2="148" stroke="#1c232e" stroke-width="4"/>
+<line x1="258" y1="376" x2="258" y2="448" stroke="#1c232e" stroke-width="4"/>
+<line x1="642" y1="376" x2="642" y2="448" stroke="#1c232e" stroke-width="4"/>
+
+<!-- 底盘护板（虚线轮廓示意覆盖区） -->
+<rect x="318" y="56" width="264" height="104" rx="10" fill="none" stroke="#3d4f68" stroke-width="1.5" stroke-dasharray="7 5"/>
+
+<!-- 前副车架 -->
+<rect x="310" y="56" width="280" height="74" rx="10" fill="#1e2733" stroke="#4a6079" stroke-width="1.5"/>
+<!-- 发动机（横置）+ 油底壳 -->
+<rect x="360" y="62" width="140" height="60" rx="8" fill="#26303f" stroke="#4a6079" stroke-width="1.5"/>
+<rect x="385" y="86" width="90" height="32" rx="6" fill="#1a2330" stroke="#55677f" stroke-width="1.5"/>
+<circle cx="430" cy="114" r="3.5" fill="#8fa3ba"/>
+<!-- 变速箱（左） -->
+<rect x="306" y="64" width="52" height="54" rx="8" fill="#222d3d" stroke="#4a6079" stroke-width="1.5"/>
+
+<!-- 传动半轴 -->
+<line x1="306" y1="92" x2="272" y2="108" stroke="#55677f" stroke-width="7" stroke-linecap="round"/>
+<circle cx="300" cy="95" r="6" fill="#3d4f68"/><circle cx="276" cy="106" r="6" fill="#3d4f68"/>
+<line x1="500" y1="92" x2="624" y2="110" stroke="#55677f" stroke-width="7" stroke-linecap="round"/>
+<circle cx="508" cy="94" r="6" fill="#3d4f68"/><circle cx="618" cy="108" r="6" fill="#3d4f68"/>
+
+<!-- 转向机 + 拉杆 -->
+<rect x="400" y="132" width="100" height="16" rx="6" fill="#222d3d" stroke="#4a6079" stroke-width="1.5"/>
+<line x1="400" y1="140" x2="302" y2="128" stroke="#8fa3ba" stroke-width="4" stroke-linecap="round"/>
+<line x1="500" y1="140" x2="598" y2="128" stroke="#8fa3ba" stroke-width="4" stroke-linecap="round"/>
+
+<!-- 下摆臂（前） -->
+<polygon points="330,124 288,148 352,148" fill="#2a3547" stroke="#4a6079" stroke-width="1.5"/>
+<polygon points="570,124 612,148 548,148" fill="#2a3547" stroke="#4a6079" stroke-width="1.5"/>
+<!-- 前防倾杆 + 连杆 -->
+<path d="M310 158 Q450 176 590 158" fill="none" stroke="#3a4658" stroke-width="6"/>
+<line x1="310" y1="158" x2="298" y2="144" stroke="#8fa3ba" stroke-width="4" stroke-linecap="round"/>
+<line x1="590" y1="158" x2="602" y2="144" stroke="#8fa3ba" stroke-width="4" stroke-linecap="round"/>
+<!-- 前麦弗逊减震（弹簧示意） -->
+<line x1="298" y1="80" x2="332" y2="126" stroke="#8fa3ba" stroke-width="11" stroke-dasharray="4 3" stroke-linecap="round"/>
+<line x1="602" y1="80" x2="568" y2="126" stroke="#8fa3ba" stroke-width="11" stroke-dasharray="4 3" stroke-linecap="round"/>
+
+<!-- 排气系统：歧管→三元→中段→消音器→尾喉 -->
+<line x1="450" y1="122" x2="450" y2="168" stroke="url(#u_exh)" stroke-width="9"/>
+<rect x="428" y="168" width="44" height="40" rx="14" fill="url(#u_exh)" stroke="#55677f" stroke-width="1.5"/>
+<circle cx="462" cy="160" r="4" fill="#d8b93a" stroke="#8a7a2a"/>
+<circle cx="440" y="212" r="4" fill="#d8b93a" stroke="#8a7a2a"/>
+<line x1="450" y1="208" x2="450" y2="240" stroke="url(#u_exh)" stroke-width="8"/>
+<rect x="434" y="240" width="32" height="46" rx="12" fill="url(#u_exh)" stroke="#55677f" stroke-width="1.2"/>
+<line x1="450" y1="286" x2="450" y2="306" stroke="url(#u_exh)" stroke-width="8"/>
+<rect x="388" y="306" width="124" height="64" rx="24" fill="url(#u_exh)" stroke="#55677f" stroke-width="1.5"/>
+<line x1="470" y1="370" x2="478" y2="440" stroke="url(#u_exh)" stroke-width="8" stroke-linecap="round"/>
+<rect x="468" y="436" width="24" height="14" rx="6" fill="#93a6bd" stroke="#3d4f68"/>
+<!-- 排气吊耳 -->
+<rect x="424" y="230" width="10" height="14" rx="3" fill="#31415a"/>
+<rect x="394" y="296" width="10" height="14" rx="3" fill="#31415a"/>
+
+<!-- 油箱 -->
+<rect x="516" y="214" width="86" height="120" rx="14" fill="#26303f" stroke="#4a6079" stroke-width="1.5"/>
+<circle cx="559" cy="240" r="12" fill="#1a2330" stroke="#4a6079" stroke-width="1.5"/>
+<path d="M540 300 Q520 330 548 350" fill="none" stroke="#3d4f68" stroke-width="4"/>
+<!-- 碳罐 -->
+<rect x="528" y="348" width="60" height="36" rx="8" fill="#141b26" stroke="#4a6079" stroke-width="1.5"/>
+
+<!-- 后副车架 -->
+<rect x="310" y="388" width="280" height="62" rx="10" fill="#1e2733" stroke="#4a6079" stroke-width="1.5"/>
+<!-- 后多连杆（多根连杆示意） -->
+<g stroke="#4a6079" stroke-width="6" stroke-linecap="round">
+  <line x1="322" y1="398" x2="282" y2="408"/><line x1="330" y1="430" x2="284" y2="428"/>
+  <line x1="578" y1="398" x2="618" y2="408"/><line x1="570" y1="430" x2="616" y2="428"/>
+</g>
+<g stroke="#3a4658" stroke-width="5">
+  <line x1="340" y1="448" x2="300" y2="454"/><line x1="560" y1="448" x2="600" y2="454"/>
+</g>
+<!-- 后减震弹簧 -->
+<line x1="308" y1="392" x2="292" y2="372" stroke="#8fa3ba" stroke-width="11" stroke-dasharray="4 3" stroke-linecap="round"/>
+<line x1="592" y1="392" x2="608" y2="372" stroke="#8fa3ba" stroke-width="11" stroke-dasharray="4 3" stroke-linecap="round"/>
+<!-- 后防倾杆 -->
+<path d="M320 388 Q450 404 580 388" fill="none" stroke="#3a4658" stroke-width="5"/>
+
+<!-- 备胎槽 -->
+<circle cx="380" cy="452" r="28" fill="#141b26" stroke="#3d4f68" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="380" y="456" fill="#4a6079" font-size="10" text-anchor="middle">备胎槽</text>
+
+${hs("trans_oil",330,92,"变速箱",-30,-10,"end")}
+${hs("oil_pan",430,102,"油底壳",0,-24)}
+${hs("half_shaft",560,102,"传动半轴",30,16,"start")}
+${hs("control_arm",320,136,"下摆臂",-32,8,"end")}
+${hs("tie_rod",450,140,"转向拉杆",-6,26)}
+${hs("sway_link",302,152,"防倾杆连杆",-28,14,"end")}
+${hs("suspension",585,100,"前减震(麦弗逊)",30,-16,"start")}
+${hs("catalyst",450,188,"三元催化",36,0,"start")}
+${hs("o2_sensor",462,160,"氧传感器",38,-28,"start")}
+${hs("exhaust",450,263,"排气管",-34,0,"end")}
+${hs("fuel",559,278,"油箱",30,0,"start")}
+${hs("canister",558,366,"碳罐",34,0,"start")}
+${hs("multilink",596,420,"后多连杆",26,12,"start")}
+${hs("under_shield",340,68,"底盘护板",-28,-10,"end")}
+</svg>`},
+];
+</script>
+<script>
+/* ================= 交互逻辑 ================= */
+const viewTabs = document.getElementById("viewTabs");
+const canvas = document.getElementById("canvas");
+const detail = document.getElementById("detail");
+let curView = VIEWS[0].id, curPart = null, curSec = "explore";
+
+/* URL hash 定位：#view=engine&part=battery 或 #sec=price */
+function parseHash(){
+  const h=location.hash.replace(/^#/,"");
+  const mv=h.match(/view=(\w+)/), mp=h.match(/part=([\w]+)/), ms=h.match(/sec=(\w+)/);
+  if(mv&&VIEWS.some(v=>v.id===mv[1]))curView=mv[1];
+  if(mp&&PARTS[mp[1]])curPart=mp[1];
+  if(ms&&["explore","tut","price"].includes(ms[1]))curSec=ms[1];
+  else if(mv||mp)curSec="explore";
+}
+function syncHash(){
+  const h=curSec==="explore"
+    ?"#view="+curView+(curPart?"&part="+curPart:"")
+    :"#sec="+curSec;
+  if(location.hash!==h)history.replaceState(null,"",h);
+}
+parseHash();
+
+VIEWS.forEach(v=>{
+  const b=document.createElement("button");
+  b.textContent=v.label; b.dataset.view=v.id;
+  if(v.id===curView)b.classList.add("on");
+  b.onclick=()=>{curView=v.id;curPart=null;detail.innerHTML='<div class="empty">👈 点击左侧图中的零件标记<br>查看功能、自检方法、更换周期与参考价格</div>';
+    document.querySelectorAll("#viewTabs button").forEach(x=>x.classList.toggle("on",x.dataset.view===v.id));renderView();syncHash();};
+  viewTabs.appendChild(b);
+});
+
+function renderView(){
+  const v=VIEWS.find(x=>x.id===curView);
+  canvas.innerHTML=v.svg;
+  canvas.querySelectorAll(".hotspot").forEach(h=>{
+    if(h.dataset.part===curPart)h.classList.add("sel");
+    h.onclick=()=>{showPart(h.dataset.part);syncHash();};
+  });
+}
+
+function showPart(key){
+  const p=PARTS[key]; if(!p)return;
+  curPart=key;
+  canvas.querySelectorAll(".hotspot").forEach(h=>h.classList.toggle("sel",h.dataset.part===key));
+  detail.innerHTML=`
+    <h2>${p.name}</h2><div class="cat">${p.cat}</div>
+    <p>${p.desc}</p>
+    ${p.check?`<h3>🔍 自检方法</h3><ul>${p.check.map(c=>`<li>${c}</li>`).join("")}</ul>`:""}
+    <h3>💰 费用与周期</h3>
+    <div class="price-grid">
+      <b>零件价</b><span>${p.price}</span>
+      <b>工时费</b><span>${p.labor}</span>
+      <b>周期</b><span>${p.cycle}</span>
+    </div>
+    ${p.tut?`<button class="btn" onclick="gotoTut('${p.tut}')">📖 查看对应 DIY 教程</button>`:""}
+    ${p.note?`<div class="note">${p.note}</div>`:""}`;
+}
+
+function gotoTut(id){
+  switchSec("tut");syncHash();
+  setTimeout(()=>{const el=document.getElementById(id);if(el){el.scrollIntoView({behavior:"smooth",block:"center"});el.style.outline="2px solid var(--hot)";setTimeout(()=>el.style.outline="",2000);}},50);
+}
+
+/* 主选项卡 */
+function switchSec(name){
+  curSec=name;
+  document.querySelectorAll(".main-tabs button").forEach(b=>b.classList.toggle("on",b.dataset.sec===name));
+  document.querySelectorAll(".section").forEach(s=>s.classList.toggle("on",s.id==="sec-"+name));
+}
+document.querySelectorAll(".main-tabs button").forEach(b=>b.onclick=()=>{switchSec(b.dataset.sec);syncHash();});
+
+/* 教程渲染 */
+const tutGrid=document.getElementById("tutGrid");
+TUTORIALS.forEach(t=>{
+  const d=document.createElement("div");
+  d.className="tut"+(t.full?" full":""); d.id=t.id;
+  d.innerHTML=`<h3>${t.title}</h3><div class="meta">${t.meta}</div><ol>${t.steps.map(s=>`<li>${s}</li>`).join("")}</ol>${t.warn?`<div class="warn">${t.warn}</div>`:""}`;
+  tutGrid.appendChild(d);
+});
+
+/* 价格表渲染 */
+const tb=document.querySelector("#priceTable tbody");
+Object.entries(PARTS).forEach(([key,p])=>{
+  if(p.price==="——"&&p.labor==="——")return;
+  const tr=document.createElement("tr");
+  tr.innerHTML=`<td><span class="linklike" onclick="jumpPart('${key}')">${p.name}</span></td><td><b>${p.price}</b></td><td>${p.labor}</td><td>${p.cycle}</td>`;
+  tb.appendChild(tr);
+});
+
+/* 按系统浏览索引 */
+const SYS_META=[["engine","🔩 发动机"],["brake","🛑 制动"],["susp","🛞 悬挂·行走"],["elec","⚡ 电气"],["fluid","🛢️ 油液"],["body","🚗 外观内饰"]];
+const sysBox=document.getElementById("sysGroups");
+SYS_META.forEach(([k,label])=>{
+  const keys=Object.keys(PARTS).filter(key=>PARTS[key].sys===k);
+  if(!keys.length)return;
+  const g=document.createElement("div");g.className="sys-group";
+  g.innerHTML=`<b>${label}（${keys.length}）</b><span class="chips">`+
+    keys.map(key=>`<span class="chip" onclick="jumpPart('${key}')">${PARTS[key].name}</span>`).join("")+`</span>`;
+  sysBox.appendChild(g);
+});
+
+function jumpPart(key){
+  const v=VIEWS.find(v=>v.svg.includes(`data-part="${key}"`));
+  if(v){curView=v.id;document.querySelectorAll("#viewTabs button").forEach(x=>x.classList.toggle("on",x.dataset.view===v.id));renderView();}
+  switchSec("explore");
+  showPart(key);
+  syncHash();
+  canvas.scrollIntoView({behavior:"smooth",block:"center"});
+}
+
+window.addEventListener("hashchange",()=>{parseHash();switchSec(curSec);
+  document.querySelectorAll("#viewTabs button").forEach(x=>x.classList.toggle("on",x.dataset.view===curView));
+  renderView();if(curPart)showPart(curPart);});
+
+switchSec(curSec);
+renderView();
+if(curPart)showPart(curPart);
+syncHash();
+</script>
+</body>
+</html>
