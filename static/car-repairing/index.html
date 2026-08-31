@@ -112,13 +112,35 @@ footer{padding:16px 24px;color:var(--sub);font-size:12.5px;border-top:1px solid 
   .tut-grid{grid-template-columns:1fr}
   th,td{padding:8px 10px;font-size:13px;white-space:nowrap}
   td:last-child{white-space:normal;min-width:120px}
+  .pimg img{max-height:180px}
 }
+/* 零件实拍图 */
+.pimg{margin:10px 0 4px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.pimg img{width:100%;max-height:230px;object-fit:contain;display:block;cursor:zoom-in;background:#0b1017}
+.pimg figcaption{font-size:11.5px;color:var(--sub);padding:6px 10px;border-top:1px solid var(--line)}
+.pimg figcaption a{color:var(--sub);text-decoration:none}
+.pimg figcaption a:hover{color:#7db1ff}
+.pimg-none{margin:10px 0 4px;background:var(--panel2);border:1px dashed var(--line);border-radius:10px;padding:16px 12px;text-align:center;color:var(--sub);font-size:13px;line-height:1.7}
+/* 实车对照 */
+.realcar{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
+.realcar .rc-t{font-size:13px;color:var(--sub);margin-bottom:6px}
+.realcar img{width:100%;border-radius:10px;display:block;cursor:zoom-in}
+.realcar .rc-c{font-size:11.5px;color:var(--sub);margin-top:4px}
+.realcar .rc-c a{color:var(--sub);text-decoration:none}
+/* 教程配图 */
+.tut .timg{margin:8px 0 12px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#0b1017}
+.tut .timg img{width:100%;max-height:200px;object-fit:contain;display:block;cursor:zoom-in}
+.tut .timg figcaption{font-size:11.5px;color:var(--sub);padding:4px 10px;background:var(--panel2)}
+/* 价格表缩略图 */
+td.tthumb{padding:6px 8px;width:52px}
+td.tthumb img{width:44px;height:44px;object-fit:cover;border-radius:8px;display:block;border:1px solid var(--line);cursor:zoom-in}
+td.tthumb .noimg{width:44px;height:44px;border-radius:8px;background:var(--panel2);border:1px dashed var(--line);display:flex;align-items:center;justify-content:center;color:var(--sub)}
 </style>
 </head>
 <body>
 <header>
   <h1>🔧 长安 CS75 修车知识交互原型</h1>
-  <span class="tag">透视看车 · 86 个零件热点 · DIY 教程 · 市场价格参考</span>
+  <span class="tag">透视看车 · 84 个零件热点 · 零件实拍图 · DIY 教程 · 市场价格参考</span>
 </header>
 
 <nav class="main-tabs">
@@ -149,11 +171,11 @@ footer{padding:16px 24px;color:var(--sub);font-size:12.5px;border-top:1px solid 
 <!-- 价格表 -->
 <div class="section" id="sec-price">
   <p style="color:var(--sub);font-size:13px;margin-bottom:10px">以下为国内市场常见参考价（副厂/品牌件为主，4S 店原厂件通常贵 50%–150%），仅供预算参考，实际以当地行情与车型年款为准。点击零件名可跳转到透视图详情。</p>
-  <div class="table-wrap"><table id="priceTable"><thead><tr><th>零件/项目</th><th>零件参考价</th><th>工时参考</th><th>建议周期</th></tr></thead><tbody></tbody></table></div>
+  <div class="table-wrap"><table id="priceTable"><thead><tr><th>图</th><th>零件/项目</th><th>零件参考价</th><th>工时参考</th><th>建议周期</th></tr></thead><tbody></tbody></table></div>
 </div>
 
 <footer>
-  本页为个人修车知识原型 · 车型：长安 CS75（含 PLUS 各年款可能有差异，参数以实车与《用户手册》为准）· 价格为市场参考区间，非实时报价
+  本页为个人修车知识原型 · 车型：长安 CS75（2017 款第一代；其他年款配置可能有差异，参数以实车与《用户手册》为准）· 价格为市场参考区间，非实时报价 · 实拍图来自 Wikimedia Commons 自由版权素材（通用组件图，非原车拍摄）
 </footer>
 
 <script>
@@ -366,10 +388,6 @@ rear_glass:{name:"后风挡玻璃",cat:"外观 · 玻璃",sys:"body",
   desc:"带电热除雾丝。贴膜、放吸盘摆件时别划伤电热丝；后雨刮臂弹回最容易砸裂它，换后雨刮片时垫毛巾。",
   check:["除雾局部不热（电热丝断，可导电银漆修补）","裂纹扩散及时换"],
   cycle:"坏了再换",price:"500–1200 元（含玻璃胶，以实车为准）",labor:"含工时"},
-light_bar:{name:"贯穿式尾灯",cat:"灯光",sys:"elec",
-  desc:"CS75 PLUS 的标志性设计，尾门正中一条 LED 灯带。局部不亮多为灯板/驱动问题，多数情况需换总成。",
-  check:["灯带局部断亮","灯罩内水汽凝结"],
-  cycle:"坏了再换",price:"800–1800 元（总成，以年款为准）",labor:"100–300 元"},
 shark_fin:{name:"鲨鱼鳍天线",cat:"电气 · 小件",sys:"elec",
   desc:"车顶尾部的小鳍，集成 FM/AM、GPS 天线。收音机信号差、导航定位飘先检查它是否松动进水。逆时针拧下即可更换。",
   check:["收音机杂音变大","过自动洗车机后松动"],
@@ -587,6 +605,99 @@ const TUTORIALS = [
 ];
 </script>
 <script>
+/* ============ 图片清单（Wikimedia Commons 自由版权，已本地化 webp） ============
+   f=详情图 t=缩略图 a=作者 l=协议 s=来源页；缺失 key = 隐藏结构件，UI 显示占位说明 */
+const PART_IMG={
+abs_pump:{f:"images/parts/abs_pump.webp",t:"images/thumbs/abs_pump.webp",a:"Samf4u",l:"CC BY-SA 4.0",s:"https://commons.wikimedia.org/wiki/File:ABS_HCU_April_2018.jpg"},
+ac_compressor:{f:"images/parts/ac_compressor.webp",t:"images/thumbs/ac_compressor.webp",a:"CZmarlin  — Christopher Ziemnowicz, releases all rights but a photo credit would",l:"Public domain",s:"https://commons.wikimedia.org/wiki/File:Jeep_2.5_liter_4-cylinder_engine_chromed_d.jpg"},
+acc_radar:{f:"images/parts/acc_radar.webp",t:"images/thumbs/acc_radar.webp",a:"Wikimedia Commons",l:"CC BY-SA 3.0",s:"https://commons.wikimedia.org/wiki/File:Radar_Antenne_f%C3%BCr_Kfz-Anwendungen.jpg"},
+air_filter:{f:"images/parts/air_filter.webp",t:"images/thumbs/air_filter.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+air_vent:{f:"images/parts/air_vent.webp",t:"images/thumbs/air_vent.webp",a:"CZmarlin  — Christopher Ziemnowicz, releases all rights but a photo credit would",l:"Public domain",s:"https://commons.wikimedia.org/wiki/File:1953_Imperial_2-tone_with_AC_vents.jpg"},
+alternator:{f:"images/parts/alternator.webp",t:"images/thumbs/alternator.webp",a:"dave_7 from Lethbridge, Canada",l:"CC BY 2.0",s:"https://commons.wikimedia.org/wiki/File:Alternator_Out_(16133831166).jpg"},
+battery:{f:"images/parts/battery.webp",t:"images/thumbs/battery.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+belt:{f:"images/parts/belt.webp",t:"images/thumbs/belt.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+brake_disc:{f:"images/parts/brake_disc.webp",t:"images/thumbs/brake_disc.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+brake_fluid:{f:"images/parts/brake_fluid.webp",t:"images/thumbs/brake_fluid.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+brake_pad:{f:"images/parts/brake_pad.webp",t:"images/thumbs/brake_pad.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+bumper:{f:"images/parts/bumper.webp",t:"images/thumbs/bumper.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+cabin_filter:{f:"images/parts/cabin_filter.webp",t:"images/thumbs/cabin_filter.webp",a:"evitomotua",l:"CC BY-SA 2.5",s:"https://commons.wikimedia.org/wiki/File:Kabinenluftfilter_Produktfamilie01.jpg"},
+canister:{f:"images/parts/canister.webp",t:"images/thumbs/canister.webp",a:"Khaosaming",l:"CC BY-SA 4.0",s:"https://commons.wikimedia.org/wiki/File:Yamaha_SR400_2014_Engine_With_EVAP_Canister.JPG"},
+catalyst:{f:"images/parts/catalyst.webp",t:"images/thumbs/catalyst.webp",a:"Amazoniano",l:"CC BY-SA 4.0",s:"https://commons.wikimedia.org/wiki/File:Bmw-catalytic-converters.jpg"},
+condenser:{f:"images/parts/condenser.webp",t:"images/thumbs/condenser.webp",a:"",l:"Public domain",s:"https://commons.wikimedia.org/wiki/File:Automobile_radiator.jpg"},
+control_arm:{f:"images/parts/control_arm.webp",t:"images/thumbs/control_arm.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+coolant:{f:"images/parts/coolant.webp",t:"images/thumbs/coolant.webp",a:"Nithinhegde.mb",l:"CC BY-SA 4.0",s:"https://commons.wikimedia.org/wiki/File:Coolant.jpg"},
+dash:{f:"images/parts/dash.webp",t:"images/thumbs/dash.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+dipstick:{f:"images/parts/dipstick.webp",t:"images/thumbs/dipstick.webp",a:"Nenad Stojkovic",l:"CC BY 2.0",s:"https://commons.wikimedia.org/wiki/File:Auto_mechanic_checking_oil_at_home_closeup._(51727929152).jpg"},
+door_handle:{f:"images/parts/door_handle.webp",t:"images/thumbs/door_handle.webp",a:"Shixart1985",l:"CC BY 2.0",s:"https://commons.wikimedia.org/wiki/File:Close-up_of_a_car_door_handle.jpg"},
+drl:{f:"images/parts/drl.webp",t:"images/thumbs/drl.webp",a:"A. Bailey",l:"CC BY-SA 3.0",s:"https://commons.wikimedia.org/wiki/File:2014_Hyundai_Genesis_Headlamp.jpg"},
+engine:{f:"images/parts/engine.webp",t:"images/thumbs/engine.webp",a:"Hip~commonswiki",l:"CC BY-SA 4.0",s:"https://commons.wikimedia.org/wiki/File:93SE_4-dr_Engine_Bay_30.jpg"},
+epb:{f:"images/parts/epb.webp",t:"images/thumbs/epb.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+exhaust:{f:"images/parts/exhaust.webp",t:"images/thumbs/exhaust.webp",a:"No machine-readable author provided. Tusanero~commonswiki assumed (based on copy",l:"CC BY-SA 2.5",s:"https://commons.wikimedia.org/wiki/File:Tubo_Escape.jpg"},
+fender:{f:"images/parts/fender.webp",t:"images/thumbs/fender.webp",a:"Dennis Fraevich",l:"CC BY-SA 2.0",s:"https://commons.wikimedia.org/wiki/File:BMW_M1_Art_Car_By_Andy_Warhol_Fender_FR.jpg"},
+fog_light:{f:"images/parts/fog_light.webp",t:"images/thumbs/fog_light.webp",a:"Thomas doerfer",l:"CC BY-SA 3.0",s:"https://commons.wikimedia.org/wiki/File:NebelleuchteMazda3.jpg"},
+front_cam:{f:"images/parts/front_cam.webp",t:"images/thumbs/front_cam.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+fuel:{f:"images/parts/fuel.webp",t:"images/thumbs/fuel.webp",a:"Brian Snelson from Hockley, Essex, England",l:"CC BY 2.0",s:"https://commons.wikimedia.org/wiki/File:7_fuel_filler_cap_squircle_(1362685942).jpg"},
+fuse:{f:"images/parts/fuse.webp",t:"images/thumbs/fuse.webp",a:"Tony Webster",l:"CC BY 2.0",s:"https://commons.wikimedia.org/wiki/File:Automotive_Fuse_Box_-_Volvo_XC90_Car_(52953529388).jpg"},
+grille:{f:"images/parts/grille.webp",t:"images/thumbs/grille.webp",a:"Ermell",l:"CC BY-SA 4.0",s:"https://commons.wikimedia.org/wiki/File:1941_Buick_8_Grill_Hirschaid-20220709-RM-104127.jpg"},
+half_shaft:{f:"images/parts/half_shaft.webp",t:"images/thumbs/half_shaft.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+headlight:{f:"images/parts/headlight.webp",t:"images/thumbs/headlight.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+hood:{f:"images/parts/hood.webp",t:"images/thumbs/hood.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+ignition_coil:{f:"images/parts/ignition_coil.webp",t:"images/thumbs/ignition_coil.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+intake_pipe:{f:"images/parts/intake_pipe.webp",t:"images/thumbs/intake_pipe.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+mirror:{f:"images/parts/mirror.webp",t:"images/thumbs/mirror.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+multilink:{f:"images/parts/multilink.webp",t:"images/thumbs/multilink.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+nozzle:{f:"images/parts/nozzle.webp",t:"images/thumbs/nozzle.webp",a:"Carrier Air Conditioning Company of America",l:"No restrictions",s:"https://commons.wikimedia.org/wiki/File:Catalog_13-_Carrier_air_washers_and_humidifiers-_applied_to_public_office_and_industrial_buildings,_with_notes_on_humidity_(1913)_(14592322067).jpg"},
+obd:{f:"images/parts/obd.webp",t:"images/thumbs/obd.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+oil:{f:"images/parts/oil.webp",t:"images/thumbs/oil.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+oil_pan:{f:"images/parts/oil_pan.webp",t:"images/thumbs/oil_pan.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+pedal:{f:"images/parts/pedal.webp",t:"images/thumbs/pedal.webp",a:"Stahlkocher",l:"CC BY-SA 3.0",s:"https://commons.wikimedia.org/wiki/File:Pedalerie_Peugeot_206.jpg"},
+radar:{f:"images/parts/radar.webp",t:"images/thumbs/radar.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+radiator_fan:{f:"images/parts/radiator_fan.webp",t:"images/thumbs/radiator_fan.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+reading_light:{f:"images/parts/reading_light.webp",t:"images/thumbs/reading_light.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+rear_cam:{f:"images/parts/rear_cam.webp",t:"images/thumbs/rear_cam.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+rear_glass:{f:"images/parts/rear_glass.webp",t:"images/thumbs/rear_glass.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+rear_wiper:{f:"images/parts/rear_wiper.webp",t:"images/thumbs/rear_wiper.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+rearview:{f:"images/parts/rearview.webp",t:"images/thumbs/rearview.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+reflector:{f:"images/parts/reflector.webp",t:"images/thumbs/reflector.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+roof_rack:{f:"images/parts/roof_rack.webp",t:"images/thumbs/roof_rack.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+seat:{f:"images/parts/seat.webp",t:"images/thumbs/seat.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+seatbelt:{f:"images/parts/seatbelt.webp",t:"images/thumbs/seatbelt.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+shark_fin:{f:"images/parts/shark_fin.webp",t:"images/thumbs/shark_fin.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+side_step:{f:"images/parts/side_step.webp",t:"images/thumbs/side_step.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+spark:{f:"images/parts/spark.webp",t:"images/thumbs/spark.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+steering:{f:"images/parts/steering.webp",t:"images/thumbs/steering.webp",a:"Shixart1985",l:"CC BY 2.0",s:"https://commons.wikimedia.org/wiki/File:Audi_Q5_steering_wheel_closeup.jpg"},
+strut_top:{f:"images/parts/strut_top.webp",t:"images/thumbs/strut_top.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+sun_visor:{f:"images/parts/sun_visor.webp",t:"images/thumbs/sun_visor.webp",a:"Bindydad123",l:"CC BY-SA 4.0",s:"https://commons.wikimedia.org/wiki/File:2015_Perodua_Axia_1.0_Standard_G_(117).jpg"},
+sunroof:{f:"images/parts/sunroof.webp",t:"images/thumbs/sunroof.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+suspension:{f:"images/parts/suspension.webp",t:"images/thumbs/suspension.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+sway_link:{f:"images/parts/sway_link.webp",t:"images/thumbs/sway_link.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+taillight:{f:"images/parts/taillight.webp",t:"images/thumbs/taillight.webp",a:"Shixart1985",l:"CC BY 2.0",s:"https://commons.wikimedia.org/wiki/File:Damaged_car_tail_light_seen_in_a_junkyard.jpg"},
+third_brake:{f:"images/parts/third_brake.webp",t:"images/thumbs/third_brake.webp",a:"Pava",l:"CC BY-SA 3.0 it",s:"https://commons.wikimedia.org/wiki/File:%22_12_-_ITALY_-_FIAT_Panda_2011_-_third_brake_light_and_rear_window_01.jpg"},
+tie_rod:{f:"images/parts/tie_rod.webp",t:"images/thumbs/tie_rod.webp",a:"R. Henrik Nilsson",l:"CC BY 4.0",s:"https://commons.wikimedia.org/wiki/File:2000s_rod_end_bearing_M80_or_MB0_111_gr.jpg"},
+tire:{f:"images/parts/tire.webp",t:"images/thumbs/tire.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+tow_cover:{f:"images/parts/tow_cover.webp",t:"images/thumbs/tow_cover.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+trans_oil:{f:"images/parts/trans_oil.webp",t:"images/thumbs/trans_oil.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+trunk:{f:"images/parts/trunk.webp",t:"images/thumbs/trunk.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+trunk_strut:{f:"images/parts/trunk_strut.webp",t:"images/thumbs/trunk_strut.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+turbo:{f:"images/parts/turbo.webp",t:"images/thumbs/turbo.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+tut_jump:{f:"images/parts/tut_jump.webp",t:"images/thumbs/tut_jump.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+tut_tire:{f:"images/parts/tut_tire.webp",t:"images/thumbs/tut_tire.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+usb_port:{f:"images/parts/usb_port.webp",t:"images/thumbs/usb_port.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+washer:{f:"images/parts/washer.webp",t:"images/thumbs/washer.webp",a:"Staselnik",l:"CC BY-SA 3.0",s:"https://commons.wikimedia.org/wiki/File:Freezing_winter_windshield_fluid.jpg"},
+washer_tank:{f:"images/parts/washer_tank.webp",t:"images/thumbs/washer_tank.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+wheel_rim:{f:"images/parts/wheel_rim.webp",t:"images/thumbs/wheel_rim.webp",a:"Kazyakuruma",l:"CC BY-SA 4.0",s:"https://commons.wikimedia.org/wiki/File:20-inch_wheel_of_Nissan_FAIRLADY_Z_(Z34)_Version_ST,_2022.jpg"},
+window_switch:{f:"images/parts/window_switch.webp",t:"images/thumbs/window_switch.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+wiper:{f:"images/parts/wiper.webp",t:"images/thumbs/wiper.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+wiper_arm:{f:"images/parts/wiper_arm.webp",t:"images/thumbs/wiper_arm.webp",a:"Wikimedia Commons",l:"见文件页",s:""},
+wiper_motor:{f:"images/parts/wiper_motor.webp",t:"images/thumbs/wiper_motor.webp",a:"Ildar Sagdejev (Specious)",l:"CC BY-SA 4.0",s:"https://commons.wikimedia.org/wiki/File:2008-04-24_Windshield_wiper_arm_attachment.jpg"},
+};
+const CAR_IMG={
+side:{f:"images/car/car_side.webp",a:"Navigator84",l:"CC BY-SA 4.0",s:"https://commons.wikimedia.org/wiki/File:Chang%27an_CS75_02_China_2015-04-10.jpg"},
+front:{f:"images/car/car_front.webp",a:"Kevauto",l:"CC BY-SA 4.0",s:"https://commons.wikimedia.org/wiki/File:2017_Chang%27an_CS75,_front_8.4.18.jpg"},
+rear:{f:"images/car/car_rear.webp",a:"Kevauto",l:"CC BY-SA 4.0",s:"https://commons.wikimedia.org/wiki/File:2016_Chang%27an_CS75,_rear_8.3.23.jpg"},
+};
+/* 教程配图（复用零件图 key） */
+const TUT_IMG={"tut-washer":"washer_tank","tut-wiper":"wiper","tut-dipstick":"dipstick","tut-coolant":"coolant","tut-fuse":"fuse","tut-sunroof":"sunroof","tut-cabin":"cabin_filter","tut-air":"air_filter","tut-tire":"tut_tire","tut-jump":"tut_jump"};
 /* ================= 六个视角的 SVG =================
    hs(part,x,y[,label,dx,dy,anchor])：默认标签在圆点上方；给 dx,dy 时画引线并把标签放在偏移处 */
 function hs(part,x,y,label,dx,dy,anchor){
@@ -910,12 +1021,14 @@ ${hs("tire",208,488,"轮胎",-26,14,"end")}
 <line x1="450" y1="200" x2="472" y2="172" stroke="#10151d" stroke-width="4" stroke-linecap="round"/>
 <line x1="442" y1="170" x2="502" y2="168" stroke="#10151d" stroke-width="6" stroke-linecap="round"/>
 
-<!-- 贯穿式尾灯 -->
-<rect x="226" y="238" width="448" height="32" rx="15" fill="url(#r_red)" stroke="#5c1420" stroke-width="1.5"/>
-<line x1="240" y1="246" x2="660" y2="246" stroke="rgba(255,255,255,.35)" stroke-width="2"/>
+<!-- 分体式尾灯（一代 CS75 两侧灯组） -->
+<rect x="226" y="238" width="148" height="32" rx="14" fill="url(#r_red)" stroke="#5c1420" stroke-width="1.5"/>
+<rect x="526" y="238" width="148" height="32" rx="14" fill="url(#r_red)" stroke="#5c1420" stroke-width="1.5"/>
+<line x1="238" y1="246" x2="362" y2="246" stroke="rgba(255,255,255,.35)" stroke-width="2"/>
+<line x1="538" y1="246" x2="662" y2="246" stroke="rgba(255,255,255,.35)" stroke-width="2"/>
 <g stroke="rgba(0,0,0,.3)" stroke-width="2">
-  <line x1="300" y1="240" x2="300" y2="268"/><line x1="360" y1="240" x2="360" y2="268"/>
-  <line x1="540" y1="240" x2="540" y2="268"/><line x1="600" y1="240" x2="600" y2="268"/>
+  <line x1="300" y1="240" x2="300" y2="268"/>
+  <line x1="600" y1="240" x2="600" y2="268"/>
 </g>
 <!-- 尾部车标 -->
 <polygon points="438,288 450,302 462,288 462,297 450,311 438,297" fill="url(#r_chrome)"/>
@@ -953,7 +1066,6 @@ ${hs("shark_fin",492,70,"鲨鱼鳍天线",28,-14,"start")}
 ${hs("rear_glass",350,158,"后风挡",-30,-6,"end")}
 ${hs("rear_wiper",468,178,"后雨刮",30,-10,"start")}
 ${hs("taillight",276,254,"尾灯",-30,0,"end")}
-${hs("light_bar",562,254,"贯穿尾灯",34,0,"start")}
 ${hs("trunk",330,304,"后备箱",-30,0,"end")}
 ${hs("rear_cam",528,312,"后摄像头",30,18,"start")}
 ${hs("trunk_strut",664,300,"尾门撑杆",26,-8,"start")}
@@ -1442,19 +1554,31 @@ VIEWS.forEach(v=>{
 
 function renderView(){
   const v=VIEWS.find(x=>x.id===curView);
-  canvas.innerHTML=v.svg;
+  const rc=CAR_IMG[curView];
+  canvas.innerHTML=v.svg+(rc?`<div class="realcar"><div class="rc-t">📷 实车对照（一代 CS75 同视角实拍，方便与上图比对）</div><img src="${rc.f}" alt="CS75 实车${v.label}" loading="lazy" onclick="zoomImg('${rc.f}')"><div class="rc-c"><a href="${rc.s}" target="_blank" rel="noopener">📷 ${rc.a} · ${rc.l} · Wikimedia Commons</a></div></div>`:"");
   canvas.querySelectorAll(".hotspot").forEach(h=>{
     if(h.dataset.part===curPart)h.classList.add("sel");
     h.onclick=()=>{showPart(h.dataset.part);syncHash();};
   });
 }
 
+function zoomImg(src){
+  const o=document.createElement("div");
+  o.style.cssText="position:fixed;inset:0;background:rgba(0,0,0,.88);display:flex;align-items:center;justify-content:center;z-index:99;cursor:zoom-out;padding:2vw";
+  o.innerHTML=`<img src="${src}" style="max-width:96vw;max-height:94vh;border-radius:10px">`;
+  o.onclick=()=>o.remove();
+  document.body.appendChild(o);
+}
+
 function showPart(key){
   const p=PARTS[key]; if(!p)return;
   curPart=key;
   canvas.querySelectorAll(".hotspot").forEach(h=>h.classList.toggle("sel",h.dataset.part===key));
+  const m=PART_IMG[key];
   detail.innerHTML=`
     <h2>${p.name}</h2><div class="cat">${p.cat}</div>
+    ${m?`<figure class="pimg"><img src="${m.f}" alt="${p.name}实拍（通用组件图）" loading="lazy" onclick="zoomImg('${m.f}')"><figcaption><a href="${m.s}" target="_blank" rel="noopener">📷 ${m.a} · ${m.l} · Wikimedia Commons（行业通用组件图，非原车拍摄）</a></figcaption></figure>`
+       :`<div class="pimg-none">📷 该部件藏于车身/车门内部，暂无可公开使用的实拍图<br>以上方透视图中的标注位置为准</div>`}
     <p>${p.desc}</p>
     ${p.check?`<h3>🔍 自检方法</h3><ul>${p.check.map(c=>`<li>${c}</li>`).join("")}</ul>`:""}
     <h3>💰 费用与周期</h3>
@@ -1485,7 +1609,10 @@ const tutGrid=document.getElementById("tutGrid");
 TUTORIALS.forEach(t=>{
   const d=document.createElement("div");
   d.className="tut"+(t.full?" full":""); d.id=t.id;
-  d.innerHTML=`<h3>${t.title}</h3><div class="meta">${t.meta}</div><ol>${t.steps.map(s=>`<li>${s}</li>`).join("")}</ol>${t.warn?`<div class="warn">${t.warn}</div>`:""}`;
+  const tm=PART_IMG[TUT_IMG[t.id]];
+  d.innerHTML=`<h3>${t.title}</h3><div class="meta">${t.meta}</div>`+
+    (tm?`<figure class="timg"><img src="${tm.f}" alt="${t.title}涉及部件实拍" loading="lazy" onclick="zoomImg('${tm.f}')"><figcaption>📷 ${tm.a} · ${tm.l} · Wikimedia Commons</figcaption></figure>`:"")+
+    `<ol>${t.steps.map(s=>`<li>${s}</li>`).join("")}</ol>${t.warn?`<div class="warn">${t.warn}</div>`:""}`;
   tutGrid.appendChild(d);
 });
 
@@ -1493,8 +1620,9 @@ TUTORIALS.forEach(t=>{
 const tb=document.querySelector("#priceTable tbody");
 Object.entries(PARTS).forEach(([key,p])=>{
   if(p.price==="——"&&p.labor==="——")return;
+  const m=PART_IMG[key];
   const tr=document.createElement("tr");
-  tr.innerHTML=`<td><span class="linklike" onclick="jumpPart('${key}')">${p.name}</span></td><td><b>${p.price}</b></td><td>${p.labor}</td><td>${p.cycle}</td>`;
+  tr.innerHTML=`<td class="tthumb">${m?`<img src="${m.t}" alt="${p.name}" loading="lazy" onclick="zoomImg('${m.f}')">`:`<span class="noimg">—</span>`}</td><td><span class="linklike" onclick="jumpPart('${key}')">${p.name}</span></td><td><b>${p.price}</b></td><td>${p.labor}</td><td>${p.cycle}</td>`;
   tb.appendChild(tr);
 });
 

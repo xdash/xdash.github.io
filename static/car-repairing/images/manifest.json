@@ -1,0 +1,658 @@
+{
+ "wiper": {
+  "file": "images/parts/wiper.webp",
+  "thumb": "images/thumbs/wiper.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "(pending meta):Windscreen wiper"
+ },
+ "rear_wiper": {
+  "file": "images/parts/rear_wiper.webp",
+  "thumb": "images/thumbs/rear_wiper.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "(pending meta):Windscreen wiper"
+ },
+ "washer": {
+  "file": "images/parts/washer.webp",
+  "thumb": "images/thumbs/washer.webp",
+  "artist": "Staselnik",
+  "license": "CC BY-SA 3.0",
+  "src": "https://commons.wikimedia.org/wiki/File:Freezing_winter_windshield_fluid.jpg",
+  "title": "File:Freezing winter windshield fluid.jpg"
+ },
+ "nozzle": {
+  "file": "images/parts/nozzle.webp",
+  "thumb": "images/thumbs/nozzle.webp",
+  "artist": "Carrier Air Conditioning Company of America",
+  "license": "No restrictions",
+  "src": "https://commons.wikimedia.org/wiki/File:Catalog_13-_Carrier_air_washers_and_humidifiers-_applied_to_public_office_and_industrial_buildings,_with_notes_on_humidity_(1913)_(14592322067).jpg",
+  "title": "File:Catalog 13- Carrier air washers and humidifiers- applied to public office and industrial buildings, with notes on humidity (1913) (14592322067).jpg"
+ },
+ "headlight": {
+  "file": "images/parts/headlight.webp",
+  "thumb": "images/thumbs/headlight.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "File:045 Replacing car headlight bulb - HIR2 type 12V halogen lightbulb for Toyota Auris.jpg"
+ },
+ "taillight": {
+  "file": "images/parts/taillight.webp",
+  "thumb": "images/thumbs/taillight.webp",
+  "artist": "Shixart1985",
+  "license": "CC BY 2.0",
+  "src": "https://commons.wikimedia.org/wiki/File:Damaged_car_tail_light_seen_in_a_junkyard.jpg",
+  "title": "File:Damaged car tail light seen in a junkyard.jpg"
+ },
+ "tire": {
+  "file": "images/parts/tire.webp",
+  "thumb": "images/thumbs/tire.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "(pending meta):Tire"
+ },
+ "brake_pad": {
+  "file": "images/parts/brake_pad.webp",
+  "thumb": "images/thumbs/brake_pad.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "(pending meta):Brake pad"
+ },
+ "mirror": {
+  "file": "images/parts/mirror.webp",
+  "thumb": "images/thumbs/mirror.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "(pending meta):Side-view mirror"
+ },
+ "battery": {
+  "file": "images/parts/battery.webp",
+  "thumb": "images/thumbs/battery.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "(pending meta):Automotive battery"
+ },
+ "washer_tank": {
+  "file": "images/parts/washer_tank.webp",
+  "thumb": "images/thumbs/washer_tank.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "(pending meta):Windshield washer fluid"
+ },
+ "oil": {
+  "file": "images/parts/oil.webp",
+  "thumb": "images/thumbs/oil.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "(pending meta):Oil filter"
+ },
+ "air_filter": {
+  "file": "images/parts/air_filter.webp",
+  "thumb": "images/thumbs/air_filter.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "(pending meta):Air filter"
+ },
+ "cabin_filter": {
+  "file": "images/parts/cabin_filter.webp",
+  "thumb": "images/thumbs/cabin_filter.webp",
+  "artist": "evitomotua",
+  "license": "CC BY-SA 2.5",
+  "src": "https://commons.wikimedia.org/wiki/File:Kabinenluftfilter_Produktfamilie01.jpg",
+  "title": "File:Kabinenluftfilter Produktfamilie01.jpg"
+ },
+ "brake_fluid": {
+  "file": "images/parts/brake_fluid.webp",
+  "thumb": "images/thumbs/brake_fluid.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "(pending meta):Brake fluid"
+ },
+ "spark": {
+  "file": "images/parts/spark.webp",
+  "thumb": "images/thumbs/spark.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "(pending meta):Spark plug"
+ },
+ "fuse": {
+  "file": "images/parts/fuse.webp",
+  "thumb": "images/thumbs/fuse.webp",
+  "artist": "Tony Webster",
+  "license": "CC BY 2.0",
+  "src": "https://commons.wikimedia.org/wiki/File:Automotive_Fuse_Box_-_Volvo_XC90_Car_(52953529388).jpg",
+  "title": "File:Automotive Fuse Box - Volvo XC90 Car (52953529388).jpg"
+ },
+ "obd": {
+  "file": "images/parts/obd.webp",
+  "thumb": "images/thumbs/obd.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "(pending meta):On-board diagnostics"
+ },
+ "dash": {
+  "file": "images/parts/dash.webp",
+  "thumb": "images/thumbs/dash.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "(pending meta):Instrument cluster"
+ },
+ "catalyst": {
+  "file": "images/parts/catalyst.webp",
+  "thumb": "images/thumbs/catalyst.webp",
+  "artist": "Amazoniano",
+  "license": "CC BY-SA 4.0",
+  "src": "https://commons.wikimedia.org/wiki/File:Bmw-catalytic-converters.jpg",
+  "title": "File:Bmw-catalytic-converters.jpg"
+ },
+ "exhaust": {
+  "file": "images/parts/exhaust.webp",
+  "thumb": "images/thumbs/exhaust.webp",
+  "artist": "No machine-readable author provided. Tusanero~commonswiki assumed (based on copy",
+  "license": "CC BY-SA 2.5",
+  "src": "https://commons.wikimedia.org/wiki/File:Tubo_Escape.jpg",
+  "title": "File:Tubo Escape.jpg"
+ },
+ "suspension": {
+  "file": "images/parts/suspension.webp",
+  "thumb": "images/thumbs/suspension.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "(pending meta):Shock absorber"
+ },
+ "trans_oil": {
+  "file": "images/parts/trans_oil.webp",
+  "thumb": "images/thumbs/trans_oil.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "(pending meta):Automatic transmission fluid"
+ },
+ "engine": {
+  "file": "images/parts/engine.webp",
+  "thumb": "images/thumbs/engine.webp",
+  "artist": "Hip~commonswiki",
+  "license": "CC BY-SA 4.0",
+  "src": "https://commons.wikimedia.org/wiki/File:93SE_4-dr_Engine_Bay_30.jpg",
+  "title": "File:93SE 4-dr Engine Bay 30.jpg"
+ },
+ "fuel": {
+  "file": "images/parts/fuel.webp",
+  "thumb": "images/thumbs/fuel.webp",
+  "artist": "Brian Snelson from Hockley, Essex, England",
+  "license": "CC BY 2.0",
+  "src": "https://commons.wikimedia.org/wiki/File:7_fuel_filler_cap_squircle_(1362685942).jpg",
+  "title": "File:7 fuel filler cap squircle (1362685942).jpg"
+ },
+ "radar": {
+  "file": "images/parts/radar.webp",
+  "thumb": "images/thumbs/radar.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "(pending meta):Parking sensor"
+ },
+ "trunk": {
+  "file": "images/parts/trunk.webp",
+  "thumb": "images/thumbs/trunk.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "(pending meta):Trunk (car)"
+ },
+ "bumper": {
+  "file": "images/parts/bumper.webp",
+  "thumb": "images/thumbs/bumper.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "(pending meta):Bumper (car)"
+ },
+ "door_handle": {
+  "file": "images/parts/door_handle.webp",
+  "thumb": "images/thumbs/door_handle.webp",
+  "artist": "Shixart1985",
+  "license": "CC BY 2.0",
+  "src": "https://commons.wikimedia.org/wiki/File:Close-up_of_a_car_door_handle.jpg",
+  "title": "File:Close-up of a car door handle.jpg"
+ },
+ "roof_rack": {
+  "file": "images/parts/roof_rack.webp",
+  "thumb": "images/thumbs/roof_rack.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "(pending meta):Roof rack"
+ },
+ "sunroof": {
+  "file": "images/parts/sunroof.webp",
+  "thumb": "images/thumbs/sunroof.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "(pending meta):Sunroof"
+ },
+ "wheel_rim": {
+  "file": "images/parts/wheel_rim.webp",
+  "thumb": "images/thumbs/wheel_rim.webp",
+  "artist": "Kazyakuruma",
+  "license": "CC BY-SA 4.0",
+  "src": "https://commons.wikimedia.org/wiki/File:20-inch_wheel_of_Nissan_FAIRLADY_Z_(Z34)_Version_ST,_2022.jpg",
+  "title": "File:20-inch wheel of Nissan FAIRLADY Z (Z34) Version ST, 2022.jpg"
+ },
+ "brake_disc": {
+  "file": "images/parts/brake_disc.webp",
+  "thumb": "images/thumbs/brake_disc.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "(pending meta):Disc brake"
+ },
+ "side_step": {
+  "file": "images/parts/side_step.webp",
+  "thumb": "images/thumbs/side_step.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "File:2002 Ford Explorer Sport Trac.jpg"
+ },
+ "fender": {
+  "file": "images/parts/fender.webp",
+  "thumb": "images/thumbs/fender.webp",
+  "artist": "Dennis Fraevich",
+  "license": "CC BY-SA 2.0",
+  "src": "https://commons.wikimedia.org/wiki/File:BMW_M1_Art_Car_By_Andy_Warhol_Fender_FR.jpg",
+  "title": "File:BMW M1 Art Car By Andy Warhol Fender FR.jpg"
+ },
+ "grille": {
+  "file": "images/parts/grille.webp",
+  "thumb": "images/thumbs/grille.webp",
+  "artist": "Ermell",
+  "license": "CC BY-SA 4.0",
+  "src": "https://commons.wikimedia.org/wiki/File:1941_Buick_8_Grill_Hirschaid-20220709-RM-104127.jpg",
+  "title": "File:1941 Buick 8 Grill Hirschaid-20220709-RM-104127.jpg"
+ },
+ "acc_radar": {
+  "file": "images/parts/acc_radar.webp",
+  "thumb": "images/thumbs/acc_radar.webp",
+  "artist": "Wikimedia Commons",
+  "license": "CC BY-SA 3.0",
+  "src": "https://commons.wikimedia.org/wiki/File:Radar_Antenne_f%C3%BCr_Kfz-Anwendungen.jpg",
+  "title": "File:Radar Antenne für Kfz-Anwendungen.jpg"
+ },
+ "drl": {
+  "file": "images/parts/drl.webp",
+  "thumb": "images/thumbs/drl.webp",
+  "artist": "A. Bailey",
+  "license": "CC BY-SA 3.0",
+  "src": "https://commons.wikimedia.org/wiki/File:2014_Hyundai_Genesis_Headlamp.jpg",
+  "title": "File:2014 Hyundai Genesis Headlamp.jpg"
+ },
+ "fog_light": {
+  "file": "images/parts/fog_light.webp",
+  "thumb": "images/thumbs/fog_light.webp",
+  "artist": "Thomas doerfer",
+  "license": "CC BY-SA 3.0",
+  "src": "https://commons.wikimedia.org/wiki/File:NebelleuchteMazda3.jpg",
+  "title": "File:NebelleuchteMazda3.jpg"
+ },
+ "wiper_arm": {
+  "file": "images/parts/wiper_arm.webp",
+  "thumb": "images/thumbs/wiper_arm.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "(pending meta):Windscreen wiper"
+ },
+ "hood": {
+  "file": "images/parts/hood.webp",
+  "thumb": "images/thumbs/hood.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "(pending meta):Hood (vehicle)"
+ },
+ "front_cam": {
+  "file": "images/parts/front_cam.webp",
+  "thumb": "images/thumbs/front_cam.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "(pending meta):Backup camera"
+ },
+ "tow_cover": {
+  "file": "images/parts/tow_cover.webp",
+  "thumb": "images/thumbs/tow_cover.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "(pending meta):Tow hitch"
+ },
+ "third_brake": {
+  "file": "images/parts/third_brake.webp",
+  "thumb": "images/thumbs/third_brake.webp",
+  "artist": "Pava",
+  "license": "CC BY-SA 3.0 it",
+  "src": "https://commons.wikimedia.org/wiki/File:%22_12_-_ITALY_-_FIAT_Panda_2011_-_third_brake_light_and_rear_window_01.jpg",
+  "title": "File:\" 12 - ITALY - FIAT Panda 2011 - third brake light and rear window 01.jpg"
+ },
+ "rear_glass": {
+  "file": "images/parts/rear_glass.webp",
+  "thumb": "images/thumbs/rear_glass.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "(pending meta):Windscreen wiper"
+ },
+ "shark_fin": {
+  "file": "images/parts/shark_fin.webp",
+  "thumb": "images/thumbs/shark_fin.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "File:2019 Honda CR-V 1.5 TC 2WD (27).jpg"
+ },
+ "rear_cam": {
+  "file": "images/parts/rear_cam.webp",
+  "thumb": "images/thumbs/rear_cam.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "(pending meta):Backup camera"
+ },
+ "reflector": {
+  "file": "images/parts/reflector.webp",
+  "thumb": "images/thumbs/reflector.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "File:Corner-Cube.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+ },
+ "trunk_strut": {
+  "file": "images/parts/trunk_strut.webp",
+  "thumb": "images/thumbs/trunk_strut.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "File:Gas-spring_simplified_numbered_120.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+ },
+ "dipstick": {
+  "file": "images/parts/dipstick.webp",
+  "thumb": "images/thumbs/dipstick.webp",
+  "artist": "Nenad Stojkovic",
+  "license": "CC BY 2.0",
+  "src": "https://commons.wikimedia.org/wiki/File:Auto_mechanic_checking_oil_at_home_closeup._(51727929152).jpg",
+  "title": "File:Auto mechanic checking oil at home closeup. (51727929152).jpg"
+ },
+ "turbo": {
+  "file": "images/parts/turbo.webp",
+  "thumb": "images/thumbs/turbo.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "File:Turbocharger_Animation_by_Tyroola.gif?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+ },
+ "ignition_coil": {
+  "file": "images/parts/ignition_coil.webp",
+  "thumb": "images/thumbs/ignition_coil.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "File:Igncoil.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+ },
+ "alternator": {
+  "file": "images/parts/alternator.webp",
+  "thumb": "images/thumbs/alternator.webp",
+  "artist": "dave_7 from Lethbridge, Canada",
+  "license": "CC BY 2.0",
+  "src": "https://commons.wikimedia.org/wiki/File:Alternator_Out_(16133831166).jpg",
+  "title": "File:Alternator Out (16133831166).jpg"
+ },
+ "ac_compressor": {
+  "file": "images/parts/ac_compressor.webp",
+  "thumb": "images/thumbs/ac_compressor.webp",
+  "artist": "CZmarlin  — Christopher Ziemnowicz, releases all rights but a photo credit would",
+  "license": "Public domain",
+  "src": "https://commons.wikimedia.org/wiki/File:Jeep_2.5_liter_4-cylinder_engine_chromed_d.jpg",
+  "title": "File:Jeep 2.5 liter 4-cylinder engine chromed d.jpg"
+ },
+ "belt": {
+  "file": "images/parts/belt.webp",
+  "thumb": "images/thumbs/belt.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "File:Belt_drive_systen_01.JPG?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+ },
+ "radiator_fan": {
+  "file": "images/parts/radiator_fan.webp",
+  "thumb": "images/thumbs/radiator_fan.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "File:Automobile_radiator.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+ },
+ "condenser": {
+  "file": "images/parts/condenser.webp",
+  "thumb": "images/thumbs/condenser.webp",
+  "artist": "",
+  "license": "Public domain",
+  "src": "https://commons.wikimedia.org/wiki/File:Automobile_radiator.jpg",
+  "title": "File:Automobile radiator.jpg"
+ },
+ "abs_pump": {
+  "file": "images/parts/abs_pump.webp",
+  "thumb": "images/thumbs/abs_pump.webp",
+  "artist": "Samf4u",
+  "license": "CC BY-SA 4.0",
+  "src": "https://commons.wikimedia.org/wiki/File:ABS_HCU_April_2018.jpg",
+  "title": "File:ABS HCU April 2018.jpg"
+ },
+ "strut_top": {
+  "file": "images/parts/strut_top.webp",
+  "thumb": "images/thumbs/strut_top.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "File:Mcpherson_strut.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+ },
+ "wiper_motor": {
+  "file": "images/parts/wiper_motor.webp",
+  "thumb": "images/thumbs/wiper_motor.webp",
+  "artist": "Ildar Sagdejev (Specious)",
+  "license": "CC BY-SA 4.0",
+  "src": "https://commons.wikimedia.org/wiki/File:2008-04-24_Windshield_wiper_arm_attachment.jpg",
+  "title": "File:2008-04-24 Windshield wiper arm attachment.jpg"
+ },
+ "intake_pipe": {
+  "file": "images/parts/intake_pipe.webp",
+  "thumb": "images/thumbs/intake_pipe.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "File:3840px-Mustang-v6-roush-intake.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+ },
+ "steering": {
+  "file": "images/parts/steering.webp",
+  "thumb": "images/thumbs/steering.webp",
+  "artist": "Shixart1985",
+  "license": "CC BY 2.0",
+  "src": "https://commons.wikimedia.org/wiki/File:Audi_Q5_steering_wheel_closeup.jpg",
+  "title": "File:Audi Q5 steering wheel closeup.jpg"
+ },
+ "pedal": {
+  "file": "images/parts/pedal.webp",
+  "thumb": "images/thumbs/pedal.webp",
+  "artist": "Stahlkocher",
+  "license": "CC BY-SA 3.0",
+  "src": "https://commons.wikimedia.org/wiki/File:Pedalerie_Peugeot_206.jpg",
+  "title": "File:Pedalerie Peugeot 206.jpg"
+ },
+ "epb": {
+  "file": "images/parts/epb.webp",
+  "thumb": "images/thumbs/epb.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "File:Handbrake_lever.JPG?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+ },
+ "seat": {
+  "file": "images/parts/seat.webp",
+  "thumb": "images/thumbs/seat.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "File:Car front seats.jpg"
+ },
+ "seatbelt": {
+  "file": "images/parts/seatbelt.webp",
+  "thumb": "images/thumbs/seatbelt.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "File:Female_driver_buckling_seatbelt.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+ },
+ "rearview": {
+  "file": "images/parts/rearview.webp",
+  "thumb": "images/thumbs/rearview.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "File:Rear-view_mirror.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+ },
+ "sun_visor": {
+  "file": "images/parts/sun_visor.webp",
+  "thumb": "images/thumbs/sun_visor.webp",
+  "artist": "Bindydad123",
+  "license": "CC BY-SA 4.0",
+  "src": "https://commons.wikimedia.org/wiki/File:2015_Perodua_Axia_1.0_Standard_G_(117).jpg",
+  "title": "File:2015 Perodua Axia 1.0 Standard G (117).jpg"
+ },
+ "reading_light": {
+  "file": "images/parts/reading_light.webp",
+  "thumb": "images/thumbs/reading_light.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "File:Dome light.jpg"
+ },
+ "usb_port": {
+  "file": "images/parts/usb_port.webp",
+  "thumb": "images/thumbs/usb_port.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "File:12volt-socket_21mm.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+ },
+ "window_switch": {
+  "file": "images/parts/window_switch.webp",
+  "thumb": "images/thumbs/window_switch.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "File:1993_Jeep_Grand_Cherokee_Laredo_-_Blackberry_with_Crimson_interior_13.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+ },
+ "air_vent": {
+  "file": "images/parts/air_vent.webp",
+  "thumb": "images/thumbs/air_vent.webp",
+  "artist": "CZmarlin  — Christopher Ziemnowicz, releases all rights but a photo credit would",
+  "license": "Public domain",
+  "src": "https://commons.wikimedia.org/wiki/File:1953_Imperial_2-tone_with_AC_vents.jpg",
+  "title": "File:1953 Imperial 2-tone with AC vents.jpg"
+ },
+ "oil_pan": {
+  "file": "images/parts/oil_pan.webp",
+  "thumb": "images/thumbs/oil_pan.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "File:3840px-Interior_and_oil_sump_of_an_Tohatsu_MFS30B_outboard_motor.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+ },
+ "half_shaft": {
+  "file": "images/parts/half_shaft.webp",
+  "thumb": "images/thumbs/half_shaft.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "File:Simple_CV_Joint_animated.gif?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+ },
+ "control_arm": {
+  "file": "images/parts/control_arm.webp",
+  "thumb": "images/thumbs/control_arm.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "File:Mcpherson_strut.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+ },
+ "sway_link": {
+  "file": "images/parts/sway_link.webp",
+  "thumb": "images/thumbs/sway_link.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "File:Stabilisator_%28Porsche%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+ },
+ "multilink": {
+  "file": "images/parts/multilink.webp",
+  "thumb": "images/thumbs/multilink.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "File:5link3Drear1.gif?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+ },
+ "tie_rod": {
+  "file": "images/parts/tie_rod.webp",
+  "thumb": "images/thumbs/tie_rod.webp",
+  "artist": "R. Henrik Nilsson",
+  "license": "CC BY 4.0",
+  "src": "https://commons.wikimedia.org/wiki/File:2000s_rod_end_bearing_M80_or_MB0_111_gr.jpg",
+  "title": "File:2000s rod end bearing M80 or MB0 111 gr.jpg"
+ },
+ "tut_tire": {
+  "file": "images/parts/tut_tire.webp",
+  "thumb": "images/thumbs/tut_tire.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "File:The_British_Army_in_North-west_Europe_1944-45_BU1571.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+ },
+ "tut_jump": {
+  "file": "images/parts/tut_jump.webp",
+  "thumb": "images/thumbs/tut_jump.webp",
+  "artist": "Wikimedia Commons",
+  "license": "见文件页",
+  "src": "",
+  "title": "File:Jump_starting.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+ },
+ "coolant": {
+  "file": "images/parts/coolant.webp",
+  "thumb": "images/thumbs/coolant.webp",
+  "artist": "Nithinhegde.mb",
+  "license": "CC BY-SA 4.0",
+  "src": "https://commons.wikimedia.org/wiki/File:Coolant.jpg",
+  "title": "File:Coolant.jpg"
+ },
+ "canister": {
+  "file": "images/parts/canister.webp",
+  "thumb": "images/thumbs/canister.webp",
+  "artist": "Khaosaming",
+  "license": "CC BY-SA 4.0",
+  "src": "https://commons.wikimedia.org/wiki/File:Yamaha_SR400_2014_Engine_With_EVAP_Canister.JPG",
+  "title": "File:Yamaha SR400 2014 Engine With EVAP Canister.JPG"
+ }
+}

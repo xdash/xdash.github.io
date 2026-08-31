@@ -1,0 +1,20 @@
+{
+ "car_side": {
+  "file": "images/car/car_side.webp",
+  "artist": "Navigator84",
+  "license": "CC BY-SA 4.0",
+  "src": "https://commons.wikimedia.org/wiki/File:Chang%27an_CS75_02_China_2015-04-10.jpg"
+ },
+ "car_front": {
+  "file": "images/car/car_front.webp",
+  "artist": "Kevauto",
+  "license": "CC BY-SA 4.0",
+  "src": "https://commons.wikimedia.org/wiki/File:2017_Chang%27an_CS75,_front_8.4.18.jpg"
+ },
+ "car_rear": {
+  "file": "images/car/car_rear.webp",
+  "artist": "Kevauto",
+  "license": "CC BY-SA 4.0",
+  "src": "https://commons.wikimedia.org/wiki/File:2016_Chang%27an_CS75,_rear_8.3.23.jpg"
+ }
+}
