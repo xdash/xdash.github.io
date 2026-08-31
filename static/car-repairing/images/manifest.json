@@ -5,7 +5,7 @@
   "artist": "Wikimedia Commons",
   "license": "见文件页",
   "src": "",
-  "title": "(pending meta):Windscreen wiper"
+  "title": "File:Heckscheibenwischer_kl.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
  },
  "rear_wiper": {
   "file": "images/parts/rear_wiper.webp",
@@ -13,7 +13,7 @@
   "artist": "Wikimedia Commons",
   "license": "见文件页",
   "src": "",
-  "title": "(pending meta):Windscreen wiper"
+  "title": "File:Heckscheibenwischer_kl.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
  },
  "washer": {
   "file": "images/parts/washer.webp",
@@ -37,7 +37,7 @@
   "artist": "Wikimedia Commons",
   "license": "见文件页",
   "src": "",
-  "title": "File:045 Replacing car headlight bulb - HIR2 type 12V halogen lightbulb for Toyota Auris.jpg"
+  "title": "File:Scooter_headlights.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
  },
  "taillight": {
   "file": "images/parts/taillight.webp",
@@ -53,7 +53,7 @@
   "artist": "Wikimedia Commons",
   "license": "见文件页",
   "src": "",
-  "title": "(pending meta):Tire"
+  "title": "File:3840px-Large_tyre.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
  },
  "brake_pad": {
   "file": "images/parts/brake_pad.webp",
@@ -61,7 +61,7 @@
   "artist": "Wikimedia Commons",
   "license": "见文件页",
   "src": "",
-  "title": "(pending meta):Brake pad"
+  "title": "File:3840px-Brake_pad.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
  },
  "mirror": {
   "file": "images/parts/mirror.webp",
@@ -69,7 +69,7 @@
   "artist": "Wikimedia Commons",
   "license": "见文件页",
   "src": "",
-  "title": "(pending meta):Side-view mirror"
+  "title": "File:3840px-Wing_mirror.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
  },
  "battery": {
   "file": "images/parts/battery.webp",
@@ -77,7 +77,7 @@
   "artist": "Wikimedia Commons",
   "license": "见文件页",
   "src": "",
-  "title": "(pending meta):Automotive battery"
+  "title": "File:Photo-CarBattery.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
  },
  "washer_tank": {
   "file": "images/parts/washer_tank.webp",
@@ -85,7 +85,7 @@
   "artist": "Wikimedia Commons",
   "license": "见文件页",
   "src": "",
-  "title": "(pending meta):Windshield washer fluid"
+  "title": "File:Man_pouring_windshield_washer_fluid.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
  },
  "oil": {
   "file": "images/parts/oil.webp",
@@ -93,7 +93,7 @@
   "artist": "Wikimedia Commons",
   "license": "见文件页",
   "src": "",
-  "title": "(pending meta):Oil filter"
+  "title": "File:Kfz-oelfilter-muenze.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
  },
  "air_filter": {
   "file": "images/parts/air_filter.webp",
@@ -101,7 +101,7 @@
   "artist": "Wikimedia Commons",
   "license": "见文件页",
   "src": "",
-  "title": "(pending meta):Air filter"
+  "title": "File:HEPA_Filter.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
  },
  "cabin_filter": {
   "file": "images/parts/cabin_filter.webp",
@@ -117,7 +117,7 @@
   "artist": "Wikimedia Commons",
   "license": "见文件页",
   "src": "",
-  "title": "(pending meta):Brake fluid"
+  "title": "File:3840px-Delco_hydrolic_brake_fluid%2C_Super_11.JPG?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
  },
  "spark": {
   "file": "images/parts/spark.webp",
@@ -125,7 +125,7 @@
   "artist": "Wikimedia Commons",
   "license": "见文件页",
   "src": "",
-  "title": "(pending meta):Spark plug"
+  "title": "File:Buj%C3%ADa_Bosch_Yttrium_Super_Plus.JPG?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
  },
  "fuse": {
   "file": "images/parts/fuse.webp",
@@ -141,7 +141,7 @@
   "artist": "Wikimedia Commons",
   "license": "见文件页",
   "src": "",
-  "title": "(pending meta):On-board diagnostics"
+  "title": "File:MaxScan_OE509_img95.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
  },
  "dash": {
   "file": "images/parts/dash.webp",
@@ -149,7 +149,7 @@
   "artist": "Wikimedia Commons",
   "license": "见文件页",
   "src": "",
-  "title": "(pending meta):Instrument cluster"
+  "title": "File:Bentley_Continental_GTC_011.JPG?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
  },
  "catalyst": {
   "file": "images/parts/catalyst.webp",
@@ -162,7 +162,7 @@
  "exhaust": {
   "file": "images/parts/exhaust.webp",
   "thumb": "images/thumbs/exhaust.webp",
-  "artist": "No machine-readable author provided. Tusanero~commonswiki assumed (based on copy",
+  "artist": "Tusanero~commonswiki assumed (based on copy",
   "license": "CC BY-SA 2.5",
   "src": "https://commons.wikimedia.org/wiki/File:Tubo_Escape.jpg",
   "title": "File:Tubo Escape.jpg"
@@ -173,7 +173,7 @@
   "artist": "Wikimedia Commons",
   "license": "见文件页",
   "src": "",
-  "title": "(pending meta):Shock absorber"
+  "title": "File:Mini_Shocks.JPG?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
  },
  "trans_oil": {
   "file": "images/parts/trans_oil.webp",
@@ -181,7 +181,7 @@
   "artist": "Wikimedia Commons",
   "license": "见文件页",
   "src": "",
-  "title": "(pending meta):Automatic transmission fluid"
+  "title": "File:Automatic_transmission_fluid_-_ATF_-_Automatikgetriebe%C3%B6l_IMG_6732.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
  },
  "engine": {
   "file": "images/parts/engine.webp",
@@ -205,7 +205,7 @@
   "artist": "Wikimedia Commons",
   "license": "见文件页",
   "src": "",
-  "title": "(pending meta):Parking sensor"
+  "title": "File:3840px-VW_Golf_VII_-_Parking_sensor_02.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
  },
  "trunk": {
   "file": "images/parts/trunk.webp",
@@ -213,7 +213,7 @@
   "artist": "Wikimedia Commons",
   "license": "见文件页",
   "src": "",
-  "title": "(pending meta):Trunk (car)"
+  "title": "File:2010_Porsche_Boxster_Spyder_%285217139071%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
  },
  "bumper": {
   "file": "images/parts/bumper.webp",
@@ -221,7 +221,7 @@
   "artist": "Wikimedia Commons",
   "license": "见文件页",
   "src": "",
-  "title": "(pending meta):Bumper (car)"
+  "title": "File:FORD_Taunus_17M_P2%28TL%29_deLuxe_Two_door_1958_Bumper.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
  },
  "door_handle": {
   "file": "images/parts/door_handle.webp",
@@ -237,7 +237,7 @@
   "artist": "Wikimedia Commons",
   "license": "见文件页",
   "src": "",
-  "title": "(pending meta):Roof rack"
+  "title": "File:1966_Ambassador_990_wagon_aztp.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
  },
  "sunroof": {
   "file": "images/parts/sunroof.webp",
@@ -245,7 +245,7 @@
   "artist": "Wikimedia Commons",
   "license": "见文件页",
   "src": "",
-  "title": "(pending meta):Sunroof"
+  "title": "File:Porsche_911_Carrera_%287266826444%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
  },
  "wheel_rim": {
   "file": "images/parts/wheel_rim.webp",
@@ -261,7 +261,7 @@
   "artist": "Wikimedia Commons",
   "license": "见文件页",
   "src": "",
-  "title": "(pending meta):Disc brake"
+  "title": "File:Disk_brake_dsc03682.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
  },
  "side_step": {
   "file": "images/parts/side_step.webp",
@@ -269,7 +269,7 @@
   "artist": "Wikimedia Commons",
   "license": "见文件页",
   "src": "",
-  "title": "File:2002 Ford Explorer Sport Trac.jpg"
+  "title": "File:WHR_NG138_Dinas.JPG?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
  },
  "fender": {
   "file": "images/parts/fender.webp",
@@ -317,7 +317,7 @@
   "artist": "Wikimedia Commons",
   "license": "见文件页",
   "src": "",
-  "title": "(pending meta):Windscreen wiper"
+  "title": "File:Heckscheibenwischer_kl.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
  },
  "hood": {
   "file": "images/parts/hood.webp",
@@ -325,7 +325,7 @@
   "artist": "Wikimedia Commons",
   "license": "见文件页",
   "src": "",
-  "title": "(pending meta):Hood (vehicle)"
+  "title": "File:Sonett-mk2-flipfront.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
  },
  "front_cam": {
   "file": "images/parts/front_cam.webp",
@@ -333,7 +333,7 @@
   "artist": "Wikimedia Commons",
   "license": "见文件页",
   "src": "",
-  "title": "(pending meta):Backup camera"
+  "title": "File:Lexus_backup_camera1.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
  },
  "tow_cover": {
   "file": "images/parts/tow_cover.webp",
@@ -341,7 +341,7 @@
   "artist": "Wikimedia Commons",
   "license": "见文件页",
   "src": "",
-  "title": "(pending meta):Tow hitch"
+  "title": "File:Kombi_anh%C3%A6ngertr%C3%A6k_med_stik.JPG?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
  },
  "third_brake": {
   "file": "images/parts/third_brake.webp",
@@ -357,7 +357,7 @@
   "artist": "Wikimedia Commons",
   "license": "见文件页",
   "src": "",
-  "title": "(pending meta):Windscreen wiper"
+  "title": "File:Panoramic-windshield.JPG?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
  },
  "shark_fin": {
   "file": "images/parts/shark_fin.webp",
@@ -365,7 +365,7 @@
   "artist": "Wikimedia Commons",
   "license": "见文件页",
   "src": "",
-  "title": "File:2019 Honda CR-V 1.5 TC 2WD (27).jpg"
+  "title": "File:3840px-A_television_antenna_in_Kakinada.JPG?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
  },
  "rear_cam": {
   "file": "images/parts/rear_cam.webp",
@@ -373,7 +373,7 @@
   "artist": "Wikimedia Commons",
   "license": "见文件页",
   "src": "",
-  "title": "(pending meta):Backup camera"
+  "title": "File:Lexus_backup_camera1.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
  },
  "reflector": {
   "file": "images/parts/reflector.webp",
@@ -450,7 +450,7 @@
  "condenser": {
   "file": "images/parts/condenser.webp",
   "thumb": "images/thumbs/condenser.webp",
-  "artist": "",
+  "artist": "Wikimedia Commons",
   "license": "Public domain",
   "src": "https://commons.wikimedia.org/wiki/File:Automobile_radiator.jpg",
   "title": "File:Automobile radiator.jpg"
@@ -517,7 +517,7 @@
   "artist": "Wikimedia Commons",
   "license": "见文件页",
   "src": "",
-  "title": "File:Car front seats.jpg"
+  "title": "File:Tesla_Model_S_rear_child_seats.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
  },
  "seatbelt": {
   "file": "images/parts/seatbelt.webp",
@@ -549,7 +549,7 @@
   "artist": "Wikimedia Commons",
   "license": "见文件页",
   "src": "",
-  "title": "File:Dome light.jpg"
+  "title": "File:Reisebus.Heck.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
  },
  "usb_port": {
   "file": "images/parts/usb_port.webp",
@@ -626,18 +626,18 @@
  "tut_tire": {
   "file": "images/parts/tut_tire.webp",
   "thumb": "images/thumbs/tut_tire.webp",
-  "artist": "Wikimedia Commons",
-  "license": "见文件页",
-  "src": "",
-  "title": "File:The_British_Army_in_North-west_Europe_1944-45_BU1571.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+  "artist": "Donald Trung Quoc Don (Chữ Hán: 徵國單) - Wikimedia Commons.(Want to use this image",
+  "license": "CC BY-SA 4.0",
+  "src": "https://commons.wikimedia.org/wiki/File:Car_lifting_device_that_can_lift_up_to_700_kilograms,_Oude_Pekela_(2018)_01.jpg",
+  "title": "File:Car lifting device that can lift up to 700 kilograms, Oude Pekela (2018) 01.jpg"
  },
  "tut_jump": {
   "file": "images/parts/tut_jump.webp",
   "thumb": "images/thumbs/tut_jump.webp",
-  "artist": "Wikimedia Commons",
-  "license": "见文件页",
-  "src": "",
-  "title": "File:Jump_starting.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+  "artist": "Mobiletireservicegta",
+  "license": "CC BY-SA 4.0",
+  "src": "https://commons.wikimedia.org/wiki/File:Battery-boost-whitby.jpg",
+  "title": "File:Battery-boost-whitby.jpg"
  },
  "coolant": {
   "file": "images/parts/coolant.webp",

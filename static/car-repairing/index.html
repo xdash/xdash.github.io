@@ -124,7 +124,7 @@ footer{padding:16px 24px;color:var(--sub);font-size:12.5px;border-top:1px solid 
 /* 实车对照 */
 .realcar{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
 .realcar .rc-t{font-size:13px;color:var(--sub);margin-bottom:6px}
-.realcar img{width:100%;border-radius:10px;display:block;cursor:zoom-in}
+.realcar img{width:100%;max-height:460px;object-fit:cover;border-radius:10px;display:block;cursor:zoom-in}
 .realcar .rc-c{font-size:11.5px;color:var(--sub);margin-top:4px}
 .realcar .rc-c a{color:var(--sub);text-decoration:none}
 /* 教程配图 */
@@ -230,7 +230,7 @@ washer_tank:{name:"玻璃水壶（加注口）",cat:"发动机舱",sys:"fluid",
   check:["加满很快又没了 → 查壶体/管路渗漏","喷水电机无声 → 查保险丝/电机"],
   cycle:"——",price:"壶体总成 100–300 元",labor:"50–150 元",tut:"tut-washer"},
 oil:{name:"机油 + 机油滤芯",cat:"发动机舱 · 保养核心",sys:"fluid",
-  desc:"CS75 1.5T/2.0 一般加注约 4–4.5L，推荐 SN/SP 级 5W-30（以手册为准）。涡轮机建议全合成。加注口在发动机装饰盖上（黑色旋盖）。",
+  desc:"CS75 1.5T/1.8T/2.0 一般加注约 4–4.5L，推荐 SN/SP 级 5W-30（以手册为准）。涡轮机建议全合成。加注口在发动机装饰盖上（黑色旋盖）。",
   check:["机油尺：冷车平地，液位在 MIN–MAX 之间","机油发黑正常，乳化发白要查（可能进水）"],
   cycle:"矿物/半合成 5000–7500 km，全合成 8000–10000 km",price:"全合成机油 300–500 元/4L；机滤 20–60 元",labor:"50–100 元",
   tut:"tut-dipstick",
@@ -279,10 +279,10 @@ suspension:{name:"减震器 / 悬挂",cat:"底盘",sys:"susp",
   check:["减震筒渗油","过减速带松散异响","高速发飘"],
   cycle:"8–10 万 km 检查",price:"减震器 300–800 元/支",labor:"150–300 元/支（换完做四轮定位）"},
 trans_oil:{name:"变速箱油",cat:"底盘 · 传动",sys:"fluid",
-  desc:"CS75 自动挡多为爱信 6AT/8AT（年款不同）。重力换油换得少但便宜，循环机换得彻底但贵。",
+  desc:"一代 CS75 自动挡为爱信 6AT。重力换油换得少但便宜，循环机换得彻底但贵。",
   check:["换挡顿挫加剧","冷车挂挡延迟"],cycle:"4–6 万 km（以手册为准）",price:"重力 300–500 元；循环机 600–1000 元",labor:"含在上价内",
   note:"千万别信「终身免维护」就不换，变速箱大修 5000 元起步。"},
-engine:{name:"发动机本体（1.5T/2.0）",cat:"发动机舱",sys:"engine",
+engine:{name:"发动机本体（1.5T/1.8T/2.0）",cat:"发动机舱",sys:"engine",
   desc:"长安蓝鲸系列。日常注意：冷启动后缓行热车、涡轮车跑完高速怠速 1 分钟再熄火、按时换机油。积碳多了可做清洗（200–500 元）。",
   check:["烧机油（尾气蓝烟、机油消耗快）","异响、抖动"],cycle:"按保养周期",price:"积碳清洗 200–500 元",labor:"——"},
 fuel:{name:"油箱 / 燃油系统",cat:"外观 · 车身",sys:"fluid",
@@ -345,11 +345,11 @@ fender:{name:"翼子板",cat:"外观 · 车身",sys:"body",
 
 /* ---------- 新增：正面 ---------- */
 grille:{name:"中网 / 车标",cat:"外观 · 前脸",sys:"body",
-  desc:"塑料电镀/钢琴烤漆件，高速石子击打易裂。注意：车标背面常固定 ACC 雷达或前摄像头，拆装中网别硬拽线束。",
+  desc:"塑料电镀/钢琴烤漆件，高速石子击打易裂。注意：部分高配车型车标背面固定有 ACC 雷达或前摄像头，拆装中网别硬拽线束。",
   check:["格栅断裂、电镀层起泡","车标松动（里面可能有雷达/摄像头线束）"],
   cycle:"坏了再换",price:"中网 200–600 元；车标 30–100 元",labor:"50–200 元"},
 acc_radar:{name:"ACC 毫米波雷达",cat:"电气 · 驾驶辅助",sys:"elec",
-  desc:"自适应巡航/主动刹车的「眼睛」，藏在前杠内（车标后方或下格栅处）。前杠碰撞、拆装后必须重新校准，否则误刹或不刹。",
+  desc:"自适应巡航/主动刹车的「眼睛」，藏在前杠内（车标后方或下格栅处）。仅顶配带 ACC 的车型有此部件，低配前杠内无此模块可忽略。前杠碰撞、拆装后必须重新校准，否则误刹或不刹。",
   check:["仪表 ACC/预碰撞故障灯","自适应巡航无法激活"],
   cycle:"——",price:"雷达 1000–3000 元（原厂，以实车配置为准）",labor:"校准 200–500 元",
   note:"别在雷达覆盖区域贴车贴/加装牌照架，会干扰信号。"},
@@ -370,7 +370,7 @@ hood:{name:"发动机舱盖（机盖）",cat:"外观 · 车身",sys:"body",
   check:["机盖举不住、缓降（换撑杆）","开关生涩（润滑铰链）"],
   cycle:"撑杆 5–8 年",price:"撑杆 50–150 元/对",labor:"0–50 元（DIY）"},
 front_cam:{name:"前视摄像头",cat:"电气 · 驾驶辅助",sys:"elec",
-  desc:"360 全景影像的前摄像头，一般在中网车标附近。画面模糊先擦镜头；前杠拆装后全景画面拼接错位需要重新标定。",
+  desc:"360 全景影像的前摄像头，一般在中网车标附近（仅高配 360 全景车型配备，中低配无）。画面模糊先擦镜头；前杠拆装后全景画面拼接错位需要重新标定。",
   check:["全景影像前方模糊/黑屏","拼接画面错位（需标定）"],
   cycle:"——",price:"150–600 元（以实车配置为准）",labor:"100–300 元（标定另计 100–300 元）"},
 tow_cover:{name:"拖车钩盖板",cat:"外观 · 小件",sys:"body",
@@ -1139,7 +1139,7 @@ ${hs("exhaust",627,473,"排气管",28,10,"start")}
 <rect x="330" y="178" width="240" height="142" rx="14" fill="url(#e_engine)" stroke="#55677f" stroke-width="2"/>
 <line x1="348" y1="214" x2="552" y2="214" stroke="rgba(255,255,255,.08)" stroke-width="3"/>
 <line x1="348" y1="262" x2="552" y2="262" stroke="rgba(0,0,0,.25)" stroke-width="3"/>
-<text x="450" y="245" fill="#9db0c3" font-size="14" text-anchor="middle" font-weight="600">蓝鲸 NE 1.5T</text>
+<text x="450" y="245" fill="#9db0c3" font-size="14" text-anchor="middle" font-weight="600">蓝鲸 1.5T</text>
 <!-- 机油加注盖 -->
 <circle cx="385" cy="196" r="11" fill="#11161f" stroke="#8fa3ba" stroke-width="2"/>
 <rect x="379" y="191" width="12" height="4" rx="2" fill="#8fa3ba"/>
@@ -1289,10 +1289,9 @@ ${hs("wiper_motor",465,452,"雨刮电机",38,8,"start")}
 <!-- 副驾气囊区域缝线 -->
 <rect x="648" y="196" width="184" height="72" rx="8" fill="none" stroke="rgba(0,0,0,.3)" stroke-width="1.5" stroke-dasharray="6 5"/>
 
-<!-- 双联屏：仪表 + 中控 -->
-<rect x="184" y="188" width="432" height="82" rx="10" fill="rgba(46,125,255,.07)"/>
-<rect x="190" y="194" width="420" height="70" rx="8" fill="url(#c_screen)" stroke="#31517a" stroke-width="2"/>
-<line x1="400" y1="198" x2="400" y2="260" stroke="#31517a" stroke-width="1.5"/>
+<!-- 仪表 + 独立中控屏（一代布局，非联屏） -->
+<rect x="190" y="194" width="196" height="70" rx="8" fill="url(#c_screen)" stroke="#31517a" stroke-width="2"/>
+<rect x="414" y="194" width="196" height="70" rx="8" fill="url(#c_screen)" stroke="#31517a" stroke-width="2"/>
 <!-- 仪表内容 -->
 <path d="M232 246 A28 28 0 0 1 288 246" fill="none" stroke="#37c978" stroke-width="3"/>
 <path d="M302 246 A28 28 0 0 1 358 246" fill="none" stroke="#ffb020" stroke-width="3"/>
@@ -1531,7 +1530,7 @@ function parseHash(){
   const h=location.hash.replace(/^#/,"");
   const mv=h.match(/view=(\w+)/), mp=h.match(/part=([\w]+)/), ms=h.match(/sec=(\w+)/);
   if(mv&&VIEWS.some(v=>v.id===mv[1]))curView=mv[1];
-  if(mp&&PARTS[mp[1]])curPart=mp[1];
+  if(mp&&Object.prototype.hasOwnProperty.call(PARTS,mp[1]))curPart=mp[1];
   if(ms&&["explore","tut","price"].includes(ms[1]))curSec=ms[1];
   else if(mv||mp)curSec="explore";
 }
@@ -1555,7 +1554,7 @@ VIEWS.forEach(v=>{
 function renderView(){
   const v=VIEWS.find(x=>x.id===curView);
   const rc=CAR_IMG[curView];
-  canvas.innerHTML=v.svg+(rc?`<div class="realcar"><div class="rc-t">📷 实车对照（一代 CS75 同视角实拍，方便与上图比对）</div><img src="${rc.f}" alt="CS75 实车${v.label}" loading="lazy" onclick="zoomImg('${rc.f}')"><div class="rc-c"><a href="${rc.s}" target="_blank" rel="noopener">📷 ${rc.a} · ${rc.l} · Wikimedia Commons</a></div></div>`:"");
+  canvas.innerHTML=v.svg+(rc?`<div class="realcar"><div class="rc-t">📷 实车对照（一代 CS75 同视角实拍，方便与上图比对）</div><img src="${rc.f}" alt="CS75 实车${v.label}" loading="lazy" onerror="this.closest('.realcar').style.display='none'" onclick="zoomImg('${rc.f}')"><div class="rc-c"><a href="${rc.s}" target="_blank" rel="noopener">📷 ${rc.a} · ${rc.l} · Wikimedia Commons</a></div></div>`:"");
   canvas.querySelectorAll(".hotspot").forEach(h=>{
     if(h.dataset.part===curPart)h.classList.add("sel");
     h.onclick=()=>{showPart(h.dataset.part);syncHash();};
@@ -1566,7 +1565,11 @@ function zoomImg(src){
   const o=document.createElement("div");
   o.style.cssText="position:fixed;inset:0;background:rgba(0,0,0,.88);display:flex;align-items:center;justify-content:center;z-index:99;cursor:zoom-out;padding:2vw";
   o.innerHTML=`<img src="${src}" style="max-width:96vw;max-height:94vh;border-radius:10px">`;
-  o.onclick=()=>o.remove();
+  const close=()=>{o.remove();document.body.style.overflow="";document.removeEventListener("keydown",onKey);};
+  const onKey=e=>{if(e.key==="Escape")close();};
+  o.onclick=close;
+  document.body.style.overflow="hidden";
+  document.addEventListener("keydown",onKey);
   document.body.appendChild(o);
 }
 
@@ -1577,8 +1580,8 @@ function showPart(key){
   const m=PART_IMG[key];
   detail.innerHTML=`
     <h2>${p.name}</h2><div class="cat">${p.cat}</div>
-    ${m?`<figure class="pimg"><img src="${m.f}" alt="${p.name}实拍（通用组件图）" loading="lazy" onclick="zoomImg('${m.f}')"><figcaption><a href="${m.s}" target="_blank" rel="noopener">📷 ${m.a} · ${m.l} · Wikimedia Commons（行业通用组件图，非原车拍摄）</a></figcaption></figure>`
-       :`<div class="pimg-none">📷 该部件藏于车身/车门内部，暂无可公开使用的实拍图<br>以上方透视图中的标注位置为准</div>`}
+    ${m?`<figure class="pimg"><img src="${m.f}" alt="${p.name}实拍（通用组件图）" loading="lazy" onerror="this.closest('figure').style.display='none'" onclick="zoomImg('${m.f}')"><figcaption>${m.s?`<a href="${m.s}" target="_blank" rel="noopener">📷 ${m.a} · ${m.l} · Wikimedia Commons（行业通用组件图，非原车拍摄）</a>`:`📷 图片来源：Wikimedia Commons 自由版权素材（行业通用组件图，非原车拍摄；作者信息待补录）`}</figcaption></figure>`
+       :`<div class="pimg-none">📷 该部件暂无合适的自由版权实拍图<br>位置以上方透视图中的标注为准</div>`}
     <p>${p.desc}</p>
     ${p.check?`<h3>🔍 自检方法</h3><ul>${p.check.map(c=>`<li>${c}</li>`).join("")}</ul>`:""}
     <h3>💰 费用与周期</h3>
@@ -1611,7 +1614,7 @@ TUTORIALS.forEach(t=>{
   d.className="tut"+(t.full?" full":""); d.id=t.id;
   const tm=PART_IMG[TUT_IMG[t.id]];
   d.innerHTML=`<h3>${t.title}</h3><div class="meta">${t.meta}</div>`+
-    (tm?`<figure class="timg"><img src="${tm.f}" alt="${t.title}涉及部件实拍" loading="lazy" onclick="zoomImg('${tm.f}')"><figcaption>📷 ${tm.a} · ${tm.l} · Wikimedia Commons</figcaption></figure>`:"")+
+    (tm?`<figure class="timg"><img src="${tm.f}" alt="${t.title}涉及部件实拍" loading="lazy" onerror="this.closest('figure').style.display='none'" onclick="zoomImg('${tm.f}')"><figcaption>${tm.s?`<a href="${tm.s}" target="_blank" rel="noopener" style="color:inherit">📷 ${tm.a} · ${tm.l} · Wikimedia Commons</a>`:`📷 ${tm.a} · ${tm.l} · Wikimedia Commons`}</figcaption></figure>`:"")+
     `<ol>${t.steps.map(s=>`<li>${s}</li>`).join("")}</ol>${t.warn?`<div class="warn">${t.warn}</div>`:""}`;
   tutGrid.appendChild(d);
 });
@@ -1622,7 +1625,7 @@ Object.entries(PARTS).forEach(([key,p])=>{
   if(p.price==="——"&&p.labor==="——")return;
   const m=PART_IMG[key];
   const tr=document.createElement("tr");
-  tr.innerHTML=`<td class="tthumb">${m?`<img src="${m.t}" alt="${p.name}" loading="lazy" onclick="zoomImg('${m.f}')">`:`<span class="noimg">—</span>`}</td><td><span class="linklike" onclick="jumpPart('${key}')">${p.name}</span></td><td><b>${p.price}</b></td><td>${p.labor}</td><td>${p.cycle}</td>`;
+  tr.innerHTML=`<td class="tthumb">${m?`<img src="${m.t}" alt="${p.name}" loading="lazy" onerror="this.outerHTML='<span class=&quot;noimg&quot;>—</span>'" onclick="zoomImg('${m.f}')">`:`<span class="noimg">—</span>`}</td><td><span class="linklike" onclick="jumpPart('${key}')">${p.name}</span></td><td><b>${p.price}</b></td><td>${p.labor}</td><td>${p.cycle}</td>`;
   tb.appendChild(tr);
 });
 
