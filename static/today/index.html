@@ -17,12 +17,24 @@
   }
   header h1 { font-size: 17px; letter-spacing: .5px; }
   header .sub { font-size: 12px; color: #8a857a; margin-top: 2px; }
-  main { max-width: 680px; margin: 0 auto; padding: 8px 16px 48px; }
-  .day { margin-top: 28px; }
-  .day-label {
-    font-size: 13px; font-weight: 600; color: #8a857a;
-    letter-spacing: 1px; margin-bottom: 10px;
+  .daynav { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+  .daynav button {
+    border: 1px solid #d8d4c9; background: #fff; border-radius: 8px;
+    font-size: 16px; line-height: 1; padding: 6px 12px; color: #4a463c;
+    cursor: pointer; -webkit-tap-highlight-color: transparent;
   }
+  .daynav button:disabled { opacity: .35; cursor: default; }
+  .daynav .cur { font-size: 14px; font-weight: 600; flex: 1; text-align: center; }
+  .daynav .cur .n { font-size: 11px; font-weight: 400; color: #8a857a; margin-left: 6px; }
+  .daynav .today-btn { font-size: 12px; padding: 6px 10px; }
+  main { max-width: 680px; margin: 0 auto; padding: 8px 16px 48px; }
+  .day { display: none; margin-top: 20px; }
+  .day.active { display: block; }
+  #empty {
+    display: none; text-align: center; color: #8a857a; font-size: 14px;
+    padding: 48px 0;
+  }
+  #empty.active { display: block; }
   .card {
     background: #fff; border: 1px solid #e8e5dd; border-radius: 12px;
     padding: 14px 16px; margin-bottom: 12px;
@@ -55,15 +67,21 @@
 <body>
 <header>
   <h1>通知 Feed</h1>
-  <div class="sub">最近 20 天 · 54 条 · 生成于 2026-09-17 15:33</div>
+  <div class="sub">最近 20 天 · 54 条 · 生成于 2026-09-17 16:17</div>
+  <div class="daynav">
+    <button id="prev" title="更早一天">‹</button>
+    <div class="cur"><span id="cur-date"></span><span class="n" id="cur-count"></span></div>
+    <button id="next" title="更晚一天">›</button>
+    <button id="today-btn" class="today-btn">今天</button>
+  </div>
 </header>
 <main>
-<section class="day"><div class="day-label">2026-09-14（1 条）</div><div class="card"><h2>🏠 房产周报 2026-09-14</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">Property_Monitor</span><span class="badge time">07:33</span></div><div class="body" data-md="房产周报 2026-09-14
+<section class="day" data-day="2026-09-14" data-count="1"><div class="card"><h2>🏠 房产周报 2026-09-14</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">Property_Monitor</span><span class="badge time">07:33</span></div><div class="body" data-md="房产周报 2026-09-14
 
 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | |  |  |  | | --- | --- | --- | | |  |  | | --- | --- | | 🏠 房产市场每周观察  2026-09-14 周一 | 数据来源：链家 / 安居客 / 诸葛 / 房天下 / 贝壳 / 中国房价行情  仅供参考，不构成投资建议 | | | 本周解读 | | 本周城市均价波动明显：上海环比升约34.6%，北京升约14.0%，南通降约16.2%。但监测小区挂牌单价周环比多为0.00%，前滩等小区连续多周持平，与城市均价走势背离，提示数据源或统计口径可能存在异常。成交量方面，广州1007套居首，北京917套，上海713套。LPR未变。 | | 全国宏观 | | |  | | --- | | 统计局70城（2026年7月）（东方财富） 二手房指数▼ -0.30%　同比 -5.4%  统计局70城指数月度更新，当月数据仅供趋势参考 | | | 房贷利率基准 | | LPR（2026-08-20 报价）：1 年期 **3.0%**　｜　 5 年期以上 **3.5%** 来源：中国货币网 · 每月20日更新 | | 重点城市 — 二手房均价（主源口径 + 参考源） | | |  |  |  |  | | --- | --- | --- | --- | | 🏙 上海 中国房价行情: ¥62,654 / 房价网: ¥46,536  近8周: 7/27 61,931 → 8/3 51,304 → 8/17 51,482 → 8/24 51,482 → 8/25 62,578 → 8/31 46,216 → 9/7 46,536 → **9/14 62,654** | ¥62,654/㎡ | ▲ +34.64% | 🎯 主源:中国房价行情 | | | |  |  |  |  | | --- | --- | --- | --- | | 🏙 北京 中国房价行情: ¥54,631 / 房价网: ¥47,942  近8周: 7/27 53,678 → 8/3 54,763 → 8/17 54,431 → 8/24 54,431 → 8/25 54,204 → 8/31 48,266 → 9/7 47,942 → **9/14 54,631** | ¥54,631/㎡ | ▲ +13.95% | 🎯 主源:中国房价行情 | | | |  |  |  |  | | --- | --- | --- | --- | | 🏙 南通 中国房价行情: ¥10,137 / 房天下: ¥12,098 / 房价网: ¥8,366  近8周: 7/27 9,955 → 8/3 12,149 → 8/17 12,121 → 8/24 12,121 → 8/25 10,496 → 8/31 12,121 → 9/7 12,098 → **9/14 10,137** | ¥10,137/㎡ | ▼ -16.21% | 🎯 主源:中国房价行情 | | | 2026年8月 · 来源：中国房价行情 | | --- | | 近期成交量（2026年第36周） | | |  |  |  | | --- | --- | --- | | 广州 | 1,007 套 | ▼ -8.04% | | | |  |  |  | | --- | --- | --- | | 成都 | 905 套 | ▼ -12.90% | | | |  |  |  | | --- | --- | --- | | 上海 | 713 套 | ▼ -27.10% | | | |  |  |  | | --- | --- | --- | | 杭州 | 501 套 | ▼ -40.71% | | | |  |  |  | | --- | --- | --- | | 深圳 | 652 套 | ▲ +1.72% | | | |  |  |  | | --- | --- | --- | | 北京 | 917 套 | ▼ -13.90% | | | |  |  |  | | --- | --- | --- | | 北京·官方网签  住建委 · 2026-09-13 | 住宅 151 套 | 2026-08月累计住宅 13,853 套 | | | |  |  |  |  | | --- | --- | --- | --- | | |  |  |  | | --- | --- | --- | | 上海新房·本月成交  3,503 套 | 成交均价  ¥76,348/㎡ | ▲ +11.92% | | | | --- | | 上海浦东 · 指定小区 | | |  |  |  |  | | --- | --- | --- | --- | | 未来域 房天下: ¥73,608 / 房价网: ¥70,312  近8周: 7/27 74,937 → 8/3 73,608 → 8/17 73,608 → 8/24 73,608 → 8/25 73,608 → 8/31 73,608 → 9/7 73,608 → **9/14 73,608**  最近成交: 2026-07-12 · ¥67,082/㎡ · 819.0万 | ¥73,608/㎡ | — 0.00% | 📌 单源 在售 30 套 | | | |  |  |  |  | | --- | --- | --- | --- | | 浦发绿城1960弄 房天下: ¥41,559 / 房价网: ¥42,992  近8周: 7/27 41,949 → 8/3 41,559 → 8/17 41,559 → 8/24 41,559 → 8/25 41,559 → 8/31 41,559 → 9/7 41,559 → **9/14 41,559**  最近成交: 2026-07-25 · ¥40,081/㎡ · 375.0万 | ¥41,559/㎡ | — 0.00% | 📌 单源 在售 7 套 | | | |  |  |  |  | | --- | --- | --- | --- | | 黄楼新邨 房天下: ¥20,184 / 房价网: ¥20,427  近8周: 7/27 20,389 → 8/3 20,184 → 8/17 20,184 → 8/24 20,184 → 8/25 20,184 → 8/31 20,184 → 9/7 20,184 → **9/14 20,184**  最近成交: 2023-10-06 · ¥27,892/㎡ · 239.0万 （陈旧，仅供参考） | ¥20,184/㎡ | — 0.00% | 📌 单源 | | | --- | | 上海浦东 · 前滩板块 | | |  |  |  |  | | --- | --- | --- | --- | | 尚峰名邸 房天下: ¥159,006 / 房价网: ¥164,566  近8周: 7/27 159,550 → 8/3 159,006 → 8/17 159,006 → 8/24 159,006 → 8/25 159,006 → 8/31 159,006 → 9/7 159,006 → **9/14 159,006**  最近成交: 2025-11-22 · ¥149,481/㎡ · 705.0万 （陈旧，仅供参考） | ¥159,006/㎡ | — 0.00% | 📌 单源 在售 7 套 | | | |  |  |  |  | | --- | --- | --- | --- | | 华唐名邸 房天下: ¥141,326 / 房价网: ¥141,372  近8周: 7/27 141,651 → 8/3 141,326 → 8/17 141,326 → 8/24 141,326 → 8/25 141,326 → 8/31 141,326 → 9/7 141,326 → **9/14 141,326**  最近成交: 2026-07-01 · ¥50,607/㎡ · 1042.0万 | ¥141,326/㎡ | — 0.00% | 📌 单源 在售 2 套 | | | |  |  |  |  | | --- | --- | --- | --- | | 东方悦耀 房天下: ¥119,038 / 房价网: ¥127,644  近8周: 7/27 120,078 → 8/3 120,078 → 8/17 119,038 → 8/24 119,038 → 8/25 119,038 → 8/31 119,038 → 9/7 119,038 → **9/14 119,038**  最近成交: 2026-05-10 · ¥96,209/㎡ · 1246.0万 | ¥119,038/㎡ | — 0.00% | 📌 单源 在售 4 套 | | | |  |  |  |  | | --- | --- | --- | --- | | 东方逸品 房天下: ¥132,537 / 房价网: ¥145,350  近8周: 7/27 133,489 → 8/3 132,537 → 8/17 132,537 → 8/24 132,537 → 8/25 132,537 → 8/31 132,537 → 9/7 132,537 → **9/14 132,537**  最近成交: 2026-05-04 · ¥120,651/㎡ · 1075.0万 | ¥132,537/㎡ | — 0.00% | 📌 单源 在售 4 套 | | | |  |  |  |  | | --- | --- | --- | --- | | 三湘印象名邸 房天下: ¥190,731 / 房价网: ¥189,964  近8周: 7/27 195,281 → 8/3 190,731 → 8/17 190,731 → 8/24 190,731 → 8/25 190,731 → 8/31 190,731 → 9/7 190,731 → **9/14 190,731**  最近成交: 2025-02-17 · ¥171,253/㎡ · 1500.0万 （陈旧，仅供参考） | ¥190,731/㎡ | — 0.00% | 📌 单源 在售 3 套 | | | --- | | 南通 · 指定小区 | | |  |  |  |  | | --- | --- | --- | --- | | 晨苑 贝壳南通: ¥8,577 / 房价网: ¥8,657  近8周: 7/27 8,708 → 8/3 8,624 → 8/17 8,624 → 8/24 8,624 → 8/25 8,624 → 8/31 8,624 → 9/7 8,577 → **9/14 8,577** | ¥8,577/㎡ | — 0.00% | 📌 单源 在售 37 套 | | | --- | | 政策与市场资讯 | | [乐居] [北京澐玺效果图剧透！北京首个全域立体抬板架空社区](https://www.lejucaijing.com/news-7504446040486639102.html) | | [乐居] [多盘热销出圈！花都城投，凭什么站稳花都楼市C位？](https://www.lejucaijing.com/news-7504417303888065992.html) | | [乐居] [世界急救日｜上海链家首台AED装进门店](https://www.lejucaijing.com/news-7504406278077871544.html) | | MyAI 自动生成 · 2026-09-14 07:33 · 数据仅供参考，不构成投资建议 | |"></div></div></section>
-<section class="day"><div class="day-label">2026-09-13（2 条）</div><div class="card"><h2>🌙 夜间顾问提案 2026-09-13 · 1 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">07:03 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-09-13
+<section class="day" data-day="2026-09-13" data-count="2"><div class="card"><h2>🌙 夜间顾问提案 2026-09-13 · 1 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">07:03 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-09-13
 
 本轮 1 个目标共产出 1 条提案。采纳或忽略请点飞书提案卡片上的按钮；觉得全是废话就把 targets.json 里对应目标关掉。
 
@@ -116,7 +134,7 @@ Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md">
 ---
 
 Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md"></div></div></section>
-<section class="day"><div class="day-label">2026-09-12（4 条）</div><div class="card"><h2>知乎课题雷达 · 2026-09-12 · 5 个命中</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">zhihu_insight</span><span class="badge time">12:12</span></div><div class="body" data-md="## 知乎课题雷达 · 2026-09-12
+<section class="day" data-day="2026-09-12" data-count="4"><div class="card"><h2>知乎课题雷达 · 2026-09-12 · 5 个命中</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">zhihu_insight</span><span class="badge time">12:12</span></div><div class="body" data-md="## 知乎课题雷达 · 2026-09-12
 
 今日命中 5 个高质量讨论。金句均为回答原文摘录。
 
@@ -472,7 +490,7 @@ Mi Duo 比 iPhone Duo 先发，调侃抄袭争议；Yuri 超现实音乐会令�
 - GPT-6虽然厉害，但无法取代人，原因是
 
 已落 `Code/writing_style_learner/data/source_inbox/`。说「消化信源」即可启动拆解提案（先 LLM 清洗，再三维度拆解，入库需人工拍板）。"></div></div></section>
-<section class="day"><div class="day-label">2026-09-10（1 条）</div><div class="card"><h2>🌙 夜间顾问提案 2026-09-10 · 2 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">07:04 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-09-10
+<section class="day" data-day="2026-09-10" data-count="1"><div class="card"><h2>🌙 夜间顾问提案 2026-09-10 · 2 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">07:04 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-09-10
 
 本轮 2 个目标共产出 2 条提案。采纳或忽略请点飞书提案卡片上的按钮；觉得全是废话就把 targets.json 里对应目标关掉。
 
@@ -503,7 +521,7 @@ Mi Duo 比 iPhone Duo 先发，调侃抄袭争议；Yuri 超现实音乐会令�
 ---
 
 Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md"></div></div></section>
-<section class="day"><div class="day-label">2026-09-09（1 条）</div><div class="card"><h2>🌙 夜间顾问提案 2026-09-09 · 2 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">07:04 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-09-09
+<section class="day" data-day="2026-09-09" data-count="1"><div class="card"><h2>🌙 夜间顾问提案 2026-09-09 · 2 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">07:04 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-09-09
 
 本轮 2 个目标共产出 2 条提案。采纳或忽略请点飞书提案卡片上的按钮；觉得全是废话就把 targets.json 里对应目标关掉。
 
@@ -534,7 +552,7 @@ Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md">
 ---
 
 Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md"></div></div></section>
-<section class="day"><div class="day-label">2026-09-08（2 条）</div><div class="card"><h2>🌙 夜间顾问提案 2026-09-08 · 1 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">21:33 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-09-08
+<section class="day" data-day="2026-09-08" data-count="2"><div class="card"><h2>🌙 夜间顾问提案 2026-09-08 · 1 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">21:33 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-09-08
 
 本轮 1 个目标共产出 1 条提案。采纳或忽略请点飞书提案卡片上的按钮；觉得全是废话就把 targets.json 里对应目标关掉。
 
@@ -583,12 +601,12 @@ Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md">
 ---
 
 Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md"></div></div></section>
-<section class="day"><div class="day-label">2026-09-07（1 条）</div><div class="card"><h2>🏠 房产周报 2026-09-07</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">Property_Monitor</span><span class="badge time">07:33</span></div><div class="body" data-md="房产周报 2026-09-07
+<section class="day" data-day="2026-09-07" data-count="1"><div class="card"><h2>🏠 房产周报 2026-09-07</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">Property_Monitor</span><span class="badge time">07:33</span></div><div class="body" data-md="房产周报 2026-09-07
 
 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | |  |  |  | | --- | --- | --- | | |  |  | | --- | --- | | 🏠 房产市场每周观察  2026-09-07 周一 | 数据来源：链家 / 安居客 / 诸葛 / 房天下 / 贝壳 / 中国房价行情  仅供参考，不构成投资建议 | | | 全国宏观 | | |  | | --- | | 统计局70城（2026年7月）（东方财富） 二手房指数▼ -0.30%　同比 -5.4%  统计局70城指数月度更新，当月数据仅供趋势参考 | | | 房贷利率基准 | | LPR（2026-08-20 报价）：1 年期 **3.0%**　｜　 5 年期以上 **3.5%** 来源：中国货币网 · 每月20日更新 | | 重点城市 — 二手房均价（主源口径 + 参考源） | | |  |  |  |  | | --- | --- | --- | --- | | 🏙 上海 房价网: ¥46,536  近8周: 7/20 61,931 → 7/27 61,931 → 8/3 51,304 → 8/17 51,482 → 8/24 51,482 → 8/25 62,578 → 8/31 46,216 → **9/7 46,536** | ¥46,536/㎡ | ▲ +0.69% | 🎯 主源:房价网 | | | |  |  |  |  | | --- | --- | --- | --- | | 🏙 北京 房价网: ¥47,942  近8周: 7/20 53,678 → 7/27 53,678 → 8/3 54,763 → 8/17 54,431 → 8/24 54,431 → 8/25 54,204 → 8/31 48,266 → **9/7 47,942** | ¥47,942/㎡ | ▼ -0.67% | 🎯 主源:房价网 | | | |  |  |  |  | | --- | --- | --- | --- | | 🏙 南通 房天下: ¥12,098 / 房价网: ¥8,366  近8周: 7/20 9,955 → 7/27 9,955 → 8/3 12,149 → 8/17 12,121 → 8/24 12,121 → 8/25 10,496 → 8/31 12,121 → **9/7 12,098** | ¥12,098/㎡ | ▼ -0.19% | 🎯 主源:房天下 | | | --- | | 近期成交量（2026年第35周） | | |  |  |  | | --- | --- | --- | | 成都 | 1,039 套 | ▲ +8.00% | | | |  |  |  | | --- | --- | --- | | 广州 | 1,095 套 | ▲ +35.02% | | | |  |  |  | | --- | --- | --- | | 上海 | 978 套 | ▲ +30.05% | | | |  |  |  | | --- | --- | --- | | 杭州 | 845 套 | ▲ +79.41% | | | |  |  |  | | --- | --- | --- | | 深圳 | 644 套 | ▲ +5.57% | | | |  |  |  | | --- | --- | --- | | 北京 | 1,066 套 | ▲ +70.29% | | | |  |  |  | | --- | --- | --- | | 北京·官方网签  住建委 · 2026-09-06 | 住宅 122 套 | 2026-08月累计住宅 13,853 套 | | | |  |  |  |  | | --- | --- | --- | --- | | |  |  |  | | --- | --- | --- | | 上海新房·本月成交  3,130 套 | 成交均价  ¥78,056/㎡ | ▲ +26.87% | | | | --- | | 上海浦东 · 指定小区 | | |  |  |  |  | | --- | --- | --- | --- | | 未来域 房天下: ¥73,608 / 房价网: ¥71,205  近8周: 7/20 74,937 → 7/27 74,937 → 8/3 73,608 → 8/17 73,608 → 8/24 73,608 → 8/25 73,608 → 8/31 73,608 → **9/7 73,608**  最近成交: 2026-07-12 · ¥67,082/㎡ · 819.0万 | ¥73,608/㎡ | — 0.00% | 📌 单源 在售 30 套 | | | |  |  |  |  | | --- | --- | --- | --- | | 浦发绿城1960弄 房天下: ¥41,559 / 房价网: ¥43,989  近8周: 7/20 41,949 → 7/27 41,949 → 8/3 41,559 → 8/17 41,559 → 8/24 41,559 → 8/25 41,559 → 8/31 41,559 → **9/7 41,559**  最近成交: 2026-07-25 · ¥40,081/㎡ · 375.0万 | ¥41,559/㎡ | — 0.00% | 📌 单源 在售 7 套 | | | |  |  |  |  | | --- | --- | --- | --- | | 黄楼新邨 房天下: ¥20,184 / 房价网: ¥20,377  近8周: 7/20 20,389 → 7/27 20,389 → 8/3 20,184 → 8/17 20,184 → 8/24 20,184 → 8/25 20,184 → 8/31 20,184 → **9/7 20,184**  最近成交: 2023-10-06 · ¥27,892/㎡ · 239.0万 （陈旧，仅供参考） | ¥20,184/㎡ | — 0.00% | 📌 单源 | | | --- | | 上海浦东 · 前滩板块 | | |  |  |  |  | | --- | --- | --- | --- | | 尚峰名邸 房天下: ¥159,006 / 房价网: ¥164,624  近8周: 7/20 159,550 → 7/27 159,550 → 8/3 159,006 → 8/17 159,006 → 8/24 159,006 → 8/25 159,006 → 8/31 159,006 → **9/7 159,006**  最近成交: 2025-11-22 · ¥149,481/㎡ · 705.0万 （陈旧，仅供参考） | ¥159,006/㎡ | — 0.00% | 📌 单源 在售 7 套 | | | |  |  |  |  | | --- | --- | --- | --- | | 华唐名邸 房天下: ¥141,326 / 房价网: ¥142,076  近7周: 7/27 141,651 → 8/3 141,326 → 8/17 141,326 → 8/24 141,326 → 8/25 141,326 → 8/31 141,326 → **9/7 141,326** | ¥141,326/㎡ | — 0.00% | 📌 单源 在售 2 套 | | | |  |  |  |  | | --- | --- | --- | --- | | 东方悦耀 房天下: ¥119,038 / 房价网: ¥125,891  近8周: 7/20 120,078 → 7/27 120,078 → 8/3 120,078 → 8/17 119,038 → 8/24 119,038 → 8/25 119,038 → 8/31 119,038 → **9/7 119,038** | ¥119,038/㎡ | — 0.00% | 📌 单源 | | | |  |  |  |  | | --- | --- | --- | --- | | 东方逸品 房天下: ¥132,537 / 房价网: ¥145,680  近8周: 7/20 133,489 → 7/27 133,489 → 8/3 132,537 → 8/17 132,537 → 8/24 132,537 → 8/25 132,537 → 8/31 132,537 → **9/7 132,537** | ¥132,537/㎡ | — 0.00% | 📌 单源 | | | |  |  |  |  | | --- | --- | --- | --- | | 三湘印象名邸 房天下: ¥190,731 / 房价网: ¥189,352  近8周: 7/20 195,281 → 7/27 195,281 → 8/3 190,731 → 8/17 190,731 → 8/24 190,731 → 8/25 190,731 → 8/31 190,731 → **9/7 190,731** | ¥190,731/㎡ | — 0.00% | 📌 单源 | | | --- | | 南通 · 指定小区 | | |  |  |  |  | | --- | --- | --- | --- | | 晨苑 贝壳南通: ¥8,577 / 房价网: ¥8,492  近8周: 7/20 8,708 → 7/27 8,708 → 8/3 8,624 → 8/17 8,624 → 8/24 8,624 → 8/25 8,624 → 8/31 8,624 → **9/7 8,577** | ¥8,577/㎡ | ▼ -0.54% | 📌 单源 在售 37 套 | | | --- | | 政策与市场资讯 | | [乐居] [招商蛇口北京大兴黄村项目案名出炉：招商兴宸揽阅](https://www.lejucaijing.com/news-7501642195536639782.html) | | [乐居] [设计引领，内外循环：第58届中国家博会(上海)与2026中国建博会(上海)盛大开幕](https://www.lejucaijing.com/news-7502250176087258533.html) | | [乐居] [海口连夜发布7条楼市新政：购房人拥有住房套数计算范围从“全省改为本市”](https://www.lejucaijing.com/news-7502021845639165124.html) | | [乐居] [绿城中国赵晖：立足8•28楼市新政，以产品力筑牢长期竞争力](https://www.lejucaijing.com/news-7501944345659634792.html) | | [乐居] [中铁•云绣外滩 | 中铁置业20年1号作品生活美学发布！上海首座五衡科技风貌墅实景示范区盛大开放](https://www.lejucaijing.com/news-7501916853385229384.html) | | [乐居] [别人在卷价格，联塑在卷什么？毛利率三连升中报里的三个“反常识”信号](https://www.lejucaijing.com/news-7501581245647353321.html) | | MyAI 自动生成 · 2026-09-07 07:33 · 数据仅供参考，不构成投资建议 | |"></div></div></section>
-<section class="day"><div class="day-label">2026-09-06（2 条）</div><div class="card"><h2>🌙 夜间顾问提案 2026-09-06 · 2 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">07:03 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-09-06
+<section class="day" data-day="2026-09-06" data-count="2"><div class="card"><h2>🌙 夜间顾问提案 2026-09-06 · 2 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">07:03 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-09-06
 
 本轮 2 个目标共产出 2 条提案。采纳或忽略请点飞书提案卡片上的按钮；觉得全是废话就把 targets.json 里对应目标关掉。
 
@@ -657,7 +675,7 @@ Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md">
 ---
 
 Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md"></div></div></section>
-<section class="day"><div class="day-label">2026-09-05（6 条）</div><div class="card"><h2>🌙 夜间顾问提案 2026-09-05 · 2 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">21:33 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-09-05
+<section class="day" data-day="2026-09-05" data-count="6"><div class="card"><h2>🌙 夜间顾问提案 2026-09-05 · 2 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">21:33 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-09-05
 
 本轮 2 个目标共产出 2 条提案。采纳或忽略请点飞书提案卡片上的按钮；觉得全是废话就把 targets.json 里对应目标关掉。
 
@@ -937,7 +955,7 @@ Oura招股书成这波AI硬件代表；过去48小时Anthropic、Google、Meta�
 
 ## 📌 待你确认（做完说一声，我从清单里划掉）
 1. 在 wechat2rss 后台订阅「半佛仙人」和「孤独大脑」两个公众号，订阅后把 biz_id 告诉我（或直接说一声），我加进 watchlist"></div></div></section>
-<section class="day"><div class="day-label">2026-09-04（3 条）</div><div class="card"><h2>🌙 夜间顾问提案 2026-09-04 · 1 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">21:33 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-09-04
+<section class="day" data-day="2026-09-04" data-count="3"><div class="card"><h2>🌙 夜间顾问提案 2026-09-04 · 1 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">21:33 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-09-04
 
 本轮 1 个目标共产出 1 条提案。采纳或忽略请点飞书提案卡片上的按钮；觉得全是废话就把 targets.json 里对应目标关掉。
 
@@ -1004,7 +1022,7 @@ Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md">
 ---
 
 Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md"></div></div></section>
-<section class="day"><div class="day-label">2026-09-03（3 条）</div><div class="card"><h2>🌙 夜间顾问提案 2026-09-03 · 1 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">21:34 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-09-03
+<section class="day" data-day="2026-09-03" data-count="3"><div class="card"><h2>🌙 夜间顾问提案 2026-09-03 · 1 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">21:34 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-09-03
 
 本轮 1 个目标共产出 1 条提案。采纳或忽略请点飞书提案卡片上的按钮；觉得全是废话就把 targets.json 里对应目标关掉。
 
@@ -1083,7 +1101,7 @@ Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md">
 ---
 
 Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md"></div></div></section>
-<section class="day"><div class="day-label">2026-09-02（3 条）</div><div class="card"><h2>🌙 夜间顾问提案 2026-09-02 · 2 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">21:34 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-09-02
+<section class="day" data-day="2026-09-02" data-count="3"><div class="card"><h2>🌙 夜间顾问提案 2026-09-02 · 2 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">21:34 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-09-02
 
 本轮 2 个目标共产出 2 条提案。采纳或忽略请点飞书提案卡片上的按钮；觉得全是废话就把 targets.json 里对应目标关掉。
 
@@ -1174,7 +1192,7 @@ Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md">
 ---
 
 Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md"></div></div></section>
-<section class="day"><div class="day-label">2026-09-01（2 条）</div><div class="card"><h2>🌙 夜间顾问提案 2026-09-01 · 2 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">21:34 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-09-01
+<section class="day" data-day="2026-09-01" data-count="2"><div class="card"><h2>🌙 夜间顾问提案 2026-09-01 · 2 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">21:34 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-09-01
 
 本轮 2 个目标共产出 2 条提案。采纳或忽略请点飞书提案卡片上的按钮；觉得全是废话就把 targets.json 里对应目标关掉。
 
@@ -1235,7 +1253,7 @@ Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md">
 ---
 
 Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md"></div></div></section>
-<section class="day"><div class="day-label">2026-08-31（6 条）</div><div class="card"><h2>rss_fetcher 评分通胀治理后，需验证修复效果并沉淀为可复用审计模板</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">23:08 · 已读</span></div><div class="body" data-md="⚠️ 本简报未联网（搜索失败），仅为 LLM 已有知识提纲。
+<section class="day" data-day="2026-08-31" data-count="6"><div class="card"><h2>rss_fetcher 评分通胀治理后，需验证修复效果并沉淀为可复用审计模板</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">23:08 · 已读</span></div><div class="body" data-md="⚠️ 本简报未联网（搜索失败），仅为 LLM 已有知识提纲。
 
 # rss_fetcher 评分通胀修复验证调研提纲
 
@@ -1488,7 +1506,7 @@ Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md">
 ---
 
 Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md"></div></div></section>
-<section class="day"><div class="day-label">2026-08-30（3 条）</div><div class="card"><h2>🌙 夜间顾问提案 2026-08-30 · 1 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">13:37 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-08-30
+<section class="day" data-day="2026-08-30" data-count="3"><div class="card"><h2>🌙 夜间顾问提案 2026-08-30 · 1 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">13:37 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-08-30
 
 本轮 1 个目标共产出 1 条提案。采纳或忽略请点飞书提案卡片上的按钮；觉得全是废话就把 targets.json 里对应目标关掉。
 
@@ -1559,7 +1577,7 @@ Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md">
 ---
 
 Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md"></div></div></section>
-<section class="day"><div class="day-label">2026-08-29（4 条）</div><div class="card"><h2>🌙 夜间顾问提案 2026-08-29 · 1 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">07:03 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-08-29
+<section class="day" data-day="2026-08-29" data-count="4"><div class="card"><h2>🌙 夜间顾问提案 2026-08-29 · 1 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">07:03 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-08-29
 
 本轮 1 个目标共产出 1 条提案。采纳或忽略请点飞书提案卡片上的按钮；觉得全是废话就把 targets.json 里对应目标关掉。
 
@@ -1757,7 +1775,7 @@ Claude API 529错误导致长程任务失败，稳定性因用户而异；找回
 
 ## 📌 待你确认（做完说一声，我从清单里划掉）
 1. 在 wechat2rss 后台订阅「半佛仙人」和「孤独大脑」两个公众号，订阅后把 biz_id 告诉我（或直接说一声），我加进 watchlist"></div></div></section>
-<section class="day"><div class="day-label">2026-08-28（2 条）</div><div class="card"><h2>🌙 夜间顾问提案 2026-08-28 · 1 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">21:33 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-08-28
+<section class="day" data-day="2026-08-28" data-count="2"><div class="card"><h2>🌙 夜间顾问提案 2026-08-28 · 1 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">21:33 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-08-28
 
 本轮 1 个目标共产出 1 条提案。采纳或忽略请点飞书提案卡片上的按钮；觉得全是废话就把 targets.json 里对应目标关掉。
 
@@ -1806,7 +1824,7 @@ Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md">
 ---
 
 Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md"></div></div></section>
-<section class="day"><div class="day-label">2026-08-27（3 条）</div><div class="card"><h2>🌙 夜间顾问提案 2026-08-27 · 1 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">21:34 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-08-27
+<section class="day" data-day="2026-08-27" data-count="3"><div class="card"><h2>🌙 夜间顾问提案 2026-08-27 · 1 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">21:34 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-08-27
 
 本轮 1 个目标共产出 1 条提案。采纳或忽略请点飞书提案卡片上的按钮；觉得全是废话就把 targets.json 里对应目标关掉。
 
@@ -1861,7 +1879,7 @@ Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md">
 ---
 
 Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md"></div></div></section>
-<section class="day"><div class="day-label">2026-08-26（4 条）</div><div class="card"><h2>🌙 夜间顾问提案 2026-08-26 · 2 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">21:34 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-08-26
+<section class="day" data-day="2026-08-26" data-count="4"><div class="card"><h2>🌙 夜间顾问提案 2026-08-26 · 2 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">21:34 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-08-26
 
 本轮 2 个目标共产出 2 条提案。采纳或忽略请点飞书提案卡片上的按钮；觉得全是废话就把 targets.json 里对应目标关掉。
 
@@ -1946,7 +1964,7 @@ Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md">
 ---
 
 Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md"></div></div></section>
-<section class="day"><div class="day-label">2026-08-25（1 条）</div><div class="card"><h2>🌙 夜间顾问提案 2026-08-25 · 1 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">21:34 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-08-25
+<section class="day" data-day="2026-08-25" data-count="1"><div class="card"><h2>🌙 夜间顾问提案 2026-08-25 · 1 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">21:34 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-08-25
 
 本轮 1 个目标共产出 1 条提案。采纳或忽略请点飞书提案卡片上的按钮；觉得全是废话就把 targets.json 里对应目标关掉。
 
@@ -1965,6 +1983,7 @@ Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md">
 ---
 
 Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md"></div></div></section>
+<div id="empty">这一天没有通知</div>
 </main>
 <footer>xdash.me/today · MyAI daily_feed</footer>
 <script>
@@ -1983,6 +2002,53 @@ function miniMd(s){
 document.querySelectorAll('.body[data-md]').forEach(el=>{
   el.innerHTML = miniMd(el.dataset.md);
 });
+
+/* 按日切换：默认今天；‹ › 在「今天 + 有通知的日子」序列里移动 */
+(function(){
+  function iso(d){
+    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')
+           +'-'+String(d.getDate()).padStart(2,'0');
+  }
+  const today = iso(new Date());
+  const sections = {};
+  document.querySelectorAll('.day[data-day]').forEach(el=>{
+    sections[el.dataset.day] = el;
+  });
+  /* 日期序列从新到旧：今天总在首位（哪怕今天无通知），其余为有通知的日子 */
+  const days = [today];
+  Object.keys(sections).sort().reverse().forEach(d=>{
+    if (d !== today) days.push(d);
+  });
+  let idx = 0;
+  const curDate = document.getElementById('cur-date');
+  const curCount = document.getElementById('cur-count');
+  const prev = document.getElementById('prev');
+  const next = document.getElementById('next');
+  const todayBtn = document.getElementById('today-btn');
+  const empty = document.getElementById('empty');
+  function show(){
+    const d = days[idx];
+    Object.values(sections).forEach(el=>el.classList.remove('active'));
+    empty.classList.remove('active');
+    curDate.textContent = (d === today ? '今天 ' : '') + d;
+    const sec = sections[d];
+    if (sec) {
+      sec.classList.add('active');
+      curCount.textContent = sec.dataset.count + ' 条';
+    } else {
+      empty.classList.add('active');
+      curCount.textContent = '0 条';
+    }
+    prev.disabled = idx >= days.length - 1;
+    next.disabled = idx <= 0;
+    todayBtn.style.visibility = idx === 0 ? 'hidden' : 'visible';
+    window.scrollTo(0, 0);
+  }
+  prev.addEventListener('click', ()=>{ if (idx < days.length-1) { idx++; show(); } });
+  next.addEventListener('click', ()=>{ if (idx > 0) { idx--; show(); } });
+  todayBtn.addEventListener('click', ()=>{ idx = 0; show(); });
+  show();
+})();
 </script>
 </body>
 </html>
