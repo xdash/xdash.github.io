@@ -68,7 +68,7 @@
 <body>
 <header>
   <h1>通知 Feed</h1>
-  <div class="sub">最近 25 天 · 57 条 · 生成于 2026-09-29 23:27</div>
+  <div class="sub">最近 24 天 · 54 条 · 生成于 2026-09-30 00:28</div>
   <div class="daynav">
     <button id="prev" title="更早一天">‹</button>
     <div class="cur"><span id="cur-date"></span><span class="n" id="cur-count"></span></div>
@@ -3377,77 +3377,6 @@ Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md">
 **风险：**⚠️ 本条未经过证据链复核（复核调用失败），事实主张未验证。 需要先收集历史评分分布数据作为基线，否则阈值拍脑袋可能误报或漏报；若评分膨胀源于 LLM 模型升级而非代码 bug，需要在 prompt 层校准而非仅代码检查。
 
 **提案：**在 Code/rss\_fetcher/core/content\_processor/score\_adjustments.py 新增 score\_sanity\_check()，在评分结束后统计非 truncated 文章的分数分布，若平均分超过历史基线（如前 30 天平均分 + 5）或出现 &gt;30 分文章，打印 warning 并写入 rss\_error 日志。同时在 Code/rss\_fetcher/tests/ 增加 test\_score\_regression.py，用当周历史样本（如 2026W34 文章）断言评分分布在合理区间（均分 &lt; 20）。验证：跑 python3 -m pytest Code/rss\_fetcher/tests/test\_score\_regression.py -v 通过，并对当日评分结果运行 score\_sanity\_check() 能捕获 20+ 异常。
-
----
-
-Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md"></div></div></section>
-<section class="day" data-day="2026-08-30" data-count="3"><div class="card"><h2>🌙 夜间顾问提案 2026-08-30 · 1 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">13:37 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-08-30
-
-本轮 1 个目标共产出 1 条提案。采纳或忽略请点飞书提案卡片上的按钮；觉得全是废话就把 targets.json 里对应目标关掉。
-
-### #1 FDE 线上课直播转化复盘与二次触达策略（基于 CRM 数据驱动）
-
-目标：业务意图猜测 ｜ 工作量 M ｜ 信心 高
-
-**问题：**近 7 天反馈事件 24 条全部为 reject（超时未裁决），其中 FDE 线上课直播转化复盘与二次触达策略被反复提案超过 10 次均未获采纳。本周焦点明确列出「 FDE 线上课直播转化收尾：首轮转化数据复盘 + 二次触达名单与话术（ 8/28 为 48h 窗口最后一天，昨日未完成顺延）」，说明该任务持续未完成且用户有明确意图。同时 git 提交显示 XDash\_Email\_CRM 项目有修复（ 08-30 09:58 修复 MikeCRM 自动续登邮箱误填手机区号框），说明 CRM 数据管道正在维护中，具备数据驱动的条件。
-
-**收益：**完成 FDE 线上课首轮转化数据复盘，输出二次触达名单与话术包，直接服务课程追单与信任建设，将直播流量转化为实际收入。
-
-**风险：**用户可能已对该话题疲劳（多次 reject），需确保提案角度有实质新意（如 CRM 数据驱动而非泛泛而谈）。
-
-**提案：**1. 从 XDash\_Email\_CRM 数据库提取 8/26 直播相关报名 / 观看 / 未转化用户数据； 2. 分析转化漏斗（报名→观看→付费）各环节流失率； 3. 按用户行为特征（观看时长、互动、历史课程购买）分层； 4. 为每层用户设计差异化二次触达话术（邮件 + 社群）； 5. 输出执行清单与时间表。
-
----
-
-Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md"></div></div><div class="card"><h2>🌙 夜间顾问提案 2026-08-30 · 1 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">07:03 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-08-30
-
-本轮 1 个目标共产出 1 条提案。采纳或忽略请点飞书提案卡片上的按钮；觉得全是废话就把 targets.json 里对应目标关掉。
-
-### #1 直播回放长尾上线：剪辑片段与官网更新素材包
-
-目标：业务意图猜测 ｜ 工作量 M ｜ 信心 中
-
-**问题：**weekly\_focus\_auto.md 第 2 项明确「直播回放长尾上线：剪辑回放片段（检查 cupcut 可用性、章节提示 AI 化）并更新官网」。近 7 天有 1 条 reject 「直播回放剪辑与官网更新素材包」超时未裁决，且 git 提交显示 CS75 原型站大幅升级（ 86 零件 /95 热点），说明用户近期在推进多个网站项目，但直播回放剪辑可能因工具（ cupcut）可用性或时间不足被搁置。
-
-**收益：**将直播回放转化为可长期引流的长尾内容，提升课程曝光与转化；官网更新后形成完整课程交付闭环。
-
-**风险：**用户可能已放弃剪辑或改用其他工具；直播回放源文件可能未保存或损坏。
-
-**提案：**1. 检查 cupcut 可用性，若不可用则列出替代剪辑工具； 2. 基于直播转录文本（如有）生成章节提示与高光片段建议； 3. 输出官网更新所需素材清单与嵌入代码； 4. 推送飞书卡片供用户确认后执行。
-
----
-
-Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md"></div></div><div class="card"><h2>🌙 夜间顾问提案 2026-08-30 · 0 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">05:58 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-08-30
-
-本轮 6 个目标共产出 0 条提案，另拦截 1 条低质提案（复核存疑 / 信心低，已记 notes.md，不再推荐）。采纳或忽略请点飞书提案卡片上的按钮；觉得全是废话就把 targets.json 里对应目标关掉。
-
-### 📊 进化系统体检 · 周报运行正常但 LLM 周诊断余额不足，选题雷达多场零终审，顾问采纳率 30.3%，总体低效
-
-**自我进化运行：**cron\_health\_checker 周报： 2026-08-24 08:00:33 开始执行→08:00:36 成功，耗时 3.8s；本周 1 次运行， 1 成功， 0 失败（调度日志 2 条：开始 + 成功）
-
-**进化产出：**产出 weekly\_report\_20260824.md（ 7202 字节，修改于 2026-08-24 08:00 周一），含代理未开任务清单、自动处置统计（重试成功 0/ 自行恢复 69/ 需人工 49）、复发问题表（知乎课题雷达 7 天 14 次超时 failed 、知乎词库自我进化 JSON 解析失败等）、近 7 天 LLM 成本台账（ 5156 次调用，$3.574≈¥25.38）；但 LLM 周诊断失败： API 调用失败 HTTP 402 Insufficient Balance
-
-**顾问提案采纳：**台账共 33 条有状态提案（另有 1 条末尾截断未计入， 1 条 2026-07-30 体检结论不属提案）：已采纳 10，待评审 0，已忽略 22，已解决 1；采纳率 30.3%（ 10/33）
-
-**重复 / 空转迹象：**周报产物无内容级对比证据，无法判重；选题雷达 ledger 尾部 8 条漏斗记录终审通过均为 0，其中 2026-08-28 、 2026-08-29 各有 1 场候选 0→阈值 0→素材 0→成稿 0→终审 0 空转，淘汰主因为同课题限流和骨架生成失败（ LLM 返回空 content finish\_reason=length）；共享母题库 topics.md 共 19 条， ledger 尾部仅明确出现课题 2/8/15，其余零匹配证据不足； topics\_auto.md 有 3 条扩展（课题 5/6/7，生成于 2026-08-24 00:42），无后续处理记录
-
-**结论：**低效——周报有产出且覆盖成本与复发问题，但 LLM 周诊断失败（ HTTP 402），选题雷达多场零终审 / 零候选，顾问提案忽略 22 条、采纳率仅 30.3%，系统运行但执行转化弱
-
-**建议：**优先修复选题雷达骨架生成缺陷（ LLM 返回空 content/finish\_reason=length）和同课题限流刷屏，把预算集中到可成稿候选；同时为周报 LLM 周诊断充值或降级模型，避免周报只统计不诊断
-
-### 📊 进化系统体检 · Self\_Evolution\_V2 退役冷备可见日志零运行，顾问台账与死链 / 孤儿证据缺失，本周无法据证判健康
-
-**自我进化运行：**从提供的 7 个日志尾部逐行计数： Self\_Evolution\_V2 出现 0 行，成功 0 行，失败 0 行；未见该任务名（ scheduler\_v2\_20260824.log 至 scheduler\_v2\_20260830.log 尾部 2000 字符）
-
-**进化产出：**无产出证据。 7 个日志尾部未见 Self\_Evolution\_V2 运行、报告或产物行；按给定机制说明该任务已退役冷备。
-
-**顾问提案采纳：**证据不足：证据中未包含 notes.md 台账，无法统计总提案数 / 已采纳 / 待评审 / 已忽略与采纳率；日志仅见 2026-08-30 05:47:19 [夜间顾问提案] 开始执行 → advisor.py 一行，尾部截断未见成功或失败行。
-
-**重复 / 空转迹象：**证据不足：本周未提供产物内容级对比证据，无法判定重复；无 Self\_Evolution\_V2 或 advisor 产出报告可比对。
-
-**结论：**低效：可见日志中自我进化任务零运行且已退役冷备，顾问台账与全量死链 / 孤儿证据未提供，进化闭环无法验证。
-
-**建议：**将 overnight\_advisor 的 notes.md 台账与 cron\_health\_checker 周报死链 / 孤儿 / 消费者清单检查结果打包为每周体检固定输入，按周输出采纳率、积压数与死链收敛数字；未提供这些数字前不判健康。
 
 ---
 
