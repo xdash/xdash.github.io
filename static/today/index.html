@@ -68,7 +68,7 @@
 <body>
 <header>
   <h1>通知 Feed</h1>
-  <div class="sub">最近 22 天 · 46 条 · 生成于 2026-10-03 23:53</div>
+  <div class="sub">最近 21 天 · 43 条 · 生成于 2026-10-04 00:54</div>
   <div class="daynav">
     <button id="prev" title="更早一天">‹</button>
     <div class="cur"><span id="cur-date"></span><span class="n" id="cur-count"></span></div>
@@ -2843,85 +2843,6 @@ Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md">
 **风险：**⚠️ 本条未经过证据链复核（复核调用失败），事实主张未验证。 假设 unified\_config.json 的 email.smtp.username 已等于 fanbingx@gmail.com（若没有需先补配）； relogin.py 在导入时会触发 ConfigManager 加载，若 Config 文件缺失会导致导入失败，需确认部署环境已有该配置。 test\_relogin.py 中仍硬编码同一邮箱，迁移后断言仍应通过，但本次不迁移测试数据。
 
 **提案：**修改 /Users/xdash/MyAI/Code/XDash\_Email\_CRM/lib/relogin.py：删除第 18 行模块级 `EMAIL =&quot;fanbingx@gmail.com&quot;`，改为从统一配置读取。例如在文件顶部加入 `import sys; from pathlib import Path; sys.path.insert(0, str(Path(\_\_file\_\_).resolve().parents[2]))`（指向 Code 目录），然后 `from utils.config\_manager import ConfigManager`，并设置 `EMAIL = ConfigManager().get\_email\_config(&#x27;smtp&#x27;)[&#x27;username&#x27;]`。若 email.sender 有 email 字段则优先用 sender.email，保持一致。验证：`grep -n&quot;fanbingx@gmail.com&quot; Code/XDash\_Email\_CRM/lib/relogin.py` 应无输出；运行 `python3 -m pytest Code/XDash\_Email\_CRM/tests/test\_relogin.py` 通过；运行 `python3 -c&quot;from Code.XDash\_Email\_CRM.lib import relogin; print(relogin.EMAIL)&quot;` 输出统一配置中的邮箱。
-
----
-
-Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md"></div></div></section>
-<section class="day" data-day="2026-09-03" data-count="3"><div class="card"><h2>🌙 夜间顾问提案 2026-09-03 · 1 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">21:34 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-09-03
-
-本轮 1 个目标共产出 1 条提案。采纳或忽略请点飞书提案卡片上的按钮；觉得全是废话就把 targets.json 里对应目标关掉。
-
-### #1 「可抄」落地执行：从五个收藏站选一改 fde4.ai 布局
-
-目标：业务意图猜测 ｜ 工作量 S ｜ 信心 中
-
-**问题：**本周焦点第 5 条明确「官网『可抄』落地：从五个收藏站选一改 fde4.ai 布局」，且 flomo 中 08-01 收藏了 oceanbase 网站界面并标注「可以抄」，说明用户有明确的改版意图但尚未执行。
-
-**收益：**快速提升 fde4.ai 的视觉与转化率，减少用户自行摸索的时间。
-
-**风险：**改版可能影响现有转化路径，需先确认收款入口不受影响。
-
-**提案：**1. 回顾五个收藏站（含 oceanbase）的布局亮点； 2. 选择 1 个最适合 fde4.ai 的参考站； 3. 用截图工具模拟新版布局； 4. 输出改版前后对比与实施建议。
-
----
-
-Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md"></div></div><div class="card"><h2>🌙 夜间顾问提案 2026-09-03 · 2 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">13:38 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-09-03
-
-本轮 2 个目标共产出 2 条提案。采纳或忽略请点飞书提案卡片上的按钮；觉得全是废话就把 targets.json 里对应目标关掉。
-
-### #1 FDE 线上课首周售卖复盘数据准备与下周策略预研
-
-目标：业务意图猜测 ｜ 工作量 M ｜ 信心 高
-
-**问题：**本周焦点明确列出「首周售卖复盘： 09-04 数据复盘，产出下周策略」（死线 09-03 18:00 的收款入口上线已过， 09-04 是复盘日）。近 7 天有 22 条 reject 均为超时未裁决，其中多条是 FDE 直播转化复盘类提案，说明用户对「执行清单 / 话术包」类提案不感兴趣，但对「数据复盘与策略」本身有需求（本周焦点第 4 条是用户自己写的）。 changelog 09-02 记录「 FDE 线上课正式版上线」， 09-03 提交 polish-newsletter v1.42.0 移除公众号 /Telegram 衍生版生成，暗示用户正在精简内容分发渠道，聚焦核心变现路径。
-
-**收益：**在 09-04 复盘日前准备好数据口径与对比基准，避免当天临时抓数；产出下周可执行的策略选项而非空泛建议
-
-**风险：**用户可能已自行完成数据拉取，此提案变成重复劳动；但作为复盘模板仍有复用价值
-
-**提案：**1. 从 XDash\_Email\_CRM 的 SQLite 拉取 09-02 上线后的订单 / 付款记录，统计转化漏斗（访问→点击→付款）； 2. 对比 206 人加微名单与自然流量的转化差异； 3. 按本周焦点第 4 条要求，产出 09-04 复盘会议用的数据看板与下周策略候选； 4. 输出为可直接在复盘会上使用的文档
-
-### #2 AI 工具向长文选题：从 09-03 密集收藏中提炼「 AI 时代个人 / 企业转型」叙事主线
-
-目标：业务意图猜测 ｜ 工作量 M ｜ 信心 中
-
-**问题：**本周焦点第 3 条是「内容引流：写 1 篇 AI 工具向长文，文末挂收款链接」。 09-03 当天用户密集收藏了 10+ 条 AI 相关素材：曾鸣谈 AI 三阶段与公司消亡论（ podcast， score 30）、盖茨警示 AI 时代社会考验、 AI 推理成本骤降 Agent 时代来临、后工作时代职业阶梯崩塌、 20 人制造企业全员 AI 化实录、 AI 提升产出上限而非减少人力——这些素材高度聚焦「 AI 对社会结构 / 就业 / 企业的冲击与应对」，且与 FDE（前线部署工程师）课程定位天然契合。用户还收藏了「长沙服务业冲刺万亿」和「宇树投资往事」，显示对产业转型与投资判断的兴趣。
-
-**收益：**产出一篇有素材支撑、能自然导流 fde4.ai 收款链接的长文选题方案，避免从零开始找素材
-
-**风险：**用户可能已有既定选题方向，此提案需与用户确认后再展开；素材虽多但需避免变成综述文
-
-**提案：**1. 梳理 09-03 收藏的 10+ 条 AI 素材，提炼共同主线（ AI 重塑工作 / 企业 / 社会结构）； 2. 结合 FDE 课程定位（前线部署工程师），设计「 AI 时代个人如何不被淘汰」的叙事角度； 3. 产出长文大纲与素材引用映射表； 4. 设计文末导流 fde4.ai 收款链接的过渡段落
-
----
-
-Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md"></div></div><div class="card"><h2>🌙 夜间顾问提案 2026-09-03 · 2 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">07:04 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-09-03
-
-本轮 2 个目标共产出 2 条提案。采纳或忽略请点飞书提案卡片上的按钮；觉得全是废话就把 targets.json 里对应目标关掉。
-
-### #1 FDE 线上课首周售卖复盘与下周策略制定
-
-目标：业务意图猜测 ｜ 工作量 M ｜ 信心 高
-
-**问题：**weekly\_focus\_auto.md 明确列出「首周售卖复盘： 09-04 数据复盘，产出下周策略」为本周焦点第 4 项，且 09-02 已上线收款入口（ changelog 2026-09-02.md: fde4ai： FDE 线上课正式版上线）， 09-03 为死线后第一天，数据已积累 1-2 天，具备复盘条件。
-
-**收益：**基于真实售卖数据产出下周可执行的策略，避免拍脑袋决策，直接提升 FDE 变现闭环的转化效率。
-
-**风险：**数据量可能过小（仅 1-2 天），结论统计意义不足；需结合直播首播数据综合判断。
-
-**提案：**1. 从 fde4.ai 收款入口、 CRM 、直播数据源拉取 09-02 至 09-03 的订单、金额、来源渠道数据； 2. 分析转化漏斗（访问→下单→支付），识别流失环节； 3. 对比 206 人加微名单与付费名单的重合度，评估二次触达效果； 4. 产出下周策略（内容引流方向、话术迭代点、渠道优先级调整）。
-
-### #2 AI 工具向长文选题与素材准备
-
-目标：业务意图猜测 ｜ 工作量 M ｜ 信心 高
-
-**问题：**weekly\_focus\_auto.md 第 3 项「内容引流：写 1 篇 AI 工具向长文，文末挂收款链接」；同时 Obsidian 近期收藏了多篇 AI 工具 / 量化 /AI 教育相关文章（如「量化有没有峰哥因子？」「 AI 时代，精英阶层正在如何重构教育？」），且「新发布的 AI 工具」 motif 下有 OpenClaw 2.0 、 OJO 等素材，说明用户正在积累写作素材。
-
-**收益：**产出一篇高质量 AI 工具向长文，文末挂 fde4.ai 收款链接，直接为 FDE 课程引流，形成内容→变现闭环。
-
-**风险：**选题与 FDE 课程关联度不足会导致引流效果差；需确保文章价值独立成立，而非硬广。
-
-**提案：**1. 从 Obsidian 收藏的 AI 工具相关文章中提炼 3-5 个候选选题； 2. 结合 FDE 课程核心卖点（ AI 自动化、效率提升）筛选最优选题； 3. 搭建文章结构（开头钩子→痛点分析→工具 / 方法论介绍→案例→CTA）； 4. 撰写初稿并预留 CTA 位置。
 
 ---
 
