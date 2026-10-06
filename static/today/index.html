@@ -28,13 +28,18 @@
   .daynav .cur .n { font-size: 11px; font-weight: 400; color: #8a857a; margin-left: 6px; }
   .daynav .today-btn { font-size: 12px; padding: 6px 10px; }
   main { max-width: 680px; margin: 0 auto; padding: 8px 16px 48px; }
-  .day { display: none; margin-top: 20px; }
-  .day.active { display: block; }
-  #empty {
-    display: none; text-align: center; color: #8a857a; font-size: 14px;
-    padding: 48px 0;
+  .day { margin-top: 24px; scroll-margin-top: 128px; }
+  .day.hidden { display: none; }
+  .dayhead {
+    display: flex; align-items: baseline; gap: 8px;
+    font-size: 13px; font-weight: 600; color: #6b675c; margin-bottom: 10px;
   }
-  #empty.active { display: block; }
+  .dayhead .dnum { font-size: 15px; color: #1a1a1a; }
+  .dayhead .n { font-weight: 400; color: #a8a396; font-size: 11px; }
+  .empty-day {
+    background: #faf9f6; border: 1px dashed #ddd9cd; border-radius: 12px;
+    text-align: center; color: #a8a396; font-size: 13px; padding: 20px 0;
+  }
   .card {
     background: #fff; border: 1px solid #e8e5dd; border-radius: 12px;
     padding: 14px 16px; margin-bottom: 12px;
@@ -59,6 +64,13 @@
   footer {
     text-align: center; font-size: 11px; color: #b0ab9e; padding: 24px 0 40px;
   }
+  #loadmore {
+    display: block; width: 100%; margin-top: 24px; padding: 10px 0;
+    border: 1px solid #d8d4c9; background: #fff; border-radius: 10px;
+    font-size: 13px; color: #4a463c; cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  #loadmore.hidden { display: none; }
   @media (max-width: 480px) {
     main { padding: 4px 12px 40px; }
     .card { padding: 12px 14px; }
@@ -68,7 +80,7 @@
 <body>
 <header>
   <h1>通知 Feed</h1>
-  <div class="sub">最近 20 天 · 35 条 · 生成于 2026-10-06 08:49</div>
+  <div class="sub">最近 31 天 · 35 条 · 生成于 2026-10-06 09:50</div>
   <div class="daynav">
     <button id="prev" title="更早一天">‹</button>
     <div class="cur"><span id="cur-date"></span><span class="n" id="cur-count"></span></div>
@@ -77,7 +89,8 @@
   </div>
 </header>
 <main>
-<section class="day" data-day="2026-10-05" data-count="1"><div class="card"><h2>🏠 房产周报 2026-10-05</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">Property_Monitor</span><span class="badge time">07:33</span></div><div class="body" data-md="房产周报 2026-10-05
+<section class="day" id="d-2026-10-06" data-day="2026-10-06" data-count="0"><div class="dayhead"><span class="dnum">10月6日 周二 · 今天</span><span class="n">2026-10-06 · 0 条</span></div><div class="empty-day">这一天暂时还没有内容</div></section>
+<section class="day" id="d-2026-10-05" data-day="2026-10-05" data-count="1"><div class="dayhead"><span class="dnum">10月5日 周一</span><span class="n">2026-10-05 · 1 条</span></div><div class="card"><h2>🏠 房产周报 2026-10-05</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">Property_Monitor</span><span class="badge time">07:33</span></div><div class="body" data-md="房产周报 2026-10-05
 
 🏠 房产市场每周观察
 
@@ -268,7 +281,8 @@ LPR（2026-09-20 报价）：1 年期 **3.0%**　｜　
 [三部门出台房贷贴息政策：首套房商贷年贴息1%](https://www.lejucaijing.com/news-7510658118834648267.html)
 
 MyAI 自动生成 · 2026-10-05 07:33 · 数据仅供参考，不构成投资建议"></div></div></section>
-<section class="day" data-day="2026-10-03" data-count="3"><div class="card"><h2>即刻内容周报 - 2026 W40</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">jike_content_monitor</span><span class="badge time">06:01</span></div><div class="body" data-md="即刻内容周报 - 2026-10-03
+<section class="day" id="d-2026-10-04" data-day="2026-10-04" data-count="0"><div class="dayhead"><span class="dnum">10月4日 周日</span><span class="n">2026-10-04 · 0 条</span></div><div class="empty-day">这一天暂时还没有内容</div></section>
+<section class="day" id="d-2026-10-03" data-day="2026-10-03" data-count="3"><div class="dayhead"><span class="dnum">10月3日 周六</span><span class="n">2026-10-03 · 3 条</span></div><div class="card"><h2>即刻内容周报 - 2026 W40</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">jike_content_monitor</span><span class="badge time">06:01</span></div><div class="body" data-md="即刻内容周报 - 2026-10-03
 
 # 📱 即刻内容周报
 
@@ -411,7 +425,10 @@ Claude Code 作者 Boris 的模型升级心法：新模型上线先删空系统�
 
 ## 📌 待你确认（做完说一声，我从清单里划掉）
 1. 在 wechat2rss 后台订阅「半佛仙人」和「孤独大脑」两个公众号，订阅后把 biz_id 告诉我（或直接说一声），我加进 watchlist"></div></div></section>
-<section class="day" data-day="2026-09-29" data-count="1"><div class="card"><h2>多层级交易日报 2026-09-29</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">multi_layer_trader</span><span class="badge time">08:47</span></div><div class="body" data-md="# 多层级交易日报 2026-09-29
+<section class="day" id="d-2026-10-02" data-day="2026-10-02" data-count="0"><div class="dayhead"><span class="dnum">10月2日 周五</span><span class="n">2026-10-02 · 0 条</span></div><div class="empty-day">这一天暂时还没有内容</div></section>
+<section class="day" id="d-2026-10-01" data-day="2026-10-01" data-count="0"><div class="dayhead"><span class="dnum">10月1日 周四</span><span class="n">2026-10-01 · 0 条</span></div><div class="empty-day">这一天暂时还没有内容</div></section>
+<section class="day" id="d-2026-09-30" data-day="2026-09-30" data-count="0"><div class="dayhead"><span class="dnum">9月30日 周三</span><span class="n">2026-09-30 · 0 条</span></div><div class="empty-day">这一天暂时还没有内容</div></section>
+<section class="day" id="d-2026-09-29" data-day="2026-09-29" data-count="1"><div class="dayhead"><span class="dnum">9月29日 周二</span><span class="n">2026-09-29 · 1 条</span></div><div class="card"><h2>多层级交易日报 2026-09-29</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">multi_layer_trader</span><span class="badge time">08:47</span></div><div class="body" data-md="# 多层级交易日报 2026-09-29
 
 ## 一、市场总览
 
@@ -471,7 +488,7 @@ Claude Code 作者 Boris 的模型升级心法：新模型上线先删空系统�
 
 ---
 模拟盘市值 $98,977.92（盈亏 -1,022.08）· 完整看板见 Dashboard「多层级交易日报」"></div></div></section>
-<section class="day" data-day="2026-09-28" data-count="1"><div class="card"><h2>🏠 房产周报 2026-09-28</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">Property_Monitor</span><span class="badge time">07:34</span></div><div class="body" data-md="房产周报 2026-09-28
+<section class="day" id="d-2026-09-28" data-day="2026-09-28" data-count="1"><div class="dayhead"><span class="dnum">9月28日 周一</span><span class="n">2026-09-28 · 1 条</span></div><div class="card"><h2>🏠 房产周报 2026-09-28</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">Property_Monitor</span><span class="badge time">07:34</span></div><div class="body" data-md="房产周报 2026-09-28
 
 🏠 房产市场每周观察
 
@@ -679,7 +696,7 @@ LPR（2026-09-20 报价）：1 年期 **3.0%**　｜　
 [北京：新项目优先选择现房销售，购房定金最高不超总房款1%](https://www.lejucaijing.com/news-7508815383274124353.html)
 
 MyAI 自动生成 · 2026-09-28 07:34 · 数据仅供参考，不构成投资建议"></div></div></section>
-<section class="day" data-day="2026-09-27" data-count="1"><div class="card"><h2>多层级交易日报 2026-09-27</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">multi_layer_trader</span><span class="badge time">08:48</span></div><div class="body" data-md="# 多层级交易日报 2026-09-27
+<section class="day" id="d-2026-09-27" data-day="2026-09-27" data-count="1"><div class="dayhead"><span class="dnum">9月27日 周日</span><span class="n">2026-09-27 · 1 条</span></div><div class="card"><h2>多层级交易日报 2026-09-27</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">multi_layer_trader</span><span class="badge time">08:48</span></div><div class="body" data-md="# 多层级交易日报 2026-09-27
 
 ## 一、市场总览
 
@@ -738,7 +755,7 @@ MyAI 自动生成 · 2026-09-28 07:34 · 数据仅供参考，不构成投资建
 
 ---
 模拟盘市值 $98,941.69（盈亏 -1,058.31）· 完整看板见 Dashboard「多层级交易日报」"></div></div></section>
-<section class="day" data-day="2026-09-26" data-count="4"><div class="card"><h2>多层级交易日报 2026-09-26</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">multi_layer_trader</span><span class="badge time">08:47</span></div><div class="body" data-md="# 多层级交易日报 2026-09-26
+<section class="day" id="d-2026-09-26" data-day="2026-09-26" data-count="4"><div class="dayhead"><span class="dnum">9月26日 周六</span><span class="n">2026-09-26 · 4 条</span></div><div class="card"><h2>多层级交易日报 2026-09-26</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">multi_layer_trader</span><span class="badge time">08:47</span></div><div class="body" data-md="# 多层级交易日报 2026-09-26
 
 ## 一、市场总览
 
@@ -979,7 +996,7 @@ Opus 5.5 强到越界（纯代码直出一句话产品宣传片，效果碾压�
 
 ## 📌 待你确认（做完说一声，我从清单里划掉）
 1. 在 wechat2rss 后台订阅「半佛仙人」和「孤独大脑」两个公众号，订阅后把 biz_id 告诉我（或直接说一声），我加进 watchlist"></div></div></section>
-<section class="day" data-day="2026-09-25" data-count="1"><div class="card"><h2>多层级交易日报 2026-09-25</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">multi_layer_trader</span><span class="badge time">08:47</span></div><div class="body" data-md="# 多层级交易日报 2026-09-25
+<section class="day" id="d-2026-09-25" data-day="2026-09-25" data-count="1"><div class="dayhead"><span class="dnum">9月25日 周五</span><span class="n">2026-09-25 · 1 条</span></div><div class="card"><h2>多层级交易日报 2026-09-25</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">multi_layer_trader</span><span class="badge time">08:47</span></div><div class="body" data-md="# 多层级交易日报 2026-09-25
 
 ## 一、市场总览
 
@@ -1038,7 +1055,7 @@ Opus 5.5 强到越界（纯代码直出一句话产品宣传片，效果碾压�
 
 ---
 模拟盘市值 $99,332.88（盈亏 -667.12）· 完整看板见 Dashboard「多层级交易日报」"></div></div></section>
-<section class="day" data-day="2026-09-24" data-count="1"><div class="card"><h2>多层级交易日报 2026-09-24</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">multi_layer_trader</span><span class="badge time">08:47</span></div><div class="body" data-md="# 多层级交易日报 2026-09-24
+<section class="day" id="d-2026-09-24" data-day="2026-09-24" data-count="1"><div class="dayhead"><span class="dnum">9月24日 周四</span><span class="n">2026-09-24 · 1 条</span></div><div class="card"><h2>多层级交易日报 2026-09-24</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">multi_layer_trader</span><span class="badge time">08:47</span></div><div class="body" data-md="# 多层级交易日报 2026-09-24
 
 ## 一、市场总览
 
@@ -1096,7 +1113,9 @@ Opus 5.5 强到越界（纯代码直出一句话产品宣传片，效果碾压�
 
 ---
 模拟盘市值 $98,751.43（盈亏 -1,248.57）· 完整看板见 Dashboard「多层级交易日报」"></div></div></section>
-<section class="day" data-day="2026-09-21" data-count="1"><div class="card"><h2>🏠 房产周报 2026-09-21</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">Property_Monitor</span><span class="badge time">07:33</span></div><div class="body" data-md="房产周报 2026-09-21
+<section class="day" id="d-2026-09-23" data-day="2026-09-23" data-count="0"><div class="dayhead"><span class="dnum">9月23日 周三</span><span class="n">2026-09-23 · 0 条</span></div><div class="empty-day">这一天暂时还没有内容</div></section>
+<section class="day" id="d-2026-09-22" data-day="2026-09-22" data-count="0"><div class="dayhead"><span class="dnum">9月22日 周二</span><span class="n">2026-09-22 · 0 条</span></div><div class="empty-day">这一天暂时还没有内容</div></section>
+<section class="day" id="d-2026-09-21" data-day="2026-09-21" data-count="1"><div class="dayhead"><span class="dnum">9月21日 周一</span><span class="n">2026-09-21 · 1 条</span></div><div class="card"><h2>🏠 房产周报 2026-09-21</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">Property_Monitor</span><span class="badge time">07:33</span></div><div class="body" data-md="房产周报 2026-09-21
 
 🏠 房产市场每周观察
 
@@ -1296,7 +1315,7 @@ LPR（2026-09-20 报价）：1 年期 **3.0%**　｜　
 [光明豪宅进化，深圳楼市的下一个时代在这里生长](https://www.lejucaijing.com/news-7507021942248633652.html)
 
 MyAI 自动生成 · 2026-09-21 07:33 · 数据仅供参考，不构成投资建议"></div></div></section>
-<section class="day" data-day="2026-09-20" data-count="2"><div class="card"><h2>Twitter 爆款选题雷达 V4 - 2026-09-20（ 11 条）</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">twitter_scrape</span><span class="badge time">22:16</span></div><div class="body" data-md="## 📡 Twitter 爆款选题雷达 V4 · 2026-09-20
+<section class="day" id="d-2026-09-20" data-day="2026-09-20" data-count="2"><div class="dayhead"><span class="dnum">9月20日 周日</span><span class="n">2026-09-20 · 2 条</span></div><div class="card"><h2>Twitter 爆款选题雷达 V4 - 2026-09-20（ 11 条）</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">twitter_scrape</span><span class="badge time">22:16</span></div><div class="body" data-md="## 📡 Twitter 爆款选题雷达 V4 · 2026-09-20
 
 今日新发现 **11** 条互动量异常高的推文（相对账号自身基线）。
 
@@ -1471,7 +1490,7 @@ ZEC 空军头子 [Garrett Jin 巨鲸实体] 他们昨天晚上从 Binance 提出
 
 ---
 模拟盘市值 $101,035.72（盈亏 +1,035.72）· 完整看板见 Dashboard「多层级交易日报」"></div></div></section>
-<section class="day" data-day="2026-09-19" data-count="3"><div class="card"><h2>即刻内容周报 - 2026 W38</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">jike_content_monitor</span><span class="badge time">06:02</span></div><div class="body" data-md="即刻内容周报 - 2026-09-19
+<section class="day" id="d-2026-09-19" data-day="2026-09-19" data-count="3"><div class="dayhead"><span class="dnum">9月19日 周六</span><span class="n">2026-09-19 · 3 条</span></div><div class="card"><h2>即刻内容周报 - 2026 W38</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">jike_content_monitor</span><span class="badge time">06:02</span></div><div class="body" data-md="即刻内容周报 - 2026-09-19
 
 # 📱 即刻内容周报
 
@@ -1609,7 +1628,7 @@ Jev 是大语言模型之后的新范式（系统1、极速低价、无语言层
 - 课代表立正 x 破局点
 
 已落 `Code/writing_style_learner/data/source_inbox/`。说「消化信源」即可启动拆解提案（先 LLM 清洗，再三维度拆解，入库需人工拍板）。"></div></div></section>
-<section class="day" data-day="2026-09-18" data-count="2"><div class="card"><h2>多层级交易日报 2026-09-18</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">multi_layer_trader</span><span class="badge time">18:10</span></div><div class="body" data-md="# 多层级交易日报 2026-09-18
+<section class="day" id="d-2026-09-18" data-day="2026-09-18" data-count="2"><div class="dayhead"><span class="dnum">9月18日 周五</span><span class="n">2026-09-18 · 2 条</span></div><div class="card"><h2>多层级交易日报 2026-09-18</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">multi_layer_trader</span><span class="badge time">18:10</span></div><div class="body" data-md="# 多层级交易日报 2026-09-18
 
 ## 一、市场总览
 
@@ -1709,7 +1728,10 @@ Jev 是大语言模型之后的新范式（系统1、极速低价、无语言层
 
 ---
 模拟盘市值 $100,000.00（盈亏 +0.00）· 完整看板见 Dashboard「多层级交易日报」"></div></div></section>
-<section class="day" data-day="2026-09-14" data-count="1"><div class="card"><h2>🏠 房产周报 2026-09-14</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">Property_Monitor</span><span class="badge time">07:33</span></div><div class="body" data-md="房产周报 2026-09-14
+<section class="day" id="d-2026-09-17" data-day="2026-09-17" data-count="0"><div class="dayhead"><span class="dnum">9月17日 周四</span><span class="n">2026-09-17 · 0 条</span></div><div class="empty-day">这一天暂时还没有内容</div></section>
+<section class="day" id="d-2026-09-16" data-day="2026-09-16" data-count="0"><div class="dayhead"><span class="dnum">9月16日 周三</span><span class="n">2026-09-16 · 0 条</span></div><div class="empty-day">这一天暂时还没有内容</div></section>
+<section class="day" id="d-2026-09-15" data-day="2026-09-15" data-count="0"><div class="dayhead"><span class="dnum">9月15日 周二</span><span class="n">2026-09-15 · 0 条</span></div><div class="empty-day">这一天暂时还没有内容</div></section>
+<section class="day" id="d-2026-09-14" data-day="2026-09-14" data-count="1"><div class="dayhead"><span class="dnum">9月14日 周一</span><span class="n">2026-09-14 · 1 条</span></div><div class="card"><h2>🏠 房产周报 2026-09-14</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">Property_Monitor</span><span class="badge time">07:33</span></div><div class="body" data-md="房产周报 2026-09-14
 
 🏠 房产市场每周观察
 
@@ -1911,7 +1933,7 @@ LPR（2026-08-20 报价）：1 年期 **3.0%**　｜　
 [世界急救日｜上海链家首台AED装进门店](https://www.lejucaijing.com/news-7504406278077871544.html)
 
 MyAI 自动生成 · 2026-09-14 07:33 · 数据仅供参考，不构成投资建议"></div></div></section>
-<section class="day" data-day="2026-09-13" data-count="2"><div class="card"><h2>🌙 夜间顾问提案 2026-09-13 · 1 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">07:03 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-09-13
+<section class="day" id="d-2026-09-13" data-day="2026-09-13" data-count="2"><div class="dayhead"><span class="dnum">9月13日 周日</span><span class="n">2026-09-13 · 2 条</span></div><div class="card"><h2>🌙 夜间顾问提案 2026-09-13 · 1 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">07:03 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-09-13
 
 本轮 1 个目标共产出 1 条提案。采纳或忽略请点飞书提案卡片上的按钮；觉得全是废话就把 targets.json 里对应目标关掉。
 
@@ -1964,7 +1986,7 @@ Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md">
 ---
 
 Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md"></div></div></section>
-<section class="day" data-day="2026-09-12" data-count="4"><div class="card"><h2>知乎课题雷达 · 2026-09-12 · 5 个命中</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">zhihu_insight</span><span class="badge time">12:12</span></div><div class="body" data-md="## 知乎课题雷达 · 2026-09-12
+<section class="day" id="d-2026-09-12" data-day="2026-09-12" data-count="4"><div class="dayhead"><span class="dnum">9月12日 周六</span><span class="n">2026-09-12 · 4 条</span></div><div class="card"><h2>知乎课题雷达 · 2026-09-12 · 5 个命中</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">zhihu_insight</span><span class="badge time">12:12</span></div><div class="body" data-md="## 知乎课题雷达 · 2026-09-12
 
 今日命中 5 个高质量讨论。金句均为回答原文摘录。
 
@@ -2320,7 +2342,8 @@ Mi Duo 比 iPhone Duo 先发，调侃抄袭争议；Yuri 超现实音乐会令�
 - GPT-6虽然厉害，但无法取代人，原因是
 
 已落 `Code/writing_style_learner/data/source_inbox/`。说「消化信源」即可启动拆解提案（先 LLM 清洗，再三维度拆解，入库需人工拍板）。"></div></div></section>
-<section class="day" data-day="2026-09-10" data-count="1"><div class="card"><h2>🌙 夜间顾问提案 2026-09-10 · 2 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">07:04 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-09-10
+<section class="day" id="d-2026-09-11" data-day="2026-09-11" data-count="0"><div class="dayhead"><span class="dnum">9月11日 周五</span><span class="n">2026-09-11 · 0 条</span></div><div class="empty-day">这一天暂时还没有内容</div></section>
+<section class="day" id="d-2026-09-10" data-day="2026-09-10" data-count="1"><div class="dayhead"><span class="dnum">9月10日 周四</span><span class="n">2026-09-10 · 1 条</span></div><div class="card"><h2>🌙 夜间顾问提案 2026-09-10 · 2 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">07:04 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-09-10
 
 本轮 2 个目标共产出 2 条提案。采纳或忽略请点飞书提案卡片上的按钮；觉得全是废话就把 targets.json 里对应目标关掉。
 
@@ -2351,7 +2374,7 @@ Mi Duo 比 iPhone Duo 先发，调侃抄袭争议；Yuri 超现实音乐会令�
 ---
 
 Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md"></div></div></section>
-<section class="day" data-day="2026-09-09" data-count="1"><div class="card"><h2>🌙 夜间顾问提案 2026-09-09 · 2 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">07:04 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-09-09
+<section class="day" id="d-2026-09-09" data-day="2026-09-09" data-count="1"><div class="dayhead"><span class="dnum">9月9日 周三</span><span class="n">2026-09-09 · 1 条</span></div><div class="card"><h2>🌙 夜间顾问提案 2026-09-09 · 2 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">07:04 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-09-09
 
 本轮 2 个目标共产出 2 条提案。采纳或忽略请点飞书提案卡片上的按钮；觉得全是废话就把 targets.json 里对应目标关掉。
 
@@ -2382,7 +2405,7 @@ Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md">
 ---
 
 Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md"></div></div></section>
-<section class="day" data-day="2026-09-08" data-count="2"><div class="card"><h2>🌙 夜间顾问提案 2026-09-08 · 1 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">21:33 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-09-08
+<section class="day" id="d-2026-09-08" data-day="2026-09-08" data-count="2"><div class="dayhead"><span class="dnum">9月8日 周二</span><span class="n">2026-09-08 · 2 条</span></div><div class="card"><h2>🌙 夜间顾问提案 2026-09-08 · 1 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">21:33 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-09-08
 
 本轮 1 个目标共产出 1 条提案。采纳或忽略请点飞书提案卡片上的按钮；觉得全是废话就把 targets.json 里对应目标关掉。
 
@@ -2431,7 +2454,7 @@ Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md">
 ---
 
 Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md"></div></div></section>
-<section class="day" data-day="2026-09-07" data-count="1"><div class="card"><h2>🏠 房产周报 2026-09-07</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">Property_Monitor</span><span class="badge time">07:33</span></div><div class="body" data-md="房产周报 2026-09-07
+<section class="day" id="d-2026-09-07" data-day="2026-09-07" data-count="1"><div class="dayhead"><span class="dnum">9月7日 周一</span><span class="n">2026-09-07 · 1 条</span></div><div class="card"><h2>🏠 房产周报 2026-09-07</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">Property_Monitor</span><span class="badge time">07:33</span></div><div class="body" data-md="房产周报 2026-09-07
 
 🏠 房产市场每周观察
 
@@ -2622,7 +2645,7 @@ LPR（2026-08-20 报价）：1 年期 **3.0%**　｜　
 [别人在卷价格，联塑在卷什么？毛利率三连升中报里的三个“反常识”信号](https://www.lejucaijing.com/news-7501581245647353321.html)
 
 MyAI 自动生成 · 2026-09-07 07:33 · 数据仅供参考，不构成投资建议"></div></div></section>
-<section class="day" data-day="2026-09-06" data-count="2"><div class="card"><h2>🌙 夜间顾问提案 2026-09-06 · 2 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">07:03 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-09-06
+<section class="day" id="d-2026-09-06" data-day="2026-09-06" data-count="2"><div class="dayhead"><span class="dnum">9月6日 周日</span><span class="n">2026-09-06 · 2 条</span></div><div class="card"><h2>🌙 夜间顾问提案 2026-09-06 · 2 条</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">overnight_advisor</span><span class="badge time">07:03 · 已读</span></div><div class="body" data-md="## 🌙 夜间顾问提案 · 2026-09-06
 
 本轮 2 个目标共产出 2 条提案。采纳或忽略请点飞书提案卡片上的按钮；觉得全是废话就把 targets.json 里对应目标关掉。
 
@@ -2691,7 +2714,7 @@ Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md">
 ---
 
 Code/overnight\_advisor · 只分析不执行 · 历史记录见 data/notes.md"></div></div></section>
-<div id="empty">这一天没有通知</div>
+<button id="loadmore"></button>
 </main>
 <footer>xdash.me/today · MyAI daily_feed</footer>
 <script>
@@ -2712,51 +2735,54 @@ document.querySelectorAll('.body[data-md]').forEach(el=>{
   el.innerHTML = miniMd(el.dataset.md);
 });
 
-/* 按日切换：默认今天；‹ › 在「今天 + 有通知的日子」序列里移动 */
+/* 瀑布流：最新 8 天默认可见，其余静态藏在页面里，按钮/导航按需展开 */
 (function(){
-  function iso(d){
-    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')
-           +'-'+String(d.getDate()).padStart(2,'0');
-  }
-  const today = iso(new Date());
+  const PAGE = 8;
+  const today = '2026-10-06';
+  const days = [];
   const sections = {};
   document.querySelectorAll('.day[data-day]').forEach(el=>{
+    days.push(el.dataset.day);
     sections[el.dataset.day] = el;
   });
-  /* 日期序列从新到旧：今天总在首位（哪怕今天无通知），其余为有通知的日子 */
-  const days = [today];
-  Object.keys(sections).sort().reverse().forEach(d=>{
-    if (d !== today) days.push(d);
+  let shown = Math.min(PAGE, days.length);
+  const loadmore = document.getElementById('loadmore');
+  function applyShown(){
+    days.forEach((d,i)=>sections[d].classList.toggle('hidden', i >= shown));
+    const left = days.length - shown;
+    loadmore.classList.toggle('hidden', left <= 0);
+    if (left > 0) loadmore.textContent = '加载更早 ' + Math.min(PAGE, left) + ' 天';
+  }
+  loadmore.addEventListener('click', ()=>{
+    shown = Math.min(shown + PAGE, days.length);
+    applyShown();
   });
+
+  /* ‹ › 在完整日期序列（含空白天）里移动，跳转到页面对应日期的位置 */
   let idx = 0;
   const curDate = document.getElementById('cur-date');
   const curCount = document.getElementById('cur-count');
   const prev = document.getElementById('prev');
   const next = document.getElementById('next');
   const todayBtn = document.getElementById('today-btn');
-  const empty = document.getElementById('empty');
-  function show(){
+  function show(scroll){
     const d = days[idx];
-    Object.values(sections).forEach(el=>el.classList.remove('active'));
-    empty.classList.remove('active');
     curDate.textContent = (d === today ? '今天 ' : '') + d;
-    const sec = sections[d];
-    if (sec) {
-      sec.classList.add('active');
-      curCount.textContent = sec.dataset.count + ' 条';
-    } else {
-      empty.classList.add('active');
-      curCount.textContent = '0 条';
-    }
+    curCount.textContent = sections[d].dataset.count + ' 条';
     prev.disabled = idx >= days.length - 1;
     next.disabled = idx <= 0;
     todayBtn.style.visibility = idx === 0 ? 'hidden' : 'visible';
-    window.scrollTo(0, 0);
+    if (idx >= shown) { shown = idx + 1; applyShown(); }
+    if (scroll) {
+      sections[d].scrollIntoView({ behavior: 'smooth', block: 'start' });
+      history.replaceState(null, '', '#d-' + d);
+    }
   }
-  prev.addEventListener('click', ()=>{ if (idx < days.length-1) { idx++; show(); } });
-  next.addEventListener('click', ()=>{ if (idx > 0) { idx--; show(); } });
-  todayBtn.addEventListener('click', ()=>{ idx = 0; show(); });
-  show();
+  prev.addEventListener('click', ()=>{ if (idx < days.length-1) { idx++; show(true); } });
+  next.addEventListener('click', ()=>{ if (idx > 0) { idx--; show(true); } });
+  todayBtn.addEventListener('click', ()=>{ idx = 0; show(true); });
+  applyShown();
+  show(false);
 })();
 </script>
 </body>
