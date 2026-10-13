@@ -80,7 +80,7 @@
 <body>
 <header>
   <h1>通知 Feed</h1>
-  <div class="sub">最近 31 天 · 37 条 · 生成于 2026-10-13 10:07</div>
+  <div class="sub">最近 31 天 · 38 条 · 生成于 2026-10-13 11:08</div>
   <div class="daynav">
     <button id="prev" title="更早一天">‹</button>
     <div class="cur"><span id="cur-date"></span><span class="n" id="cur-count"></span></div>
@@ -89,7 +89,67 @@
   </div>
 </header>
 <main>
-<section class="day" id="d-2026-10-13" data-day="2026-10-13" data-count="0"><div class="dayhead"><span class="dnum">10月13日 周二 · 今天</span><span class="n">2026-10-13 · 0 条</span></div><div class="empty-day">这一天暂时还没有内容</div></section>
+<section class="day" id="d-2026-10-13" data-day="2026-10-13" data-count="1"><div class="dayhead"><span class="dnum">10月13日 周二 · 今天</span><span class="n">2026-10-13 · 1 条</span></div><div class="card"><h2>多层级交易日报 2026-10-13</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">multi_layer_trader</span><span class="badge time">10:07</span></div><div class="body" data-md="# 多层级交易日报 2026-10-13
+
+## 一、市场总览
+
+- 恐慌贪婪指数：57（Greed），7 日变化 -14
+- 加密全球市值：2.78 万亿 USD，24h -3.87%，BTC 占比 59.4%
+
+### Polymarket 热点（24h 成交量前 5）
+
+- Bills vs. Rams — YES 34%，24h 量 $2,703,276
+- Spread: Rams (-3.5) — YES 45%，24h 量 $1,367,994
+- Cleveland Guardians vs. Tampa Bay Rays — YES 40%，24h 量 $621,376
+- US x Yemen ceasefire continues through October 12? — YES 100%，24h 量 $538,148
+- Will the Fed decrease interest rates by 25 bps after the October 2026 meeting? — YES 1%，24h 量 $491,133
+
+## 二、标的信号
+
+| 标的 | 收盘 | RSI | 动量% | 趋势 | 量能x | 得分 |
+|---|---|---|---|---|---|---|
+| ^GSPC | 7807.24 | 55 | 2.46 | 多 | 0.4 | 0.28 |
+| ^IXIC | 27245.90 | 50 | 4.05 | 多 | 0.7 | 0.32 |
+| GC=F | 4181.80 | 35 | -3.49 | 空 | 0.1 | -0.36 |
+| CL=F | 92.51 | 51 | -12.59 | 荡 | 0.0 | -0.28 |
+| BTC-USD | 82379.01 | 45 | -4.40 | 荡 | 1.0 | -0.14 |
+| ETH-USD | 2463.50 | 29 | -10.50 | 荡 | 1.2 | -0.27 |
+
+## 三、今日决策
+
+- **^GSPC → HOLD**（仓位 0.0%）：多方合计 +0.31，空方合计 -0.03，净值 +0.28，阈值 ±0.3 → HOLD
+- **^IXIC → VETO**（仓位 0.0%）：多方合计 +0.35，空方合计 -0.03，净值 +0.32，阈值 ±0.3 → VETO（风控否决：已持有同向仓位，不重复加仓）
+  - 风控否决：已持有同向仓位，不重复加仓
+- **GC=F → SELL**（仓位 0.0%）：多方合计 +0.00，空方合计 -0.37，净值 -0.36，阈值 ±0.3 → SELL
+- **CL=F → HOLD**（仓位 0.0%）：多方合计 +0.00，空方合计 -0.28，净值 -0.28，阈值 ±0.3 → HOLD
+- **BTC-USD → HOLD**（仓位 0.0%）：多方合计 +0.00，空方合计 -0.14，净值 -0.14，阈值 ±0.3 → HOLD
+- **ETH-USD → HOLD**（仓位 0.0%）：多方合计 +0.01，空方合计 -0.28，净值 -0.27，阈值 ±0.3 → HOLD
+
+## 四、模拟盘现状
+
+- 总市值 $98,642.92，浮动盈亏 -1,357.08（-1.36%），现金 $52,937.11
+
+| 标的 | 数量 | 均价 | 现价 | 市值 | 盈亏 |
+|---|---|---|---|---|---|
+| CL=F | 259.5785 | 96.31 | 92.51 | 24,013.60 | -986.4 |
+| BTC-USD | 0.1750 | 84577.45 | 82379.01 | 14,415.88 | -384.72 |
+| ^IXIC | 0.2671 | 27193.34 | 27245.90 | 7,276.33 | 14.04 |
+
+## 五、回测摘要
+
+| 标的 | 总收益% | 年化% | 最大回撤% | Sharpe | 胜率 | 盈亏比 | 交易数 |
+|---|---|---|---|---|---|---|---|
+| ^GSPC | 1.66 | 2.1 | -1.18 | 0.78 | 0.5 | 9.52 | 2 |
+| ^IXIC | 0.56 | 0.71 | -2.2 | 0.21 | 0.333 | 3.59 | 3 |
+| GC=F | 0.57 | 0.72 | -5.66 | 0.14 | 0.5 | 29.99 | 2 |
+| CL=F | 18.57 | 23.81 | -9.87 | 1.31 | 1.0 | — | 2 |
+| BTC-USD | 2.54 | 2.02 | -6.47 | 0.38 | 0.667 | 0.9 | 3 |
+
+---
+模拟盘记录，非投资建议。
+
+---
+模拟盘市值 $98,642.92（盈亏 -1,357.08）· 完整看板见 Dashboard「多层级交易日报」"></div></div></section>
 <section class="day" id="d-2026-10-12" data-day="2026-10-12" data-count="2"><div class="dayhead"><span class="dnum">10月12日 周一</span><span class="n">2026-10-12 · 2 条</span></div><div class="card"><h2>🏠 房产周报 2026-10-12</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">Property_Monitor</span><span class="badge time">07:33</span></div><div class="body" data-md="房产周报 2026-10-12
 
 🏠 房产市场每周观察
