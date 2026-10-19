@@ -84,6 +84,25 @@
   .badge.src { background: #e8eefb; color: #2b5cb0; }
   .badge.free { background: #edf8ef; color: #2f7a3e; }
   .evt-today { border-left: 3px solid #d8b45a; }
+  .xrank-summary { font-size: 12px; color: #8a857a; margin: 18px 0 4px; }
+  .xrank-group { font-size: 13px; font-weight: 600; color: #6b675c; margin: 18px 0 8px; }
+  .xrank-row {
+    display: flex; align-items: baseline; gap: 8px;
+    font-size: 13px; padding: 7px 0; border-bottom: 1px solid #f0eee7;
+  }
+  .xrank-row:last-child { border-bottom: none; }
+  .xrank-row .rk { width: 20px; flex-shrink: 0; color: #a8a396; font-size: 12px; }
+  .xrank-row .acct {
+    flex: 1; min-width: 0; overflow: hidden;
+    text-overflow: ellipsis; white-space: nowrap;
+  }
+  .xrank-row .acct a { color: #1a1a1a; text-decoration: none; font-weight: 600; }
+  .xrank-row .acct a:active { color: #2b6cb0; }
+  .xrank-row .dn { color: #8a857a; font-size: 12px; margin-left: 4px; }
+  .xrank-row .flw { flex-shrink: 0; color: #a8a396; font-size: 12px; }
+  .xrank-row .gain { flex-shrink: 0; color: #2f7a3e; font-weight: 600; }
+  .xrank-row .pct { flex-shrink: 0; color: #a8a396; font-size: 12px; }
+  .badge.new { background: #fdf0e0; color: #a05a10; }
   .fab-nav {
     position: fixed; right: 10px; top: 50%; transform: translateY(-50%);
     z-index: 20; display: flex; flex-direction: column; gap: 10px;
@@ -114,6 +133,7 @@
   <div class="tabs">
     <button id="tab-feed" class="active">信息流</button>
     <button id="tab-sh">上海 · 111 场</button>
+    <button id="tab-xrank">X 涨粉</button>
   </div>
   <div class="daynav" id="daynav">
     <button id="prev" title="更早一天">‹</button>
