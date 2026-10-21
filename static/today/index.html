@@ -71,7 +71,7 @@
     -webkit-tap-highlight-color: transparent;
   }
   #loadmore.hidden { display: none; }
-  .tabs { display: flex; gap: 8px; margin-top: 10px; }
+  .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
   .tabs button {
     border: 1px solid #d8d4c9; background: #fff; border-radius: 99px;
     font-size: 13px; padding: 5px 16px; color: #4a463c; cursor: pointer;
@@ -104,7 +104,7 @@
   .xrank-row .pct { flex-shrink: 0; color: #a8a396; font-size: 12px; }
   .badge.new { background: #fdf0e0; color: #a05a10; }
   .qstrip {
-    display: none; align-items: center; gap: 14px; margin-top: 10px;
+    display: none; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-top: 10px;
     padding: 8px 10px; background: #fbfaf7;
     border: 1px solid #e3e0d8; border-radius: 10px;
   }
@@ -155,6 +155,12 @@
   @media (max-width: 480px) {
     main { padding: 4px 12px 40px; }
     .card { padding: 12px 14px; }
+    .tabs { gap: 6px; }
+    .tabs button { padding: 5px 12px; font-size: 12px; }
+    .qstrip { gap: 6px 10px; padding: 7px 9px; }
+    .qstrip .q { font-size: 12px; gap: 4px; }
+    .qstrip .q b { font-size: 12px; }
+    .qstrip .q-time { font-size: 9px; }
     .fab-nav { right: 5px; gap: 8px; }
     .fab-nav button { width: 32px; height: 32px; font-size: 14px; opacity: .3; }
   }
@@ -163,14 +169,14 @@
 <body>
 <header>
   <h1>通知 Feed</h1>
-  <div class="sub">最近 31 天 · 39 条 · 生成于 2026-10-21</div>
+  <div class="sub">最近 31 天 · 40 条 · 生成于 2026-10-21</div>
   <div class="tabs">
     <button id="tab-feed" class="active">信息流</button>
     <button id="tab-sh">上海 · 116 场</button>
     <button id="tab-xrank">X 涨粉</button>
     <button id="tab-pos">持仓</button>
   </div>
-  <div class="qstrip" id="qstrip"><div class="q"><span class="q-name">上证指数</span><b>3,713.03</b><i class="down">-0.60%</i></div><div class="q"><span class="q-name">BTCUSD</span><b>83,522.90</b><i class="up">+2.62%</i></div><span class="q-time">20:09 更新</span></div>
+  <div class="qstrip" id="qstrip"><div class="q"><span class="q-name">上证指数</span><b>3,713.03</b><i class="down">-0.60%</i></div><div class="q"><span class="q-name">BTCUSD</span><b>83,559.10</b><i class="up">+2.63%</i></div><span class="q-time">20:17 更新</span></div>
   <div class="daynav" id="daynav">
     <button id="prev" title="更早一天">‹</button>
     <div class="cur"><span id="cur-date"></span><span class="n" id="cur-count"></span></div>
@@ -180,7 +186,7 @@
 </header>
 <main>
 <div id="view-feed" class="view">
-<section class="day" id="d-2026-10-21" data-day="2026-10-21" data-count="1"><div class="dayhead"><span class="dnum">10月21日 周三 · 今天</span><span class="n">2026-10-21 · 1 条</span></div><div class="card evt-today"><h2>📅 上海活动 · 今明</h2><div class="badges"><span class="badge src">上海</span><span class="badge time">每日自动更新</span></div><div class="body" data-md="**今天 · 10月21日 周三**
+<section class="day" id="d-2026-10-21" data-day="2026-10-21" data-count="2"><div class="dayhead"><span class="dnum">10月21日 周三 · 今天</span><span class="n">2026-10-21 · 2 条</span></div><div class="card evt-today"><h2>📅 上海活动 · 今明</h2><div class="badges"><span class="badge src">上海</span><span class="badge time">每日自动更新</span></div><div class="body" data-md="**今天 · 10月21日 周三**
 - [《富爸爸》读书会](https://www.huodongxing.com/event/2878368171200)　10/3 ~ 11/1 · 上海静安
 - [半导体俱乐部-2026年10月，半导体下午茶 线下活动](https://www.huodongxing.com/event/1881237552300)　10/4 ~ 11/30 · 上海松江
 - [你的认知边界，就是你的事业边界-巴黎二大，与智者同行](https://www.huodongxing.com/event/4870572441711)　10/5 ~ 11/4 · 上海普陀
@@ -245,7 +251,21 @@
 - [用国学智慧，引领着幸福生活](https://www.huodongxing.com/event/2883145726700)　13:00 · 上海闵行
 - [软信申城 创在基地———低空经济场景应用产业对接会（漕河泾科技绿洲专场)](https://www.huodongxing.com/event/1883682383300)　14:00 · 上海闵行
 - [「一个人，一支 AI 团队」· Workbuddy-AI 工作坊](https://www.huodongxing.com/event/5880805531000)　14:00 · 上海杨浦
-- [AI 出海的秋收，当增长用 ARR 说话](https://lianpu.com/event/ai-chuhai-arr)　14:30 - 17:30 · 上海浦东软件园，具体地点报名后可知 · 免费"></div></div><div class="card"><h2>多层级交易日报 2026-10-21</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">multi_layer_trader</span><span class="badge time">08:47</span></div><div class="body" data-md="# 多层级交易日报 2026-10-21
+- [AI 出海的秋收，当增长用 ARR 说话](https://lianpu.com/event/ai-chuhai-arr)　14:30 - 17:30 · 上海浦东软件园，具体地点报名后可知 · 免费"></div></div><div class="card"><h2>概念雷达：新收录 15 个（高靠谱 2）</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">ai_concept_radar</span><span class="badge time">20:16</span></div><div class="body" data-md="- **最大内容绘制**（Largest Contentful Paint）｜工程/系统｜衡量页面最大可见元素渲染完成时间的核心网页性能指标｜高｜新词（出处：05-官网要素.md）
+- **世界模型**（World Model）｜AI/计算机｜学习环境动态规律、可预测未来状态并支持规划的内部表征模型｜高｜新词（出处：candidates.md）
+- **前线部署工程师**（Forward Deployed Engineer）｜管理/组织｜驻扎客户现场、把通用产品改造适配客户业务并交付落地的工程师角色。｜中｜新词（出处：FDE，AI落地最稀缺的岗位，终于有了第一本入门书了！.md）
+- **前线部署工程**（Forward Deployed Engineering）｜AI/计算机｜工程师驻客户现场，弥合产品能力与客户需求差距的交付模式｜中｜旧词新用（出处：FDE，AI落地最稀缺的岗位，终于有了第一本入门书了！.md）
+- **前沿部署工程**（Forward Deployed Engineering）｜管理/组织｜工程师驻客户现场，把通用产品改造为可落地业务方案的模式。｜中｜旧词新用（出处：inbox.md）
+- **小院高墙**（small yard, high fence）｜社会/历史｜在有限核心领域设高壁垒、其余开放的战略框架，源于技术管制｜中｜旧词新用（出处：Podcast_20261018_006 AI 逆向挡不住Grok BotMuse 用上头干活_308d957a.md）
+- **评测框架**（eval harness）｜AI/计算机｜自动化运行模型评测、汇总指标并回归对比的工程框架。｜中｜新词（出处：inbox.md）
+- **厂商锁定**（Vendor Lock-in）｜经济/金融｜客户迁移成本高企而被单一供应商绑定的机制。｜中｜旧词新用（出处：inbox.md）
+- **AI 网格**（AI Mesh）｜AI/计算机｜以本体表征决策、连接数据与应用的分层架构范式。｜中｜新词（出处：inbox.md）
+- **前沿部署高管**（Forward Deployed Executive）｜管理/组织｜把FDE模式上移到高管层，由高管驻客户现场驱动采用与结果。｜中｜新词（出处：inbox.md）
+- **效率悖论**（Productivity Paradox）｜经济/金融｜个体效率大幅提升却未转化为企业级产出增长。｜中｜旧词新用（出处：ai-personal-productivity-org-stagnation.md）
+- **需求资格判定**（Demand Qualification）｜管理/组织｜用多道门槛区分兴趣、真实需求与合格商机的销售方法。｜中｜旧词新用（出处：需求六道门.md）
+- …另有 3 条，见 Obsidian
+
+全文见 Obsidian `Wiki/概念雷达流水.md`"></div></div><div class="card"><h2>多层级交易日报 2026-10-21</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">multi_layer_trader</span><span class="badge time">08:47</span></div><div class="body" data-md="# 多层级交易日报 2026-10-21
 
 ## 一、市场总览
 
@@ -5710,7 +5730,7 @@ MyAI 自动生成 · 2026-09-21 07:33 · 数据仅供参考，不构成投资建
 <div class="xrank-group">100万+</div><div class="card"><div class="xrank-row"><span class="rk">1</span><span class="acct"><a href="https://x.com/karpathy" target="_blank" rel="noopener">@karpathy</a><span class="dn">Andrej Karpathy</span></span><span class="flw">430.0万</span><span class="badge new">🆕 新追踪</span></div><div class="xrank-row"><span class="rk">2</span><span class="acct"><a href="https://x.com/Polymarket" target="_blank" rel="noopener">@Polymarket</a><span class="dn">Polymarket</span></span><span class="flw">200.0万</span><span class="badge new">🆕 新追踪</span></div><div class="xrank-row"><span class="rk">3</span><span class="acct"><a href="https://x.com/RyanHoliday" target="_blank" rel="noopener">@RyanHoliday</a><span class="dn">Ryan Holiday</span></span><span class="flw">100.0万</span><span class="badge new">🆕 新追踪</span></div></div>
 </div>
 <div id="view-pos" class="view hidden">
-<div class="card pos-sum"><div class="sum-row"><span>总市值</span><b>186.89 USDT</b></div><div class="sum-row"><span>总成本</span><b>195.55 USDT</b></div><div class="sum-row"><span>浮动盈亏</span><b class="down">-8.67 (-4.43%)</b></div><div class="sum-note">更新于 2026-10-21 20:09 · 1/1 个持仓有报价 · 每小时自动刷新</div></div><div class="card pos"><div class="pos-head"><span class="pname">INJ</span><span class="ppair">INJUSDT</span><span class="pprice">8.7540</span></div><div class="pos-sub">24h <i class="up">+3.16%</i> · binance_spot · 20:09</div><div class="pos-grid"><div><span class="k">持仓数量</span><span class="v">21.348638</span></div><div><span class="k">成本价</span><span class="v">9.1600</span></div><div><span class="k">持仓市值</span><span class="v">186.89 USDT</span></div><div><span class="k">浮动盈亏</span><span class="v"><b class="down">-8.67 (-4.43%)</b></span></div></div><div class="pos-sub" style="margin:8px 0 0">买入于 2026-10-21 11:00</div></div>
+<div class="card pos-sum"><div class="sum-row"><span>总市值</span><b>186.91 USDT</b></div><div class="sum-row"><span>总成本</span><b>195.55 USDT</b></div><div class="sum-row"><span>浮动盈亏</span><b class="down">-8.65 (-4.42%)</b></div><div class="sum-note">更新于 2026-10-21 20:17 · 1/1 个持仓有报价 · 每小时自动刷新</div></div><div class="card pos"><div class="pos-head"><span class="pname">INJ</span><span class="ppair">INJUSDT</span><span class="pprice">8.7550</span></div><div class="pos-sub">24h <i class="up">+3.15%</i> · binance_spot · 20:17</div><div class="pos-grid"><div><span class="k">持仓数量</span><span class="v">21.348638</span></div><div><span class="k">成本价</span><span class="v">9.1600</span></div><div><span class="k">持仓市值</span><span class="v">186.91 USDT</span></div><div><span class="k">浮动盈亏</span><span class="v"><b class="down">-8.65 (-4.42%)</b></span></div></div><div class="pos-sub" style="margin:8px 0 0">买入于 2026-10-21 11:00</div></div>
 </div>
 </main>
 <div class="fab-nav">
