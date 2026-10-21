@@ -103,6 +103,40 @@
   .xrank-row .gain { flex-shrink: 0; color: #2f7a3e; font-weight: 600; }
   .xrank-row .pct { flex-shrink: 0; color: #a8a396; font-size: 12px; }
   .badge.new { background: #fdf0e0; color: #a05a10; }
+  .qstrip {
+    display: none; align-items: center; gap: 14px; margin-top: 10px;
+    padding: 8px 10px; background: #fbfaf7;
+    border: 1px solid #e3e0d8; border-radius: 10px;
+  }
+  .qstrip.on { display: flex; }
+  .qstrip .q { display: flex; align-items: baseline; gap: 6px; font-size: 13px; }
+  .qstrip .q-name { color: #8a857a; font-size: 11px; }
+  .qstrip .q b { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .qstrip .q i { font-style: normal; font-size: 11px; }
+  .qstrip .q-time { margin-left: auto; font-size: 10px; color: #b0ab9e; }
+  .up { color: #c0392b; }
+  .down { color: #2f7a3e; }
+  .pos-sum .sum-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 13px; padding: 3px 0;
+  }
+  .pos-sum .sum-row span { color: #8a857a; }
+  .pos-sum .sum-row b { font-size: 15px; font-variant-numeric: tabular-nums; }
+  .pos-sum .sum-note { font-size: 11px; color: #b0ab9e; margin-top: 8px; }
+  .pos-head { display: flex; align-items: baseline; gap: 8px; }
+  .pos-head .pname { font-size: 15px; font-weight: 600; }
+  .pos-head .ppair { font-size: 11px; color: #a8a396; }
+  .pos-head .pprice {
+    margin-left: auto; font-size: 17px; font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .pos-sub { font-size: 11px; color: #a8a396; margin: 4px 0 10px; }
+  .pos-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px 14px;
+    border-top: 1px solid #f0eee7; padding-top: 10px;
+  }
+  .pos-grid .k { font-size: 11px; color: #a8a396; display: block; }
+  .pos-grid .v { font-size: 13px; font-variant-numeric: tabular-nums; }
   .fab-nav {
     position: fixed; right: 10px; top: 50%; transform: translateY(-50%);
     z-index: 20; display: flex; flex-direction: column; gap: 10px;
@@ -134,7 +168,9 @@
     <button id="tab-feed" class="active">信息流</button>
     <button id="tab-sh">上海 · 116 场</button>
     <button id="tab-xrank">X 涨粉</button>
+    <button id="tab-pos">持仓</button>
   </div>
+  <div class="qstrip" id="qstrip"><div class="q"><span class="q-name">上证指数</span><b>3,713.03</b><i class="down">-0.60%</i></div><div class="q"><span class="q-name">BTCUSD</span><b>83,565.40</b><i class="up">+2.49%</i></div><span class="q-time">20:07 更新</span></div>
   <div class="daynav" id="daynav">
     <button id="prev" title="更早一天">‹</button>
     <div class="cur"><span id="cur-date"></span><span class="n" id="cur-count"></span></div>
@@ -5673,6 +5709,9 @@ MyAI 自动生成 · 2026-09-21 07:33 · 数据仅供参考，不构成投资建
 <div class="xrank-group">10-100万</div><div class="card"><div class="xrank-row"><span class="rk">1</span><span class="acct"><a href="https://x.com/Bitwux" target="_blank" rel="noopener">@Bitwux</a><span class="dn">BITWU.ETH 🔆</span></span><span class="flw">38.8万</span><span class="badge new">🆕 新追踪</span></div><div class="xrank-row"><span class="rk">2</span><span class="acct"><a href="https://x.com/BTCdayu" target="_blank" rel="noopener">@BTCdayu</a><span class="dn">大宇</span></span><span class="flw">32.8万</span><span class="badge new">🆕 新追踪</span></div><div class="xrank-row"><span class="rk">3</span><span class="acct"><a href="https://x.com/dotey" target="_blank" rel="noopener">@dotey</a><span class="dn">宝玉</span></span><span class="flw">26.0万</span><span class="badge new">🆕 新追踪</span></div><div class="xrank-row"><span class="rk">4</span><span class="acct"><a href="https://x.com/Irenezhao_" target="_blank" rel="noopener">@Irenezhao_</a><span class="dn">Irene Zhao</span></span><span class="flw">25.3万</span><span class="badge new">🆕 新追踪</span></div><div class="xrank-row"><span class="rk">5</span><span class="acct"><a href="https://x.com/Morris_LT" target="_blank" rel="noopener">@Morris_LT</a><span class="dn">Morris</span></span><span class="flw">25.2万</span><span class="badge new">🆕 新追踪</span></div><div class="xrank-row"><span class="rk">6</span><span class="acct"><a href="https://x.com/0xcryptowizard" target="_blank" rel="noopener">@0xcryptowizard</a><span class="dn">0xWizard</span></span><span class="flw">22.9万</span><span class="badge new">🆕 新追踪</span></div><div class="xrank-row"><span class="rk">7</span><span class="acct"><a href="https://x.com/Fenng" target="_blank" rel="noopener">@Fenng</a><span class="dn">Fenng</span></span><span class="flw">21.9万</span><span class="badge new">🆕 新追踪</span></div><div class="xrank-row"><span class="rk">8</span><span class="acct"><a href="https://x.com/DtDt666" target="_blank" rel="noopener">@DtDt666</a><span class="dn">看不懂的SOL</span></span><span class="flw">21.0万</span><span class="badge new">🆕 新追踪</span></div><div class="xrank-row"><span class="rk">9</span><span class="acct"><a href="https://x.com/MacroMargin" target="_blank" rel="noopener">@MacroMargin</a><span class="dn">宏观边际MacroMargin</span></span><span class="flw">20.0万</span><span class="badge new">🆕 新追踪</span></div><div class="xrank-row"><span class="rk">10</span><span class="acct"><a href="https://x.com/FinanceYF5" target="_blank" rel="noopener">@FinanceYF5</a><span class="dn">AI Will</span></span><span class="flw">19.2万</span><span class="badge new">🆕 新追踪</span></div></div>
 <div class="xrank-group">100万+</div><div class="card"><div class="xrank-row"><span class="rk">1</span><span class="acct"><a href="https://x.com/karpathy" target="_blank" rel="noopener">@karpathy</a><span class="dn">Andrej Karpathy</span></span><span class="flw">430.0万</span><span class="badge new">🆕 新追踪</span></div><div class="xrank-row"><span class="rk">2</span><span class="acct"><a href="https://x.com/Polymarket" target="_blank" rel="noopener">@Polymarket</a><span class="dn">Polymarket</span></span><span class="flw">200.0万</span><span class="badge new">🆕 新追踪</span></div><div class="xrank-row"><span class="rk">3</span><span class="acct"><a href="https://x.com/RyanHoliday" target="_blank" rel="noopener">@RyanHoliday</a><span class="dn">Ryan Holiday</span></span><span class="flw">100.0万</span><span class="badge new">🆕 新追踪</span></div></div>
 </div>
+<div id="view-pos" class="view hidden">
+<div class="card pos-sum"><div class="sum-row"><span>总市值</span><b>-</b></div><div class="sum-row"><span>总成本</span><b>-</b></div><div class="sum-row"><span>浮动盈亏</span>-</div><div class="sum-note">更新于 2026-10-21 20:07 · 0/1 个持仓有报价 · 每小时自动刷新</div></div><div class="sum-note" style="margin:0 0 12px 2px">⚠️ INT 暂无可达行情源，先按成本展示，接上报价后自动恢复</div><div class="card pos"><div class="pos-head"><span class="pname">INT</span><span class="ppair">INTUSDT</span><span class="pprice" style="color:#a8a396">暂无报价</span></div><div class="pos-grid"><div><span class="k">持仓数量</span><span class="v">21.348638</span></div><div><span class="k">成本价</span><span class="v">9.1600</span></div><div><span class="k">持仓市值</span><span class="v">195.55 USDT（按成本）</span></div><div><span class="k">浮动盈亏</span><span class="v"><b>-</b></span></div></div><div class="pos-sub" style="margin:8px 0 0">买入于 2026-10-21 11:00</div></div>
+</div>
 </main>
 <div class="fab-nav">
   <button id="fab-prev" title="上一条">↑</button>
@@ -5750,12 +5789,16 @@ document.querySelectorAll('.body[data-md]').forEach(el=>{
   const tabFeed = document.getElementById('tab-feed');
   const tabSh = document.getElementById('tab-sh');
   const tabXrank = document.getElementById('tab-xrank');
+  const tabPos = document.getElementById('tab-pos');
   const viewFeed = document.getElementById('view-feed');
   const viewSh = document.getElementById('view-sh');
   const viewXrank = document.getElementById('view-xrank');
+  const viewPos = document.getElementById('view-pos');
   const daynav = document.getElementById('daynav');
-  const TABS = { feed: [tabFeed, viewFeed], sh: [tabSh, viewSh], xrank: [tabXrank, viewXrank] };
-  const HASH = { feed: '#', sh: '#shanghai', xrank: '#xrank' };
+  const qstrip = document.getElementById('qstrip');
+  const TABS = { feed: [tabFeed, viewFeed], sh: [tabSh, viewSh],
+                 xrank: [tabXrank, viewXrank], pos: [tabPos, viewPos] };
+  const HASH = { feed: '#', sh: '#shanghai', xrank: '#xrank', pos: '#portfolio' };
   function activate(name, scroll) {
     if (!TABS[name]) name = 'feed';
     for (const [n, pair] of Object.entries(TABS)) {
@@ -5763,6 +5806,7 @@ document.querySelectorAll('.body[data-md]').forEach(el=>{
       pair[1].classList.toggle('hidden', n !== name);
     }
     daynav.style.display = name === 'feed' ? '' : 'none';
+    qstrip.classList.toggle('on', name === 'pos');
     if (name === 'sh') {
       const t = document.getElementById('sh-' + today);
       if (t && scroll !== false) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -5772,15 +5816,17 @@ document.querySelectorAll('.body[data-md]').forEach(el=>{
   tabFeed.addEventListener('click', ()=>activate('feed'));
   tabSh.addEventListener('click', ()=>activate('sh'));
   tabXrank.addEventListener('click', ()=>activate('xrank'));
+  tabPos.addEventListener('click', ()=>activate('pos'));
   if (location.hash === '#shanghai') activate('sh');
   else if (location.hash === '#xrank') activate('xrank');
+  else if (location.hash === '#portfolio') activate('pos');
 
   /* 上一条/下一条浮动按钮：在当前可见视图的卡片间跳转，边界隐藏（占位隐藏保持位置固定） */
   const fabPrev = document.getElementById('fab-prev');
   const fabNext = document.getElementById('fab-next');
   let fabLastY = -1, fabLastIdx = 0;  // 上次跳转前的滚动位置与目标索引：边界卡顿时沿索引继续走
   function fabCards() {
-    const view = [viewFeed, viewSh, viewXrank].find(v => !v.classList.contains('hidden'));
+    const view = [viewFeed, viewSh, viewXrank, viewPos].find(v => !v.classList.contains('hidden'));
     return view ? [...view.querySelectorAll('.card')].filter(c => c.offsetHeight > 0) : [];
   }
   function fabCur(cards) {
@@ -5817,6 +5863,7 @@ document.querySelectorAll('.body[data-md]').forEach(el=>{
   tabFeed.addEventListener('click', ()=>{ fabLastY = -1; fabUpdate(); });
   tabSh.addEventListener('click', ()=>{ fabLastY = -1; setTimeout(fabUpdate, 60); });
   tabXrank.addEventListener('click', ()=>{ fabLastY = -1; setTimeout(fabUpdate, 60); });
+  tabPos.addEventListener('click', ()=>{ fabLastY = -1; setTimeout(fabUpdate, 60); });
   fabUpdate();
 })();
 </script>
