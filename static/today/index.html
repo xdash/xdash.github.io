@@ -131,12 +131,9 @@
     font-variant-numeric: tabular-nums;
   }
   .pos-sub { font-size: 11px; color: #a8a396; margin: 4px 0 10px; }
-  .pos-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 8px 14px;
-    border-top: 1px solid #f0eee7; padding-top: 10px;
-  }
-  .pos-grid .k { font-size: 11px; color: #a8a396; display: block; }
-  .pos-grid .v { font-size: 13px; font-variant-numeric: tabular-nums; }
+  .pos-chg { display: flex; align-items: baseline; gap: 8px; margin: 10px 0 4px; }
+  .pos-chg .clabel { font-size: 11px; color: #a8a396; }
+  .pos-chg b { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
   .fab-nav {
     position: fixed; right: 10px; top: 50%; transform: translateY(-50%);
     z-index: 20; display: flex; flex-direction: column; gap: 10px;
@@ -174,7 +171,7 @@
     <button id="tab-feed" class="active">信息流</button>
     <button id="tab-sh">上海 · 116 场</button>
     <button id="tab-xrank">X 涨粉</button>
-    <button id="tab-pos">持仓</button>
+    <button id="tab-pos">行情</button>
   </div>
   <div class="qstrip" id="qstrip"><div class="q"><span class="q-name">上证指数</span><b>3,658.03</b><i class="down">-1.48%</i></div><div class="q"><span class="q-name">BTCUSD</span><b>82,086.80</b><i class="down">-1.50%</i></div><span class="q-time">18:32 更新</span></div>
   <div class="daynav" id="daynav">
@@ -6903,7 +6900,7 @@ Opus 5.5 强到越界（纯代码直出一句话产品宣传片，效果碾压�
 <div class="xrank-group">100万+</div><div class="card"><div class="xrank-row"><span class="rk">1</span><span class="acct"><a href="https://x.com/karpathy" target="_blank" rel="noopener">@karpathy</a><span class="dn">Andrej Karpathy</span></span><span class="flw">430.0万</span><span class="badge new">🆕 新追踪</span></div><div class="xrank-row"><span class="rk">2</span><span class="acct"><a href="https://x.com/Polymarket" target="_blank" rel="noopener">@Polymarket</a><span class="dn">Polymarket</span></span><span class="flw">200.0万</span><span class="badge new">🆕 新追踪</span></div><div class="xrank-row"><span class="rk">3</span><span class="acct"><a href="https://x.com/RyanHoliday" target="_blank" rel="noopener">@RyanHoliday</a><span class="dn">Ryan Holiday</span></span><span class="flw">100.0万</span><span class="badge new">🆕 新追踪</span></div></div>
 </div>
 <div id="view-pos" class="view hidden">
-<div class="card pos-sum"><div class="sum-row"><span>总市值</span><b>173.09 USDT</b></div><div class="sum-row"><span>总成本</span><b>195.55 USDT</b></div><div class="sum-row"><span>浮动盈亏</span><b class="down">-22.46 (-11.48%)</b></div><div class="sum-note">更新于 2026-10-22 18:32 · 1/1 个持仓有报价 · 每小时自动刷新</div></div><div class="card pos"><div class="pos-head"><span class="pname">INJ</span><span class="ppair">INJUSDT</span><span class="pprice">8.1080</span></div><div class="pos-sub">24h <i class="down">-7.08%</i> · binance_spot · 18:32</div><div class="pos-grid"><div><span class="k">持仓数量</span><span class="v">21.348638</span></div><div><span class="k">成本价</span><span class="v">9.1600</span></div><div><span class="k">持仓市值</span><span class="v">173.09 USDT</span></div><div><span class="k">浮动盈亏</span><span class="v"><b class="down">-22.46 (-11.48%)</b></span></div></div><div class="pos-sub" style="margin:8px 0 0">买入于 2026-10-21 11:00</div></div>
+<div class="card pos-sum"><div class="sum-row"><span>标的</span><b>1</b></div><div class="sum-row"><span>涨 / 跌 / 平</span><b><span class="up">0</span> / <span class="down">1</span> / 0</b></div><div class="sum-note">更新于 2026-10-22 18:32 · 1/1 个有报价 · 每小时自动刷新</div></div><div class="card pos"><div class="pos-head"><span class="pname">INJ</span><span class="ppair">INJUSDT</span><span class="pprice">8.1080</span></div><div class="pos-chg"><span class="clabel">24h 涨跌幅</span><b class="down">-7.08%</b></div><div class="pos-sub">binance_spot · 18:32</div></div>
 </div>
 </main>
 <div class="fab-nav">
