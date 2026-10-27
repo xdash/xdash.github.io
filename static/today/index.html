@@ -173,7 +173,7 @@
 <body>
 <header>
   <h1>通知 Feed</h1>
-  <div class="sub">最近 31 天 · 66 条 · 生成于 2026-10-27</div>
+  <div class="sub">最近 31 天 · 68 条 · 生成于 2026-10-27</div>
   <div class="tabs">
     <button id="tab-feed" class="active">信息流</button>
     <button id="tab-sh">上海 · 100 场</button>
@@ -181,7 +181,7 @@
     <button id="tab-pos">行情</button>
     <button id="tab-usage">用量</button>
   </div>
-  <div class="qstrip" id="qstrip"><div class="q"><span class="q-name">上证指数</span><b>3,697.52</b><i class="up">+0.19%</i></div><div class="q"><span class="q-name">BTCUSD</span><b>80,211.80</b><i class="up">+0.20%</i></div><span class="q-time">08:21 更新</span></div>
+  <div class="qstrip" id="qstrip"><div class="q"><span class="q-name">上证指数</span><b>3,697.25</b><i class="down">-0.01%</i></div><div class="q"><span class="q-name">BTCUSD</span><b>80,119.60</b><i class="up">+0.08%</i></div><span class="q-time">09:22 更新</span></div>
   <div class="daynav" id="daynav">
     <button id="prev" title="更早一天">‹</button>
     <div class="cur"><span id="cur-date"></span><span class="n" id="cur-count"></span></div>
@@ -191,7 +191,64 @@
 </header>
 <main>
 <div id="view-feed" class="view">
-<section class="day" id="d-2026-10-27" data-day="2026-10-27" data-count="8"><div class="dayhead"><span class="dnum">10月27日 周二 · 今天</span><span class="n">2026-10-27 · 8 条</span></div><div class="card"><h2>UU远程自愈失败</h2><div class="badges"><span class="badge level-critical">critical</span><span class="badge">uuremote_watchdog</span><span class="badge time">07:38</span></div><div class="body" data-md="- 检出：主程序进程不存在
+<section class="day" id="d-2026-10-27" data-day="2026-10-27" data-count="10"><div class="dayhead"><span class="dnum">10月27日 周二 · 今天</span><span class="n">2026-10-27 · 10 条</span></div><div class="card"><h2>多层级交易日报 2026-10-27</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">multi_layer_trader</span><span class="badge time">08:47</span></div><div class="body" data-md="# 多层级交易日报 2026-10-27
+
+## 一、市场总览
+
+- 恐慌贪婪指数：48（Neutral），7 日变化 -15
+- 加密全球市值：2.71 万亿 USD，24h -1.49%，BTC 占比 59.4%
+
+## 二、标的信号
+
+| 标的 | 收盘 | RSI | 动量% | 趋势 | 量能x | 得分 |
+|---|---|---|---|---|---|---|
+| BTC-USD | 80280.10 | 35 | -3.66 | 荡 | 0.0 | -0.08 |
+| SOL-USD | 100.92 | 31 | -13.22 | 空 | 0.0 | -0.49 |
+| 000001.SS | 3697.52 | 28 | -5.48 | 空 | 0.9 | -0.37 |
+| AAPL | 343.91 | 64 | 1.63 | 多 | 1.1 | 0.30 |
+| TSLA | 391.62 | 55 | 9.56 | 多 | 1.5 | 0.50 |
+| GOOGL | 316.80 | 23 | -7.57 | 空 | 1.0 | -0.39 |
+| MSFT | 532.60 | 52 | 4.59 | 多 | 0.9 | 0.37 |
+| ^GSPC | 7676.77 | — | — | 荡 | — | 0.01 |
+| ^IXIC | 26169.38 | — | — | 荡 | — | 0.01 |
+
+## 三、今日决策
+
+- **BTC-USD → HOLD**（仓位 0.0%）：多方合计 +0.01，空方合计 -0.09，净值 -0.08，阈值 ±0.3 → HOLD
+- **SOL-USD → SELL**（仓位 0.0%）：多方合计 +0.01，空方合计 -0.50，净值 -0.49，阈值 ±0.3 → SELL
+- **000001.SS → SELL**（仓位 0.0%）：多方合计 +0.02，空方合计 -0.39，净值 -0.37，阈值 ±0.3 → SELL
+- **AAPL → HOLD**（仓位 0.0%）：多方合计 +0.30，空方合计 +0.00，净值 +0.30，阈值 ±0.3 → HOLD
+- **TSLA → BUY**（仓位 0.0%）：多方合计 +0.50，空方合计 +0.00，净值 +0.50，阈值 ±0.3 → BUY
+- **GOOGL → SELL**（仓位 0.0%）：多方合计 +0.05，空方合计 -0.44，净值 -0.39，阈值 ±0.3 → SELL
+- **MSFT → BUY**（仓位 0.0%）：多方合计 +0.37，空方合计 +0.00，净值 +0.37，阈值 ±0.3 → BUY
+- **^GSPC → VETO**（仓位 0.0%）：多方合计 +0.01，空方合计 +0.00，净值 +0.01，阈值 ±0.3 → VETO（风控否决：数据缺失或不足）
+  - 风控否决：数据缺失或不足
+- **^IXIC → VETO**（仓位 0.0%）：多方合计 +0.01，空方合计 +0.00，净值 +0.01，阈值 ±0.3 → VETO（风控否决：数据缺失或不足）
+  - 风控否决：数据缺失或不足
+
+## 四、模拟盘现状
+
+- 总市值 $10,000.00，浮动盈亏 +0.00（+0.00%），现金 $10,000.00
+
+（空仓）
+
+## 五、回测摘要
+
+| 标的 | 总收益% | 年化% | 最大回撤% | Sharpe | 胜率 | 盈亏比 | 交易数 |
+|---|---|---|---|---|---|---|---|
+| ^GSPC | 1.66 | 2.1 | -1.18 | 0.78 | 0.5 | 9.52 | 2 |
+| ^IXIC | 0.56 | 0.71 | -2.2 | 0.21 | 0.333 | 3.59 | 3 |
+| GC=F | 0.57 | 0.72 | -5.66 | 0.14 | 0.5 | 29.99 | 2 |
+| CL=F | 18.57 | 23.81 | -9.87 | 1.31 | 1.0 | — | 2 |
+| BTC-USD | 2.54 | 2.02 | -6.47 | 0.38 | 0.667 | 0.9 | 3 |
+
+---
+模拟盘记录，非投资建议。
+
+---
+模拟盘市值 $10,000.00（盈亏 +0.00）· 完整看板见 Dashboard「多层级交易日报」"></div></div><div class="card"><h2>UU远程自愈失败</h2><div class="badges"><span class="badge level-critical">critical</span><span class="badge">uuremote_watchdog</span><span class="badge time">08:39</span></div><div class="body" data-md="- 检出：主程序进程不存在
+- 复验：重启后主程序未出现
+- 请人工检查（疑似 VPN 路由问题）"></div></div><div class="card"><h2>UU远程自愈失败</h2><div class="badges"><span class="badge level-critical">critical</span><span class="badge">uuremote_watchdog</span><span class="badge time">07:38</span></div><div class="body" data-md="- 检出：主程序进程不存在
 - 复验：重启后主程序未出现
 - 请人工检查（疑似 VPN 路由问题）"></div></div><div class="card"><h2>UU远程自愈失败</h2><div class="badges"><span class="badge level-critical">critical</span><span class="badge">uuremote_watchdog</span><span class="badge time">06:37</span></div><div class="body" data-md="- 检出：主程序进程不存在
 - 复验：重启后主程序未出现
@@ -10124,10 +10181,10 @@ MyAI 自动生成 · 2026-09-28 07:34 · 数据仅供参考，不构成投资建
 <div class="xrank-group">100万+</div><div class="card"><div class="xrank-row"><span class="rk">1</span><span class="acct"><a href="https://x.com/Polymarket" target="_blank" rel="noopener">@Polymarket</a><span class="dn">Polymarket</span></span><span class="flw">200.0万</span><span class="gain">+0</span><span class="pct">0.0%</span></div><div class="xrank-row"><span class="rk">2</span><span class="acct"><a href="https://x.com/RyanHoliday" target="_blank" rel="noopener">@RyanHoliday</a><span class="dn">Ryan Holiday</span></span><span class="flw">100.0万</span><span class="gain">+0</span><span class="pct">0.0%</span></div><div class="xrank-row"><span class="rk">3</span><span class="acct"><a href="https://x.com/aleabitoreddit" target="_blank" rel="noopener">@aleabitoreddit</a><span class="dn">Serenity</span></span><span class="flw">100.0万</span><span class="gain">+0</span><span class="pct">0.0%</span></div><div class="xrank-row"><span class="rk">4</span><span class="acct"><a href="https://x.com/claudeai" target="_blank" rel="noopener">@claudeai</a><span class="dn">Claude</span></span><span class="flw">190.0万</span><span class="gain">+0</span><span class="pct">0.0%</span></div><div class="xrank-row"><span class="rk">5</span><span class="acct"><a href="https://x.com/karpathy" target="_blank" rel="noopener">@karpathy</a><span class="dn">Andrej Karpathy</span></span><span class="flw">430.0万</span><span class="gain">+0</span><span class="pct">0.0%</span></div><div class="xrank-row"><span class="rk">6</span><span class="acct"><a href="https://x.com/nikitabier" target="_blank" rel="noopener">@nikitabier</a><span class="dn">Nikita Bier</span></span><span class="flw">130.0万</span><span class="gain">+0</span><span class="pct">0.0%</span></div><div class="xrank-row"><span class="rk">7</span><span class="acct"><a href="https://x.com/thedankoe" target="_blank" rel="noopener">@thedankoe</a><span class="dn">DAN KOE</span></span><span class="flw">100.0万</span><span class="gain">+0</span><span class="pct">0.0%</span></div><div class="xrank-row"><span class="rk">8</span><span class="acct"><a href="https://x.com/unusual_whales" target="_blank" rel="noopener">@unusual_whales</a><span class="dn">unusual_whales</span></span><span class="flw">540.0万</span><span class="gain">+0</span><span class="pct">0.0%</span></div></div>
 </div>
 <div id="view-pos" class="view hidden">
-<div class="card pos-sum"><div class="sum-row"><span>标的</span><b>1</b></div><div class="sum-row"><span>涨 / 跌 / 平</span><b><span class="up">1</span> / <span class="down">0</span> / 0</b></div><div class="sum-note">更新于 2026-10-27 08:21 · 1/1 个有报价 · 每小时自动刷新</div></div><div class="card pos"><div class="pos-head"><span class="pname">INJ</span><span class="ppair">INJUSDT</span><span class="pprice">8.1040</span></div><div class="pos-chg"><span class="clabel">24h 涨跌幅</span><b class="up">+2.41%</b></div><div class="pos-sub">binance_spot · 08:21</div></div>
+<div class="card pos-sum"><div class="sum-row"><span>标的</span><b>1</b></div><div class="sum-row"><span>涨 / 跌 / 平</span><b><span class="up">1</span> / <span class="down">0</span> / 0</b></div><div class="sum-note">更新于 2026-10-27 09:22 · 1/1 个有报价 · 每小时自动刷新</div></div><div class="card pos"><div class="pos-head"><span class="pname">INJ</span><span class="ppair">INJUSDT</span><span class="pprice">7.8560</span></div><div class="pos-chg"><span class="clabel">24h 涨跌幅</span><b class="up">+0.69%</b></div><div class="pos-sub">binance_spot · 09:22</div></div>
 </div>
 <div id="view-usage" class="view hidden">
-<div class="card usage"><h2>Google Cloud</h2><div class="usage-value">$81.29</div><div class="usage-meta">本月总费用 · 2026/10/1 – 2026/10/27</div><div class="usage-meta">最后统计 2026-10-27 05:45:26 · <span class="badge level-warning">数据可能过期</span></div></div><div class="card usage"><h2>Kimi</h2><div class="usage-row"><div><b>总使用量</b><div class="usage-meta">2026-11-23 21:08 后重置</div><div class="usage-meta">最后统计 2026-10-27 07:52:27</div></div><span class="usage-value">2.22%</span></div><div class="usage-row"><div><b>5 小时用量</b><div class="usage-meta">10-27 09:07 后重置</div><div class="usage-meta">最后统计 2026-10-27 07:52:27</div></div><span class="usage-value">0%</span></div><div class="usage-row"><div><b>7 天用量</b><div class="usage-meta">10-31 21:07 后重置</div><div class="usage-meta">最后统计 2026-10-27 07:52:27</div></div><span class="usage-value">12.31%</span></div></div>
+<div class="card usage"><h2>Google Cloud</h2><div class="usage-value">$81.29</div><div class="usage-meta">本月总费用 · 2026/10/1 – 2026/10/27</div><div class="usage-meta">最后统计 2026-10-27 05:45:26 · <span class="badge level-warning">数据可能过期</span></div></div><div class="card usage"><h2>Kimi</h2><div class="usage-row"><div><b>总使用量</b><div class="usage-meta">2026-11-23 21:08 后重置</div><div class="usage-meta">最后统计 2026-10-27 09:27:27</div></div><span class="usage-value">2.76%</span></div><div class="usage-row"><div><b>5 小时用量</b><div class="usage-meta">10-27 14:07 后重置</div><div class="usage-meta">最后统计 2026-10-27 09:27:27</div></div><span class="usage-value">10.97%</span></div><div class="usage-row"><div><b>7 天用量</b><div class="usage-meta">10-31 21:07 后重置</div><div class="usage-meta">最后统计 2026-10-27 09:27:27</div></div><span class="usage-value">15.01%</span></div></div>
 </div>
 </main>
 <div class="fab-nav">
