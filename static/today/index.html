@@ -199,12 +199,12 @@
   <div class="sub">最近 3 天 · 65 条 · 生成于 2026-10-28</div>
   <div class="tabs">
     <button id="tab-feed" class="active">信息流</button>
-    <button id="tab-sh">上海 · 100 场</button>
+    <button id="tab-sh">上海 · 128 场</button>
     <button id="tab-xrank">X 涨粉</button>
     <button id="tab-pos">行情</button>
     <button id="tab-usage">用量</button>
   </div>
-  <div class="qstrip" id="qstrip"><div class="q"><span class="q-name">上证指数</span><b>3,648.30</b><i class="down">-1.33%</i></div><div class="q"><span class="q-name">BTCUSD</span><b>80,999.00</b><i class="up">+1.17%</i></div><span class="q-time">06:05 更新</span></div>
+  <div class="qstrip" id="qstrip"><div class="q"><span class="q-name">上证指数</span><b>3,648.30</b><i class="down">-1.33%</i></div><div class="q"><span class="q-name">BTCUSD</span><b>80,899.60</b><i class="up">+1.39%</i></div><span class="q-time">07:06 更新</span></div>
   <div class="daynav" id="daynav">
     <button id="prev" title="更早一天">‹</button>
     <div class="cur"><span id="cur-date"></span><span class="n" id="cur-count"></span></div>
@@ -3258,6 +3258,14 @@ async function loadTab(name){
     else if (location.hash === '#portfolio') await activate('pos');
   }
   fabUpdate();
+
+  async function prefetchTabs() {
+    for (const name of ['sh', 'xrank', 'pos', 'usage']) {
+      try { await loadTab(name); } catch (error) {}
+    }
+  }
+  if ('requestIdleCallback' in window) requestIdleCallback(prefetchTabs, { timeout: 2000 });
+  else setTimeout(prefetchTabs, 1000);
 })();
 </script>
 </body>
