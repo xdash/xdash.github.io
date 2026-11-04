@@ -1,0 +1,660 @@
+<section class="day" id="d-2026-11-04" data-day="2026-11-04" data-count="4"><div class="dayhead"><span class="dnum">11月4日 周三</span><span class="n">2026-11-04 · 4 条</span></div><div class="card"><h2>个人选题｜AI 做的 PPT 好不好，别在电脑上验收：我把它投到手机直播间，才发现字号全废了</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">personal_topic_bot</span><span class="badge time">21:48</span></div><div class="body" data-md="## 选题建议：AI 做的 PPT 好不好，别在电脑上验收：我把它投到手机直播间，才发现字号全废了
+
+**建议平台**：公众号｜**目标读者**：要用 AI 做线上分享、直播课件、客户提案的职场人和独立创作者，尤其是观众主要在手机小屏上看的那批人。｜**主目标**：收藏
+
+**公共问题**：AI 生成的演示文档，到底该在哪儿验收才算数？为什么在电脑上看着没问题的排版，一到手机小屏就全废了？
+**故事弧**：起因：主人拿到 AI 生成的 30 页 Keynote，本地 Keynote 打开逐页点戳，确认元素不移位、字体不丢失，验收通过（doc-c4bd896e81de）。转折：他意识到观众是在手机直播间看，提出「把较小的字适当调大，尽量不要导致错位折行」（9bb94c1766aeda5b）。结果：进一步判断「最小的字号得 18 或 20 号打底，为此可以适当牺牲个别不重要的文字段落」，并要求输出副本而非改源文件（de405b0de80a112b）。这是一条完整的「技术验收通过 → 场景验收失败 → 重定规则」的决策链。
+**核心断言**：AI 生成物的验收坐标系应该从「生成端」换成「最终投放终端」：同一份文档在电脑上验收通过、在手机直播间不可读，不是 AI 不行，是验收位置选错了；先定终端的最小可读底线，再倒推删哪些内容，比事后逐页调字号省一个数量级的返工。
+**大众第一反应**：AI 做 PPT 已经能用了，但细节还得人工调。｜**切入方式**：换坐标系
+
+### 为什么建议这个选题
+
+这是主人一手踩出来的验收盲区：AI 生成的 Keynote 在本地看排版完美，但目标场景是手机竖屏直播间，最小字号不够大，必须牺牲部分文字换可读性。为什么现在值得写：AI 生成 PPT 已经从「能不能生成」进入「怎么验收」阶段，而绝大多数人还在用生成端视角验收，缺一套按投放场景倒推的验收清单。为什么是主人的题：他既有 30 页真实交付（398 个可编辑文本框、位图 0）的验收数据，又有这次手机端返工的真实动作，还有「先出 6 页样稿定规则再批量」的工作流，物证链完整。
+
+**传播钩子**：反差：后台验收数据漂亮到「398 个可编辑文本框、位图 0、全量文字回读校验通过」，结果一放到手机直播间，最小字号根本看不清——技术指标全过，使用场景全崩。
+**读者为什么转发**：做过直播/线上分享、或用 AI 做 PPT 的人，会因为「我也在电脑上验收过就上线了」的既视感，转给同样要做线上分享的同事或合伙人。
+**可能的转发文案**：AI 做的 PPT 别在电脑上验收，投到手机直播间才知道字号全废了。
+**读者能带走**：一套「按投放终端倒推排版」的验收方法：先定最小字号底线（手机直播 18–20 号打底），再允许删减次要文字段落；先出少量样稿锁定规则，再批量生成；验收必须在真实终端上做，不在生成工具里做。
+**开头兑现**：开场用后台验收数据：398 个独立可编辑文本框、位图图片 0、全量文字回读校验通过——然后一句「这份文档投到手机直播间，最小的字根本看不清」。
+
+**主编发散路径**：种子只是一句字号调整指令，主编把它放大成公共命题：AI 生成物的验收标准不该由生成端定义，而应由最终投放终端倒推。发散依据是主人自己已有的「先出 6 页样稿锁定排版规则、再允许 Agent 批量制作」的工作流——两件事合起来，正好构成「规则先行 + 终端验收」的完整方法论。
+**证据链**：
+- AI 生成的 PPT 在本地软件里可编辑、验收数据漂亮，但这不等于在真实观看场景里可用（支撑：doc-c4bd896e81de, 9bb94c1766aeda5b）
+- 真实约束是手机直播间的小屏，字号底线必须先定，再倒推删减内容（支撑：de405b0de80a112b, 9bb94c1766aeda5b）
+- 先出少量样稿锁定排版规则、再批量生成，是避免大规模返工的关键工序（支撑：doc-78eeac076747）
+- 改稿要输出副本、不动源文件，是保留可回退版本的基本纪律（支撑：de405b0de80a112b）
+
+### 大致谋篇布局
+
+1. **开场：一份验收数据全绿的 PPT，在手机直播间翻车**：doc-c4bd896e81de 提供 398 文本框/位图 0/回读校验通过的验收数据；9bb94c1766aeda5b 提供「手机直播间观看」这一真实约束
+2. **为什么电脑上验收不算数：生成端和观看端是两个坐标系**：de405b0de80a112b 的「18 或 20 号打底」判断，说明可读性底线由终端决定；doc-041919508e08 中「截图页按手机竖屏卡片设计」印证主人早已有终端意识
+3. **正确工序：先出样稿锁规则，再批量生成，最后在真实终端验收**：doc-78eeac076747 的 6 页样稿定排版规则、确认后才允许批量制作 24 页
+4. **改稿纪律：输出副本、不动源文件，保留可回退版本**：de405b0de80a112b 明确要求「不要直接改源文件而是输出为副本」
+5. **读者带走：一张按投放终端倒推的验收清单**：综合 de405b0de80a112b、9bb94c1766aeda5b、doc-78eeac076747 提炼为可执行清单
+
+### 原始主动输出与素材
+
+- 主动输出 `de405b0de80a112b`｜Kimi 对话｜2026-11-04T08:16:42.295000+00:00：还是得大点，最小的字号估计得18号或者20号打底才看得见。为此可以适当牺牲个别不重要的文字、段落。你研究下，再给改下，不要直接改源文件而是输出为副本
+- 主动输出 `9bb94c1766aeda5b`｜Kimi 对话｜2026-11-04T08:09:23.650000+00:00：这个 AI 生成的 Keynote；「&#x27;/Users/xdash/Library/Mobile Documents/com~apple~CloudDocs/temp/刘润直播间_范冰 FDE 书.key&#x27;」 ，可否将其中比较小的字的字号适当调大点（尽量不要导致错位、折行），因为会有人在手机直播间看。你研究下给出行动计划
+- 素材 `doc-c4bd896e81de`｜AI改稿参考原稿：# AI 做 PPT，现在发展到哪一步了？ ### 一次真实任务中的 30 页交付与工作流记录 前几天，为了刘润直播间的一场 120 分钟分享，我拿到了一份 30 页的 PPTX 文件。 对于演示文档的交付，我习惯在本地办公软件里进行实际检验。我实际用 Keynote 打开编辑，效果不错。后台验收数据显示：全文档共有 398 个独立可编辑文本框、位图图片为 0，全量文字回读校验通过。 这份文档并不是把设计稿切成图片打进幻灯片里的半成品，而是一份能在本地软件中继续修改文案与调整结构的完整演示文稿。 能拿到这个结果，对我来说是一次预料之外的顺利交付。因为在去年制作一门系统课程时，我在使用一些 AI 生成 PPT 的工具时，经历并不算愉快。 当时我接触到的那些工具，在浏览器网页里展示时通常视觉表现良
+- 素材 `doc-78eeac076747`｜人工修改工作稿：1. 演示封面 2. 120 分钟内容总览导览 3. 章节大标题转场页 4. 典型商业内容页 5. 核心金句页 6. 总结结尾页 这 6 页样稿覆盖了后续制作涉及的主要排版，包括标题与正文的字号比例、深炭底色与橙色高亮的搭配规则、信息卡片的内边距以及多列布局的网格间距。 待我确认了这 6 页样稿的排版规则后，Agent 才被允许调度底层引擎，按照既定规则展开后续 24 页内容的批量制作。 完成后，Agent 自动打开了本机的 Keynote，对可编辑性进行了确认。 我自己也接管过来，亲自点点戳戳，看各个元素是否会出现意外移位、字体丢失等。看来没啥问题。 5/ 这是个什么技术原理呢？我好奇就研究了下。 以往许多网页端工具导出的演示文档之所以难以在本地软件中编辑，主要原因在于排版模型的差异。 前端开发常用的 HTML/CSS 属于流式布局，元素尺寸通常依靠内容自适应撑开；而本地演示软件（如 PowerPoint 或 Keynote）的底层是基于绝对坐标系统的二维矢量
+- 素材 `doc-041919508e08`｜项目背景与策划思考：清单； 3. 交 ppt skill 出成片（深色底、大字数字页、截图页按手机竖屏卡片设计）； 4. 成片总验收：全场 63 个页标题连起来读，要能独立成文； 5. 如需逐字稿：以六句过桥词为骨架扩写，语速按 230–250 字/分钟，120 分钟约 2.8–3 万字（含互动弹性）。 ## 七、环境提示（给接手的模型） - 工作目录 `/Users/xdash/MyAI`；`Writings/` 是指向 `/Users/xdash/Documents/Obsidian_Sync/Writings` 的软链，不在 git 内，改动不用提交。 - 书稿在 `Writings/fde-book/chapters/`（写作版）与 `Writings/fde-book/github/`（开源版镜像），引用素材时两个目录内容基本一致，以 chapters/ 为准。 - 本机 WebSearch 未配置、grok CLI 需系统代理（proxy_guard.py 检查）；外网检索可用 Fetch
+
+### Obsidian 成熟选题参照
+
+- `doc-c4bd896e81de`｜AI改稿参考原稿：# AI 做 PPT，现在发展到哪一步了？ ### 一次真实任务中的 30 页交付与工作流记录 前几天，为了刘润直播间的一场 120 分钟分享，我拿到了一份 30 页的 PPTX 文件。 对于演示文档的交付，我习惯在本地办公软件里进行实际检验。我实际用 Keynote 打开编辑，效果不错。后台验收数据显示：全文档共有 398 个独立可编辑文本框、位图图片为 0，全量文字回读校验通过。 这份文档并不是把设计稿切成图片打进幻灯片里的半成品，而是一份能在本地软件中继续修改文案与调整结构的完整演示文稿。 能拿到这个结果，对我来说是一次预料之外的顺利交付。因为在去年制作一门系统课程时，我在使用一些 AI 生成 PPT 的工具时，经历并不算愉快。 当时我接触到的那些工具，在浏览器网页里展示时通常视觉表现良"></div></div><div class="card"><h2>多层级交易日报 2026-11-04</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">multi_layer_trader</span><span class="badge time">08:47</span></div><div class="body" data-md="# 多层级交易日报 2026-11-04
+
+## 一、市场总览
+
+- 恐慌贪婪指数：34（Fear），7 日变化 -17
+- 加密全球市值：2.60 万亿 USD，24h -2.46%，BTC 占比 59.3%
+
+## 二、标的信号
+
+| 标的 | 收盘 | RSI | 动量% | 趋势 | 量能x | 得分 |
+|---|---|---|---|---|---|---|
+| BTC-USD | 77041.10 | 22 | -6.32 | 空 | 0.1 | -0.29 |
+| SOL-USD | 92.25 | 15 | -12.52 | 空 | 0.1 | -0.33 |
+| 000001.SS | 3608.10 | 32 | -5.80 | 空 | 1.2 | -0.33 |
+| ^GSPC | 7568.92 | — | — | 荡 | — | 0.06 |
+| ^IXIC | 25372.01 | — | — | 荡 | — | 0.06 |
+
+## 三、今日决策
+
+- **BTC-USD → HOLD**（仓位 0.0%）：多方合计 +0.11，空方合计 -0.41，净值 -0.29，阈值 ±0.3 → HOLD
+- **SOL-USD → VETO**（仓位 0.0%）：多方合计 +0.17，空方合计 -0.50，净值 -0.33，阈值 ±0.3 → VETO（风控否决：RSI=15 极端超卖，禁止追空）
+  - 风控否决：RSI=15 极端超卖，禁止追空
+- **000001.SS → SELL**（仓位 0.0%）：多方合计 +0.06，空方合计 -0.40，净值 -0.33，阈值 ±0.3 → SELL
+- **^GSPC → VETO**（仓位 0.0%）：多方合计 +0.06，空方合计 +0.00，净值 +0.06，阈值 ±0.3 → VETO（风控否决：数据缺失或不足）
+  - 风控否决：数据缺失或不足
+- **^IXIC → VETO**（仓位 0.0%）：多方合计 +0.06，空方合计 +0.00，净值 +0.06，阈值 ±0.3 → VETO（风控否决：数据缺失或不足）
+  - 风控否决：数据缺失或不足
+
+## 四、模拟盘现状
+
+- 总市值 $10,000.00，浮动盈亏 +0.00（+0.00%），现金 $10,000.00
+
+（空仓）
+
+## 五、回测摘要
+
+| 标的 | 总收益% | 年化% | 最大回撤% | Sharpe | 胜率 | 盈亏比 | 交易数 |
+|---|---|---|---|---|---|---|---|
+| ^GSPC | 1.66 | 2.1 | -1.18 | 0.78 | 0.5 | 9.52 | 2 |
+| ^IXIC | 0.56 | 0.71 | -2.2 | 0.21 | 0.333 | 3.59 | 3 |
+| GC=F | 0.57 | 0.72 | -5.66 | 0.14 | 0.5 | 29.99 | 2 |
+| CL=F | 18.57 | 23.81 | -9.87 | 1.31 | 1.0 | — | 2 |
+| BTC-USD | 2.54 | 2.02 | -6.47 | 0.38 | 0.667 | 0.9 | 3 |
+
+---
+模拟盘记录，非投资建议。
+
+---
+模拟盘市值 $10,000.00（盈亏 +0.00）· 完整看板见 Dashboard「多层级交易日报」"></div></div><div class="card"><h2>Twitter 爆款选题雷达 V4 - 2026-11-04（ 56 条）</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">twitter_scrape</span><span class="badge time">08:14</span></div><div class="body" data-md="## 📡 Twitter 爆款选题雷达 V4 · 2026-11-04
+
+今日新发现 **56** 条互动量异常高的推文（相对账号自身基线）。
+
+[@paoloardoino](https://x.com/paoloardoino)
+
+浏览 60.0× 基线
+
+浏览 1,200,000（账号基线 median 20000）
+
+Possibly the best explanatory video on Bitcoin for kids and adults 🧡 by @tether
+
+[查看推文 →](https://x.com/paoloardoino/status/2117320333145584036)
+
+[@poteto](https://x.com/poteto)
+
+点赞 46.2× 基线
+
+点赞 9,231（账号基线 median 200）
+
+maybe a hot take but i now consider adversarial reviews mostly a waste of tokens. far better to use those tokens on empirical combined with formal ver…
+
+[查看推文 →](https://x.com/poteto/status/2117437607940681849)
+
+[@unusual\_whales](https://x.com/unusual_whales)
+
+转发 39.1× 基线
+
+转发 2,072（账号基线 median 53）
+
+BREAKING: The U.S. military attacked Iran&#x27;s Qeshm Island, per WSJ
+
+[查看推文 →](https://x.com/unusual_whales/status/2117432949868220629)
+
+[@0427smtieshou](https://x.com/0427smtieshou)
+
+浏览 37.9× 基线
+
+浏览 758,000（账号基线 median 20000）
+
+八九十年代，东北人做爱。 一家人整整齐齐躺在大炕上，两口子好不容易熬到孩子睡着了，互相使个眼色开整。 孩子被吵醒了，听到声音很奇怪，敢动又不敢动，懂了又好像不懂。 2026 年东北人做爱：
+
+[查看推文 →](https://x.com/0427SMtieshou/status/2117451708603433178)
+
+[@0427smtieshou](https://x.com/0427smtieshou)
+
+浏览 26.2× 基线
+
+浏览 525,000（账号基线 median 20000）
+
+田曦薇楼上视角 可以看见葡萄粒。
+
+[查看推文 →](https://x.com/0427SMtieshou/status/2117512099178127834)
+
+[@kylewmi](https://x.com/kylewmi)
+
+转发 19.8× 基线
+
+转发 991（账号基线 median 50）
+
+想了解臭名昭著的朝鲜黑客组织 Lazarus，可以看看 Cipher 拍的纪录片《 How North Korean Hackers Are Stealing Billions》。 Cipher 专做犯罪和地缘政治题材，看他们的纪录片跟追剧一样。这部片长 1 小时 20 分钟，把这支朝鲜国家队从头到…
+
+[查看推文 →](https://x.com/kylewmi/status/2116812866003361940)
+
+[@Voxyz\_ai](https://x.com/Voxyz_ai)
+
+点赞 18.8× 基线
+
+点赞 3,760（账号基线 median 200）
+
+Vibecoders, 𝗜&#x27;𝗺 𝗯𝗲𝗴𝗴𝗶𝗻𝗴 𝘆𝗼𝘂, before your next website or app, paste this into Claude Code or Codex: &quot;I want this to be as perfect as Linear&#x27;s website…
+
+[查看推文 →](https://x.com/Voxyz_ai/status/2117281830449942825)
+
+[@didengshengwu](https://x.com/didengshengwu)
+
+浏览 18.4× 基线
+
+浏览 367,000（账号基线 median 20000）
+
+狗头萝莉刚提一周的小米汽车，就被人砸了 11 月 2 日，狗头萝莉到广州参加完生日会，因为订的酒店便宜、没有车库，就把刚提一周的小米澎程停在路边。 结果被人拿一块板砖，把车身从头划到尾。这辆被她称为 &quot;大狗 &quot;的新车，如今身上多了一道抹不掉的疤。事后她报了警。 七天。从提车到划痕，只有七天。
+
+[查看推文 →](https://x.com/didengshengwu/status/2117553845123391709)
+
+[@Polymarket](https://x.com/Polymarket)
+
+评论 15.2× 基线
+
+评论 503（账号基线 median 33）
+
+BREAKING: Xavier Becerra now 97% to succeed Gavin Newsom as Governor of California.
+
+[查看推文 →](https://x.com/Polymarket/status/2117407062653305128)
+
+[@unusual\_whales](https://x.com/unusual_whales)
+
+转发 13.9× 基线
+
+转发 737（账号基线 median 53）
+
+BREAKING: The former head of the FBI in Chicago has accused the Trump administration of pressuring him to investigate the president’s political oppone…
+
+[查看推文 →](https://x.com/unusual_whales/status/2117473114795987136)
+
+[@Morris\_LT](https://x.com/Morris_LT)
+
+点赞 12.8× 基线
+
+点赞 2,567（账号基线 median 200）
+
+不要关注网红、明星、政客、名人等等，而是要多关注世界各地的医生、科学家、创业者、交易员、工程师、投资人、研究人员等等，以及那些长期接触真实世界、解决真实问题、不断接受现实反馈的人。因为，他们接触的现实越多，你就有机会通过他们看到更多的世界。
+
+[查看推文 →](https://x.com/Morris_LT/status/2117437036005298390)
+
+[@Lxt911](https://x.com/Lxt911)
+
+评论 12.5× 基线
+
+评论 376（账号基线 median 30）
+
+大规模免费空投合约平台代币！！ 他们官推 @Riverbit\_ 点个关注 面向全网社区 EVM 地址发放空投 + 白名单 真实用户在评论区留下你的 EVM 地址即可！ 我会全部收集！直接空投！！直接空投！！
+
+[查看推文 →](https://x.com/Lxt911/status/2117470897925947857)
+
+[@unusual\_whales](https://x.com/unusual_whales)
+
+转发 12.3× 基线
+
+转发 654（账号基线 median 53）
+
+Americans are falling behind on their bills at levels not seen since the Great Recession. Nearly 20% of consumers were late on payments, a level last…
+
+[查看推文 →](https://x.com/unusual_whales/status/2117606972971426226)
+
+[@Jizhengguang](https://x.com/Jizhengguang)
+
+浏览 11.1× 基线
+
+浏览 221,000（账号基线 median 20000）
+
+据说三对夫妻玩交换游戏 只有眼镜妹这一对是真夫妻 眼镜妹被疯狂乱凿 谁看过视频发来学习一下？
+
+[查看推文 →](https://x.com/Jizhengguang/status/2117460195697889373)
+
+[@giantcutie666](https://x.com/giantcutie666)
+
+浏览 10.8× 基线
+
+浏览 216,000（账号基线 median 20000）
+
+一开始以为这个图是 P 的，没想到还真是人民日报的发文😅 官媒现在也是越来越敢说了😁
+
+[查看推文 →](https://x.com/giantcutie666/status/2117462324713807943)
+
+[@Web3454354](https://x.com/Web3454354)
+
+浏览 9.9× 基线
+
+浏览 198,000（账号基线 median 20000）
+
+Cz 找孙哥借钱了？？？ 今天孙哥抵押 5.8 亿枚 TRX，在波场制造 6 千万 USDD。然后在官方兑换池换成 6 千万 USDT，加上之前换的，一共 1.4 亿 USDT 全部经 P 网交易所转入一个第三方钱包，然后转入币安热钱包！ 首富也有手头不宽裕的时候？找孙哥借钱？不知道这种大佬借钱会不会打欠条😅
+
+[查看推文 →](https://x.com/Web3454354/status/2117301961351696875)
+
+[@obsdmd](https://x.com/obsdmd)
+
+点赞 9.9× 基线
+
+点赞 1,976（账号基线 median 200）
+
+Obsidian 1.15 is now available! Some highlights: 1. Mermaid diagrams use our new rendering engine, Pele, which renders up to 500 times faster and use…
+
+[查看推文 →](https://x.com/obsdmd/status/2117286163367293219)
+
+[@immersivetran](https://x.com/immersivetran)
+
+浏览 9.8× 基线
+
+浏览 195,000（账号基线 median 20000）
+
+🎉 双十一重磅钜惠 | 沉浸式翻译 Pro 年费会员 4.9 折，限时抢购！ 📅 活动时间： 11 月 2 日 - 11 月 15 日（整整 14 天） 💰 年费直降 ¥400+， 7 折基础上再享 7 折，折后仅 4.9 折！ 立即抢购 ➡ 👉👉点击沉浸式翻译价格页直接参加活动： https:// immersi…
+
+[查看推文 →](https://x.com/immersivetran/status/2117095655613382925)
+
+[@wujizhuzhu](https://x.com/wujizhuzhu)
+
+浏览 9.8× 基线
+
+浏览 195,000（账号基线 median 20000）
+
+李彦宏有个习惯，就是使用自家的产品，然后提意见。 这本身其实挺好的。 但是，下面的人把他的手机号 iMEi 特别处理了，保证他使用如百度 app 时，看到的都是下面人希望他看到的。
+
+[查看推文 →](https://x.com/Wujizhuzhu/status/2117217443202654621)
+
+[@nannan07788](https://x.com/nannan07788)
+
+浏览 9.4× 基线
+
+浏览 189,000（账号基线 median 20000）
+
+卧槽！！！ 大家还是要小心，不要在朋友圈乱发 北京一 20 岁大学生，发了一条朋友圈 “现在的近况是，白天实习，晚上躺平” 被警察带走拘留，不允许聘请律师辩护😱😱
+
+[查看推文 →](https://x.com/nannan07788/status/2117583133814169710)
+
+[@Polymarket](https://x.com/Polymarket)
+
+评论 8.9× 基线
+
+评论 293（账号基线 median 33）
+
+BREAKING: Georgia projected to elect its first Democratic governor in 28 years, as Keisha Lance Bottoms surges ahead of tomorrow&#x27;s election. 70% chan…
+
+[查看推文 →](https://x.com/Polymarket/status/2117412918547415146)
+
+[@adamdotdev](https://x.com/adamdotdev)
+
+浏览 8.4× 基线
+
+浏览 169,000（账号基线 median 20000）
+
+I rebuilt OpenCode to run inside browser devtools with console.log statements! I hope you (errr, your agents) will build some amazing console apps, t…
+
+[查看推文 →](https://x.com/adamdotdev/status/2117348728046846376)
+
+[@0427smtieshou](https://x.com/0427smtieshou)
+
+浏览 7.7× 基线
+
+浏览 154,000（账号基线 median 20000）
+
+大家很爱看女生胸部走光吗？ 不就是两颗葡萄吗？这么爱看吗？ 我身高 186，穿鞋 190 左右。夏天在北京坐地铁。上下班能看到十多对葡萄吧。
+
+[查看推文 →](https://x.com/0427SMtieshou/status/2117572508274884980)
+
+[@Polymarket](https://x.com/Polymarket)
+
+点赞 7.6× 基线
+
+点赞 2,160（账号基线 median 284）
+
+JUST IN: Haley Stevens reiterates her endorsement of Mike Rogers, declaring Abdul El-Sayed is &quot;not fit to serve in the United States Senate.&quot;
+
+[查看推文 →](https://x.com/Polymarket/status/2117455132455485934)
+
+[@Polymarket](https://x.com/Polymarket)
+
+点赞 7.6× 基线
+
+点赞 2,146（账号基线 median 284）
+
+BREAKING: Notorious Haitian gang leader calls for peace talks after El Salvador President Nayib Bukele deploys 2,000+ troops to crush gangs &amp; rescue 4…
+
+[查看推文 →](https://x.com/Polymarket/status/2117300236226113643)
+
+[@aliez\_ren](https://x.com/aliez_ren)
+
+评论 7.5× 基线
+
+评论 224（账号基线 median 30）
+
+384gb vram + 256gb ram 刚好塞下 deepseek v4.1 flash， pp 13000 tps， tg 300 tps，真不错
+
+[查看推文 →](https://x.com/aliez_ren/status/2117192263403241623)
+
+[@ExploreLaura](https://x.com/ExploreLaura)
+
+评论 7.5× 基线
+
+评论 224（账号基线 median 30）
+
+免费空投啦！！先到先得！！！ 小妈为你们争取到了 200 名额 Riverbit 链上合约平台准备面向全网社区 发放代币空投 + 白名单资格 参与也简单：关注官推 @Riverbit\_ 随便互动一下，留下你的 EVM 钱包地址即可
+
+[查看推文 →](https://x.com/ExploreLaura/status/2117492427456200908)
+
+[@CryptoDoggyCN](https://x.com/CryptoDoggyCN)
+
+浏览 7.4× 基线
+
+浏览 148,000（账号基线 median 20000）
+
+长见识了，深交所最初设计，竟然是平台可以随股市涨跌上下移动 大楼设计师是雷姆库哈斯，他还设计了央视大裤衩 怎么说呢，还好没有成型
+
+[查看推文 →](https://x.com/CryptoDoggyCN/status/2117423910492991822)
+
+[@DeepSeekHarness](https://x.com/DeepSeekHarness)
+
+浏览 7.3× 基线
+
+浏览 146,000（账号基线 median 20000）
+
+Explore the English and Chinese prompts for the plugins featured in the video:
+
+[查看推文 →](https://x.com/DeepSeekHarness/status/2117256255907754016)
+
+[@94vanAI](https://x.com/94vanAI)
+
+点赞 7.3× 基线
+
+点赞 1,454（账号基线 median 200）
+
+🦁&amp;🐍
+
+[查看推文 →](https://x.com/94vanAI/status/2117235525459288207)
+
+[@Cbb0fe](https://x.com/Cbb0fe)
+
+点赞 7.2× 基线
+
+点赞 1,451（账号基线 median 200）
+
+one of the biggest capital killers in crypto is thinking you can constantly grow your capital no matter what the truth is that opportunities to subst…
+
+[查看推文 →](https://x.com/Cbb0fe/status/2117591023949950993)
+
+[@poteto](https://x.com/poteto)
+
+评论 7.2× 基线
+
+评论 215（账号基线 median 30）
+
+hire grok bot! if you want to setup a data bot like this for yourself, tag @bot and ask it to read the post and guide you through it
+
+[查看推文 →](https://x.com/poteto/status/2117366076342460440)
+
+[@poteto](https://x.com/poteto)
+
+点赞 6.6× 基线
+
+点赞 1,329（账号基线 median 200）
+
+wow, almost 100k non-story games have been played since https:// tibo.dog launched! the real game is much more fun than the story mode btw if you li…
+
+[查看推文 →](https://x.com/poteto/status/2117328786555564192)
+
+[@kang53440576](https://x.com/kang53440576)
+
+评论 6.4× 基线
+
+评论 192（账号基线 median 30）
+
+余额 318.41 元 怎么撑到月底？ 各位生存大师 支个招吧！😂
+
+[查看推文 →](https://x.com/kang53440576/status/2117541886613414186)
+
+[@Polymarket](https://x.com/Polymarket)
+
+点赞 6.2× 基线
+
+点赞 1,769（账号基线 median 284）
+
+BREAKING: President Trump makes final midterms pitch — “please pretend I’m on the ballot.”
+
+[查看推文 →](https://x.com/Polymarket/status/2117432674193457606)
+
+[@Polymarket](https://x.com/Polymarket)
+
+点赞 6.2× 基线
+
+点赞 1,758（账号基线 median 284）
+
+JUST IN: United States to mediate peace negotiations between Russia &amp; Ukraine on November 10–11 in Abu Dhabi.
+
+[查看推文 →](https://x.com/Polymarket/status/2117409490169385323)
+
+[@RhysSullivan](https://x.com/RhysSullivan)
+
+点赞 6.2× 基线
+
+点赞 1,230（账号基线 median 200）
+
+i mostly see no reason these days for: - my laptop and phone being different operating systems - my laptop and phone not just being super thin client…
+
+[查看推文 →](https://x.com/RhysSullivan/status/2117367337846505967)
+
+[@nake13](https://x.com/nake13)
+
+浏览 6.0× 基线
+
+浏览 121,000（账号基线 median 20000）
+
+这段 prompt 太强了👇 笑死我了
+
+[查看推文 →](https://x.com/nake13/status/2117264463330259201)
+
+[@linyiLYi](https://x.com/linyiLYi)
+
+点赞 5.9× 基线
+
+点赞 1,172（账号基线 median 200）
+
+今天我想正式提出一个「大数理论」，因为真的被 AI+ 数据搓出来的魔法震撼到了：我用 DSH 插件记录了 Apple
+
+[查看推文 →](https://x.com/linyiLYi/status/2117279676737671322)
+
+[@HiFrey](https://x.com/HiFrey)
+
+浏览 5.5× 基线
+
+浏览 111,000（账号基线 median 20000）
+
+还有人记得 2018 年的鸿毛药酒事件的谭秦东医生吗？那个事件后彻底改变了他的命运，之后就失业了，得了尿毒症，现在靠抖音直播卖货生活，我买过很多谭医生卖的东西，品质都很好，希望大家可以多多支持一下，抖音搜：谭琴东本人
+
+[查看推文 →](https://x.com/HiFrey/status/2116873115238293819)
+
+[@norax2026](https://x.com/norax2026)
+
+浏览 5.5× 基线
+
+浏览 111,000（账号基线 median 20000）
+
+玄学提醒：容易沾染因果的 12 件事
+
+[查看推文 →](https://x.com/NoraX2026/status/2117433359559475632)
+
+[@star\_okx](https://x.com/star_okx)
+
+评论 5.5× 基线
+
+评论 166（账号基线 median 30）
+
+This cartoon makes me feel both proud and under tremendous pressure. I will never claim that OKX is absolutely safe or immune to attacks. No company …
+
+[查看推文 →](https://x.com/star_okx/status/2117282436107378890)
+
+[@zengying1107](https://x.com/zengying1107)
+
+浏览 5.5× 基线
+
+浏览 374,000（账号基线 median 68000）
+
+特朗普中期选举输定了，距离特朗普被干翻，还有 32 个小时😂
+
+[查看推文 →](https://x.com/zengying1107/status/2117268738034762114)
+
+[@williamlong](https://x.com/williamlong)
+
+浏览 5.5× 基线
+
+浏览 110,000（账号基线 median 20000）
+
+峰哥这个人挺有趣的，以前他在知乎写的段子有点意思。
+
+[查看推文 →](https://x.com/williamlong/status/2117410777133101383)
+
+[@kongkongda5588](https://x.com/kongkongda5588)
+
+浏览 5.5× 基线
+
+浏览 109,000（账号基线 median 20000）
+
+上海常住人口差不多 2500 万，澳大利亚人口也是略多于 2500 万。上海一年 GDP 五万四千亿，澳大利亚十五万亿，账面一比，澳大利亚是上海的 2.8 倍。人均数字更唬人，换算下来，澳大利亚人一年创造的财富，够一个上海人干好几年。
+
+[查看推文 →](https://x.com/kongkongda5588/status/2117126072257118453)
+
+[@unusual\_whales](https://x.com/unusual_whales)
+
+转发 5.4× 基线
+
+转发 287（账号基线 median 53）
+
+Americans now spend nearly half of their budgets on food and housing alone, the biggest share in 15 years, per FORTUNE
+
+[查看推文 →](https://x.com/unusual_whales/status/2117627357108556125)
+
+[@knowyourself518](https://x.com/knowyourself518)
+
+浏览 5.4× 基线
+
+浏览 108,000（账号基线 median 20000）
+
+超级好文，值得多次深读。这两天和曾经体制内的同事聊天，说现在都降薪，出国旅游都没钱，低欲望，要给小孩省钱搞教育，然后说这份工作已经不是铁饭碗，表达了各种不好但又无法离开，但文章很核心的表达了： You aren’t where you want to be because you don’t want…
+
+[查看推文 →](https://x.com/knowyourself518/status/2117039098150178994)
+
+[@HiTw93](https://x.com/HiTw93)
+
+点赞 5.3× 基线
+
+点赞 1,054（账号基线 median 200）
+
+昨天有一个小伙伴私信问我，自己计算机专业，感觉现在 AI 可以完全代替他们的作业和论文，问我这个行业还有没有前景，以及对未来的一些建议。 我在想假如我回到大四的那一年，我会怎么做让自己未来之路少踩坑，走得顺一点，当然自己见识浅薄有限，欢迎交流。 1.
+
+[查看推文 →](https://x.com/HiTw93/status/2117521154747625813)
+
+[@unusual\_whales](https://x.com/unusual_whales)
+
+转发 5.2× 基线
+
+转发 275（账号基线 median 53）
+
+Elon Musk has now given $474 million in the midterms, more than any donor has ever spent in a single election cycle, per The New York Times. The only…
+
+[查看推文 →](https://x.com/unusual_whales/status/2117290135171863015)
+
+[@unusual\_whales](https://x.com/unusual_whales)
+
+转发 5.2× 基线
+
+转发 274（账号基线 median 53）
+
+Americans are eating out far less than they used to. Share who eat a meal at a restaurant at least once a week, per Gallup: 2019: 53% 2021: 43% 2022…
+
+[查看推文 →](https://x.com/unusual_whales/status/2117617039246500078)
+
+[@CindyCreation](https://x.com/CindyCreation)
+
+浏览 5.2× 基线
+
+浏览 103,000（账号基线 median 20000）
+
+如果你还不会用 AI Agent 帮你打土狗，那么你将错过无数个 100X🤡 好多人还是不太会操作，私信被问爆了，胖迪子还是做个操作视频给大家讲更直观些！视频内容包括： 1. 先下载 Grok Bot 并开通 X Premium:
+
+[查看推文 →](https://x.com/CindyCreation/status/2116781751444111862)
+
+[@wolfyxbt](https://x.com/wolfyxbt)
+
+点赞 5.1× 基线
+
+点赞 1,015（账号基线 median 200）
+
+平壤大牛市
+
+[查看推文 →](https://x.com/wolfyxbt/status/2117245701600260575)
+
+[@unusual\_whales](https://x.com/unusual_whales)
+
+点赞 5.0× 基线
+
+点赞 3,073（账号基线 median 608）
+
+Trump says he’ll veto everything if Democrats win the midterms.
+
+[查看推文 →](https://x.com/unusual_whales/status/2117295168332452139)
+
+[@RyanHoliday](https://x.com/RyanHoliday)
+
+点赞 5.0× 基线
+
+点赞 1,167（账号基线 median 232）
+
+To quote Fight Club again, “We buy things we don’t need, to impress people we don’t like.&quot;
+
+[查看推文 →](https://x.com/RyanHoliday/status/2117256163075260788)
+
+[@Shenxiao123971](https://x.com/Shenxiao123971)
+
+浏览 5.0× 基线
+
+浏览 100,000（账号基线 median 20000）
+
+后爸打了我 12 年，我妈从来没护过我。去年我考上浙大，去学校报道那天，后爸递给我一张银行卡，说里面有 18 万，是我大学四年的学费和生活费。手指触到卡面的冰凉，像被他手里的皮带抽过一样发麻。 12 年里，他的皮带、扫帚、甚至生锈的铁丝，在我身上留下的淤青从来没断过。我妈每次都只会躲在厨房里，把水
+
+[查看推文 →](https://x.com/Shenxiao123971/status/2117240138338279857)
+
+[@giantcutie666](https://x.com/giantcutie666)
+
+浏览 5.0× 基线
+
+浏览 100,000（账号基线 median 20000）
+
+目前中期选举，大部分选民都已经投完票了 从 Polymarket 的走势看，共和党在参众两院都完犊子了😅
+
+[查看推文 →](https://x.com/giantcutie666/status/2117433532650029131)
+
+---
+
+由 twitter\_viral\_radar\_v4 自动生成 · 数据 tweets\_v4.db"></div></div><div class="card"><h2>📸 Google Photos 备份：成功 7</h2><div class="badges"><span class="badge level-info">info</span><span class="badge">gphotos_backup</span><span class="badge time">02:44</span></div><div class="body" data-md="- ✅ 成功 **7** 个（0.07 GB）：照片 6 / 视频 1
+- 📁 分布：Pixel 8a 2 个（0.05 GB）、OPPO Find N2 5 个（0.02 GB）"></div></div></section>
