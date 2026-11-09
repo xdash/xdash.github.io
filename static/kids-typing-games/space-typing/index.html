@@ -113,6 +113,12 @@
   function whoosh(){ tone(300,0.3,'sawtooth',0.12); tone(900,0.25,'sine',0.15,0.06); }
   function ding(){ tone(980,0.14,'sine',0.28); tone(1470,0.2,'sine',0.18,0.06); }
   function wrongSound(){ tone(220,0.16,'sine',0.15); }
+  // 定制鼓励：叫宝宝小名（大厅家长设置可改，默认辉哥）
+  var KID_NAME = '辉哥';
+  try { KID_NAME = localStorage.getItem('kids_typing_name') || '辉哥'; } catch(e){}
+  var PRAISE = ['太棒了', '真棒', '好厉害', '你真聪明', '好棒呀'];
+  function praise(){ return PRAISE[Math.floor(Math.random()*PRAISE.length)]; }
+  function speak(t){ try{ if(!('speechSynthesis' in window))return; window.speechSynthesis.cancel(); var u=new SpeechSynthesisUtterance(t); u.lang='zh-CN'; u.rate=0.8; u.pitch=1.2; window.speechSynthesis.speak(u);}catch(e){} }
 
   function hasStar(li){ for(var i=0;i<stars.length;i++){ if(stars[i].li===li) return true; } return false; }
   function findStar(li){ for(var i=0;i<stars.length;i++){ if(stars[i].li===li) return stars[i]; } return null; }
@@ -131,7 +137,7 @@
     var L=String.fromCharCode(65+li);
     el.innerHTML='⭐<span class="letter">'+L+'</span>';
     el.style.left=(5+Math.random()*85)+'%';
-    el.style.animationDuration=(9+Math.random()*4)+'s';
+    el.style.animationDuration=((9+Math.random()*4)*3)+'s';   // 生命延长3倍：星星慢慢掉，宝宝更好抓
     area.appendChild(el);
     var s={el:el,li:li};
     stars.push(s);
@@ -183,7 +189,8 @@
     }
     ding(); whoosh();
     score++; scoreEl.textContent='⭐ '+score;
-    flashPrompt('抓到 '+String.fromCharCode(65+s.li)+' 啦！🎉<small>继续抓下一颗星星</small>');
+    speak(KID_NAME + '，' + praise() + '！抓到' + String.fromCharCode(65+s.li) + '啦');
+    flashPrompt(KID_NAME + '，抓到 '+String.fromCharCode(65+s.li)+' 啦！🎉<small>继续抓下一颗星星</small>');
   }
 
   function onLetter(li){

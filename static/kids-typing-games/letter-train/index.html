@@ -128,6 +128,11 @@
   function whistle(){ tone(523,0.25,'square',0.18); tone(784,0.25,'square',0.18,0.22); }
   function wrongSound(){ tone(220,0.16,'sine',0.15); }
   function speak(t){ try{ if(!('speechSynthesis' in window))return; window.speechSynthesis.cancel(); var u=new SpeechSynthesisUtterance(t); u.lang='zh-CN'; u.rate=0.75; u.pitch=1.3; window.speechSynthesis.speak(u);}catch(e){} }
+  // 定制鼓励：叫宝宝小名（大厅家长设置可改，默认辉哥）
+  var KID_NAME = '辉哥';
+  try { KID_NAME = localStorage.getItem('kids_typing_name') || '辉哥'; } catch(e){}
+  var PRAISE = ['太棒了', '真棒', '好厉害', '你真聪明', '好棒呀'];
+  function praise(){ return PRAISE[Math.floor(Math.random()*PRAISE.length)]; }
 
   function buildEngine(){
     var eng=document.createElement('div');
@@ -145,14 +150,16 @@
     trainEl.style.transform = 'translateX(' + (-shift) + 'px)';
   }
 
-  function nextTarget(){
+  function nextTarget(celebrate){
     if(cur>=26){ finish(); return; }
     targetEl.textContent=String.fromCharCode(65+cur);
-    speak('按' + String.fromCharCode(65+cur));
+    var ch = String.fromCharCode(65+cur);
+    speak(celebrate ? (KID_NAME + '，' + praise() + '！按' + ch) : ('按' + ch));
   }
 
   function finish(){
     whistle();
+    speak(KID_NAME + '，你真棒！小火车装好啦！');
     document.querySelector('.star-line').style.display='none';
     congratsEl.classList.add('show');
     running=false;
@@ -171,7 +178,7 @@
       cur++;
       scoreEl.textContent='🚂 车厢 '+cur;
       scrollTrain();
-      if(cur<26) nextTarget(); else finish();
+      if(cur<26) nextTarget(cur%5===0); else finish();   // 每挂5节叫名字表扬一次
     } else {
       wrongSound();
       targetEl.classList.remove('shake'); void targetEl.offsetWidth; targetEl.classList.add('shake');

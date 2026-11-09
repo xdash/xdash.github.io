@@ -153,6 +153,12 @@
   function ding(){ tone(880, 0.16, 'sine', 0.25); tone(1320, 0.24, 'sine', 0.18, 0.05); }
   function wrongSound(){ tone(220, 0.16, 'sine', 0.15); }
 
+  // 定制鼓励：叫宝宝小名（大厅家长设置可改，默认辉哥）
+  var KID_NAME = '辉哥';
+  try { KID_NAME = localStorage.getItem('kids_typing_name') || '辉哥'; } catch(e){}
+  var PRAISE = ['太棒了', '真棒', '好厉害', '你真聪明', '好棒呀'];
+  function praise(){ return PRAISE[Math.floor(Math.random()*PRAISE.length)]; }
+
   function speak(text){
     try{
       if(!('speechSynthesis' in window)) return;
@@ -162,9 +168,10 @@
       window.speechSynthesis.speak(u);
     }catch(e){}
   }
-  function sayPrompt(){
+  function sayPrompt(celebrate){
     var ch = String.fromCharCode(65 + nextLetter);
-    speak('找一找' + ch);
+    var text = celebrate ? (KID_NAME + '，' + praise() + '！找一找' + ch) : ('找一找' + ch);
+    speak(text);
     promptEl.innerHTML = '按 ' + ch + '<small>戳破带金色光圈的 ' + ch + ' 气球</small>';
   }
   function flashMsg(txt){
@@ -212,7 +219,7 @@
     el.style.setProperty('--c-dark', col.d);
     el.style.setProperty('--tilt', (Math.random()*14-7) + 'deg');
     el.style.left = (slot*(100/BALLOON_COUNT) + 2 + Math.random()*4) + '%';
-    var dur = 16 + Math.random()*6;
+    var dur = (16 + Math.random()*6) * 3;   // 生命延长3倍：气球飘得慢，宝宝有更多时间按键
     el.style.animationDuration = dur + 's';
     el.style.animationDelay = scatter ? (-(0.12 + Math.random()*0.55)*dur) + 's' : '0s';
     el.innerHTML = '<div class="body"><span class="letter">' + String.fromCharCode(65+li) + '</span></div><div class="knot"></div><div class="string"></div>';
@@ -283,10 +290,10 @@
     ding();
     addScore(1);
     if(wasTarget){
-      // 目标达成：进入下一个字母
+      // 目标达成：进入下一个字母，语音叫宝宝名字鼓励
       nextLetter = (nextLetter + 1) % 26;
-      flashMsg('🎉 太棒了！');
-      sayPrompt();
+      flashMsg('🎉 ' + KID_NAME + '，' + praise() + '！');
+      sayPrompt(true);
     }
     refill();
   }

@@ -136,8 +136,17 @@
   function popSound(){ var c=ctx(); if(!c)return; var t=c.currentTime; var b=c.createBuffer(1,c.sampleRate*0.16,c.sampleRate); var d=b.getChannelData(0); for(var i=0;i<d.length;i++){ d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2);} var s=c.createBufferSource(); s.buffer=b; var g=c.createGain(); g.gain.setValueAtTime(0.45,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.16); s.connect(g); g.connect(c.destination); s.start(t); }
   function ding(){ tone(980,0.14,'sine',0.25); tone(1470,0.22,'sine',0.16,0.05); }
   function wrongSound(){ tone(220,0.16,'sine',0.15); }
+  // 定制鼓励：叫宝宝小名（大厅家长设置可改，默认辉哥）
+  var KID_NAME = '辉哥';
+  try { KID_NAME = localStorage.getItem('kids_typing_name') || '辉哥'; } catch(e){}
+  var PRAISE = ['太棒了', '真棒', '好厉害', '你真聪明', '好棒呀'];
+  function praise(){ return PRAISE[Math.floor(Math.random()*PRAISE.length)]; }
   function speak(t){ try{ if(!('speechSynthesis' in window))return; window.speechSynthesis.cancel(); var u=new SpeechSynthesisUtterance(t); u.lang='zh-CN'; u.rate=0.75; u.pitch=1.3; window.speechSynthesis.speak(u);}catch(e){} }
-  function sayGoal(){ speak('按' + countGoal); goalEl.textContent = countGoal; }
+  function sayGoal(celebrate){
+    var text = celebrate ? (KID_NAME + '，' + praise() + '！按' + countGoal) : ('按' + countGoal);
+    speak(text);
+    goalEl.textContent = countGoal;
+  }
   function flashMsg(txt){ msgEl.textContent=txt; msgEl.classList.remove('hidden'); clearTimeout(msgTimer); msgTimer=setTimeout(function(){ msgEl.classList.add('hidden'); },900); }
 
   function findBubble(n){ for(var i=0;i<bubbles.length;i++){ if(bubbles[i].num===n) return bubbles[i]; } return null; }
@@ -169,7 +178,7 @@
     el.style.setProperty('--ink',col.ink);
     el.style.left=(slot*(100/BUBBLE_COUNT)+2+Math.random()*4)+'%';
     // scatter 仅开场布阵分散高度；游戏中补充的积木从底部自然升起，不凭空出现
-    var dur=15+Math.random()*5;
+    var dur=(15+Math.random()*5)*3;   // 生命延长3倍：积木慢慢飘，宝宝时间更充裕
     var delay=(0.12+Math.random()*0.55)*dur;
     el.style.animationDuration = isTarget ? dur+'s, 1s' : dur+'s';
     el.style.animationDelay = scatter ? (isTarget ? (-delay)+'s, 0s' : (-delay)+'s') : (isTarget ? '0s, 0s' : '0s');
@@ -231,12 +240,12 @@
     var wasTarget = pop(b);
     ding(); addScore(1);
     if(wasTarget){
-      // 换一个新目标（1-5，不重复当前）
+      // 换一个新目标（1-5，不重复当前），语音叫宝宝名字鼓励
       var next;
       do { next = 1+Math.floor(Math.random()*5); } while(next===countGoal);
       countGoal = next;
-      flashMsg('🎉 真棒！');
-      sayGoal();
+      flashMsg('🎉 ' + KID_NAME + '，' + praise() + '！');
+      sayGoal(true);
     }
     refill();
   }

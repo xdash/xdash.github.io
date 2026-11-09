@@ -34,6 +34,12 @@
     padding: 5px 12px; font-size: clamp(13px, 2.4vh, 15px); color: #3a76b8; font-weight: 700; letter-spacing: 1px;
   }
   .footer { text-align: center; color: rgba(255,255,255,.85); font-size: 13px; margin-top: 26px; text-shadow: 0 1px 3px rgba(31,94,150,.4); }
+  .name-btn {
+    background: rgba(255,255,255,.9); border: none; border-radius: 18px;
+    padding: 8px 18px; font-size: 14px; font-weight: 700; color: #2b6bb0;
+    cursor: pointer; box-shadow: 0 2px 8px rgba(31,94,150,.25);
+  }
+  .name-btn:active { transform: scale(.96); }
 </style>
 </head>
 <body>
@@ -74,6 +80,24 @@
     </a>
   </div>
   <p class="footer">👶 为 3 岁宝宝设计 · 在 iPad 上配键盘玩最开心 · <a href="/" style="color:#fff">回到博客</a></p>
+  <p class="footer"><button class="name-btn" id="nameBtn">⚙️ 家长设置：鼓励语音叫「<span id="kidName">辉哥</span>」</button></p>
 </div>
+<script>
+(function(){
+  var KEY = 'kids_typing_name';
+  var nameEl = document.getElementById('kidName');
+  function load(){ try { return localStorage.getItem(KEY) || '辉哥'; } catch(e){ return '辉哥'; } }
+  nameEl.textContent = load();
+  document.getElementById('nameBtn').onclick = function(){
+    var cur = load();
+    var n = prompt('宝宝的小名是什么？\n（鼓励语音会叫这个名字，比如「辉哥，太棒了！」）', cur);
+    if(n === null) return;
+    n = n.trim().slice(0, 12);
+    if(!n) n = '辉哥';
+    try { localStorage.setItem(KEY, n); } catch(e){}
+    nameEl.textContent = n;
+  };
+})();
+</script>
 </body>
 </html>
