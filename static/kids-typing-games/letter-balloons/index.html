@@ -78,11 +78,23 @@
   #msg.hidden { opacity: 0; }
   .ground { position: fixed; left: 0; right: 0; bottom: 0; height: 8vh; z-index: 5;
     background: linear-gradient(#9be36b, #6fce4a); border-radius: 50% 50% 0 0 / 16% 16% 0 0; }
+  /* 萌鸡小队：草地上的小鸡，蹦蹦跳跳 */
+  .chick { position: fixed; bottom: 2vh; z-index: 8; font-size: clamp(38px, 8vh, 58px);
+    animation: chickHop 1.6s ease-in-out infinite; pointer-events: none; }
+  .chick.c2 { animation-delay: .5s; }
+  .chick.c3 { animation-delay: 1s; }
+  @keyframes chickHop {
+    0%,100% { transform: translateY(0) rotate(-4deg); }
+    50% { transform: translateY(-14px) rotate(5deg); }
+  }
 </style>
 </head>
 <body>
 <div class="sky"></div>
 <div class="ground"></div>
+<div class="chick" style="left:6%">🐤</div>
+<div class="chick c2" style="left:29%">🐥</div>
+<div class="chick c3" style="right:7%">🐤</div>
 <div class="game-area" id="area"></div>
 <div id="msg" class="hidden"></div>
 <div class="hud">
@@ -178,8 +190,9 @@
     return free.length ? free[Math.floor(Math.random()*free.length)] : Math.floor(Math.random()*BALLOON_COUNT);
   }
 
-  // 生成一个气球。forceLi 指定字母；isTarget 标记为当前目标
-  function spawnBalloon(forceLi){
+  // 生成一个气球。forceLi 指定字母；scatter=true 时分散在各高度（仅开场布阵用），
+  // 游戏中补充的气球一律从底部自然升起，绝不凭空出现在屏幕中上方
+  function spawnBalloon(forceLi, scatter){
     var li;
     if(forceLi !== undefined){
       li = forceLi;
@@ -199,10 +212,9 @@
     el.style.setProperty('--c-dark', col.d);
     el.style.setProperty('--tilt', (Math.random()*14-7) + 'deg');
     el.style.left = (slot*(100/BALLOON_COUNT) + 2 + Math.random()*4) + '%';
-    // 随机负 delay：让气球开场就分布在屏幕可见区的中下部~中上部（进程 12%~67%）
     var dur = 16 + Math.random()*6;
     el.style.animationDuration = dur + 's';
-    el.style.animationDelay = (-(0.12 + Math.random()*0.55)*dur) + 's';
+    el.style.animationDelay = scatter ? (-(0.12 + Math.random()*0.55)*dur) + 's' : '0s';
     el.innerHTML = '<div class="body"><span class="letter">' + String.fromCharCode(65+li) + '</span></div><div class="knot"></div><div class="string"></div>';
     area.appendChild(el);
     var b = { el: el, li: li, target: isTarget, slot: slot };
@@ -223,12 +235,18 @@
     if(i>=0) balloons.splice(i,1);
     if(b.el.parentNode) b.el.parentNode.removeChild(b.el);
   }
-  // 保证屏幕上始终有目标气球 + 足够数量
-  function refill(){
+  // 保证屏幕上始终有目标气球 + 足够数量（补充的气球从底部自然升起）
+  function refill(scatter){
     if(!running) return;
-    if(!findBalloon(nextLetter)) spawnBalloon(nextLetter);
+    var t = findBalloon(nextLetter);
+    if(t){
+      // 目标字母推进到已在屏幕上的普通气球：直接给它加上金色光圈
+      if(!t.target){ t.target = true; t.el.classList.add('target'); }
+    } else {
+      spawnBalloon(nextLetter, scatter);
+    }
     var guard = 0;
-    while(balloons.length < BALLOON_COUNT && guard < 20){ spawnBalloon(); guard++; }
+    while(balloons.length < BALLOON_COUNT && guard < 20){ spawnBalloon(undefined, scatter); guard++; }
   }
   function burst(b){
     var r = b.el.getBoundingClientRect();
@@ -246,7 +264,8 @@
       s.style.left = x + 'px'; s.style.top = y + 'px';
       s.style.setProperty('--dx', (Math.random()*160-80)+'px');
       s.style.setProperty('--dy', (Math.random()*160-80)+'px');
-      s.textContent = '✨';
+      // 目标气球爆出萌鸡小队小鸡，普通气球爆星星
+      s.textContent = b.target ? (i%2===0 ? '🐤' : '🐥') : '✨';
       area.appendChild(s);
       (function(s){ setTimeout(function(){ s.parentNode && s.parentNode.removeChild(s); }, 950); })(s);
     }
@@ -308,12 +327,11 @@
     running = true;
     score = 0; nextLetter = 0; scoreEl.textContent = '🌟 0';
     balloons.slice().forEach(removeBalloon);
-    spawnBalloon(nextLetter);   // 先有目标 A
-    refill();
+    refill(true);            // 开场一次性分散布阵
     sayPrompt();
     // 定时巡检：防止意外情况下气球不足
     clearInterval(refillTimer);
-    refillTimer = setInterval(refill, 2500);
+    refillTimer = setInterval(function(){ refill(false); }, 2500);
   };
 })();
 </script>

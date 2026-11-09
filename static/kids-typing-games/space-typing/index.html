@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
-<title>🚀 太空打字</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕷️</text></svg>">
+<title>🕷️ 蜘蛛小英雄</title>
 <link rel="stylesheet" href="../style.css">
 <style>
   body { background: linear-gradient(180deg, #0b1035 0%, #1b2a6b 45%, #3a4f9e 100%); }
@@ -31,14 +31,20 @@
     position: absolute; left: 50%; top: 42%; transform: translate(-50%,-50%);
     font-size: .5em; color: #fff; font-weight: 900; text-shadow: 0 0 8px rgba(0,0,0,.7);
   }
-  /* 火箭：可以左右移动去追星星 */
+  /* Q 版蜘蛛小英雄：可以左右移动去追星星 */
   .rocket {
     position: fixed; left: 50%; bottom: clamp(40px, 9vh, 80px); z-index: 30;
-    font-size: clamp(60px, 14vh, 100px);
     transition: left .3s cubic-bezier(.3,1.2,.4,1);
     filter: drop-shadow(0 10px 18px rgba(0,0,0,.4));
     transform: translateX(-50%);
   }
+  .hero-svg { width: clamp(64px, 15vh, 104px); height: auto; display: block; }
+  /* 蛛丝 */
+  .webline { position: fixed; z-index: 28; height: 3px;
+    background: rgba(255,255,255,.92); box-shadow: 0 0 6px rgba(255,255,255,.8);
+    transform-origin: 0 50%; pointer-events: none;
+    animation: webFade .45s ease-out forwards; }
+  @keyframes webFade { 0% { opacity: 0; } 15% { opacity: 1; } 100% { opacity: 0; } }
   .rocket.thrust { animation: thrust .18s; }
   @keyframes thrust { 0%{ transform: translateX(-50%) translateY(0) scale(1);} 50%{ transform: translateX(-50%) translateY(6px) scale(1.08);} 100%{ transform: translateX(-50%) translateY(0) scale(1);} }
   .rocket.boost { animation: boost .5s ease-out; }
@@ -63,16 +69,30 @@
 <div class="planet ring" style="width:56px;height:56px;left:8%;top:34%;"></div>
 <div class="beam" id="beam"></div>
 <div class="game-area" id="area"></div>
-<div class="rocket" id="rocket">🚀</div>
+<div class="rocket" id="rocket">
+  <svg viewBox="0 0 100 122" class="hero-svg" aria-hidden="true">
+    <rect x="31" y="72" width="38" height="42" rx="13" fill="#2b5fb0"/>
+    <rect x="31" y="72" width="38" height="15" rx="7" fill="#d23c3c"/>
+    <circle cx="22" cy="84" r="8" fill="#d23c3c"/>
+    <circle cx="78" cy="84" r="8" fill="#d23c3c"/>
+    <circle cx="50" cy="42" r="34" fill="#d23c3c"/>
+    <g stroke="rgba(255,255,255,.38)" stroke-width="1.3" fill="none">
+      <path d="M50 9 V75 M17 42 H83 M27 19 L73 65 M73 19 L27 65"/>
+      <circle cx="50" cy="42" r="22"/>
+    </g>
+    <ellipse cx="36" cy="45" rx="10.5" ry="14" fill="#fff" stroke="#222" stroke-width="3.2" transform="rotate(-18 36 45)"/>
+    <ellipse cx="64" cy="45" rx="10.5" ry="14" fill="#fff" stroke="#222" stroke-width="3.2" transform="rotate(18 64 45)"/>
+  </svg>
+</div>
 <div class="hud">
   <button class="btn" id="homeBtn">🏠 回家</button>
   <div class="score" id="score">⭐ 0</div>
 </div>
-<div id="prompt">⭐ 字母星星掉下来啦！<small>按键盘上的字母，火箭飞上去抓住它！</small></div>
+<div id="prompt">⭐ 字母星星掉下来啦！<small>按键盘上的字母，蜘蛛小英雄发射蛛丝抓星星！</small></div>
 <div class="overlay" id="startOv">
-  <div class="big">🚀 太空打字</div>
+  <div class="big">🕷️ 蜘蛛小英雄</div>
   <button class="start-btn" id="startBtn">发 射</button>
-  <div class="hint">字母星星一颗颗掉下来，<br>按出星星上的字母，火箭就飞过去抓住它！<br>抓得越多越厉害！</div>
+  <div class="hint">字母星星一颗颗掉下来，<br>按出星星上的字母，蜘蛛小英雄就发射蛛丝抓住它！<br>抓得越多越厉害！</div>
 </div>
 <script>
 (function(){
@@ -126,17 +146,33 @@
     promptEl.innerHTML=html;
     clearTimeout(promptTimer);
     promptTimer=setTimeout(function(){
-      promptEl.innerHTML='⭐ 字母星星掉下来啦！<small>按键盘上的字母，火箭飞上去抓住它！</small>';
+      promptEl.innerHTML='⭐ 字母星星掉下来啦！<small>按键盘上的字母，蜘蛛小英雄发射蛛丝抓星星！</small>';
     },1600);
+  }
+
+  function shootWeb(x, y){
+    var rr = rocket.getBoundingClientRect();
+    var hx = rr.left + rr.width/2, hy = rr.top + rr.height/2;
+    var dx = x-hx, dy = y-hy;
+    var len = Math.sqrt(dx*dx+dy*dy);
+    var ang = Math.atan2(dy,dx)*180/Math.PI;
+    var web = document.createElement('div');
+    web.className = 'webline';
+    web.style.left = hx+'px'; web.style.top = hy+'px';
+    web.style.width = len+'px';
+    web.style.transform = 'rotate('+ang+'deg)';
+    area.appendChild(web);
+    setTimeout(function(){ web.parentNode && web.parentNode.removeChild(web); }, 460);
   }
 
   function collect(s){
     var r=s.el.getBoundingClientRect();
     var x=r.left+r.width/2, y=r.top+r.height/2;
     removeStar(s);
-    // 火箭先水平移到星星下方，再加速上冲
+    // 蜘蛛小英雄先水平移到星星下方，发射蛛丝，再加速上冲
     rocket.style.left = x+'px';
     beam.style.left = x+'px';
+    shootWeb(x, y);
     rocket.classList.remove('boost'); void rocket.offsetWidth; rocket.classList.add('boost');
     for(var i=0;i<6;i++){
       var sp=document.createElement('div'); sp.className='spark';

@@ -160,28 +160,31 @@
     for(var i=0;i<KEYS.length;i++){ if(KEYS[i].note===note) return i; }
     return -1;
   }
+  function stopStar(){
+    demoQueue.forEach(clearTimeout);
+    demoQueue = [];
+    clearTimeout(demoTimer);
+    demoOn = false;
+    demoBtn.classList.remove('playing');
+    demoBtn.textContent = '⭐ 听小星星';
+  }
   function playStar(){
-    if(demoOn) return;
+    if(demoOn){ stopStar(); return; }   // 播放中再点 = 停止
     demoOn = true;
     demoBtn.classList.add('playing');
-    demoBtn.textContent = '🎶 听小星星…';
+    demoBtn.textContent = '⏹ 停止';
     var t = 0;
     STAR.forEach(function(step){
       var idx = noteToKeyIdx(step[0]);
       var dur = (step[1]===2) ? 1.0 : (step[1]===1 ? 0.55 : 0.3);
-      (function(idx, dur){
-        setTimeout(function(){
-          if(idx>=0){ playKey(idx); }
-        }, t*1000);
-      })(idx, dur);
+      var id = setTimeout(function(){
+        if(idx>=0 && demoOn){ playKey(idx); }
+      }, t*1000);
+      demoQueue.push(id);
       t += dur;
     });
     clearTimeout(demoTimer);
-    demoTimer = setTimeout(function(){
-      demoOn = false;
-      demoBtn.classList.remove('playing');
-      demoBtn.textContent = '⭐ 听小星星';
-    }, t*1000 + 200);
+    demoTimer = setTimeout(stopStar, t*1000 + 200);
   }
   demoBtn.onclick = function(){ if(running) playStar(); };
 

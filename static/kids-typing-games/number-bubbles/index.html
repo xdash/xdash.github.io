@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🫧</text></svg>">
-<title>🫧 数字泡泡</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔢</text></svg>">
+<title>🔢 数字积木</title>
 <link rel="stylesheet" href="../style.css">
 <style>
   /* 泡泡：从水底升起，飘到顶部外 */
@@ -40,6 +40,18 @@
     0%,100% { filter: brightness(1); }
     50% { filter: brightness(1.2); }
   }
+  /* 数字积木（NumberBlocks）：圆角方块 + 大眼睛 + 微笑 */
+  .bubble.block { border-radius: 24%; }
+  .bubble .eyes { position: absolute; top: 14%; left: 0; right: 0;
+    display: flex; justify-content: center; gap: 14%; z-index: 2; }
+  .bubble .eyes i { width: 19%; aspect-ratio: 1; background: #fff; border-radius: 50%;
+    position: relative; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+  .bubble .eyes i::after { content: ''; position: absolute; left: 28%; top: 34%;
+    width: 46%; height: 46%; background: #222; border-radius: 50%; }
+  .bubble .num { color: var(--ink, #fff); margin-top: 22%; z-index: 2; }
+  .bubble .mouth { position: absolute; bottom: 10%; left: 50%; transform: translateX(-50%);
+    width: 32%; height: 15%; border: 4px solid var(--ink, #fff); border-top: none;
+    border-radius: 0 0 40px 40px; z-index: 2; opacity: .9; }
   .pop-wave { position: absolute; z-index: 15; pointer-events: none;
     border-radius: 50%; animation: popWave .5s ease-out forwards; }
   @keyframes popWave {
@@ -92,9 +104,9 @@
 </div>
 <div id="goalBox"><span class="star">⭐</span><span id="goalNum">1</span><small>按这个数字键</small></div>
 <div class="overlay" id="startOv">
-  <div class="big">🫧 数字泡泡</div>
+  <div class="big">🔢 数字积木</div>
   <button class="start-btn" id="startBtn">开 始 玩</button>
-  <div class="hint">看下面的大数字，在键盘上按一样的数字！<br>带金色光圈的泡泡就会 '啵' 地破掉～<br>按其他数字也能戳破其他泡泡哦！</div>
+  <div class="hint">数字积木从水里冒出来啦！<br>看下面的大数字，在键盘上按一样的数字！<br>带金色光圈的积木就会 '啵' 地破掉～</div>
 </div>
 <script>
 (function(){
@@ -109,8 +121,11 @@
 
   var NUMBERS = [1,2,3,4,5];
   var COLORS = {
-    1:{c:'#ff7eb6',d:'#e04f8f'}, 2:{c:'#ffb45e',d:'#e08a2e'}, 3:{c:'#6fc3ff',d:'#3d8fe0'},
-    4:{c:'#8be58b',d:'#4fbf4f'}, 5:{c:'#c79bff',d:'#9a63e8'}
+    1:{c:'#ff6b6b',d:'#d64545',ink:'#fff'},    // One 红
+    2:{c:'#ffb45e',d:'#e08a2e',ink:'#fff'},    // Two 橙
+    3:{c:'#ffe14d',d:'#e0b62a',ink:'#8a6d00'}, // Three 黄（深棕字）
+    4:{c:'#8be58b',d:'#4fbf4f',ink:'#fff'},    // Four 绿
+    5:{c:'#6fc3ff',d:'#3d8fe0',ink:'#fff'}     // Five 蓝
   };
   var BUBBLE_COUNT = 5;
   var score=0, running=false, countGoal=1, msgTimer=null, refillTimer=null;
@@ -134,7 +149,7 @@
     return free.length ? free[Math.floor(Math.random()*free.length)] : Math.floor(Math.random()*BUBBLE_COUNT);
   }
 
-  function spawn(forceNum){
+  function spawn(forceNum, scatter){
     var num;
     if(forceNum!==undefined){ num=forceNum; }
     else {
@@ -144,21 +159,23 @@
       num=cands[Math.floor(Math.random()*cands.length)];
     }
     var isTarget = (num===countGoal);
-    var size = 84 + Math.random()*40;
+    var size = 92 + Math.random()*28;
     var col = COLORS[num];
     var slot = freeSlot();
     var el = document.createElement('div');
-    el.className='bubble' + (isTarget ? ' target' : '');
+    el.className='bubble block' + (isTarget ? ' target' : '');
     el.style.width=size+'px'; el.style.height=size+'px';
     el.style.setProperty('--c',col.c); el.style.setProperty('--c-dark',col.d);
+    el.style.setProperty('--ink',col.ink);
     el.style.left=(slot*(100/BUBBLE_COUNT)+2+Math.random()*4)+'%';
-    // 随机负 delay：泡泡一出现就分布在不同高度（目标泡泡的呼吸动画单独计时）
+    // scatter 仅开场布阵分散高度；游戏中补充的积木从底部自然升起，不凭空出现
     var dur=15+Math.random()*5;
     var delay=(0.12+Math.random()*0.55)*dur;
     el.style.animationDuration = isTarget ? dur+'s, 1s' : dur+'s';
-    el.style.animationDelay = isTarget ? (-delay)+'s, 0s' : (-delay)+'s';
-    el.style.fontSize=(size*0.42)+'px';
-    el.innerHTML='<span class="num">'+num+'</span>';
+    el.style.animationDelay = scatter ? (isTarget ? (-delay)+'s, 0s' : (-delay)+'s') : (isTarget ? '0s, 0s' : '0s');
+    el.style.fontSize=(size*0.34)+'px';
+    // 数字积木：两只大眼睛 + 数字 + 微笑
+    el.innerHTML='<div class="eyes"><i></i><i></i></div><span class="num">'+num+'</span><div class="mouth"></div>';
     area.appendChild(el);
     var b={el:el,num:num,target:isTarget,slot:slot};
     bubbles.push(b);
@@ -170,11 +187,22 @@
     return b;
   }
   function removeB(b){ var i=bubbles.indexOf(b); if(i>=0)bubbles.splice(i,1); if(b.el.parentNode)b.el.parentNode.removeChild(b.el); }
-  function refill(){
+  function refill(scatter){
     if(!running) return;
-    if(!findBubble(countGoal)) spawn(countGoal);
+    var t = findBubble(countGoal);
+    if(t){
+      // 目标数字已在屏幕上：直接升级为目标（金色光圈+呼吸），双动画时长需分别设置
+      if(!t.target){
+        t.target = true;
+        t.el.classList.add('target');
+        t.el.style.animationDuration = t.el.style.animationDuration + ', 1s';
+        t.el.style.animationDelay = t.el.style.animationDelay + ', 0s';
+      }
+    } else {
+      spawn(countGoal, scatter);
+    }
     var guard=0;
-    while(bubbles.length<BUBBLE_COUNT && guard<20){ spawn(); guard++; }
+    while(bubbles.length<BUBBLE_COUNT && guard<20){ spawn(undefined, scatter); guard++; }
   }
   function pop(b){
     var r=b.el.getBoundingClientRect();
@@ -244,11 +272,10 @@
     running=true; score=0; countGoal=1;
     scoreEl.textContent='🌟 0';
     bubbles.slice().forEach(removeB);
-    spawn(countGoal);
-    refill();
+    refill(true);
     sayGoal();
     clearInterval(refillTimer);
-    refillTimer=setInterval(refill,2500);
+    refillTimer=setInterval(function(){ refill(false); },2500);
   };
 })();
 </script>
