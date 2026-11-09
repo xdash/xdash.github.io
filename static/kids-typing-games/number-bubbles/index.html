@@ -8,15 +8,16 @@
 <title>🔢 数字积木</title>
 <link rel="stylesheet" href="../style.css">
 <style>
-  /* 泡泡：从水底升起，飘到顶部外 */
+  /* 积木：从水底升起，飘到顶部外 */
   .bubble {
-    position: absolute; z-index: 10; border-radius: 50%;
+    position: absolute; z-index: 10;
     top: 100%;
     background: radial-gradient(circle at 32% 28%, rgba(255,255,255,.95), var(--c) 45%, var(--c-dark) 100%);
     box-shadow: inset -6px -8px 14px rgba(0,0,0,.14), 0 6px 16px rgba(31,94,150,.28);
     display: flex; align-items: center; justify-content: center;
     animation: bubbleFloat linear forwards;
     will-change: transform;
+    cursor: pointer;
   }
   .bubble::before {
     content: ''; position: absolute; left: 22%; top: 16%; width: 22%; height: 26%;
@@ -29,16 +30,6 @@
   @keyframes bubbleFloat {
     from { transform: translateY(0) scale(1); }
     to   { transform: translateY(-140vh) scale(1.02); }
-  }
-  /* 目标泡泡：金色光环呼吸 + 层级更高 */
-  .bubble.target {
-    z-index: 16;
-    box-shadow: 0 0 0 6px #ffe14d, 0 0 30px 10px rgba(255,225,77,.75), inset -6px -8px 14px rgba(0,0,0,.14);
-    animation: bubbleFloat linear forwards, targetPulse 1s ease-in-out infinite;
-  }
-  @keyframes targetPulse {
-    0%,100% { filter: brightness(1); }
-    50% { filter: brightness(1.2); }
   }
   /* 数字积木（NumberBlocks）：圆角方块 + 大眼睛 + 微笑 */
   .bubble.block { border-radius: 24%; }
@@ -71,13 +62,12 @@
   #goalBox {
     position: fixed; left: 50%; transform: translateX(-50%);
     bottom: clamp(64px, 12vh, 110px); z-index: 40;
-    background: rgba(255,255,255,.9); border-radius: 26px; padding: 8px 24px;
-    font-size: clamp(26px, 6vh, 44px); font-weight: 900; color: #1d4e8f;
+    background: rgba(255,255,255,.9); border-radius: 26px; padding: 12px 24px;
+    font-size: clamp(18px, 3.6vh, 28px); font-weight: 800; color: #1d4e8f;
     box-shadow: 0 4px 18px rgba(31,94,150,.3);
     display: flex; align-items: center; gap: 12px;
   }
-  #goalBox .star { font-size: .8em; }
-  #goalBox small { font-size: .4em; color: #6b93bb; font-weight: 600; }
+  #goalBox small { font-size: .6em; color: #6b93bb; font-weight: 600; }
   #goalBox.shake { animation: goalShake .4s; }
   @keyframes goalShake {
     0%,100% { transform: translateX(-50%); }
@@ -102,17 +92,16 @@
   <button class="btn" id="homeBtn">🏠 回家</button>
   <div class="score" id="score">🌟 0</div>
 </div>
-<div id="goalBox"><span class="star">⭐</span><span id="goalNum">1</span><small>按这个数字键</small></div>
+<div id="goalBox">🔢 积木上是什么数字，就按什么键<small>按一样的数字键，'啵'！</small></div>
 <div class="overlay" id="startOv">
   <div class="big">🔢 数字积木</div>
   <button class="start-btn" id="startBtn">开 始 玩</button>
-  <div class="hint">数字积木从水里冒出来啦！<br>看下面的大数字，在键盘上按一样的数字！<br>带金色光圈的积木就会 '啵' 地破掉～</div>
+  <div class="hint">数字积木（NumberBlocks）从水里冒出来啦！<br>积木上是什么数字，就在键盘上按什么数字！<br>'啵' 的一声戳破它，想戳哪个就戳哪个～</div>
 </div>
 <script>
 (function(){
   var area = document.getElementById('area');
   var scoreEl = document.getElementById('score');
-  var goalEl = document.getElementById('goalNum');
   var goalBox = document.getElementById('goalBox');
   var msgEl = document.getElementById('msg');
   var startOv = document.getElementById('startOv');
@@ -128,7 +117,7 @@
     5:{c:'#6fc3ff',d:'#3d8fe0',ink:'#fff'}     // Five 蓝
   };
   var BUBBLE_COUNT = 5;
-  var score=0, running=false, countGoal=1, msgTimer=null, refillTimer=null;
+  var score=0, running=false, msgTimer=null, refillTimer=null;
   var bubbles=[];
   var audioCtx=null;
   function ctx(){ if(!audioCtx){ try{ audioCtx=new(window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return audioCtx; }
@@ -142,12 +131,7 @@
   var PRAISE = ['太棒了', '真棒', '好厉害', '你真聪明', '好棒呀'];
   function praise(){ return PRAISE[Math.floor(Math.random()*PRAISE.length)]; }
   function speak(t){ try{ if(!('speechSynthesis' in window))return; window.speechSynthesis.cancel(); var u=new SpeechSynthesisUtterance(t); u.lang='zh-CN'; u.rate=0.75; u.pitch=1.3; window.speechSynthesis.speak(u);}catch(e){} }
-  function sayGoal(celebrate){
-    var text = celebrate ? (KID_NAME + '，' + praise() + '！按' + countGoal) : ('按' + countGoal);
-    speak(text);
-    goalEl.textContent = countGoal;
-  }
-  function flashMsg(txt){ msgEl.textContent=txt; msgEl.classList.remove('hidden'); clearTimeout(msgTimer); msgTimer=setTimeout(function(){ msgEl.classList.add('hidden'); },900); }
+  function flashMsg(txt){ msgEl.textContent=txt; msgEl.classList.remove('hidden'); clearTimeout(msgTimer); msgTimer=setTimeout(function(){ msgEl.classList.add('hidden'); },1100); }
 
   function findBubble(n){ for(var i=0;i<bubbles.length;i++){ if(bubbles[i].num===n) return bubbles[i]; } return null; }
   function freeSlot(){
@@ -158,65 +142,48 @@
     return free.length ? free[Math.floor(Math.random()*free.length)] : Math.floor(Math.random()*BUBBLE_COUNT);
   }
 
-  function spawn(forceNum, scatter){
-    var num;
-    if(forceNum!==undefined){ num=forceNum; }
-    else {
-      var cands=[];
-      for(var i=0;i<NUMBERS.length;i++){ var n=NUMBERS[i]; if(n!==countGoal && !findBubble(n)) cands.push(n); }
-      if(!cands.length) return;
-      num=cands[Math.floor(Math.random()*cands.length)];
-    }
-    var isTarget = (num===countGoal);
+  // 生成一个积木：随机挑屏幕上还没有的数字，1-5 每种最多一个
+  // scatter 仅开场布阵分散高度；游戏中补充的积木从底部自然升起，不凭空出现
+  function spawn(scatter){
+    var cands=[];
+    for(var i=0;i<NUMBERS.length;i++){ var n=NUMBERS[i]; if(!findBubble(n)) cands.push(n); }
+    if(!cands.length) return;
+    var num=cands[Math.floor(Math.random()*cands.length)];
     var size = 92 + Math.random()*28;
     var col = COLORS[num];
     var slot = freeSlot();
     var el = document.createElement('div');
-    el.className='bubble block' + (isTarget ? ' target' : '');
+    el.className='bubble block';
     el.style.width=size+'px'; el.style.height=size+'px';
     el.style.setProperty('--c',col.c); el.style.setProperty('--c-dark',col.d);
     el.style.setProperty('--ink',col.ink);
     el.style.left=(slot*(100/BUBBLE_COUNT)+2+Math.random()*4)+'%';
-    // scatter 仅开场布阵分散高度；游戏中补充的积木从底部自然升起，不凭空出现
-    var dur=(15+Math.random()*5)*3;   // 生命延长3倍：积木慢慢飘，宝宝时间更充裕
+    var dur=(15+Math.random()*5)*3;   // 生命延长3倍：积木慢慢飘，宝宝时间充裕
     var delay=(0.12+Math.random()*0.55)*dur;
-    el.style.animationDuration = isTarget ? dur+'s, 1s' : dur+'s';
-    el.style.animationDelay = scatter ? (isTarget ? (-delay)+'s, 0s' : (-delay)+'s') : (isTarget ? '0s, 0s' : '0s');
+    el.style.animationDuration = dur+'s';
+    el.style.animationDelay = scatter ? (-delay)+'s' : '0s';
     el.style.fontSize=(size*0.34)+'px';
     // 数字积木：两只大眼睛 + 数字 + 微笑
     el.innerHTML='<div class="eyes"><i></i><i></i></div><span class="num">'+num+'</span><div class="mouth"></div>';
     area.appendChild(el);
-    var b={el:el,num:num,target:isTarget,slot:slot};
+    var b={el:el,num:num,slot:slot};
     bubbles.push(b);
     el.addEventListener('animationend',function(){
-      var wasTarget=b.target;
       removeB(b);
-      if(running){ if(wasTarget) spawn(countGoal); refill(); }
+      if(running) refill();
     });
     return b;
   }
   function removeB(b){ var i=bubbles.indexOf(b); if(i>=0)bubbles.splice(i,1); if(b.el.parentNode)b.el.parentNode.removeChild(b.el); }
+  // 保持积木数量（补充的从底部自然升起）
   function refill(scatter){
     if(!running) return;
-    var t = findBubble(countGoal);
-    if(t){
-      // 目标数字已在屏幕上：直接升级为目标（金色光圈+呼吸），双动画时长需分别设置
-      if(!t.target){
-        t.target = true;
-        t.el.classList.add('target');
-        t.el.style.animationDuration = t.el.style.animationDuration + ', 1s';
-        t.el.style.animationDelay = t.el.style.animationDelay + ', 0s';
-      }
-    } else {
-      spawn(countGoal, scatter);
-    }
     var guard=0;
-    while(bubbles.length<BUBBLE_COUNT && guard<20){ spawn(undefined, scatter); guard++; }
+    while(bubbles.length<BUBBLE_COUNT && guard<20){ spawn(scatter); guard++; }
   }
   function pop(b){
     var r=b.el.getBoundingClientRect();
     var x=r.left+r.width/2, y=r.top+r.height/2;
-    var wasTarget=b.target;
     removeB(b);
     var w=document.createElement('div'); w.className='pop-wave';
     w.style.left=(x-40)+'px'; w.style.top=(y-40)+'px';
@@ -231,22 +198,14 @@
       (function(s){ setTimeout(function(){ s.parentNode&&s.parentNode.removeChild(s); },950); })(s);
     }
     popSound();
-    return wasTarget;
   }
 
-  function addScore(n){ score+=n; scoreEl.textContent='🌟 '+score; }
-
+  // 戳破积木（键盘或点击共用）：爆炸 + 音效 + 叫名字鼓励并读出数字
   function popBubble(b){
-    var wasTarget = pop(b);
-    ding(); addScore(1);
-    if(wasTarget){
-      // 换一个新目标（1-5，不重复当前），语音叫宝宝名字鼓励
-      var next;
-      do { next = 1+Math.floor(Math.random()*5); } while(next===countGoal);
-      countGoal = next;
-      flashMsg('🎉 ' + KID_NAME + '，' + praise() + '！');
-      sayGoal(true);
-    }
+    pop(b);
+    ding();
+    score++; scoreEl.textContent='🌟 '+score;
+    speak(b.num + '！' + KID_NAME + '，' + praise() + '！');
     refill();
   }
 
@@ -255,10 +214,10 @@
     var b = findBubble(n);
     if(b){ popBubble(b); }
     else {
+      // 屏幕上没有这个数字：温和提示，不自动生成（免得宝宝找不到）
       wrongSound();
       goalBox.classList.remove('shake'); void goalBox.offsetWidth; goalBox.classList.add('shake');
-      spawn(n);
-      flashMsg(n + ' 泡泡来了，再按一次！');
+      flashMsg('没有 ' + n + ' 积木哦，看看屏幕上的积木');
     }
   }
 
@@ -278,11 +237,11 @@
   startBtn.onclick=function(){
     try{ ctx().resume&&ctx().resume(); }catch(e){}
     startOv.classList.add('hidden');
-    running=true; score=0; countGoal=1;
+    running=true; score=0;
     scoreEl.textContent='🌟 0';
     bubbles.slice().forEach(removeB);
     refill(true);
-    sayGoal();
+    speak('看积木上的数字，按一样的键');
     clearInterval(refillTimer);
     refillTimer=setInterval(function(){ refill(false); },2500);
   };
