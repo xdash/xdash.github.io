@@ -8,16 +8,19 @@
 <title>🎈 字母气球</title>
 <link rel="stylesheet" href="../style.css">
 <style>
-  /* 气球 */
+  /* 气球：从屏幕底部外升起，飘到顶部外 */
   .balloon {
-    position: absolute; z-index: 10; width: 84px; height: 112px;
+    position: absolute; z-index: 10; width: 84px; height: 200px;
+    top: 100%;
     cursor: pointer;
-    animation: floatBalloon linear infinite;
+    animation: floatBalloon linear forwards;
     will-change: transform;
   }
+  /* 目标气球层级更高，不被普通气球遮挡 */
+  .balloon.target { z-index: 16; }
   @keyframes floatBalloon {
     from { transform: translateY(0) rotate(var(--tilt, 0deg)); }
-    to   { transform: translateY(-115vh) rotate(var(--tilt, 0deg)); }
+    to   { transform: translateY(-140vh) rotate(var(--tilt, 0deg)); }
   }
   .balloon .body {
     position: absolute; left: 7px; top: 0; width: 70px; height: 88px;
@@ -43,15 +46,22 @@
   .balloon .string {
     position: absolute; left: 39px; top: 100px; width: 2px; height: 100px;
     background: rgba(255,255,255,.8);
-    transform-origin: top center;
   }
-  .shake { animation: shake .4s; }
-  @keyframes shake {
-    0%,100% { transform: translateX(0); }
-    25% { transform: translateX(-7px); }
-    75% { transform: translateX(7px); }
+  /* 目标气球：金色光环 + 呼吸放大，一眼认出 */
+  .balloon.target .body {
+    box-shadow: 0 0 0 6px #ffe14d, 0 0 30px 10px rgba(255,225,77,.75), inset -6px -8px 12px rgba(0,0,0,.12);
+    animation: targetPulse 1s ease-in-out infinite;
   }
-  /* 爆炸动画 */
+  @keyframes targetPulse {
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.12); }
+  }
+  .shake { animation: shakeX .4s; }
+  @keyframes shakeX {
+    0%,100% { transform: translateX(-50%); }
+    25% { transform: translateX(calc(-50% - 8px)); }
+    75% { transform: translateX(calc(-50% + 8px)); }
+  }
   .burst {
     position: absolute; z-index: 20; pointer-events: none;
     font-size: 60px; animation: burstAnim .7s ease-out forwards;
@@ -83,7 +93,7 @@
 <div class="overlay" id="startOv">
   <div class="big">🎈 字母气球</div>
   <button class="start-btn" id="startBtn">开 始 玩</button>
-  <div class="hint">看看最下面的大字母，在键盘上找到它，按下去！<br>气球飞到天上，要快点找到它哦～</div>
+  <div class="hint">找到带金色光圈的气球，看看上面的字母，<br>在键盘上按出一样的字母，'啵'！<br>按其他字母也能戳破其他气球哦～</div>
 </div>
 <script>
 (function(){
@@ -99,10 +109,10 @@
     {c:'#ff7eb6', d:'#e04f8f'}, {c:'#ffb45e', d:'#e08a2e'}, {c:'#6fc3ff', d:'#3d8fe0'},
     {c:'#8be58b', d:'#4fbf4f'}, {c:'#c79bff', d:'#9a63e8'}, {c:'#ff8a6f', d:'#e05c3d'}
   ];
-  var score = 0, level = 1, running = false, popTimer = null;
-  var balloons = [];          // 活跃气球
-  var nextLetter = 0;         // 提示的目标字母索引 0-25
-  var lettersShown = {};      // 当前屏幕上出现的字母
+  var BALLOON_COUNT = 6;
+  var score = 0, running = false, msgTimer = null, refillTimer = null;
+  var balloons = [];            // 活跃气球 {el, li, target}
+  var nextLetter = 0;           // 目标字母索引 0-25
 
   var audioCtx = null;
   function ctx(){ if(!audioCtx){ try{ audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return audioCtx; }
@@ -129,7 +139,7 @@
     tone(180, 0.12, 'triangle', 0.2);
   }
   function ding(){ tone(880, 0.16, 'sine', 0.25); tone(1320, 0.24, 'sine', 0.18, 0.05); }
-  function wrongSound(){ tone(160, 0.2, 'square', 0.12); }
+  function wrongSound(){ tone(220, 0.16, 'sine', 0.15); }
 
   function speak(text){
     try{
@@ -142,95 +152,137 @@
   }
   function sayPrompt(){
     var ch = String.fromCharCode(65 + nextLetter);
-    speak('按' + ch);
-    promptEl.innerHTML = ch + '<small>按一下这个字母键</small>';
+    speak('找一找' + ch);
+    promptEl.innerHTML = '按 ' + ch + '<small>戳破带金色光圈的 ' + ch + ' 气球</small>';
   }
   function flashMsg(txt){
     msgEl.textContent = txt; msgEl.classList.remove('hidden');
-    clearTimeout(popTimer); popTimer = setTimeout(function(){ msgEl.classList.add('hidden'); }, 900);
+    clearTimeout(msgTimer); msgTimer = setTimeout(function(){ msgEl.classList.add('hidden'); }, 900);
   }
 
-  function letterUsed(l){ return lettersShown[l] || false; }
-  function spawnBalloon(){
-    var candidates = [];
-    for(var i=0;i<26;i++){
-      if(i===nextLetter) continue;
-      if(!lettersShown[i]) candidates.push(i);
+  function hasBalloon(li){
+    for(var i=0;i<balloons.length;i++){ if(balloons[i].li===li) return true; }
+    return false;
+  }
+  function findBalloon(li){
+    for(var i=0;i<balloons.length;i++){ if(balloons[i].li===li) return balloons[i]; }
+    return null;
+  }
+
+  // 水平槽位：6 个槽各放一个气球，避免重叠
+  function freeSlot(){
+    var used = {};
+    balloons.forEach(function(b){ used[b.slot] = true; });
+    var free = [];
+    for(var i=0;i<BALLOON_COUNT;i++){ if(!used[i]) free.push(i); }
+    return free.length ? free[Math.floor(Math.random()*free.length)] : Math.floor(Math.random()*BALLOON_COUNT);
+  }
+
+  // 生成一个气球。forceLi 指定字母；isTarget 标记为当前目标
+  function spawnBalloon(forceLi){
+    var li;
+    if(forceLi !== undefined){
+      li = forceLi;
+    } else {
+      // 随机挑一个屏幕上还没有的字母，避免重复
+      var cands = [];
+      for(var i=0;i<26;i++){ if(i!==nextLetter && !hasBalloon(i)) cands.push(i); }
+      if(!cands.length) return;
+      li = cands[Math.floor(Math.random()*cands.length)];
     }
-    // 目标字母每轮必须出现一次
-    var idx = (Math.random() < 0.55) ? nextLetter : (candidates.length ? candidates[Math.floor(Math.random()*candidates.length)] : nextLetter);
-    var li = idx;
+    var isTarget = (li === nextLetter);
     var col = COLORS[Math.floor(Math.random()*COLORS.length)];
+    var slot = freeSlot();
     var el = document.createElement('div');
-    el.className = 'balloon';
+    el.className = 'balloon' + (isTarget ? ' target' : '');
     el.style.setProperty('--c', col.c);
     el.style.setProperty('--c-dark', col.d);
     el.style.setProperty('--tilt', (Math.random()*14-7) + 'deg');
-    el.style.left = (6 + Math.random()*84) + '%';
-    el.style.animationDuration = (9 - level*0.6 + Math.random()*3) + 's';
-    var s = (0.8 + Math.random()*0.5);
-    el.style.transform = 'scale(' + s + ')';
+    el.style.left = (slot*(100/BALLOON_COUNT) + 2 + Math.random()*4) + '%';
+    // 随机负 delay：让气球开场就分布在屏幕可见区的中下部~中上部（进程 12%~67%）
+    var dur = 16 + Math.random()*6;
+    el.style.animationDuration = dur + 's';
+    el.style.animationDelay = (-(0.12 + Math.random()*0.55)*dur) + 's';
     el.innerHTML = '<div class="body"><span class="letter">' + String.fromCharCode(65+li) + '</span></div><div class="knot"></div><div class="string"></div>';
     area.appendChild(el);
-    var b = { el: el, li: li };
+    var b = { el: el, li: li, target: isTarget, slot: slot };
     balloons.push(b);
-    lettersShown[li] = true;
     el.addEventListener('animationend', function(){
-      // 气球飘出屏幕，若不匹配提示字母则重新生成（保持字母在循环里）
+      // 飘出屏幕：移除；若是目标气球，稍后补一个新的目标气球
+      var wasTarget = b.target;
       removeBalloon(b);
+      if(running){
+        if(wasTarget){ spawnBalloon(nextLetter); }
+        refill();
+      }
     });
+    return b;
   }
   function removeBalloon(b){
     var i = balloons.indexOf(b);
-    if(i>=0){ balloons.splice(i,1); delete lettersShown[b.li]; }
+    if(i>=0) balloons.splice(i,1);
     if(b.el.parentNode) b.el.parentNode.removeChild(b.el);
   }
+  // 保证屏幕上始终有目标气球 + 足够数量
+  function refill(){
+    if(!running) return;
+    if(!findBalloon(nextLetter)) spawnBalloon(nextLetter);
+    var guard = 0;
+    while(balloons.length < BALLOON_COUNT && guard < 20){ spawnBalloon(); guard++; }
+  }
   function burst(b){
+    var r = b.el.getBoundingClientRect();
+    var x = r.left + r.width/2, y = r.top + 44;
     removeBalloon(b);
     var ex = document.createElement('div');
     ex.className = 'burst';
     ex.textContent = '💥';
-    ex.style.left = b.x + 'px'; ex.style.top = b.y + 'px';
+    ex.style.left = (x-30) + 'px'; ex.style.top = (y-30) + 'px';
     area.appendChild(ex);
     setTimeout(function(){ ex.parentNode && ex.parentNode.removeChild(ex); }, 750);
-    var s = document.createElement('div');
-    s.className = 'spark';
-    s.style.left = b.x + 'px'; s.style.top = b.y + 'px';
-    s.style.setProperty('--dx', (Math.random()*120-60)+'px');
-    s.style.setProperty('--dy', (Math.random()*120-60)+'px');
-    s.textContent = '✨';
-    area.appendChild(s);
-    setTimeout(function(){ s.parentNode && s.parentNode.removeChild(s); }, 950);
+    for(var i=0;i<6;i++){
+      var s = document.createElement('div');
+      s.className = 'spark';
+      s.style.left = x + 'px'; s.style.top = y + 'px';
+      s.style.setProperty('--dx', (Math.random()*160-80)+'px');
+      s.style.setProperty('--dy', (Math.random()*160-80)+'px');
+      s.textContent = '✨';
+      area.appendChild(s);
+      (function(s){ setTimeout(function(){ s.parentNode && s.parentNode.removeChild(s); }, 950); })(s);
+    }
+    popSound();
   }
 
   function addScore(n){
     score += n; scoreEl.textContent = '🌟 ' + score;
-    if(score > 0 && score % 8 === 0 && level < 5){ level++; flashMsg('🎉 变快了！'); }
+  }
+
+  // 戳破一个气球（键盘或点击共用）
+  function popBalloon(b){
+    var wasTarget = b.target;
+    burst(b);
+    ding();
+    addScore(1);
+    if(wasTarget){
+      // 目标达成：进入下一个字母
+      nextLetter = (nextLetter + 1) % 26;
+      flashMsg('🎉 太棒了！');
+      sayPrompt();
+    }
+    refill();
   }
 
   function onKey(li){
     if(!running) return;
-    var ch = String.fromCharCode(65+li);
-    // 找匹配的气球：优先提示字母的气球
-    var target = null;
-    for(var i=0;i<balloons.length;i++){
-      if(balloons[i].li === li){ target = balloons[i]; break; }
-    }
-    if(target){
-      var r = target.el.getBoundingClientRect();
-      target.x = r.left + r.width/2; target.y = r.top + r.height/2;
-      burst(target);
-      ding();
-      addScore(1);
-      nextLetter = (nextLetter + 1) % 26;
-      // 空位补气球
-      if(balloons.length < 5) setTimeout(spawnBalloon, 300);
-      sayPrompt();
+    var b = findBalloon(li);
+    if(b){
+      popBalloon(b);
     } else {
+      // 屏幕上没有这个字母：温和提示 + 生成一个该字母气球，下次就能按
       wrongSound();
-      flashMsg('咦？没有这个气球哦');
-      // 屏幕上有这个字母但没显示时，生成一个（保证永远能玩）
-      if(!letterUsed(li)) spawnBalloon();
+      promptEl.classList.remove('shake'); void promptEl.offsetWidth; promptEl.classList.add('shake');
+      spawnBalloon(li);
+      flashMsg('看，' + String.fromCharCode(65+li) + ' 气球来了！');
     }
   }
 
@@ -241,17 +293,12 @@
     if(k.length===1 && k>='A' && k<='Z'){ e.preventDefault(); onKey(k.charCodeAt(0)-65); }
   });
   window.addEventListener('pointerdown', function(e){
-    // 触摸/鼠标点气球也可戳破（家长辅助）
     if(!running) return;
     var el = e.target.closest ? e.target.closest('.balloon') : null;
     if(el){
       var b = null;
       for(var i=0;i<balloons.length;i++){ if(balloons[i].el===el){ b=balloons[i]; break; } }
-      if(b){
-        var r = b.el.getBoundingClientRect();
-        b.x = r.left+r.width/2; b.y = r.top+r.height/2;
-        burst(b); ding(); addScore(1);
-      }
+      if(b) popBalloon(b);
     }
   });
 
@@ -259,10 +306,14 @@
     try{ ctx().resume && ctx().resume(); }catch(e){}
     startOv.classList.add('hidden');
     running = true;
-    score = 0; level = 1; nextLetter = 0; scoreEl.textContent = '🌟 0';
-    balloons.forEach(removeBalloon);
-    for(var i=0;i<6;i++) spawnBalloon();
+    score = 0; nextLetter = 0; scoreEl.textContent = '🌟 0';
+    balloons.slice().forEach(removeBalloon);
+    spawnBalloon(nextLetter);   // 先有目标 A
+    refill();
     sayPrompt();
+    // 定时巡检：防止意外情况下气球不足
+    clearInterval(refillTimer);
+    refillTimer = setInterval(refill, 2500);
   };
 })();
 </script>

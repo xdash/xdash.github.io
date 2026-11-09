@@ -21,29 +21,32 @@
     background: radial-gradient(circle at 32% 28%, #ffd9a0, #d98a4a 55%, #a85f2e);
     box-shadow: inset -10px -12px 20px rgba(0,0,0,.35); }
   .planet.ring { box-shadow: inset -10px -12px 20px rgba(0,0,0,.35), 0 0 0 6px rgba(255,214,150,.35), 0 0 0 12px rgba(255,214,150,.18); }
-  .star { position: absolute; z-index: 10; font-size: clamp(34px, 7vh, 52px);
-    animation: starFall linear infinite; will-change: transform; filter: drop-shadow(0 0 8px rgba(255,240,160,.8)); }
-  @keyframes starFall { from { transform: translateY(-6vh); } to { transform: translateY(105vh); } }
+  /* 星星：从顶部往下掉 */
+  .star { position: absolute; z-index: 10; top: -8vh;
+    font-size: clamp(40px, 8vh, 60px);
+    animation: starFall linear forwards; will-change: transform;
+    filter: drop-shadow(0 0 8px rgba(255,240,160,.8)); cursor: pointer; }
+  @keyframes starFall { from { transform: translateY(0); } to { transform: translateY(120vh); } }
   .star .letter {
     position: absolute; left: 50%; top: 42%; transform: translate(-50%,-50%);
     font-size: .5em; color: #fff; font-weight: 900; text-shadow: 0 0 8px rgba(0,0,0,.7);
   }
+  /* 火箭：可以左右移动去追星星 */
   .rocket {
     position: fixed; left: 50%; bottom: clamp(40px, 9vh, 80px); z-index: 30;
     font-size: clamp(60px, 14vh, 100px);
-    transition: left .35s cubic-bezier(.3,1.4,.4,1), transform .2s;
+    transition: left .3s cubic-bezier(.3,1.2,.4,1);
     filter: drop-shadow(0 10px 18px rgba(0,0,0,.4));
     transform: translateX(-50%);
   }
   .rocket.thrust { animation: thrust .18s; }
   @keyframes thrust { 0%{ transform: translateX(-50%) translateY(0) scale(1);} 50%{ transform: translateX(-50%) translateY(6px) scale(1.08);} 100%{ transform: translateX(-50%) translateY(0) scale(1);} }
-  .rocket.boost { animation: boost .45s ease-out; }
+  .rocket.boost { animation: boost .5s ease-out; }
   @keyframes boost {
     0% { transform: translateX(-50%) translateY(0) scale(1); }
     40% { transform: translateX(-50%) translateY(-46vh) scale(1.15); }
     100% { transform: translateX(-50%) translateY(0) scale(1); }
   }
-  .score-badge { font-size: clamp(16px,3vh,22px); }
   .beam {
     position: fixed; left: 50%; transform: translateX(-50%);
     bottom: clamp(36px,8vh,70px); width: 130px; height: 40vh; z-index: 25;
@@ -51,13 +54,14 @@
     clip-path: polygon(35% 0, 65% 0, 100% 100%, 0 100%);
     pointer-events: none; opacity: .7;
   }
+  #prompt { bottom: auto; top: clamp(64px, 10vh, 100px); }
 </style>
 </head>
 <body>
 <div class="sky"></div>
 <div class="planet" style="width:90px;height:90px;right:6%;top:8%;"></div>
 <div class="planet ring" style="width:56px;height:56px;left:8%;top:34%;"></div>
-<div class="beam"></div>
+<div class="beam" id="beam"></div>
 <div class="game-area" id="area"></div>
 <div class="rocket" id="rocket">🚀</div>
 <div class="hud">
@@ -68,86 +72,93 @@
 <div class="overlay" id="startOv">
   <div class="big">🚀 太空打字</div>
   <button class="start-btn" id="startBtn">发 射</button>
-  <div class="hint">字母星星一颗颗掉下来，<br>按出星星上的字母，火箭就飞上去抓住它！<br>抓得越多越厉害！</div>
+  <div class="hint">字母星星一颗颗掉下来，<br>按出星星上的字母，火箭就飞过去抓住它！<br>抓得越多越厉害！</div>
 </div>
 <script>
 (function(){
   var area=document.getElementById('area');
   var rocket=document.getElementById('rocket');
+  var beam=document.getElementById('beam');
   var scoreEl=document.getElementById('score');
   var promptEl=document.getElementById('prompt');
   var startOv=document.getElementById('startOv');
   var startBtn=document.getElementById('startBtn');
   document.getElementById('homeBtn').onclick=function(){ location.href='../'; };
 
-  var score=0, level=1, running=false, spawnTimer=null;
-  var stars=[], shown={};
+  var score=0, running=false, spawnTimer=null, promptTimer=null;
+  var stars=[];
   var audioCtx=null;
   function ctx(){ if(!audioCtx){ try{ audioCtx=new(window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return audioCtx; }
   function tone(f,d,tp,v,dl){ var c=ctx(); if(!c)return; var t=c.currentTime+(dl||0); var o=c.createOscillator(),g=c.createGain(); o.type=tp||'sine'; o.frequency.value=f; g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(v||0.25,t+0.02); g.gain.exponentialRampToValueAtTime(0.0001,t+d); o.connect(g); g.connect(c.destination); o.start(t); o.stop(t+d+0.05); }
   function whoosh(){ tone(300,0.3,'sawtooth',0.12); tone(900,0.25,'sine',0.15,0.06); }
   function ding(){ tone(980,0.14,'sine',0.28); tone(1470,0.2,'sine',0.18,0.06); }
-  function wrongSound(){ tone(150,0.18,'square',0.12); }
-  function speak(t){ try{ if(!('speechSynthesis' in window))return; window.speechSynthesis.cancel(); var u=new SpeechSynthesisUtterance(t); u.lang='zh-CN'; u.rate=0.8; u.pitch=1.2; window.speechSynthesis.speak(u);}catch(e){} }
+  function wrongSound(){ tone(220,0.16,'sine',0.15); }
+
+  function hasStar(li){ for(var i=0;i<stars.length;i++){ if(stars[i].li===li) return true; } return false; }
+  function findStar(li){ for(var i=0;i<stars.length;i++){ if(stars[i].li===li) return stars[i]; } return null; }
 
   function spawnStar(forceLetter){
     var li;
-    if(forceLetter!==undefined && !shown[forceLetter]) li=forceLetter;
+    if(forceLetter!==undefined){ li=forceLetter; }
     else {
       var cands=[];
-      for(var i=0;i<26;i++){ if(!shown[i]) cands.push(i); }
-      li = cands.length ? cands[Math.floor(Math.random()*cands.length)] : Math.floor(Math.random()*26);
+      for(var i=0;i<26;i++){ if(!hasStar(i)) cands.push(i); }
+      if(!cands.length) return;
+      li=cands[Math.floor(Math.random()*cands.length)];
     }
     var el=document.createElement('div');
     el.className='star';
-    el.textContent='⭐';
     var L=String.fromCharCode(65+li);
     el.innerHTML='⭐<span class="letter">'+L+'</span>';
-    el.style.left=(5+Math.random()*88)+'%';
-    el.style.animationDuration=(6.5-level*0.6+Math.random()*2.5)+'s';
+    el.style.left=(5+Math.random()*85)+'%';
+    el.style.animationDuration=(9+Math.random()*4)+'s';
     area.appendChild(el);
     var s={el:el,li:li};
-    stars.push(s); shown[li]=true;
-    el.addEventListener('animationend',function(){
-      // 星星落到屏幕底端消失，miss 了
-      removeStar(s);
-      if(running) speak('哦哦，掉了');
-    });
+    stars.push(s);
+    el.addEventListener('animationend',function(){ removeStar(s); });
+    return s;
   }
   function removeStar(s){
     var i=stars.indexOf(s); if(i>=0) stars.splice(i,1);
-    delete shown[s.li];
     if(s.el.parentNode) s.el.parentNode.removeChild(s.el);
   }
+  function flashPrompt(html){
+    promptEl.innerHTML=html;
+    clearTimeout(promptTimer);
+    promptTimer=setTimeout(function(){
+      promptEl.innerHTML='⭐ 字母星星掉下来啦！<small>按键盘上的字母，火箭飞上去抓住它！</small>';
+    },1600);
+  }
+
   function collect(s){
     var r=s.el.getBoundingClientRect();
+    var x=r.left+r.width/2, y=r.top+r.height/2;
     removeStar(s);
-    // 火箭飞上去的视觉
+    // 火箭先水平移到星星下方，再加速上冲
+    rocket.style.left = x+'px';
+    beam.style.left = x+'px';
     rocket.classList.remove('boost'); void rocket.offsetWidth; rocket.classList.add('boost');
-    // 抓到的位置喷火花
-    var sp=document.createElement('div'); sp.className='spark';
-    sp.style.left=(r.left+r.width/2)+'px'; sp.style.top=(r.top+r.height/2)+'px';
-    sp.style.setProperty('--dx',(Math.random()*120-60)+'px'); sp.style.setProperty('--dy',(Math.random()*120-60)+'px');
-    sp.textContent='✨'; area.appendChild(sp);
-    setTimeout(function(){ sp.parentNode&&sp.parentNode.removeChild(sp); },950);
-    ding();
+    for(var i=0;i<6;i++){
+      var sp=document.createElement('div'); sp.className='spark';
+      sp.style.left=x+'px'; sp.style.top=y+'px';
+      sp.style.setProperty('--dx',(Math.random()*140-70)+'px'); sp.style.setProperty('--dy',(Math.random()*140-70)+'px');
+      sp.textContent='✨'; area.appendChild(sp);
+      (function(sp){ setTimeout(function(){ sp.parentNode&&sp.parentNode.removeChild(sp); },950); })(sp);
+    }
+    ding(); whoosh();
     score++; scoreEl.textContent='⭐ '+score;
-    if(score>0 && score%6===0 && level<4){ level++; }
-    promptEl.innerHTML='抓到啦！再来一个！<small>按字母键抓星星</small>';
-    setTimeout(function(){ promptEl.innerHTML='⭐ 字母星星掉下来啦！<small>按键盘上的字母，火箭飞上去抓住它！</small>'; }, 1500);
+    flashPrompt('抓到 '+String.fromCharCode(65+s.li)+' 啦！🎉<small>继续抓下一颗星星</small>');
   }
 
   function onLetter(li){
     if(!running) return;
-    var target=null;
-    for(var i=0;i<stars.length;i++){ if(stars[i].li===li){ target=stars[i]; break; } }
-    if(target){
-      collect(target); whoosh();
-    } else {
+    var s=findStar(li);
+    if(s){ collect(s); }
+    else {
       wrongSound();
       rocket.classList.remove('thrust'); void rocket.offsetWidth; rocket.classList.add('thrust');
-      // 没这个星星时补一个，保证能玩
-      if(!shown[li]) spawnStar(li);
+      spawnStar(li);
+      flashPrompt(String.fromCharCode(65+li)+' 星星来了，再按一次！<small>按字母键抓星星</small>');
     }
   }
 
@@ -161,20 +172,21 @@
     if(!running) return;
     var el=e.target.closest?e.target.closest('.star'):null;
     if(el){ var s=null; for(var i=0;i<stars.length;i++){ if(stars[i].el===el){s=stars[i];break;} }
-      if(s){ collect(s); whoosh(); } }
+      if(s) collect(s); }
   });
 
   startBtn.onclick=function(){
     try{ ctx().resume&&ctx().resume(); }catch(e){}
     startOv.classList.add('hidden');
-    running=true; score=0; level=1; scoreEl.textContent='⭐ 0';
-    stars.forEach(removeStar);
+    running=true; score=0; scoreEl.textContent='⭐ 0';
+    rocket.style.left='50%'; beam.style.left='50%';
+    stars.slice().forEach(removeStar);
     clearInterval(spawnTimer);
     for(var i=0;i<5;i++) spawnStar();
     spawnTimer=setInterval(function(){
       if(!running){ clearInterval(spawnTimer); return; }
-      if(stars.length<8) spawnStar();
-    }, 1800);
+      if(stars.length<7) spawnStar();
+    }, 2200);
   };
 })();
 </script>

@@ -13,29 +13,41 @@
     background: repeating-linear-gradient(90deg, #a9825a 0 18px, #8a6644 18px 36px);
     z-index: 20; border-radius: 4px;
   }
-  .train { position: fixed; left: 0; bottom: clamp(96px, 17vh, 158px); z-index: 30;
-    display: flex; align-items: flex-end; pointer-events: none; }
+  /* 火车：车厢变长时整体向左平移，像真的在往前开 */
+  .train { position: fixed; left: 12px; bottom: clamp(102px, 17.5vh, 162px); z-index: 30;
+    display: flex; align-items: flex-end; pointer-events: none;
+    transition: transform .5s ease; }
   .car {
-    width: clamp(64px, 10vw, 96px); height: clamp(70px, 12vh, 100px);
+    position: relative; flex: 0 0 auto;
+    width: clamp(56px, 8.5vw, 84px); height: clamp(62px, 11vh, 92px);
+    margin-right: 8px;
     background: linear-gradient(160deg, var(--cc), var(--cd));
-    border-radius: 14px 14px 10px 10px;
+    border-radius: 14px 14px 8px 8px;
     display: flex; align-items: center; justify-content: center;
     box-shadow: inset 0 -8px 0 rgba(0,0,0,.15), 0 6px 14px rgba(20,60,110,.3);
-    font-size: clamp(26px, 5vh, 40px); font-weight: 900; color: #fff;
+    font-size: clamp(24px, 4.6vh, 36px); font-weight: 900; color: #fff;
     text-shadow: 0 2px 4px rgba(0,0,0,.4);
-    animation: carArrive .5s cubic-bezier(.2,.9,.3,1.2);
   }
+  /* 车轮 */
+  .car::before, .car::after {
+    content: ''; position: absolute; bottom: -12px; width: 20px; height: 20px;
+    background: radial-gradient(circle at 35% 30%, #6b6b6b, #2c2c2c 70%);
+    border-radius: 50%; border: 3px solid #444;
+  }
+  .car::before { left: 10px; }
+  .car::after { right: 10px; }
+  .car.new { animation: carArrive .5s cubic-bezier(.2,.9,.3,1.2); }
   @keyframes carArrive {
-    from { transform: translateX(-120px) scale(.8); opacity: 0; }
-    to { transform: translateX(0) scale(1); opacity: 1; }
+    from { transform: translateY(-60px) scale(.6); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
   }
   .car .window {
-    position: absolute; top: 10px; left: 14px; right: 14px; height: 26%;
+    position: absolute; top: 8px; left: 12px; right: 12px; height: 26%;
     background: rgba(255,255,255,.55); border-radius: 8px;
   }
   .car.engine {
-    width: clamp(74px, 12vw, 110px); height: clamp(84px, 15vh, 118px);
-    border-radius: 22px 22px 12px 12px;
+    width: clamp(66px, 10vw, 96px); height: clamp(76px, 13.5vh, 108px);
+    border-radius: 22px 22px 10px 10px;
   }
   .engine .smoke {
     position: absolute; top: -34px; left: 14px; font-size: clamp(18px, 3.4vh, 28px);
@@ -46,28 +58,37 @@
     25% { opacity: .9; }
     100% { transform: translateY(-34px) scale(1.4); opacity: 0; }
   }
-  .train .gap { width: clamp(10px, 2vw, 18px); align-self: flex-end; height: 10px; }
-  .coupler { width: clamp(10px,2vw,18px); height: 12px; background: #5b4328; align-self: flex-end; border-radius: 3px; }
-  .star-line { position: fixed; left: 50%; transform: translateX(-50%); bottom: 12vh; z-index: 40; }
+  .star-line { position: fixed; left: 50%; transform: translateX(-50%); bottom: 30vh; z-index: 40; }
   .target-key {
     background: #ffcf5e; color: #7a4d00; border: none; border-radius: 26px;
-    padding: 8px 22px; font-size: clamp(20px, 4.4vh, 32px); font-weight: 900;
+    padding: 8px 26px; font-size: clamp(26px, 5.4vh, 40px); font-weight: 900;
     box-shadow: 0 4px 0 #c79a2a, 0 8px 16px rgba(20,60,110,.3);
   }
-  .done-flag { font-size: clamp(40px, 9vh, 66px); }
+  .target-key.shake { animation: keyShake .4s; }
+  @keyframes keyShake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+  }
+  .target-label { text-align: center; color: #fff; font-weight: 700; margin-top: 8px;
+    font-size: clamp(14px, 2.6vh, 20px); text-shadow: 0 2px 4px rgba(31,94,150,.5); }
   .congrats {
     position: fixed; inset: 0; z-index: 70; display: none;
     background: rgba(20,60,110,.5);
     justify-content: center; align-items: center; flex-direction: column; gap: 18px; text-align: center;
   }
   .congrats.show { display: flex; }
+  .done-flag { font-size: clamp(40px, 9vh, 66px); }
 </style>
 </head>
 <body>
 <div class="sky"></div>
 <div class="track"></div>
 <div class="train" id="train"></div>
-<div class="star-line"><button class="target-key" id="targetKey">A</button></div>
+<div class="star-line">
+  <button class="target-key" id="targetKey">A</button>
+  <div class="target-label">按这个字母，挂新车厢</div>
+</div>
 <div class="hud">
   <button class="btn" id="homeBtn">🏠 回家</button>
   <div class="score" id="score">🚂 车厢 0</div>
@@ -77,7 +98,7 @@
   <button class="start-btn" id="startBtn">开 始 玩</button>
   <div class="hint">看看上面的字母，在键盘上按出来！<br>按对了，小火车就会长出一节新车厢！<br>从 A 一直装到 Z，把火车装得长长的！</div>
 </div>
-<div class="congrats" id="congrats">
+<div class="overlay congrats" id="congrats">
   <div class="done-flag">🎉</div>
   <div class="big">小火车装好啦！<br>你真棒！</div>
   <button class="start-btn" id="againBtn">再 玩 一 次</button>
@@ -98,33 +119,30 @@
     {c:'#4dc7ff',d:'#1f9ad4'}, {c:'#7a7dff',d:'#4f52d9'}, {c:'#c97fff',d:'#9c4fe0'},
     {c:'#ff9de2',d:'#d46bb4'}, {c:'#7ee8c0',d:'#3fbf8f'}
   ];
-  var cur = 0;         // 下一个要拼的车厢字母索引 0-25
+  var cur = 0;
   var running = false;
   var audioCtx = null;
   function ctx(){ if(!audioCtx){ try{ audioCtx=new(window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return audioCtx; }
   function tone(f,d,tp,v,dl){ var c=ctx(); if(!c)return; var t=c.currentTime+(dl||0); var o=c.createOscillator(),g=c.createGain(); o.type=tp||'sine'; o.frequency.value=f; g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(v||0.25,t+0.02); g.gain.exponentialRampToValueAtTime(0.0001,t+d); o.connect(g); g.connect(c.destination); o.start(t); o.stop(t+d+0.05); }
   function chime(){ tone(660,0.14,'sine',0.25); tone(880,0.14,'sine',0.25,0.1); tone(1320,0.22,'sine',0.2,0.2); }
   function whistle(){ tone(523,0.25,'square',0.18); tone(784,0.25,'square',0.18,0.22); }
-  function wrongSound(){ tone(150,0.18,'square',0.12); }
+  function wrongSound(){ tone(220,0.16,'sine',0.15); }
   function speak(t){ try{ if(!('speechSynthesis' in window))return; window.speechSynthesis.cancel(); var u=new SpeechSynthesisUtterance(t); u.lang='zh-CN'; u.rate=0.75; u.pitch=1.3; window.speechSynthesis.speak(u);}catch(e){} }
 
-  function renderTrain(){
-    trainEl.innerHTML='';
-    // 火车头
+  function buildEngine(){
     var eng=document.createElement('div');
     eng.className='car engine';
     eng.style.setProperty('--cc','#ff5252'); eng.style.setProperty('--cd','#c23030');
     eng.innerHTML='<div class="window"></div><div class="smoke">💨</div>🔥';
-    trainEl.appendChild(eng);
-    for(var i=0;i<cur;i++){
-      var col=CAR_COLORS[i % CAR_COLORS.length];
-      var car=document.createElement('div');
-      car.className='car';
-      car.style.setProperty('--cc',col.c); car.style.setProperty('--cd',col.d);
-      car.innerHTML='<div class="window"></div>'+String.fromCharCode(65+i);
-      trainEl.appendChild(car);
-    }
-    scoreEl.textContent='🚂 车厢 '+cur;
+    return eng;
+  }
+
+  // 车厢变长后，把火车整体左移，让新车厢始终看得见（火车前进感）
+  function scrollTrain(){
+    var total = trainEl.scrollWidth;
+    var visible = window.innerWidth - 24;
+    var shift = Math.max(0, total - visible);
+    trainEl.style.transform = 'translateX(' + (-shift) + 'px)';
   }
 
   function nextTarget(){
@@ -135,6 +153,7 @@
 
   function finish(){
     whistle();
+    document.querySelector('.star-line').style.display='none';
     congratsEl.classList.add('show');
     running=false;
   }
@@ -142,11 +161,20 @@
   function onLetter(li){
     if(!running) return;
     if(li===cur){
-      chime(); cur++;
-      renderTrain();
+      chime();
+      var col=CAR_COLORS[cur % CAR_COLORS.length];
+      var car=document.createElement('div');
+      car.className='car new';
+      car.style.setProperty('--cc',col.c); car.style.setProperty('--cd',col.d);
+      car.innerHTML='<div class="window"></div>'+String.fromCharCode(65+cur);
+      trainEl.appendChild(car);
+      cur++;
+      scoreEl.textContent='🚂 车厢 '+cur;
+      scrollTrain();
       if(cur<26) nextTarget(); else finish();
     } else {
       wrongSound();
+      targetEl.classList.remove('shake'); void targetEl.offsetWidth; targetEl.classList.add('shake');
     }
   }
 
@@ -161,8 +189,12 @@
     try{ ctx().resume&&ctx().resume(); }catch(e){}
     startOv.classList.add('hidden');
     congratsEl.classList.remove('show');
+    document.querySelector('.star-line').style.display='';
     cur=0; running=true;
-    renderTrain();
+    trainEl.innerHTML='';
+    trainEl.style.transform='translateX(0)';
+    trainEl.appendChild(buildEngine());
+    scoreEl.textContent='🚂 车厢 0';
     nextTarget();
   }
   startBtn.onclick=startGame;

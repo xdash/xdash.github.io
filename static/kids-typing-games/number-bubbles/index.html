@@ -8,12 +8,14 @@
 <title>🫧 数字泡泡</title>
 <link rel="stylesheet" href="../style.css">
 <style>
+  /* 泡泡：从水底升起，飘到顶部外 */
   .bubble {
     position: absolute; z-index: 10; border-radius: 50%;
+    top: 100%;
     background: radial-gradient(circle at 32% 28%, rgba(255,255,255,.95), var(--c) 45%, var(--c-dark) 100%);
     box-shadow: inset -6px -8px 14px rgba(0,0,0,.14), 0 6px 16px rgba(31,94,150,.28);
     display: flex; align-items: center; justify-content: center;
-    animation: bubbleFloat linear infinite;
+    animation: bubbleFloat linear forwards;
     will-change: transform;
   }
   .bubble::before {
@@ -26,7 +28,17 @@
   }
   @keyframes bubbleFloat {
     from { transform: translateY(0) scale(1); }
-    to   { transform: translateY(-115vh) scale(1.02); }
+    to   { transform: translateY(-140vh) scale(1.02); }
+  }
+  /* 目标泡泡：金色光环呼吸 + 层级更高 */
+  .bubble.target {
+    z-index: 16;
+    box-shadow: 0 0 0 6px #ffe14d, 0 0 30px 10px rgba(255,225,77,.75), inset -6px -8px 14px rgba(0,0,0,.14);
+    animation: bubbleFloat linear forwards, targetPulse 1s ease-in-out infinite;
+  }
+  @keyframes targetPulse {
+    0%,100% { filter: brightness(1); }
+    50% { filter: brightness(1.2); }
   }
   .pop-wave { position: absolute; z-index: 15; pointer-events: none;
     border-radius: 50%; animation: popWave .5s ease-out forwards; }
@@ -36,12 +48,13 @@
   }
   .water { position: fixed; left: 0; right: 0; bottom: 0; height: 16vh; z-index: 5;
     background: linear-gradient(#79c9f5, #4aa8e8); border-radius: 48% 52% 0 0 / 26% 30% 0 0; }
-  .fish { position: absolute; z-index: 6; font-size: clamp(24px, 6vh, 46px); animation: fishSwim 18s linear infinite; }
+  /* 鱼：🐠🐟 emoji 头朝左，从右往左游 = 正向；固定在水层里 */
+  .fish { position: absolute; z-index: 6; font-size: clamp(24px, 6vh, 46px);
+    left: 110%; bottom: 3vh; animation: fishSwim linear infinite; animation-delay: -6s; }
+  .fish.f2 { font-size: clamp(18px,4.5vh,34px); bottom: 8vh; animation-duration: 26s; animation-delay: -16s; }
   @keyframes fishSwim {
-    from { transform: translateX(-12vw) scaleX(1); }
-    49% { transform: translateX(112vw) scaleX(1); }
-    50% { transform: translateX(112vw) scaleX(-1); }
-    99% { transform: translateX(-12vw) scaleX(-1); }
+    from { transform: translateX(0) scaleX(1); }
+    to   { transform: translateX(-135vw) scaleX(1); }
   }
   #goalBox {
     position: fixed; left: 50%; transform: translateX(-50%);
@@ -53,29 +66,43 @@
   }
   #goalBox .star { font-size: .8em; }
   #goalBox small { font-size: .4em; color: #6b93bb; font-weight: 600; }
+  #goalBox.shake { animation: goalShake .4s; }
+  @keyframes goalShake {
+    0%,100% { transform: translateX(-50%); }
+    25% { transform: translateX(calc(-50% - 10px)); }
+    75% { transform: translateX(calc(-50% + 10px)); }
+  }
+  #msg { position: fixed; left: 50%; top: 20%; transform: translateX(-50%); z-index: 50;
+    background: rgba(255,255,255,.95); border-radius: 22px; padding: 12px 26px;
+    font-size: clamp(24px, 5vh, 40px); font-weight: 800; color: #e05a2a;
+    box-shadow: 0 6px 24px rgba(31,94,150,.35); transition: opacity .3s; pointer-events: none; }
+  #msg.hidden { opacity: 0; }
 </style>
 </head>
 <body>
 <div class="sky"></div>
 <div class="water"></div>
 <div class="fish">🐠</div>
-<div class="fish" style="animation-delay:-9s; animation-duration:24s; font-size:clamp(18px,4.5vh,34px)">🐟</div>
+<div class="fish f2">🐟</div>
 <div class="game-area" id="area"></div>
+<div id="msg" class="hidden"></div>
 <div class="hud">
   <button class="btn" id="homeBtn">🏠 回家</button>
   <div class="score" id="score">🌟 0</div>
 </div>
-<div id="goalBox"><span class="star">⭐</span><span id="goalNum">1</span><small>按一样的数字泡泡</small></div>
+<div id="goalBox"><span class="star">⭐</span><span id="goalNum">1</span><small>按这个数字键</small></div>
 <div class="overlay" id="startOv">
   <div class="big">🫧 数字泡泡</div>
   <button class="start-btn" id="startBtn">开 始 玩</button>
-  <div class="hint">看中间的大数字，在键盘上找到同样的数字，按下去！<br>泡泡里也有数字，按对就 '啵' 地破掉！</div>
+  <div class="hint">看下面的大数字，在键盘上按一样的数字！<br>带金色光圈的泡泡就会 '啵' 地破掉～<br>按其他数字也能戳破其他泡泡哦！</div>
 </div>
 <script>
 (function(){
   var area = document.getElementById('area');
   var scoreEl = document.getElementById('score');
   var goalEl = document.getElementById('goalNum');
+  var goalBox = document.getElementById('goalBox');
+  var msgEl = document.getElementById('msg');
   var startOv = document.getElementById('startOv');
   var startBtn = document.getElementById('startBtn');
   document.getElementById('homeBtn').onclick = function(){ location.href='../'; };
@@ -85,65 +112,116 @@
     1:{c:'#ff7eb6',d:'#e04f8f'}, 2:{c:'#ffb45e',d:'#e08a2e'}, 3:{c:'#6fc3ff',d:'#3d8fe0'},
     4:{c:'#8be58b',d:'#4fbf4f'}, 5:{c:'#c79bff',d:'#9a63e8'}
   };
-  var score=0, level=1, running=false, countGoal=0;
-  var bubbles=[], shown={};
+  var BUBBLE_COUNT = 5;
+  var score=0, running=false, countGoal=1, msgTimer=null, refillTimer=null;
+  var bubbles=[];
   var audioCtx=null;
   function ctx(){ if(!audioCtx){ try{ audioCtx=new(window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return audioCtx; }
   function tone(f,d,tp,v,dl){ var c=ctx(); if(!c)return; var tt=c.currentTime+(dl||0); var o=c.createOscillator(),g=c.createGain(); o.type=tp||'sine'; o.frequency.value=f; g.gain.setValueAtTime(0.0001,tt); g.gain.exponentialRampToValueAtTime(v||0.25,tt+0.02); g.gain.exponentialRampToValueAtTime(0.0001,tt+d); o.connect(g); g.connect(c.destination); o.start(tt); o.stop(tt+d+0.05); }
   function popSound(){ var c=ctx(); if(!c)return; var t=c.currentTime; var b=c.createBuffer(1,c.sampleRate*0.16,c.sampleRate); var d=b.getChannelData(0); for(var i=0;i<d.length;i++){ d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2);} var s=c.createBufferSource(); s.buffer=b; var g=c.createGain(); g.gain.setValueAtTime(0.45,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.16); s.connect(g); g.connect(c.destination); s.start(t); }
   function ding(){ tone(980,0.14,'sine',0.25); tone(1470,0.22,'sine',0.16,0.05); }
-  function wrongSound(){ tone(150,0.18,'square',0.12); }
+  function wrongSound(){ tone(220,0.16,'sine',0.15); }
   function speak(t){ try{ if(!('speechSynthesis' in window))return; window.speechSynthesis.cancel(); var u=new SpeechSynthesisUtterance(t); u.lang='zh-CN'; u.rate=0.75; u.pitch=1.3; window.speechSynthesis.speak(u);}catch(e){} }
   function sayGoal(){ speak('按' + countGoal); goalEl.textContent = countGoal; }
+  function flashMsg(txt){ msgEl.textContent=txt; msgEl.classList.remove('hidden'); clearTimeout(msgTimer); msgTimer=setTimeout(function(){ msgEl.classList.add('hidden'); },900); }
 
-  function spawn(){
-    // 目标数字至少要有一个在屏幕上
-    var num = (Math.random()<0.5) ? countGoal : NUMBERS[Math.floor(Math.random()*NUMBERS.length)];
-    var size = 74 + Math.random()*46;
+  function findBubble(n){ for(var i=0;i<bubbles.length;i++){ if(bubbles[i].num===n) return bubbles[i]; } return null; }
+  function freeSlot(){
+    var used={};
+    bubbles.forEach(function(b){ used[b.slot]=true; });
+    var free=[];
+    for(var i=0;i<BUBBLE_COUNT;i++){ if(!used[i]) free.push(i); }
+    return free.length ? free[Math.floor(Math.random()*free.length)] : Math.floor(Math.random()*BUBBLE_COUNT);
+  }
+
+  function spawn(forceNum){
+    var num;
+    if(forceNum!==undefined){ num=forceNum; }
+    else {
+      var cands=[];
+      for(var i=0;i<NUMBERS.length;i++){ var n=NUMBERS[i]; if(n!==countGoal && !findBubble(n)) cands.push(n); }
+      if(!cands.length) return;
+      num=cands[Math.floor(Math.random()*cands.length)];
+    }
+    var isTarget = (num===countGoal);
+    var size = 84 + Math.random()*40;
     var col = COLORS[num];
+    var slot = freeSlot();
     var el = document.createElement('div');
-    el.className='bubble';
+    el.className='bubble' + (isTarget ? ' target' : '');
     el.style.width=size+'px'; el.style.height=size+'px';
     el.style.setProperty('--c',col.c); el.style.setProperty('--c-dark',col.d);
-    el.style.left=(4+Math.random()*88)+'%';
-    el.style.animationDuration=(8.5-level*0.7+Math.random()*3)+'s';
+    el.style.left=(slot*(100/BUBBLE_COUNT)+2+Math.random()*4)+'%';
+    // 随机负 delay：泡泡一出现就分布在不同高度（目标泡泡的呼吸动画单独计时）
+    var dur=15+Math.random()*5;
+    var delay=(0.12+Math.random()*0.55)*dur;
+    el.style.animationDuration = isTarget ? dur+'s, 1s' : dur+'s';
+    el.style.animationDelay = isTarget ? (-delay)+'s, 0s' : (-delay)+'s';
     el.style.fontSize=(size*0.42)+'px';
     el.innerHTML='<span class="num">'+num+'</span>';
     area.appendChild(el);
-    var b={el:el,num:num};
-    bubbles.push(b); shown[num]=true;
-    el.addEventListener('animationend',function(){ removeB(b); });
+    var b={el:el,num:num,target:isTarget,slot:slot};
+    bubbles.push(b);
+    el.addEventListener('animationend',function(){
+      var wasTarget=b.target;
+      removeB(b);
+      if(running){ if(wasTarget) spawn(countGoal); refill(); }
+    });
+    return b;
   }
-  function removeB(b){ var i=bubbles.indexOf(b); if(i>=0){bubbles.splice(i,1);} if(b.el.parentNode)b.el.parentNode.removeChild(b.el); }
+  function removeB(b){ var i=bubbles.indexOf(b); if(i>=0)bubbles.splice(i,1); if(b.el.parentNode)b.el.parentNode.removeChild(b.el); }
+  function refill(){
+    if(!running) return;
+    if(!findBubble(countGoal)) spawn(countGoal);
+    var guard=0;
+    while(bubbles.length<BUBBLE_COUNT && guard<20){ spawn(); guard++; }
+  }
   function pop(b){
     var r=b.el.getBoundingClientRect();
+    var x=r.left+r.width/2, y=r.top+r.height/2;
+    var wasTarget=b.target;
     removeB(b);
     var w=document.createElement('div'); w.className='pop-wave';
-    w.style.left=(r.left+r.width/2-40)+'px'; w.style.top=(r.top+r.height/2-40)+'px';
+    w.style.left=(x-40)+'px'; w.style.top=(y-40)+'px';
     w.style.width='80px'; w.style.height='80px';
     w.style.background='radial-gradient(circle, rgba(255,255,255,.95), transparent 70%)';
     area.appendChild(w); setTimeout(function(){ w.parentNode&&w.parentNode.removeChild(w); },520);
-    var s=document.createElement('div'); s.className='spark';
-    s.style.left=(r.left+r.width/2)+'px'; s.style.top=(r.top+r.height/2)+'px';
-    s.style.setProperty('--dx',(Math.random()*110-55)+'px'); s.style.setProperty('--dy',(Math.random()*110-55)+'px');
-    s.textContent='✨'; area.appendChild(s); setTimeout(function(){ s.parentNode&&s.parentNode.removeChild(s); },950);
+    for(var i=0;i<5;i++){
+      var s=document.createElement('div'); s.className='spark';
+      s.style.left=x+'px'; s.style.top=y+'px';
+      s.style.setProperty('--dx',(Math.random()*140-70)+'px'); s.style.setProperty('--dy',(Math.random()*140-70)+'px');
+      s.textContent='✨'; area.appendChild(s);
+      (function(s){ setTimeout(function(){ s.parentNode&&s.parentNode.removeChild(s); },950); })(s);
+    }
     popSound();
+    return wasTarget;
   }
 
-  function addScore(n){ score+=n; scoreEl.textContent='🌟 '+score;
-    if(score>0 && score%8===0 && level<5){ level++; } }
+  function addScore(n){ score+=n; scoreEl.textContent='🌟 '+score; }
+
+  function popBubble(b){
+    var wasTarget = pop(b);
+    ding(); addScore(1);
+    if(wasTarget){
+      // 换一个新目标（1-5，不重复当前）
+      var next;
+      do { next = 1+Math.floor(Math.random()*5); } while(next===countGoal);
+      countGoal = next;
+      flashMsg('🎉 真棒！');
+      sayGoal();
+    }
+    refill();
+  }
 
   function onNum(n){
     if(!running) return;
-    if(n===countGoal){
-      var target=null;
-      for(var i=0;i<bubbles.length;i++){ if(bubbles[i].num===n){ target=bubbles[i]; break; } }
-      if(target){ pop(target); ding(); addScore(1); }
-      countGoal = 1 + Math.floor(Math.random()*5);
-      while(bubbles.length<5) spawn();
-      sayGoal();
-    } else {
+    var b = findBubble(n);
+    if(b){ popBubble(b); }
+    else {
       wrongSound();
+      goalBox.classList.remove('shake'); void goalBox.offsetWidth; goalBox.classList.add('shake');
+      spawn(n);
+      flashMsg(n + ' 泡泡来了，再按一次！');
     }
   }
 
@@ -157,18 +235,20 @@
     if(!running) return;
     var el=e.target.closest?e.target.closest('.bubble'):null;
     if(el){ var b=null; for(var i=0;i<bubbles.length;i++){ if(bubbles[i].el===el){b=bubbles[i];break;} }
-      if(b && b.num===countGoal){ pop(b); ding(); addScore(1);
-        countGoal=1+Math.floor(Math.random()*5); while(bubbles.length<5)spawn(); sayGoal(); } }
+      if(b) popBubble(b); }
   });
 
   startBtn.onclick=function(){
     try{ ctx().resume&&ctx().resume(); }catch(e){}
     startOv.classList.add('hidden');
-    running=true; score=0; level=1; countGoal=1;
+    running=true; score=0; countGoal=1;
     scoreEl.textContent='🌟 0';
-    bubbles.forEach(removeB);
-    for(var i=0;i<6;i++) spawn();
+    bubbles.slice().forEach(removeB);
+    spawn(countGoal);
+    refill();
     sayGoal();
+    clearInterval(refillTimer);
+    refillTimer=setInterval(refill,2500);
   };
 })();
 </script>
