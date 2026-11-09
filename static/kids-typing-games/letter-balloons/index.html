@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎈</text></svg>">
+<title>🎈 字母气球</title>
+<link rel="stylesheet" href="../style.css">
+<style>
+  /* 气球 */
+  .balloon {
+    position: absolute; z-index: 10; width: 84px; height: 112px;
+    cursor: pointer;
+    animation: floatBalloon linear infinite;
+    will-change: transform;
+  }
+  @keyframes floatBalloon {
+    from { transform: translateY(0) rotate(var(--tilt, 0deg)); }
+    to   { transform: translateY(-115vh) rotate(var(--tilt, 0deg)); }
+  }
+  .balloon .body {
+    position: absolute; left: 7px; top: 0; width: 70px; height: 88px;
+    border-radius: 50% 50% 46% 46%;
+    background: radial-gradient(circle at 30% 26%, rgba(255,255,255,.85), var(--c) 42%, var(--c-dark) 100%);
+    box-shadow: inset -6px -8px 12px rgba(0,0,0,.12);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .balloon .body::after {
+    content: ''; position: absolute; left: 9px; top: 11px; width: 14px; height: 20px;
+    background: rgba(255,255,255,.65); border-radius: 50%;
+    transform: rotate(-28deg);
+  }
+  .balloon .letter {
+    font-size: 38px; font-weight: 900; color: #fff;
+    text-shadow: 0 2px 3px rgba(0,0,0,.35); z-index: 2;
+  }
+  .balloon .knot {
+    position: absolute; left: 31px; top: 88px; width: 0; height: 0;
+    border-left: 8px solid transparent; border-right: 8px solid transparent;
+    border-top: 14px solid var(--c-dark);
+  }
+  .balloon .string {
+    position: absolute; left: 39px; top: 100px; width: 2px; height: 100px;
+    background: rgba(255,255,255,.8);
+    transform-origin: top center;
+  }
+  .shake { animation: shake .4s; }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-7px); }
+    75% { transform: translateX(7px); }
+  }
+  /* 爆炸动画 */
+  .burst {
+    position: absolute; z-index: 20; pointer-events: none;
+    font-size: 60px; animation: burstAnim .7s ease-out forwards;
+  }
+  @keyframes burstAnim {
+    0% { transform: scale(.4); opacity: 1; }
+    60% { transform: scale(1.5); opacity: 1; }
+    100% { transform: scale(2.2); opacity: 0; }
+  }
+  #msg { position: fixed; left: 50%; top: 22%; transform: translateX(-50%); z-index: 50;
+    background: rgba(255,255,255,.95); border-radius: 22px; padding: 12px 26px;
+    font-size: clamp(24px, 5vh, 40px); font-weight: 800; color: #e05a2a;
+    box-shadow: 0 6px 24px rgba(31,94,150,.35); transition: opacity .3s; pointer-events: none; }
+  #msg.hidden { opacity: 0; }
+  .ground { position: fixed; left: 0; right: 0; bottom: 0; height: 8vh; z-index: 5;
+    background: linear-gradient(#9be36b, #6fce4a); border-radius: 50% 50% 0 0 / 16% 16% 0 0; }
+</style>
+</head>
+<body>
+<div class="sky"></div>
+<div class="ground"></div>
+<div class="game-area" id="area"></div>
+<div id="msg" class="hidden"></div>
+<div class="hud">
+  <button class="btn" id="homeBtn">🏠 回家</button>
+  <div class="score" id="score">🌟 0</div>
+</div>
+<div id="prompt">准备好了吗？<small>按一按键盘上的字母，戳破一样的气球！</small></div>
+<div class="overlay" id="startOv">
+  <div class="big">🎈 字母气球</div>
+  <button class="start-btn" id="startBtn">开 始 玩</button>
+  <div class="hint">看看最下面的大字母，在键盘上找到它，按下去！<br>气球飞到天上，要快点找到它哦～</div>
+</div>
+<script>
+(function(){
+  var area = document.getElementById('area');
+  var scoreEl = document.getElementById('score');
+  var promptEl = document.getElementById('prompt');
+  var msgEl = document.getElementById('msg');
+  var startOv = document.getElementById('startOv');
+  var startBtn = document.getElementById('startBtn');
+  document.getElementById('homeBtn').onclick = function(){ location.href = '../'; };
+
+  var COLORS = [
+    {c:'#ff7eb6', d:'#e04f8f'}, {c:'#ffb45e', d:'#e08a2e'}, {c:'#6fc3ff', d:'#3d8fe0'},
+    {c:'#8be58b', d:'#4fbf4f'}, {c:'#c79bff', d:'#9a63e8'}, {c:'#ff8a6f', d:'#e05c3d'}
+  ];
+  var score = 0, level = 1, running = false, popTimer = null;
+  var balloons = [];          // 活跃气球
+  var nextLetter = 0;         // 提示的目标字母索引 0-25
+  var lettersShown = {};      // 当前屏幕上出现的字母
+
+  var audioCtx = null;
+  function ctx(){ if(!audioCtx){ try{ audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return audioCtx; }
+  function tone(freq, dur, type, vol, delay){
+    var c = ctx(); if(!c) return;
+    var t = c.currentTime + (delay||0);
+    var o = c.createOscillator(), g = c.createGain();
+    o.type = type||'sine'; o.frequency.value = freq;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol||0.25, t+0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, t+dur);
+    o.connect(g); g.connect(c.destination);
+    o.start(t); o.stop(t+dur+0.05);
+  }
+  function popSound(){
+    var c = ctx(); if(!c) return;
+    var t = c.currentTime;
+    var buf = c.createBuffer(1, c.sampleRate*0.18, c.sampleRate);
+    var d = buf.getChannelData(0);
+    for(var i=0;i<d.length;i++){ d[i] = (Math.random()*2-1) * Math.pow(1-i/d.length, 2); }
+    var src = c.createBufferSource(); src.buffer = buf;
+    var g = c.createGain(); g.gain.setValueAtTime(0.5, t); g.gain.exponentialRampToValueAtTime(0.001, t+0.18);
+    src.connect(g); g.connect(c.destination); src.start(t);
+    tone(180, 0.12, 'triangle', 0.2);
+  }
+  function ding(){ tone(880, 0.16, 'sine', 0.25); tone(1320, 0.24, 'sine', 0.18, 0.05); }
+  function wrongSound(){ tone(160, 0.2, 'square', 0.12); }
+
+  function speak(text){
+    try{
+      if(!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      var u = new SpeechSynthesisUtterance(text);
+      u.lang = 'zh-CN'; u.rate = 0.8; u.pitch = 1.2;
+      window.speechSynthesis.speak(u);
+    }catch(e){}
+  }
+  function sayPrompt(){
+    var ch = String.fromCharCode(65 + nextLetter);
+    speak('按' + ch);
+    promptEl.innerHTML = ch + '<small>按一下这个字母键</small>';
+  }
+  function flashMsg(txt){
+    msgEl.textContent = txt; msgEl.classList.remove('hidden');
+    clearTimeout(popTimer); popTimer = setTimeout(function(){ msgEl.classList.add('hidden'); }, 900);
+  }
+
+  function letterUsed(l){ return lettersShown[l] || false; }
+  function spawnBalloon(){
+    var candidates = [];
+    for(var i=0;i<26;i++){
+      if(i===nextLetter) continue;
+      if(!lettersShown[i]) candidates.push(i);
+    }
+    // 目标字母每轮必须出现一次
+    var idx = (Math.random() < 0.55) ? nextLetter : (candidates.length ? candidates[Math.floor(Math.random()*candidates.length)] : nextLetter);
+    var li = idx;
+    var col = COLORS[Math.floor(Math.random()*COLORS.length)];
+    var el = document.createElement('div');
+    el.className = 'balloon';
+    el.style.setProperty('--c', col.c);
+    el.style.setProperty('--c-dark', col.d);
+    el.style.setProperty('--tilt', (Math.random()*14-7) + 'deg');
+    el.style.left = (6 + Math.random()*84) + '%';
+    el.style.animationDuration = (9 - level*0.6 + Math.random()*3) + 's';
+    var s = (0.8 + Math.random()*0.5);
+    el.style.transform = 'scale(' + s + ')';
+    el.innerHTML = '<div class="body"><span class="letter">' + String.fromCharCode(65+li) + '</span></div><div class="knot"></div><div class="string"></div>';
+    area.appendChild(el);
+    var b = { el: el, li: li };
+    balloons.push(b);
+    lettersShown[li] = true;
+    el.addEventListener('animationend', function(){
+      // 气球飘出屏幕，若不匹配提示字母则重新生成（保持字母在循环里）
+      removeBalloon(b);
+    });
+  }
+  function removeBalloon(b){
+    var i = balloons.indexOf(b);
+    if(i>=0){ balloons.splice(i,1); delete lettersShown[b.li]; }
+    if(b.el.parentNode) b.el.parentNode.removeChild(b.el);
+  }
+  function burst(b){
+    removeBalloon(b);
+    var ex = document.createElement('div');
+    ex.className = 'burst';
+    ex.textContent = '💥';
+    ex.style.left = b.x + 'px'; ex.style.top = b.y + 'px';
+    area.appendChild(ex);
+    setTimeout(function(){ ex.parentNode && ex.parentNode.removeChild(ex); }, 750);
+    var s = document.createElement('div');
+    s.className = 'spark';
+    s.style.left = b.x + 'px'; s.style.top = b.y + 'px';
+    s.style.setProperty('--dx', (Math.random()*120-60)+'px');
+    s.style.setProperty('--dy', (Math.random()*120-60)+'px');
+    s.textContent = '✨';
+    area.appendChild(s);
+    setTimeout(function(){ s.parentNode && s.parentNode.removeChild(s); }, 950);
+  }
+
+  function addScore(n){
+    score += n; scoreEl.textContent = '🌟 ' + score;
+    if(score > 0 && score % 8 === 0 && level < 5){ level++; flashMsg('🎉 变快了！'); }
+  }
+
+  function onKey(li){
+    if(!running) return;
+    var ch = String.fromCharCode(65+li);
+    // 找匹配的气球：优先提示字母的气球
+    var target = null;
+    for(var i=0;i<balloons.length;i++){
+      if(balloons[i].li === li){ target = balloons[i]; break; }
+    }
+    if(target){
+      var r = target.el.getBoundingClientRect();
+      target.x = r.left + r.width/2; target.y = r.top + r.height/2;
+      burst(target);
+      ding();
+      addScore(1);
+      nextLetter = (nextLetter + 1) % 26;
+      // 空位补气球
+      if(balloons.length < 5) setTimeout(spawnBalloon, 300);
+      sayPrompt();
+    } else {
+      wrongSound();
+      flashMsg('咦？没有这个气球哦');
+      // 屏幕上有这个字母但没显示时，生成一个（保证永远能玩）
+      if(!letterUsed(li)) spawnBalloon();
+    }
+  }
+
+  window.addEventListener('keydown', function(e){
+    if(e.repeat) return;
+    var k = e.key.toUpperCase();
+    if(e.metaKey || e.ctrlKey || e.altKey) return;
+    if(k.length===1 && k>='A' && k<='Z'){ e.preventDefault(); onKey(k.charCodeAt(0)-65); }
+  });
+  window.addEventListener('pointerdown', function(e){
+    // 触摸/鼠标点气球也可戳破（家长辅助）
+    if(!running) return;
+    var el = e.target.closest ? e.target.closest('.balloon') : null;
+    if(el){
+      var b = null;
+      for(var i=0;i<balloons.length;i++){ if(balloons[i].el===el){ b=balloons[i]; break; } }
+      if(b){
+        var r = b.el.getBoundingClientRect();
+        b.x = r.left+r.width/2; b.y = r.top+r.height/2;
+        burst(b); ding(); addScore(1);
+      }
+    }
+  });
+
+  startBtn.onclick = function(){
+    try{ ctx().resume && ctx().resume(); }catch(e){}
+    startOv.classList.add('hidden');
+    running = true;
+    score = 0; level = 1; nextLetter = 0; scoreEl.textContent = '🌟 0';
+    balloons.forEach(removeBalloon);
+    for(var i=0;i<6;i++) spawnBalloon();
+    sayPrompt();
+  };
+})();
+</script>
+</body>
+</html>

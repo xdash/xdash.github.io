@@ -1,0 +1,100 @@
+/* 宝宝键盘游戏 · 共享样式
+   目标：3 岁宝宝 + iPad Safari + 零外链、零依赖 */
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  background: linear-gradient(160deg, #7ec8ff 0%, #a5e0ff 45%, #c8f4ff 100%);
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+.sky {
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(2px 2px at 12% 22%, rgba(255,255,255,.9), transparent),
+    radial-gradient(2px 2px at 34% 12%, rgba(255,255,255,.7), transparent),
+    radial-gradient(3px 3px at 58% 30%, rgba(255,255,255,.8), transparent),
+    radial-gradient(2px 2px at 78% 16%, rgba(255,255,255,.9), transparent),
+    radial-gradient(2px 2px at 92% 40%, rgba(255,255,255,.7), transparent),
+    radial-gradient(3px 3px at 22% 62%, rgba(255,255,255,.6), transparent),
+    radial-gradient(2px 2px at 66% 70%, rgba(255,255,255,.7), transparent),
+    radial-gradient(2px 2px at 46% 84%, rgba(255,255,255,.6), transparent);
+  pointer-events: none;
+  z-index: 0;
+}
+.hud {
+  position: fixed; top: 12px; left: 12px; right: 12px; z-index: 40;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.hud .btn {
+  background: rgba(255,255,255,.85);
+  border: none; border-radius: 18px;
+  font-size: clamp(15px, 2.4vh, 20px); font-weight: 700; color: #2b6bb0;
+  padding: 6px 16px; cursor: pointer;
+  box-shadow: 0 2px 8px rgba(31,94,150,.25);
+}
+.hud .btn:active { transform: scale(.94); }
+.hud .score {
+  background: rgba(255,255,255,.85);
+  border-radius: 18px; padding: 6px 16px;
+  font-size: clamp(15px, 2.4vh, 20px); font-weight: 800; color: #e05a2a;
+  box-shadow: 0 2px 8px rgba(31,94,150,.25);
+}
+#prompt {
+  position: fixed; left: 50%; transform: translateX(-50%);
+  bottom: clamp(14px, 3.2vh, 30px); z-index: 40;
+  background: rgba(255,255,255,.9);
+  border-radius: 24px; padding: 10px 22px;
+  font-size: clamp(20px, 4vh, 32px); font-weight: 800; color: #1d4e8f;
+  box-shadow: 0 4px 18px rgba(31,94,150,.3);
+  text-align: center; max-width: 92vw; pointer-events: none;
+}
+#prompt small { display: block; font-size: .45em; font-weight: 600; color: #6b93bb; margin-top: 2px; }
+.game-area { position: fixed; inset: 0; z-index: 10; }
+.overlay {
+  position: fixed; inset: 0; z-index: 60;
+  background: rgba(20,60,110,.45);
+  display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 22px;
+  text-align: center; padding: 20px;
+}
+.overlay.hidden { display: none; }
+.overlay .big {
+  background: rgba(255,255,255,.95);
+  border-radius: 32px; padding: 26px 44px;
+  font-size: clamp(26px, 6vh, 48px); font-weight: 800; color: #1d4e8f;
+  box-shadow: 0 8px 30px rgba(20,60,110,.4);
+  max-width: 90vw;
+}
+.overlay .start-btn {
+  background: #ff9a3d; color: #fff; border: none;
+  border-radius: 40px; padding: 16px 52px;
+  font-size: clamp(22px, 5vh, 36px); font-weight: 800;
+  box-shadow: 0 6px 0 #c96a12, 0 10px 24px rgba(20,60,110,.4);
+  cursor: pointer; letter-spacing: 2px;
+}
+.overlay .start-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #c96a12, 0 6px 14px rgba(20,60,110,.35); }
+.overlay .hint { color: #fff; font-size: clamp(14px, 2.6vh, 20px); font-weight: 600; background: rgba(0,0,0,.28); padding: 8px 18px; border-radius: 20px; max-width: 86vw; line-height: 1.6; }
+/* 通用飘落物 */
+.item { position: absolute; z-index: 10; transition: transform .18s; will-change: transform, opacity; }
+.pop { transform: scale(1.7) rotate(12deg) !important; opacity: 0 !important; transition: all .28s ease-in !important; }
+/* 星光粒子 */
+.spark {
+  position: absolute; z-index: 30; pointer-events: none;
+  animation: sparkAnim .9s ease-out forwards;
+}
+@keyframes sparkAnim {
+  0% { transform: translate(0,0) scale(1); opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)) scale(.2); opacity: 0; }
+}
+/* 飘动云朵 */
+.cloud {
+  position: absolute; z-index: 1; color: rgba(255,255,255,.75);
+  font-size: clamp(50px, 12vh, 120px); animation: cloudDrift linear infinite;
+  pointer-events: none;
+}
+@keyframes cloudDrift {
+  from { transform: translateX(-20vw); }
+  to { transform: translateX(120vw); }
+}

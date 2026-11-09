@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎈</text></svg>">
+<meta name="theme-color" content="#7ec8ff">
+<title>宝宝键盘乐园 · 打字小游戏</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  body { overflow: auto; }
+  .hall { position: relative; z-index: 10; min-height: 100vh; padding: 20px 16px 40px; }
+  .hall h1 {
+    text-align: center; color: #fff; font-size: clamp(28px, 6vh, 44px);
+    text-shadow: 0 3px 0 rgba(31,94,150,.45), 0 6px 18px rgba(31,94,150,.4);
+    margin: 10px 0 4px; letter-spacing: 2px;
+  }
+  .hall .sub { text-align: center; color: rgba(255,255,255,.92); font-size: clamp(14px, 2.6vh, 18px); margin-bottom: 22px; text-shadow: 0 1px 4px rgba(31,94,150,.4); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; max-width: 960px; margin: 0 auto; }
+  .card {
+    background: #fff; border-radius: 26px; padding: 22px 20px 18px; text-decoration: none; color: #1d4e8f;
+    box-shadow: 0 6px 0 rgba(31,94,150,.18), 0 12px 26px rgba(31,94,150,.28);
+    display: flex; flex-direction: column; gap: 10px;
+    transition: transform .15s;
+  }
+  .card:active { transform: translateY(4px) scale(.98); }
+  .card .emoji { font-size: clamp(40px, 8vh, 58px); line-height: 1; }
+  .card .name { font-size: clamp(20px, 3.6vh, 26px); font-weight: 800; }
+  .card .desc { font-size: clamp(13px, 2.4vh, 16px); color: #5f7fa5; line-height: 1.6; flex: 1; }
+  .card .keys {
+    display: inline-block; align-self: flex-start;
+    background: #eaf4ff; border: 2px dashed #9dc6ee; border-radius: 14px;
+    padding: 5px 12px; font-size: clamp(13px, 2.4vh, 15px); color: #3a76b8; font-weight: 700; letter-spacing: 1px;
+  }
+  .footer { text-align: center; color: rgba(255,255,255,.85); font-size: 13px; margin-top: 26px; text-shadow: 0 1px 3px rgba(31,94,150,.4); }
+</style>
+</head>
+<body>
+<div class="sky"></div>
+<div class="hall">
+  <h1>🎈 宝宝键盘乐园</h1>
+  <p class="sub">按一按键盘，好多好多小游戏！给小手的魔法练习 ✨</p>
+  <div class="grid">
+    <a class="card" href="letter-balloons/">
+      <div class="emoji">🎈</div>
+      <div class="name">字母气球</div>
+      <div class="desc">气球飘呀飘，按出气球上的字母，'啵' 的一声戳破它！认识 A B C。</div>
+      <span class="keys">按 A - Z 字母键</span>
+    </a>
+    <a class="card" href="number-bubbles/">
+      <div class="emoji">🫧</div>
+      <div class="name">数字泡泡</div>
+      <div class="desc">彩色泡泡里藏着数字，按对的数字泡泡就 '啵' 一下破掉，一起学数数！</div>
+      <span class="keys">按 1 - 5 数字键</span>
+    </a>
+    <a class="card" href="keyboard-piano/">
+      <div class="emoji">🎹</div>
+      <div class="name">键盘小钢琴</div>
+      <div class="desc">键盘就是钢琴！想按哪个键就按哪个键，听音符叮叮咚咚唱歌。</div>
+      <span class="keys">按 Q W E R T Y U 弹琴</span>
+    </a>
+    <a class="card" href="letter-train/">
+      <div class="emoji">🚂</div>
+      <div class="name">字母小火车</div>
+      <div class="desc">小火车一节节开过来，帮它按出正确的字母车厢，把火车装得长长的！</div>
+      <span class="keys">跟着提示按 A - Z</span>
+    </a>
+    <a class="card" href="space-typing/">
+      <div class="emoji">🚀</div>
+      <div class="name">太空打字</div>
+      <div class="desc">太空里掉下字母星星，按对字母，火箭就 '嗖' 地飞上去抓住它！</div>
+      <span class="keys">按 A - Z 抓星星</span>
+    </a>
+  </div>
+  <p class="footer">👶 为 3 岁宝宝设计 · 在 iPad 上配键盘玩最开心 · <a href="/" style="color:#fff">回到博客</a></p>
+</div>
+</body>
+</html>

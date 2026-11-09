@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🫧</text></svg>">
+<title>🫧 数字泡泡</title>
+<link rel="stylesheet" href="../style.css">
+<style>
+  .bubble {
+    position: absolute; z-index: 10; border-radius: 50%;
+    background: radial-gradient(circle at 32% 28%, rgba(255,255,255,.95), var(--c) 45%, var(--c-dark) 100%);
+    box-shadow: inset -6px -8px 14px rgba(0,0,0,.14), 0 6px 16px rgba(31,94,150,.28);
+    display: flex; align-items: center; justify-content: center;
+    animation: bubbleFloat linear infinite;
+    will-change: transform;
+  }
+  .bubble::before {
+    content: ''; position: absolute; left: 22%; top: 16%; width: 22%; height: 26%;
+    background: rgba(255,255,255,.8); border-radius: 50%; transform: rotate(-30deg);
+  }
+  .bubble .num {
+    font-weight: 900; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,.4);
+    z-index: 2;
+  }
+  @keyframes bubbleFloat {
+    from { transform: translateY(0) scale(1); }
+    to   { transform: translateY(-115vh) scale(1.02); }
+  }
+  .pop-wave { position: absolute; z-index: 15; pointer-events: none;
+    border-radius: 50%; animation: popWave .5s ease-out forwards; }
+  @keyframes popWave {
+    from { transform: scale(.3); opacity: 1; }
+    to { transform: scale(1.6); opacity: 0; }
+  }
+  .water { position: fixed; left: 0; right: 0; bottom: 0; height: 16vh; z-index: 5;
+    background: linear-gradient(#79c9f5, #4aa8e8); border-radius: 48% 52% 0 0 / 26% 30% 0 0; }
+  .fish { position: absolute; z-index: 6; font-size: clamp(24px, 6vh, 46px); animation: fishSwim 18s linear infinite; }
+  @keyframes fishSwim {
+    from { transform: translateX(-12vw) scaleX(1); }
+    49% { transform: translateX(112vw) scaleX(1); }
+    50% { transform: translateX(112vw) scaleX(-1); }
+    99% { transform: translateX(-12vw) scaleX(-1); }
+  }
+  #goalBox {
+    position: fixed; left: 50%; transform: translateX(-50%);
+    bottom: clamp(64px, 12vh, 110px); z-index: 40;
+    background: rgba(255,255,255,.9); border-radius: 26px; padding: 8px 24px;
+    font-size: clamp(26px, 6vh, 44px); font-weight: 900; color: #1d4e8f;
+    box-shadow: 0 4px 18px rgba(31,94,150,.3);
+    display: flex; align-items: center; gap: 12px;
+  }
+  #goalBox .star { font-size: .8em; }
+  #goalBox small { font-size: .4em; color: #6b93bb; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="sky"></div>
+<div class="water"></div>
+<div class="fish">🐠</div>
+<div class="fish" style="animation-delay:-9s; animation-duration:24s; font-size:clamp(18px,4.5vh,34px)">🐟</div>
+<div class="game-area" id="area"></div>
+<div class="hud">
+  <button class="btn" id="homeBtn">🏠 回家</button>
+  <div class="score" id="score">🌟 0</div>
+</div>
+<div id="goalBox"><span class="star">⭐</span><span id="goalNum">1</span><small>按一样的数字泡泡</small></div>
+<div class="overlay" id="startOv">
+  <div class="big">🫧 数字泡泡</div>
+  <button class="start-btn" id="startBtn">开 始 玩</button>
+  <div class="hint">看中间的大数字，在键盘上找到同样的数字，按下去！<br>泡泡里也有数字，按对就 '啵' 地破掉！</div>
+</div>
+<script>
+(function(){
+  var area = document.getElementById('area');
+  var scoreEl = document.getElementById('score');
+  var goalEl = document.getElementById('goalNum');
+  var startOv = document.getElementById('startOv');
+  var startBtn = document.getElementById('startBtn');
+  document.getElementById('homeBtn').onclick = function(){ location.href='../'; };
+
+  var NUMBERS = [1,2,3,4,5];
+  var COLORS = {
+    1:{c:'#ff7eb6',d:'#e04f8f'}, 2:{c:'#ffb45e',d:'#e08a2e'}, 3:{c:'#6fc3ff',d:'#3d8fe0'},
+    4:{c:'#8be58b',d:'#4fbf4f'}, 5:{c:'#c79bff',d:'#9a63e8'}
+  };
+  var score=0, level=1, running=false, countGoal=0;
+  var bubbles=[], shown={};
+  var audioCtx=null;
+  function ctx(){ if(!audioCtx){ try{ audioCtx=new(window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return audioCtx; }
+  function tone(f,d,tp,v,dl){ var c=ctx(); if(!c)return; var tt=c.currentTime+(dl||0); var o=c.createOscillator(),g=c.createGain(); o.type=tp||'sine'; o.frequency.value=f; g.gain.setValueAtTime(0.0001,tt); g.gain.exponentialRampToValueAtTime(v||0.25,tt+0.02); g.gain.exponentialRampToValueAtTime(0.0001,tt+d); o.connect(g); g.connect(c.destination); o.start(tt); o.stop(tt+d+0.05); }
+  function popSound(){ var c=ctx(); if(!c)return; var t=c.currentTime; var b=c.createBuffer(1,c.sampleRate*0.16,c.sampleRate); var d=b.getChannelData(0); for(var i=0;i<d.length;i++){ d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2);} var s=c.createBufferSource(); s.buffer=b; var g=c.createGain(); g.gain.setValueAtTime(0.45,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.16); s.connect(g); g.connect(c.destination); s.start(t); }
+  function ding(){ tone(980,0.14,'sine',0.25); tone(1470,0.22,'sine',0.16,0.05); }
+  function wrongSound(){ tone(150,0.18,'square',0.12); }
+  function speak(t){ try{ if(!('speechSynthesis' in window))return; window.speechSynthesis.cancel(); var u=new SpeechSynthesisUtterance(t); u.lang='zh-CN'; u.rate=0.75; u.pitch=1.3; window.speechSynthesis.speak(u);}catch(e){} }
+  function sayGoal(){ speak('按' + countGoal); goalEl.textContent = countGoal; }
+
+  function spawn(){
+    // 目标数字至少要有一个在屏幕上
+    var num = (Math.random()<0.5) ? countGoal : NUMBERS[Math.floor(Math.random()*NUMBERS.length)];
+    var size = 74 + Math.random()*46;
+    var col = COLORS[num];
+    var el = document.createElement('div');
+    el.className='bubble';
+    el.style.width=size+'px'; el.style.height=size+'px';
+    el.style.setProperty('--c',col.c); el.style.setProperty('--c-dark',col.d);
+    el.style.left=(4+Math.random()*88)+'%';
+    el.style.animationDuration=(8.5-level*0.7+Math.random()*3)+'s';
+    el.style.fontSize=(size*0.42)+'px';
+    el.innerHTML='<span class="num">'+num+'</span>';
+    area.appendChild(el);
+    var b={el:el,num:num};
+    bubbles.push(b); shown[num]=true;
+    el.addEventListener('animationend',function(){ removeB(b); });
+  }
+  function removeB(b){ var i=bubbles.indexOf(b); if(i>=0){bubbles.splice(i,1);} if(b.el.parentNode)b.el.parentNode.removeChild(b.el); }
+  function pop(b){
+    var r=b.el.getBoundingClientRect();
+    removeB(b);
+    var w=document.createElement('div'); w.className='pop-wave';
+    w.style.left=(r.left+r.width/2-40)+'px'; w.style.top=(r.top+r.height/2-40)+'px';
+    w.style.width='80px'; w.style.height='80px';
+    w.style.background='radial-gradient(circle, rgba(255,255,255,.95), transparent 70%)';
+    area.appendChild(w); setTimeout(function(){ w.parentNode&&w.parentNode.removeChild(w); },520);
+    var s=document.createElement('div'); s.className='spark';
+    s.style.left=(r.left+r.width/2)+'px'; s.style.top=(r.top+r.height/2)+'px';
+    s.style.setProperty('--dx',(Math.random()*110-55)+'px'); s.style.setProperty('--dy',(Math.random()*110-55)+'px');
+    s.textContent='✨'; area.appendChild(s); setTimeout(function(){ s.parentNode&&s.parentNode.removeChild(s); },950);
+    popSound();
+  }
+
+  function addScore(n){ score+=n; scoreEl.textContent='🌟 '+score;
+    if(score>0 && score%8===0 && level<5){ level++; } }
+
+  function onNum(n){
+    if(!running) return;
+    if(n===countGoal){
+      var target=null;
+      for(var i=0;i<bubbles.length;i++){ if(bubbles[i].num===n){ target=bubbles[i]; break; } }
+      if(target){ pop(target); ding(); addScore(1); }
+      countGoal = 1 + Math.floor(Math.random()*5);
+      while(bubbles.length<5) spawn();
+      sayGoal();
+    } else {
+      wrongSound();
+    }
+  }
+
+  window.addEventListener('keydown',function(e){
+    if(e.repeat) return;
+    if(e.metaKey||e.ctrlKey||e.altKey) return;
+    var n=parseInt(e.key,10);
+    if(!isNaN(n) && n>=1 && n<=5){ e.preventDefault(); onNum(n); }
+  });
+  window.addEventListener('pointerdown',function(e){
+    if(!running) return;
+    var el=e.target.closest?e.target.closest('.bubble'):null;
+    if(el){ var b=null; for(var i=0;i<bubbles.length;i++){ if(bubbles[i].el===el){b=bubbles[i];break;} }
+      if(b && b.num===countGoal){ pop(b); ding(); addScore(1);
+        countGoal=1+Math.floor(Math.random()*5); while(bubbles.length<5)spawn(); sayGoal(); } }
+  });
+
+  startBtn.onclick=function(){
+    try{ ctx().resume&&ctx().resume(); }catch(e){}
+    startOv.classList.add('hidden');
+    running=true; score=0; level=1; countGoal=1;
+    scoreEl.textContent='🌟 0';
+    bubbles.forEach(removeB);
+    for(var i=0;i<6;i++) spawn();
+    sayGoal();
+  };
+})();
+</script>
+</body>
+</html>
