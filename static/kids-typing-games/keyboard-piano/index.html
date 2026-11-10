@@ -43,21 +43,28 @@
     0% { transform: translateY(0) scale(.6); opacity: 1; }
     100% { transform: translateY(-70vh) scale(1.3) rotate(14deg); opacity: 0; }
   }
-  .demo-btn {
+  .demo-bar {
     position: fixed; left: 50%; transform: translateX(-50%);
     bottom: clamp(250px, 46vh, 420px); z-index: 30;
-    background: #ff9a3d; color: #fff; border: none; border-radius: 30px;
-    padding: 10px 26px; font-size: clamp(16px, 3vh, 22px); font-weight: 800;
-    box-shadow: 0 4px 0 #c96a12, 0 8px 18px rgba(20,60,110,.35); cursor: pointer;
+    display: flex; gap: 12px;
   }
-  .demo-btn:active { transform: translateX(-50%) translateY(3px); }
+  .demo-btn {
+    background: #ff9a3d; color: #fff; border: none; border-radius: 30px;
+    padding: 10px 22px; font-size: clamp(15px, 2.8vh, 20px); font-weight: 800;
+    box-shadow: 0 4px 0 #c96a12, 0 8px 18px rgba(20,60,110,.35); cursor: pointer;
+    white-space: nowrap;
+  }
+  .demo-btn:active { transform: translateY(3px); }
   .demo-btn.playing { background: #7cc0ff; box-shadow: 0 4px 0 #3d8fe0; }
 </style>
 </head>
 <body>
 <div class="sky"></div>
 <div class="game-area" id="area"></div>
-<button class="demo-btn" id="demoBtn">⭐ 听小星星</button>
+<div class="demo-bar">
+  <button class="demo-btn" id="demoBtnStar">⭐ 听小星星</button>
+  <button class="demo-btn" id="demoBtnTiger">🐯 听两只老虎</button>
+</div>
 <div class="hud">
   <button class="btn" id="homeBtn">🏠 回家</button>
   <div class="score" id="score">🎼 叮叮咚咚</div>
@@ -76,7 +83,10 @@
   var pianoEl = document.getElementById('piano');
   var startOv = document.getElementById('startOv');
   var startBtn = document.getElementById('startBtn');
-  var demoBtn = document.getElementById('demoBtn');
+  var demoBtns = {
+    star: document.getElementById('demoBtnStar'),
+    tiger: document.getElementById('demoBtnTiger')
+  };
   document.getElementById('homeBtn').onclick = function(){ location.href='../'; };
 
   // Q W E R T Y U → C D E F G A B（C 大调）
@@ -147,36 +157,55 @@
     setTimeout(function(){ n.parentNode && n.parentNode.removeChild(n); }, 1150);
   }
 
-  // 小星星旋律（C C G G A A G / F F E E D D C / G G F F E E D / G G F F E E D / C C G G A A G / F F E E D D C）
-  var STAR = [
-    ['C',0],['C',0],['G',0],['G',0],['A',0],['A',0],['G',1],
-    ['F',0],['F',0],['E',0],['E',0],['D',0],['D',0],['C',1],
-    ['G',0],['G',0],['F',0],['F',0],['E',0],['E',0],['D',1],
-    ['G',0],['G',0],['F',0],['F',0],['E',0],['E',0],['D',1],
-    ['C',0],['C',0],['G',0],['G',0],['A',0],['A',0],['G',1],
-    ['F',0],['F',0],['E',0],['E',0],['D',0],['D',0],['C',2]
-  ];
+  // 时值标记：0=短 1=中 2=长 3=更短
+  var DUR = { 0:0.3, 1:0.55, 2:1.0, 3:0.15 };
+  var SONGS = {
+    // 小星星旋律（C C G G A A G / F F E E D D C / G G F F E E D / G G F F E E D / C C G G A A G / F F E E D D C）
+    star: [
+      ['C',0],['C',0],['G',0],['G',0],['A',0],['A',0],['G',1],
+      ['F',0],['F',0],['E',0],['E',0],['D',0],['D',0],['C',1],
+      ['G',0],['G',0],['F',0],['F',0],['E',0],['E',0],['D',1],
+      ['G',0],['G',0],['F',0],['F',0],['E',0],['E',0],['D',1],
+      ['C',0],['C',0],['G',0],['G',0],['A',0],['A',0],['G',1],
+      ['F',0],['F',0],['E',0],['E',0],['D',0],['D',0],['C',2]
+    ],
+    // 两只老虎旋律（C D E C / C D E C / E F G / E F G / G A G F E C / G A G F E C / C G C / C G C）
+    tiger: [
+      ['C',0],['D',0],['E',0],['C',0],
+      ['C',0],['D',0],['E',0],['C',0],
+      ['E',0],['F',0],['G',1],
+      ['E',0],['F',0],['G',1],
+      ['G',3],['A',3],['G',3],['F',3],['E',0],['C',0],
+      ['G',3],['A',3],['G',3],['F',3],['E',0],['C',0],
+      ['C',0],['G',0],['C',1],
+      ['C',0],['G',0],['C',2]
+    ]
+  };
   function noteToKeyIdx(note){
     for(var i=0;i<KEYS.length;i++){ if(KEYS[i].note===note) return i; }
     return -1;
   }
-  function stopStar(){
+  function stopSong(){
     demoQueue.forEach(clearTimeout);
     demoQueue = [];
     clearTimeout(demoTimer);
     demoOn = false;
-    demoBtn.classList.remove('playing');
-    demoBtn.textContent = '⭐ 听小星星';
+    for(var name in demoBtns){
+      var b = demoBtns[name];
+      b.classList.remove('playing');
+      b.textContent = b.getAttribute('data-label');
+    }
   }
-  function playStar(){
-    if(demoOn){ stopStar(); return; }   // 播放中再点 = 停止
+  function playSong(name){
+    var btn = demoBtns[name];
+    if(demoOn){ stopSong(); return; }   // 播放中再点 = 停止
     demoOn = true;
-    demoBtn.classList.add('playing');
-    demoBtn.textContent = '⏹ 停止';
+    btn.classList.add('playing');
+    btn.textContent = '⏹ 停止';
     var t = 0;
-    STAR.forEach(function(step){
+    SONGS[name].forEach(function(step){
       var idx = noteToKeyIdx(step[0]);
-      var dur = (step[1]===2) ? 1.0 : (step[1]===1 ? 0.55 : 0.3);
+      var dur = DUR[step[1]];
       var id = setTimeout(function(){
         if(idx>=0 && demoOn){ playKey(idx); }
       }, t*1000);
@@ -184,9 +213,15 @@
       t += dur;
     });
     clearTimeout(demoTimer);
-    demoTimer = setTimeout(stopStar, t*1000 + 200);
+    demoTimer = setTimeout(stopSong, t*1000 + 200);
   }
-  demoBtn.onclick = function(){ if(running) playStar(); };
+  for(var songName in demoBtns){
+    (function(name){
+      var b = demoBtns[name];
+      b.setAttribute('data-label', b.textContent);
+      b.onclick = function(){ if(running) playSong(name); };
+    })(songName);
+  }
 
   window.addEventListener('keydown', function(e){
     if(e.repeat) return;
