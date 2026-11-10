@@ -64,6 +64,7 @@
 <div class="demo-bar">
   <button class="demo-btn" id="demoBtnStar">⭐ 听小星星</button>
   <button class="demo-btn" id="demoBtnTiger">🐯 听两只老虎</button>
+  <button class="demo-btn" id="demoBtnApt">🎤 听 APT.</button>
 </div>
 <div class="hud">
   <button class="btn" id="homeBtn">🏠 回家</button>
@@ -85,7 +86,8 @@
   var startBtn = document.getElementById('startBtn');
   var demoBtns = {
     star: document.getElementById('demoBtnStar'),
-    tiger: document.getElementById('demoBtnTiger')
+    tiger: document.getElementById('demoBtnTiger'),
+    apt: document.getElementById('demoBtnApt')
   };
   document.getElementById('homeBtn').onclick = function(){ location.href='../'; };
 
@@ -179,6 +181,18 @@
       ['G',3],['A',3],['G',3],['F',3],['E',0],['C',0],
       ['C',0],['G',0],['C',1],
       ['C',0],['G',0],['C',2]
+    ],
+    // APT.（Rosé & Bruno Mars，原曲 C 小调，此处移到 C 大调：E♭→C F→D G→E A♭→F B♭→G）
+    // 副歌 chant「apateu apateu」+ uh uh-huh uh-huh，再接「Don't you want me...」唱段
+    apt: [
+      ['G',3],['G',3],['G',0], ['G',3],['G',3],['G',0],
+      ['G',3],['G',3],['G',0], ['G',3],['G',3],['G',1],
+      ['G',3],['G',3],['A',3],['G',3],['A',3],['G',3],['A',0],
+      ['F',0],['F',0],['F',0],['E',0],['E',0],['E',0],['B',0],['B',0],['C',0],['D',0],
+      ['E',0],['E',0],['E',0],['D',0],['D',0],['D',0],['D',0],['C',0],['E',1],
+      ['F',0],['F',0],['F',0],['E',0],['E',0],['E',0],['B',0],['B',0],['C',0],['D',0],
+      ['E',0],['E',0],['E',0],['E',0],['E',0],['D',0],['C',0],['G',0],['C',0],['B',0],['C',1],
+      ['G',3],['G',3],['G',0], ['G',3],['G',3],['G',2]
     ]
   };
   function noteToKeyIdx(note){
