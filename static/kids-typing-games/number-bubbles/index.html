@@ -123,7 +123,16 @@
   function ctx(){ if(!audioCtx){ try{ audioCtx=new(window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return audioCtx; }
   function tone(f,d,tp,v,dl){ var c=ctx(); if(!c)return; var tt=c.currentTime+(dl||0); var o=c.createOscillator(),g=c.createGain(); o.type=tp||'sine'; o.frequency.value=f; g.gain.setValueAtTime(0.0001,tt); g.gain.exponentialRampToValueAtTime(v||0.25,tt+0.02); g.gain.exponentialRampToValueAtTime(0.0001,tt+d); o.connect(g); g.connect(c.destination); o.start(tt); o.stop(tt+d+0.05); }
   function popSound(){ var c=ctx(); if(!c)return; var t=c.currentTime; var b=c.createBuffer(1,c.sampleRate*0.16,c.sampleRate); var d=b.getChannelData(0); for(var i=0;i<d.length;i++){ d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2);} var s=c.createBufferSource(); s.buffer=b; var g=c.createGain(); g.gain.setValueAtTime(0.45,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.16); s.connect(g); g.connect(c.destination); s.start(t); }
-  function ding(){ tone(980,0.14,'sine',0.25); tone(1470,0.22,'sine',0.16,0.05); }
+  function correctSound(){ var c=ctx(); if(!c)return;
+    var t0=c.currentTime+0.09;
+    [[1046.5,0,0.34,0.32],[1568,0.085,0.42,0.26]].forEach(function(n){ var at=t0+n[1];
+      var o=c.createOscillator(),g=c.createGain(); o.type='sine'; o.frequency.setValueAtTime(n[0],at);
+      g.gain.setValueAtTime(0.0001,at); g.gain.exponentialRampToValueAtTime(n[3],at+0.004);   // 4ms 快起音=清脆
+      g.gain.exponentialRampToValueAtTime(0.0001,at+n[2]); o.connect(g); g.connect(c.destination); o.start(at); o.stop(at+n[2]+0.03);
+      var o2=c.createOscillator(),g2=c.createGain(); o2.type='sine'; o2.frequency.setValueAtTime(n[0]*2,at);
+      g2.gain.setValueAtTime(0.0001,at); g2.gain.exponentialRampToValueAtTime(n[3]*0.22,at+0.004);
+      g2.gain.exponentialRampToValueAtTime(0.0001,at+n[2]*0.6); o2.connect(g2); g2.connect(c.destination); o2.start(at); o2.stop(at+n[2]+0.03);
+    }); }
   function wrongSound(){ tone(220,0.16,'sine',0.15); }
   // 定制鼓励：叫宝宝小名（大厅家长设置可改，默认辉哥）
   var KID_NAME = '辉哥';
@@ -203,7 +212,7 @@
   // 戳破积木（键盘或点击共用）：爆炸 + 音效 + 叫名字鼓励并读出数字
   function popBubble(b){
     pop(b);
-    ding();
+    correctSound();
     score++; scoreEl.textContent='🌟 '+score;
     speak(b.num + '！' + KID_NAME + '，' + praise() + '！');
     refill();
