@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🫧</text></svg>">
+<meta name="theme-color" content="#bfe9ff">
+<title>🫧 泡泡纸</title>
+<link rel="stylesheet" href="../style.css">
+<style>
+  body { background: linear-gradient(165deg, #cfefff 0%, #a8ddfa 45%, #d9f3ff 100%); }
+  #wrap {
+    position: fixed; inset: 0; z-index: 10;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .sheet { display: grid; place-content: center; }
+  .bb {
+    position: relative; border-radius: 50%; cursor: pointer;
+    background: radial-gradient(circle at 34% 28%, rgba(255,255,255,.98), rgba(226,246,255,.92) 42%, rgba(150,215,246,.9) 100%);
+    box-shadow: inset -4px -6px 10px rgba(60,140,190,.28), inset 3px 4px 8px rgba(255,255,255,.9),
+                0 3px 7px rgba(60,140,190,.22);
+    transition: transform .1s;
+  }
+  .bb::after {
+    content: ''; position: absolute; left: 20%; top: 16%; width: 26%; height: 22%;
+    border-radius: 50%; background: rgba(255,255,255,.95); filter: blur(.5px);
+  }
+  .bb.pop { animation: popIt .32s ease-out forwards; pointer-events: none; }
+  @keyframes popIt {
+    0% { transform: scale(1); }
+    38% { transform: scale(1.28); box-shadow: 0 0 0 10px rgba(255,255,255,.5); }
+    100% { transform: scale(.12); opacity: 0; }
+  }
+  .bb.gold { background: radial-gradient(circle at 34% 28%, #fffbe0, #ffe27a 45%, #ffb52e 100%); }
+  .ring {
+    position: absolute; border-radius: 50%; border: 4px solid rgba(255,255,255,.9);
+    pointer-events: none; animation: ringOut .48s ease-out forwards;
+  }
+  @keyframes ringOut {
+    from { transform: scale(.4); opacity: 1; }
+    to   { transform: scale(1.9); opacity: 0; }
+  }
+  #hint {
+    position: fixed; left: 50%; transform: translateX(-50%); bottom: 2vh; z-index: 40;
+    background: rgba(255,255,255,.9); color: #1d6d9f; border-radius: 20px;
+    padding: 7px 20px; font-weight: 800; font-size: clamp(14px, 2.8vh, 20px);
+    box-shadow: 0 4px 14px rgba(31,94,150,.24); white-space: nowrap; pointer-events: none;
+  }
+  .bb .wow { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-size: 70%; opacity: 0; }
+</style>
+</head>
+<body>
+<div id="wrap"><div class="sheet" id="sheet"></div></div>
+<div id="hint">按任何键，戳破一颗泡泡 🫧</div>
+<script src="../common.js"></script>
+<script>
+(function () {
+  var sheet = document.getElementById('sheet');
+  var wrap = document.getElementById('wrap');
+  var hint = document.getElementById('hint');
+  Kid.mountChrome();
+
+  var cells = [];
+  var popped = 0;
+  var combo = 0;
+  var goldLeft = 0;
+
+  function size() {
+    var gap = Math.max(6, Math.min(window.innerWidth, window.innerHeight) * 0.014);
+    var availW = window.innerWidth * 0.94;
+    var availH = window.innerHeight * 0.82;
+    var cols = 7, rows = 5;
+    var best = null;
+    for (var c = 5; c <= 13; c++) {
+      var cell = Math.min((availW - gap * (c - 1)) / c, (availH - gap * (c - 1)) / Math.ceil(c * availH / availW));
+      var r = Math.max(3, Math.floor((availH + gap) / (cell + gap)));
+      var area = c * r;
+      if (!best || area > best.area) best = { c: c, r: r, cell: cell, area: area };
+    }
+    cols = best.c; rows = best.r;
+    return { cols: cols, rows: rows, cell: Math.max(24, best.cell), gap: gap };
+  }
+
+  function build() {
+    var s = size();
+    sheet.innerHTML = '';
+    sheet.style.gridTemplateColumns = 'repeat(' + s.cols + ', ' + s.cell + 'px)';
+    sheet.style.gridAutoRows = s.cell + 'px';
+    sheet.style.gap = s.gap + 'px';
+    cells = [];
+    popped = 0;
+    combo = 0;
+    var total = s.cols * s.rows;
+    goldLeft = 0;
+    for (var i = 0; i < total; i++) {
+      var b = document.createElement('div');
+      b.className = 'bb';
+      var pad = Math.max(3, s.cell * 0.09);
+      b.style.margin = pad + 'px';
+      var gold = Math.random() < 0.1;
+      if (gold) { b.classList.add('gold'); goldLeft++; }
+      b.dataset.gold = gold ? '1' : '0';
+      sheet.appendChild(b);
+      cells.push({ el: b, popped: false, gold: gold });
+      b.addEventListener('pointerdown', (function (cell) {
+        return function () { popCell(cell); };
+      })(cells[i]));
+    }
+  }
+
+  function ringAt(node) {
+    var r = node.getBoundingClientRect();
+    var ring = document.createElement('div');
+    ring.className = 'ring';
+    var d = r.width * 1.15;
+    ring.style.width = d + 'px'; ring.style.height = d + 'px';
+    ring.style.left = (r.left + r.width / 2 - d / 2) + 'px';
+    ring.style.top = (r.top + r.height / 2 - d / 2) + 'px';
+    ring.style.position = 'fixed';
+    document.body.appendChild(ring);
+    setTimeout(function () { ring.parentNode && ring.parentNode.removeChild(ring); }, 520);
+  }
+
+  function popCell(cell) {
+    if (!cell || cell.popped) return;
+    cell.popped = true;
+    popped++;
+    combo++;
+    cell.el.classList.add('pop');
+    ringAt(cell.el);
+
+    var f = 520 + Math.min(combo, 14) * 46;
+    Kid.noise(0.09, { filter: 'highpass', freq: 1400, vol: 0.16, decay: 3 });
+    Kid.tone(f, 0.07, { type: 'sine', vol: 0.1 });
+
+    if (cell.gold) {
+      goldLeft--;
+      Kid.tone(1046, 0.16, { type: 'sine', vol: 0.16 });
+      Kid.tone(1568, 0.22, { type: 'sine', vol: 0.13, delay: 0.09 });
+      Kid.confetti(document.body, 14, {
+        x: (cell.el.getBoundingClientRect().left / window.innerWidth) * 100,
+        y: (cell.el.getBoundingClientRect().top / window.innerHeight) * 100
+      });
+      Kid.speak('金色泡泡！' + Kid.name() + '，' + Kid.praise() + '！');
+    }
+
+    if (combo === 18) {
+      Kid.speak(Kid.name() + '，手速好快呀！');
+    }
+
+    if (popped >= cells.length) done();
+  }
+
+  function done() {
+    hint.textContent = '🎉 全部戳破啦！再来一张新的';
+    setTimeout(function () {
+      Kid.speak('哇！全戳完啦，' + Kid.name() + '，换一张新的！');
+      Kid.confetti(document.body, 40, { x: 50, y: 40 });
+    }, 220);
+    setTimeout(function () {
+      build();
+      hint.textContent = '按任何键，戳破一颗泡泡 🫧';
+    }, 1900);
+  }
+
+  Kid.onKey(function () {
+    var left = cells.filter(function (c) { return !c.popped; });
+    if (!left.length) return;
+    // 优先戳靠中间、靠上的（宝宝视线中心），保持手感
+    left.sort(function (a, b) {
+      var ra = a.el.getBoundingClientRect(), rb = b.el.getBoundingClientRect();
+      var cx = window.innerWidth / 2, cy = window.innerHeight * 0.45;
+      var da = Math.abs(ra.left - cx) + Math.abs(ra.top - cy);
+      var db = Math.abs(rb.left - cx) + Math.abs(rb.top - cy);
+      return da - db;
+    });
+    var n = Math.min(left.length, 2);
+    for (var i = 0; i < n; i++) {
+      (function (cell, delay) {
+        setTimeout(function () { popCell(cell); }, delay);
+      })(left[i], i * 90);
+    }
+  }, { throttle: 130 });
+
+  var resizeTimer = null;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () {
+      var ratio = cells.length ? popped / cells.length : 0;
+      build();
+      if (ratio > 0.6) { popped = cells.length; done(); }
+    }, 300);
+  });
+
+  build();
+  setTimeout(function () { Kid.speak('按键盘，把泡泡都戳破'); }, 900);
+})();
+</script>
+</body>
+</html>

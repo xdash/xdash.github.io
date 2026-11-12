@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥁</text></svg>">
+<meta name="theme-color" content="#ffe9b8">
+<title>🥁 小鼓手</title>
+<link rel="stylesheet" href="../style.css">
+<style>
+  body { background: linear-gradient(170deg, #ffe9b8 0%, #ffd28a 50%, #ffb776 100%); }
+  #kit {
+    position: fixed; inset: 0; z-index: 10;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(8px, 1.8vw, 22px);
+    padding: 8vh 3vw 5vh; align-content: end;
+  }
+  .pad {
+    position: relative; border-radius: clamp(18px, 3vh, 30px);
+    background: var(--c); box-shadow: 0 8px 0 var(--d), 0 14px 26px rgba(120,70,20,.26);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1vh;
+    min-height: 42vh; transition: transform .07s, box-shadow .07s; overflow: hidden;
+  }
+  .pad.hit { transform: translateY(8px) scale(.985); box-shadow: 0 0 0 var(--d), 0 6px 14px rgba(120,70,20,.2); }
+  .pad .emoji { font-size: clamp(34px, 8vh, 74px); line-height: 1; }
+  .pad .label { font-size: clamp(13px, 2.4vh, 20px); font-weight: 900; color: rgba(255,255,255,.95); text-shadow: 0 2px 3px rgba(0,0,0,.18); }
+  .pad .keys { font-size: clamp(10px, 1.7vh, 14px); font-weight: 700; color: rgba(255,255,255,.8); letter-spacing: 1px; }
+  .pad::after {
+    content: ''; position: absolute; inset: 0; border-radius: inherit;
+    background: radial-gradient(circle at 50% 30%, rgba(255,255,255,.5), transparent 62%);
+    opacity: .7; pointer-events: none;
+  }
+  .pad .burst {
+    position: absolute; left: 50%; top: 46%; width: 20px; height: 20px; margin: -10px 0 0 -10px;
+    border-radius: 50%; border: 4px solid rgba(255,255,255,.9); pointer-events: none;
+    animation: burst .45s ease-out forwards;
+  }
+  @keyframes burst {
+    from { transform: scale(.4); opacity: 1; }
+    to { transform: scale(6); opacity: 0; }
+  }
+  #hint {
+    position: fixed; left: 50%; top: 2.2vh; transform: translateX(-50%); z-index: 40;
+    background: rgba(255,255,255,.9); color: #a1511d; border-radius: 20px;
+    padding: 7px 20px; font-weight: 800; font-size: clamp(14px, 2.8vh, 20px);
+    box-shadow: 0 4px 14px rgba(160,90,40,.24); white-space: nowrap; pointer-events: none;
+  }
+  #beat {
+    position: fixed; right: 16px; top: 62px; z-index: 40; display: flex; gap: 6px;
+  }
+  #beat i { width: 11px; height: 11px; border-radius: 50%; background: rgba(255,255,255,.55); }
+  #beat i.on { background: #ff6b6b; transform: scale(1.25); }
+  #notes { position: fixed; inset: 0 0 42vh 0; z-index: 5; pointer-events: none; overflow: hidden; }
+  #notes span {
+    position: absolute; bottom: -10vh; font-size: clamp(24px, 5vh, 46px); opacity: .55;
+    animation: floatUp linear infinite;
+  }
+  @keyframes floatUp {
+    from { transform: translateY(0) rotate(-8deg); opacity: 0; }
+    15%  { opacity: .6; }
+    to   { transform: translateY(-62vh) rotate(12deg); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+<div id="notes"></div>
+<div id="kit"></div>
+<div id="hint">按任何键，敲敲打打 🥁</div>
+<div id="beat"><i></i><i></i><i></i><i></i></div>
+<script src="../common.js"></script>
+<script>
+(function () {
+  var kit = document.getElementById('kit');
+  var hint = document.getElementById('hint');
+  var beatDots = [].slice.call(document.querySelectorAll('#beat i'));
+  Kid.mountChrome();
+
+  (function floatNotes() {
+    var box = document.getElementById('notes');
+    var glyphs = ['♪', '♫', '♬', '🎵', '🎶'];
+    for (var i = 0; i < 7; i++) {
+      var s = document.createElement('span');
+      s.textContent = glyphs[i % glyphs.length];
+      s.style.left = (6 + Math.random() * 86) + '%';
+      s.style.animationDuration = (6 + Math.random() * 5) + 's';
+      s.style.animationDelay = (-Math.random() * 9) + 's';
+      box.appendChild(s);
+    }
+  })();
+
+  // 四组音色，按键盘左右分区，宝宝乱拍也会落在某个鼓上
+  var PADS = [
+    {
+      id: 'kick', emoji: '🥁', label: '大鼓', keys: 'Q W A S Z X', c: '#ff6b6b', d: '#c94a4a',
+      zones: [[0, 0.24]],
+      play: function () {
+        Kid.tone(150, 0.2, { to: 45, type: 'sine', vol: 0.34 });
+        Kid.noise(0.05, { filter: 'lowpass', freq: 400, vol: 0.14, decay: 3 });
+      }
+    },
+    {
+      id: 'snare', emoji: '🪘', label: '小鼓', keys: 'E R D F C V', c: '#ffb45e', d: '#d98a2a',
+      zones: [[0.24, 0.46]],
+      play: function () {
+        Kid.noise(0.13, { filter: 'highpass', freq: 1300, vol: 0.26, decay: 2.4 });
+        Kid.tone(190, 0.1, { type: 'triangle', vol: 0.16 });
+      }
+    },
+    {
+      id: 'hat', emoji: '🔔', label: '叮叮', keys: 'T Y G H B N', c: '#7ee0d0', d: '#3fb3a2',
+      zones: [[0.46, 0.68]],
+      play: function () {
+        Kid.noise(0.06, { filter: 'highpass', freq: 5200, vol: 0.2, decay: 4 });
+      }
+    },
+    {
+      id: 'cow', emoji: '🎺', label: '当当', keys: 'U I O P J K L', c: '#c98bff', d: '#9b56d6',
+      zones: [[0.68, 1.01]],
+      play: function () {
+        Kid.tone(520, 0.16, { type: 'square', vol: 0.12 });
+        Kid.tone(786, 0.2, { type: 'square', vol: 0.09, delay: 0.02 });
+      }
+    }
+  ];
+
+  var nodes = [];
+  var hits = 0;
+
+  PADS.forEach(function (p, i) {
+    var el = document.createElement('div');
+    el.className = 'pad';
+    el.style.setProperty('--c', p.c);
+    el.style.setProperty('--d', p.d);
+    el.innerHTML =
+      '<div class="emoji">' + p.emoji + '</div>' +
+      '<div class="label">' + p.label + '</div>' +
+      '<div class="keys">' + p.keys + '</div>';
+    kit.appendChild(el);
+    nodes.push(el);
+    el.addEventListener('pointerdown', function () { hit(i); });
+  });
+
+  var beatTimer = null, beatIdx = 0;
+  function startBeat() {
+    if (beatTimer) return;
+    var BPM = 100, step = 60000 / BPM / 2;   // 八分音符
+    beatTimer = setInterval(function () {
+      beatIdx++;
+      var onBeat = beatIdx % 4 === 0;
+      Kid.tone(90, 0.14, { to: 50, type: 'sine', vol: onBeat ? 0.1 : 0.05 });
+      Kid.noise(0.035, { filter: 'highpass', freq: 6000, vol: 0.035, decay: 3 });
+      beatDots.forEach(function (d, i) { d.classList.toggle('on', i === Math.floor(beatIdx / 2) % 4); });
+    }, step);
+  }
+
+  function hit(i) {
+    var p = PADS[i];
+    p.play();
+    var el = nodes[i];
+    el.classList.remove('hit');
+    void el.offsetWidth;
+    el.classList.add('hit');
+    setTimeout(function () { el.classList.remove('hit'); }, 110);
+    var b = document.createElement('div');
+    b.className = 'burst';
+    el.appendChild(b);
+    setTimeout(function () { b.parentNode && b.parentNode.removeChild(b); }, 480);
+
+    if (hint) hint.style.opacity = '0';
+    hits++;
+    if (hits % 24 === 0) {
+      Kid.speak(Kid.name() + '，' + Kid.praise() + '，节奏真好听！');
+      Kid.confetti(document.body, 22, { x: 50, y: 55 });
+    }
+  }
+
+  function padFor(e) {
+    var p = Kid.keyPos(e);
+    for (var i = 0; i < PADS.length; i++) {
+      var z = PADS[i].zones[0];
+      if (p.x >= z[0] && p.x < z[1]) return i;
+    }
+    return 0;
+  }
+
+  Kid.onKey(function (e) {
+    startBeat();
+    hit(padFor(e));
+  }, { throttle: 55 });
+
+  setTimeout(function () { Kid.speak('按键盘，咚咚咚，敲起来'); }, 1000);
+})();
+</script>
+</body>
+</html>

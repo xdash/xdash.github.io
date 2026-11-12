@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎆</text></svg>">
+<meta name="theme-color" content="#0b1030">
+<title>🎆 键盘烟花秀</title>
+<link rel="stylesheet" href="../style.css">
+<style>
+  body { background: radial-gradient(1200px 800px at 50% 110%, #1d2a6b 0%, #0b1030 55%, #05071a 100%); }
+  canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 10; display: block; }
+  #tip {
+    position: fixed; left: 50%; bottom: clamp(18px, 4vh, 34px); transform: translateX(-50%);
+    z-index: 40; background: rgba(255,255,255,.92); color: #1d4e8f;
+    border-radius: 24px; padding: 10px 24px; font-weight: 800;
+    font-size: clamp(17px, 3.4vh, 26px); box-shadow: 0 6px 20px rgba(0,0,0,.35);
+    transition: opacity .5s; pointer-events: none; white-space: nowrap;
+  }
+  #tip.hide { opacity: 0; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="tip">按任何键，放一朵烟花 🎇</div>
+<script src="../common.js"></script>
+<script>
+(function () {
+  var cv = document.getElementById('c');
+  var g = cv.getContext('2d');
+  var W = 0, H = 0, DPR = 1;
+  var rockets = [], parts = [], stars = [];
+  var count = 0;
+  var tip = document.getElementById('tip');
+  Kid.mountChrome();
+
+  function resize() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = cv.clientWidth; H = cv.clientHeight;
+    cv.width = Math.floor(W * DPR); cv.height = Math.floor(H * DPR);
+    g.setTransform(DPR, 0, 0, DPR, 0, 0);
+    stars = [];
+    for (var i = 0; i < 70; i++) {
+      stars.push({ x: Math.random() * W, y: Math.random() * H * 0.75, r: Math.random() * 1.4 + 0.4, p: Math.random() * 6.28 });
+    }
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function hueOf(code) {
+    var h = 0, s = String(code || 'x');
+    for (var i = 0; i < s.length; i++) h = (h * 137 + s.charCodeAt(i) * 67 * (i + 1)) % 360;
+    return h;
+  }
+
+  function launch(x, hue, big) {
+    rockets.push({
+      x: x, y: H + 10, vy: -(9.6 + Math.random() * 2.2),
+      targetY: H * (0.12 + Math.random() * 0.34),
+      hue: hue, big: !!big, trail: []
+    });
+    Kid.tone(520 + Math.random() * 240, 0.42, { to: 1500, type: 'sine', vol: 0.11 });
+  }
+
+  function boom(x, y, hue, big) {
+    var n = big ? 120 : 74;
+    var power = big ? 1.5 : 1;
+    for (var i = 0; i < n; i++) {
+      var a = (Math.PI * 2 * i) / n + Math.random() * 0.12;
+      var sp = (2.2 + Math.random() * 3.4) * power;
+      parts.push({
+        x: x, y: y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp,
+        life: 1, decay: 0.008 + Math.random() * 0.008,
+        hue: (hue + (Math.random() * 60 - 30) + 360) % 360,
+        size: 1.6 + Math.random() * 1.8, glow: big
+      });
+    }
+    Kid.noise(big ? 0.5 : 0.3, { filter: 'lowpass', freq: big ? 900 : 700, to: 120, vol: big ? 0.34 : 0.26, decay: 2.4 });
+    Kid.tone(120, 0.22, { to: 55, type: 'triangle', vol: 0.16 });
+    if (big) {
+      for (var k = 0; k < 4; k++) {
+        (function (k) { setTimeout(function () { Kid.noise(0.06, { filter: 'highpass', freq: 3200, vol: 0.03, decay: 3 }); }, 180 + k * 120); })(k);
+      }
+    }
+    count++;
+    if (count % 12 === 0) {
+      Kid.speak(Kid.name() + '，' + Kid.praise() + '，烟花好漂亮！');
+      finale();
+    }
+  }
+
+  function finale() {
+    var base = Math.random() * 360;
+    for (var i = 0; i < 6; i++) {
+      (function (i) {
+        setTimeout(function () {
+          launch(W * (0.12 + i * 0.15) + Math.random() * 30, (base + i * 40) % 360, true);
+        }, i * 130);
+      })(i);
+    }
+  }
+
+  Kid.onKey(function (e) {
+    if (tip) tip.classList.add('hide');
+    var pos = Kid.keyPos(e);
+    launch(pos.x * W, hueOf(e.code));
+  }, { throttle: 90 });
+
+  var lastT = 0;
+
+  function frame(t) {
+    var dt = lastT ? Math.min(0.05, (t - lastT) / 1000) : 0.016;
+    lastT = t;
+    var k = dt * 60;                 // 把「每帧」常量换算成当前帧率，慢设备也不会变拖沓
+    g.globalCompositeOperation = 'source-over';
+    g.fillStyle = 'rgba(5,7,26,0.22)';
+    g.fillRect(0, 0, W, H);
+
+    g.globalCompositeOperation = 'lighter';
+
+    for (var s = 0; s < stars.length; s++) {
+      var st = stars[s];
+      var a = 0.35 + 0.35 * Math.sin(t / 900 + st.p);
+      g.fillStyle = 'rgba(255,255,255,' + a.toFixed(2) + ')';
+      g.fillRect(st.x, st.y, st.r, st.r);
+    }
+
+    for (var i = rockets.length - 1; i >= 0; i--) {
+      var r = rockets[i];
+      r.y += r.vy * k;
+      r.vy += 0.12 * k;
+      r.trail.push({ x: r.x, y: r.y });
+      if (r.trail.length > 9) r.trail.shift();
+      for (var t2 = 0; t2 < r.trail.length; t2++) {
+        var pt = r.trail[t2];
+        g.fillStyle = 'hsla(' + r.hue + ',100%,72%,' + (0.08 * t2) + ')';
+        g.beginPath();
+        g.arc(pt.x + Math.sin((t2 + t) / 90) * 1.6, pt.y, 2.4, 0, 6.2832);
+        g.fill();
+      }
+      g.fillStyle = 'hsla(' + r.hue + ',100%,88%,1)';
+      g.beginPath(); g.arc(r.x, r.y, 3.2, 0, 6.2832); g.fill();
+      if (r.y <= r.targetY || r.vy > -1.2) {
+        boom(r.x, r.y, r.hue, r.big);
+        rockets.splice(i, 1);
+      }
+    }
+
+    for (var j = parts.length - 1; j >= 0; j--) {
+      var p = parts[j];
+      p.x += p.vx * k; p.y += p.vy * k;
+      p.vx *= Math.pow(0.975, k); p.vy = p.vy * Math.pow(0.975, k) + 0.055 * k;
+      p.life -= p.decay * k;
+      if (p.life <= 0) { parts.splice(j, 1); continue; }
+      g.fillStyle = 'hsla(' + p.hue + ',100%,' + (58 + p.life * 26) + '%,' + p.life.toFixed(3) + ')';
+      g.beginPath(); g.arc(p.x, p.y, p.size * (0.5 + p.life * 0.7), 0, 6.2832); g.fill();
+    }
+
+    if (parts.length > 1400) parts.splice(0, parts.length - 1400);
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  setTimeout(function () { if (tip) tip.classList.add('hide'); }, 9000);
+})();
+</script>
+</body>
+</html>

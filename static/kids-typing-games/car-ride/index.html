@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚗</text></svg>">
+<meta name="theme-color" content="#9ad9ff">
+<title>🚗 小车兜风</title>
+<link rel="stylesheet" href="../style.css">
+<style>
+  body { background: linear-gradient(180deg, #9ad9ff 0%, #c9ecff 55%, #dff6ff 100%); }
+  canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 10; display: block; }
+  #hint {
+    position: fixed; left: 50%; transform: translateX(-50%); bottom: 2vh; z-index: 40;
+    background: rgba(255,255,255,.9); color: #1d4e8f; border-radius: 22px;
+    padding: 8px 22px; font-weight: 800; font-size: clamp(15px, 3vh, 22px);
+    box-shadow: 0 4px 14px rgba(31,94,150,.26); white-space: nowrap; pointer-events: none;
+  }
+  #km {
+    position: fixed; right: 14px; top: 58px; z-index: 40;
+    background: rgba(255,255,255,.9); color: #e05a2a; border-radius: 18px;
+    padding: 6px 16px; font-weight: 900; font-size: clamp(14px, 2.6vh, 20px);
+    box-shadow: 0 3px 12px rgba(31,94,150,.26); font-variant-numeric: tabular-nums;
+  }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="hint">按住任何键，小车就往前开 🚗💨</div>
+<div id="km">0.0 公里</div>
+<script src="../common.js"></script>
+<script>
+(function () {
+  var cv = document.getElementById('c');
+  var g = cv.getContext('2d');
+  var W = 0, H = 0, DPR = 1;
+  var hint = document.getElementById('hint');
+  var kmEl = document.getElementById('km');
+  Kid.mountChrome();
+
+  var held = {};
+  var speed = 0;          // 0..1
+  var dist = 0;           // px 累计
+  var roadY = 0, roadH = 0;
+  var props = [], clouds = [], birds = [];
+  var wheel = 0;
+  var engine = null;
+
+  function resize() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = cv.clientWidth; H = cv.clientHeight;
+    cv.width = Math.floor(W * DPR); cv.height = Math.floor(H * DPR);
+    g.setTransform(DPR, 0, 0, DPR, 0, 0);
+    roadH = Math.max(88, H * 0.26);
+    roadY = H - roadH;
+    if (!props.length) seed();
+  }
+
+  function seed() {
+    props = [];
+    for (var i = 0; i < 9; i++) {
+      props.push({ x: (i / 9) * W * 1.4, type: Kid.pick(['tree', 'tree', 'house', 'lamp', 'bush']), s: Kid.rand(1.0, 1.6) });
+    }
+    clouds = [];
+    for (var j = 0; j < 5; j++) clouds.push({ x: Kid.rand(0, W), y: H * Kid.rand(0.06, 0.3), s: Kid.rand(0.7, 1.3) });
+    birds = [];
+    for (var k = 0; k < 3; k++) birds.push({ x: Kid.rand(0, W), y: H * Kid.rand(0.12, 0.34), p: Kid.rand(0, 6.28) });
+  }
+
+  function startEngine() {
+    if (engine) return;
+    var c = Kid.audio(); if (!c) return;
+    var o = c.createOscillator(), f = c.createBiquadFilter(), gn = c.createGain();
+    o.type = 'sawtooth';
+    o.frequency.value = 60;
+    f.type = 'lowpass'; f.frequency.value = 420; f.Q.value = 2;
+    gn.gain.value = 0.0001;
+    o.connect(f); f.connect(gn); gn.connect(Kid.bus() || c.destination);
+    o.start();
+    engine = { o: o, f: f, g: gn };
+  }
+
+  Kid.onKey(function (e) {
+    if (e.repeat) return;
+    if (!held[e.code]) {
+      held[e.code] = true;
+      startEngine();
+      if (!anyHeldFlag) { anyHeldFlag = true; hint.textContent = '松开手，小车就慢慢停下来'; }
+      Kid.tone(420, 0.18, { type: 'square', vol: 0.09, to: 520 });
+    }
+  }, { allowRepeat: true });
+
+  document.addEventListener('keyup', function (e) { delete held[e.code]; });
+  window.addEventListener('blur', function () { held = {}; });
+  var anyHeldFlag = false;
+
+  function anyHeld() { for (var k in held) { if (held[k]) return true; } return false; }
+
+  function roundRect(x, y, w, h, r) {
+    g.beginPath();
+    g.moveTo(x + r, y);
+    g.arcTo(x + w, y, x + w, y + h, r);
+    g.arcTo(x + w, y + h, x, y + h, r);
+    g.arcTo(x, y + h, x, y, r);
+    g.arcTo(x, y, x + w, y, r);
+    g.closePath();
+  }
+
+  function drawTree(x, base, s) {
+    g.fillStyle = '#8b5a2b';
+    g.fillRect(x - 6 * s, base - 46 * s, 12 * s, 46 * s);
+    g.fillStyle = '#4fbf5f';
+    g.beginPath(); g.arc(x, base - 58 * s, 30 * s, 0, 6.2832); g.fill();
+    g.beginPath(); g.arc(x - 20 * s, base - 44 * s, 22 * s, 0, 6.2832); g.fill();
+    g.beginPath(); g.arc(x + 20 * s, base - 44 * s, 22 * s, 0, 6.2832); g.fill();
+  }
+  function drawHouse(x, base, s) {
+    g.fillStyle = '#ffe6a8';
+    g.fillRect(x - 32 * s, base - 60 * s, 64 * s, 60 * s);
+    g.fillStyle = '#e06060';
+    g.beginPath();
+    g.moveTo(x - 40 * s, base - 58 * s);
+    g.lineTo(x, base - 96 * s);
+    g.lineTo(x + 40 * s, base - 58 * s);
+    g.closePath(); g.fill();
+    g.fillStyle = '#7ec8ff';
+    g.fillRect(x - 20 * s, base - 46 * s, 18 * s, 18 * s);
+    g.fillRect(x + 4 * s, base - 46 * s, 18 * s, 18 * s);
+    g.fillStyle = '#a8724a';
+    g.fillRect(x - 8 * s, base - 22 * s, 16 * s, 22 * s);
+  }
+  function drawLamp(x, base, s) {
+    g.fillStyle = '#b8c6d6';
+    g.fillRect(x - 3 * s, base - 90 * s, 6 * s, 90 * s);
+    g.fillStyle = '#ffe14d';
+    g.beginPath(); g.arc(x, base - 94 * s, 11 * s, 0, 6.2832); g.fill();
+  }
+  function drawBush(x, base, s) {
+    g.fillStyle = '#5fc46f';
+    g.beginPath(); g.arc(x - 14 * s, base - 12 * s, 16 * s, 0, 6.2832); g.fill();
+    g.beginPath(); g.arc(x + 14 * s, base - 12 * s, 16 * s, 0, 6.2832); g.fill();
+    g.beginPath(); g.arc(x, base - 22 * s, 20 * s, 0, 6.2832); g.fill();
+  }
+
+  function drawCar(cx, cy, s, sp) {
+    // 车身
+    g.fillStyle = '#ff5b5b';
+    roundRect(cx - 62 * s, cy - 34 * s, 124 * s, 40 * s, 14 * s); g.fill();
+    g.fillStyle = '#ff7f7f';
+    roundRect(cx - 62 * s, cy - 34 * s, 124 * s, 16 * s, 12 * s); g.fill();
+    // 车顶
+    g.fillStyle = '#ff5b5b';
+    roundRect(cx - 34 * s, cy - 62 * s, 68 * s, 32 * s, 14 * s); g.fill();
+    // 车窗
+    g.fillStyle = '#cdeaff';
+    roundRect(cx - 26 * s, cy - 56 * s, 26 * s, 22 * s, 7 * s); g.fill();
+    roundRect(cx + 4 * s, cy - 56 * s, 24 * s, 22 * s, 7 * s); g.fill();
+    // 车灯
+    g.fillStyle = '#ffe14d';
+    g.beginPath(); g.arc(cx + 60 * s, cy - 20 * s, 6 * s, 0, 6.2832); g.fill();
+    // 车轮
+    [cx - 34 * s, cx + 34 * s].forEach(function (wx) {
+      g.fillStyle = '#33354a';
+      g.beginPath(); g.arc(wx, cy + 8 * s, 17 * s, 0, 6.2832); g.fill();
+      g.fillStyle = '#c9cfda';
+      g.beginPath(); g.arc(wx, cy + 8 * s, 8 * s, 0, 6.2832); g.fill();
+      g.strokeStyle = '#8a90a0'; g.lineWidth = 2 * s;
+      g.beginPath();
+      for (var a = 0; a < 4; a++) {
+        var ang = wheel + a * Math.PI / 2;
+        g.moveTo(wx, cy + 8 * s);
+        g.lineTo(wx + Math.cos(ang) * 7 * s, cy + 8 * s + Math.sin(ang) * 7 * s);
+      }
+      g.stroke();
+    });
+    // 速度线
+    if (sp > 0.35) {
+      g.strokeStyle = 'rgba(255,255,255,' + (0.15 + sp * 0.4) + ')';
+      g.lineWidth = 3;
+      for (var i = 0; i < 4; i++) {
+        var ly = cy - 30 * s + i * 18 * s;
+        g.beginPath();
+        g.moveTo(cx - 74 * s - sp * 30, ly);
+        g.lineTo(cx - 118 * s - sp * 60, ly);
+        g.stroke();
+      }
+    }
+  }
+
+  function frame(t) {
+    var holding = anyHeld();
+    var target = holding ? 1 : 0;
+    speed += (target - speed) * (holding ? 0.035 : 0.05);
+    if (speed < 0.004) speed = 0;
+
+    var v = speed * 19;
+    dist += v;
+    wheel += v * 0.06;
+    var km = dist / 420;
+    kmEl.textContent = km.toFixed(1) + ' 公里';
+
+    if (engine) {
+      var c = Kid.audio();
+      if (c) {
+        var now = c.currentTime;
+        engine.o.frequency.setTargetAtTime(58 + speed * 78, now, 0.12);
+        engine.f.frequency.setTargetAtTime(380 + speed * 900, now, 0.12);
+        engine.g.gain.setTargetAtTime(0.0001 + speed * 0.05, now, 0.1);
+      }
+    }
+
+    // 天空
+    var sky = g.createLinearGradient(0, 0, 0, roadY);
+    sky.addColorStop(0, '#8ed3ff');
+    sky.addColorStop(1, '#d8f1ff');
+    g.fillStyle = sky;
+    g.fillRect(0, 0, W, roadY);
+
+    // 太阳
+    g.fillStyle = '#ffd93b';
+    g.beginPath(); g.arc(W * 0.82, H * 0.16, Math.min(W, H) * 0.055, 0, 6.2832); g.fill();
+
+    // 云
+    clouds.forEach(function (cl) {
+      cl.x -= 0.35 + speed * 1.6;
+      if (cl.x < -160) { cl.x = W + 120; cl.y = H * Kid.rand(0.06, 0.34); }
+      g.fillStyle = 'rgba(255,255,255,.92)';
+      var s = cl.s * Math.min(W, H) * 0.05;
+      g.beginPath();
+      g.arc(cl.x, cl.y, s, 0, 6.2832);
+      g.arc(cl.x + s * 0.9, cl.y + s * 0.15, s * 0.78, 0, 6.2832);
+      g.arc(cl.x - s * 0.9, cl.y + s * 0.18, s * 0.68, 0, 6.2832);
+      g.fill();
+    });
+
+    // 小鸟
+    birds.forEach(function (b) {
+      b.x -= 0.6 + speed * 2.2;
+      if (b.x < -60) { b.x = W + 40; b.y = H * Kid.rand(0.1, 0.36); }
+      g.strokeStyle = 'rgba(60,80,110,.55)';
+      g.lineWidth = 2.4;
+      var w = 9 + Math.sin(t / 220 + b.p) * 4;
+      g.beginPath();
+      g.moveTo(b.x - w, b.y);
+      g.quadraticCurveTo(b.x - w / 2, b.y - 6, b.x, b.y);
+      g.quadraticCurveTo(b.x + w / 2, b.y - 6, b.x + w, b.y);
+      g.stroke();
+    });
+
+    // 远山
+    g.fillStyle = '#a9d8a9';
+    g.beginPath();
+    g.moveTo(-40, roadY);
+    for (var m = 0; m <= 8; m++) {
+      var mx = ((m * 260 - dist * 0.18) % (W + 520) + W + 520) % (W + 520) - 260;
+      g.quadraticCurveTo(mx + 130, roadY - 90 - (m % 2) * 34, mx + 260, roadY);
+    }
+    g.lineTo(W + 40, roadY);
+    g.lineTo(-40, roadY);
+    g.fill();
+
+    // 草地
+    g.fillStyle = '#7ed37e';
+    g.fillRect(0, roadY - 26, W, 26);
+
+    // 路边景物
+    props.forEach(function (p) {
+      p.x -= v * 1.05;
+      if (p.x < -140) {
+        p.x = W + Kid.rand(60, 380);
+        p.type = Kid.pick(['tree', 'tree', 'house', 'lamp', 'bush']);
+        p.s = Kid.rand(1.0, 1.6);
+      }
+      var base = roadY - 26;
+      if (p.type === 'tree') drawTree(p.x, base, p.s);
+      else if (p.type === 'house') drawHouse(p.x, base, p.s);
+      else if (p.type === 'lamp') drawLamp(p.x, base, p.s);
+      else drawBush(p.x, base, p.s);
+    });
+
+    // 路面
+    g.fillStyle = '#5c6270';
+    g.fillRect(0, roadY, W, roadH);
+    g.fillStyle = '#6d7383';
+    g.fillRect(0, roadY, W, 8);
+    // 中线
+    var dashW = Math.max(46, W * 0.06);
+    var gap = dashW * 0.9;
+    var off = -(dist % (dashW + gap));
+    g.fillStyle = '#fff8d0';
+    for (var x = off; x < W + dashW; x += dashW + gap) {
+      g.fillRect(x, roadY + roadH * 0.46, dashW, Math.max(6, roadH * 0.075));
+    }
+    // 路肩虚线
+    g.fillStyle = 'rgba(255,255,255,.55)';
+    var sw = 26, sg = 22, soff = -((dist * 1.1) % (sw + sg));
+    for (var x2 = soff; x2 < W + sw; x2 += sw + sg) {
+      g.fillRect(x2, roadY + roadH - 16, sw, 5);
+    }
+
+    // 小车
+    var carY = roadY + roadH * 0.34;
+    var bob = Math.sin(t / 110) * speed * 2.6;
+    drawCar(W * 0.26, carY + bob, Math.min(W, H) / 540, speed);
+
+    // 尾气小烟
+    if (speed > 0.5 && Math.random() < 0.3) {
+      g.fillStyle = 'rgba(255,255,255,.55)';
+      g.beginPath();
+      g.arc(W * 0.26 - 74, carY + 16 + Math.random() * 8, 4 + Math.random() * 5, 0, 6.2832);
+      g.fill();
+    }
+
+    requestAnimationFrame(frame);
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+  requestAnimationFrame(frame);
+  setTimeout(function () { Kid.speak('按住键盘，小车就开啦'); }, 1100);
+})();
+</script>
+</body>
+</html>

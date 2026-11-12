@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐘</text></svg>">
+<meta name="theme-color" content="#c9f0d8">
+<title>🐘 动物点名</title>
+<link rel="stylesheet" href="../style.css">
+<style>
+  body { background: linear-gradient(170deg, #d9f7e4 0%, #b9edd2 48%, #ffeec2 100%); }
+  #stage { position: fixed; inset: 0; z-index: 10; display: flex; align-items: center; justify-content: center; padding: 8vh 4vw 18vh; }
+  .card {
+    position: relative; display: flex; flex-direction: column; align-items: center; gap: 1vh;
+    background: rgba(255,255,255,.72); border-radius: clamp(24px, 5vh, 46px);
+    padding: clamp(16px, 3.4vh, 34px) clamp(28px, 7vw, 64px);
+    box-shadow: 0 12px 34px rgba(31,94,150,.18), inset 0 0 0 4px rgba(255,255,255,.7);
+    animation: popIn .34s cubic-bezier(.2,1.6,.5,1);
+  }
+  @keyframes popIn {
+    from { transform: scale(.45) rotate(-8deg); opacity: 0; }
+    to   { transform: scale(1) rotate(0); opacity: 1; }
+  }
+  .card .emoji { font-size: clamp(84px, 26vh, 200px); line-height: 1; }
+  .card .name { font-size: clamp(26px, 6vh, 52px); font-weight: 900; color: #2b6bb0; letter-spacing: 2px; }
+  .card .letter {
+    position: absolute; left: -8px; top: -14px;
+    background: #ff9a3d; color: #fff; border-radius: 16px;
+    font-size: clamp(18px, 3.4vh, 28px); font-weight: 900; padding: 2px 14px;
+    box-shadow: 0 4px 0 #c96a12;
+  }
+  .card .says { font-size: clamp(14px, 2.6vh, 20px); font-weight: 700; color: #7fa3c7; }
+  #parade {
+    position: fixed; left: 0; right: 0; bottom: 1.6vh; z-index: 40;
+    display: flex; align-items: flex-end; justify-content: center; gap: clamp(4px, 1.2vw, 14px);
+    min-height: 12vh; pointer-events: none;
+  }
+  #parade span {
+    font-size: clamp(24px, 6.4vh, 52px); animation: hop .38s cubic-bezier(.2,1.6,.5,1);
+    filter: drop-shadow(0 3px 5px rgba(31,94,150,.22));
+  }
+  @keyframes hop {
+    from { transform: translateY(40px) scale(.4); opacity: 0; }
+    to   { transform: translateY(0) scale(1); opacity: 1; }
+  }
+  #parade.cheer span { animation: cheer .5s ease-in-out 4; }
+  @keyframes cheer {
+    0%, 100% { transform: translateY(0) rotate(0); }
+    30% { transform: translateY(-22px) rotate(-10deg); }
+    70% { transform: translateY(-22px) rotate(10deg); }
+  }
+  #tip {
+    position: fixed; left: 50%; top: 12vh; transform: translateX(-50%); z-index: 40;
+    color: #4b8b6a; font-weight: 800; font-size: clamp(15px, 3vh, 22px);
+    background: rgba(255,255,255,.78); border-radius: 20px; padding: 7px 20px;
+    box-shadow: 0 4px 14px rgba(31,94,150,.16); white-space: nowrap; pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<div id="tip">按 A - Z，认识小动物 🐾</div>
+<div id="parade"></div>
+<script src="../common.js"></script>
+<script>
+(function () {
+  var stage = document.getElementById('stage');
+  var parade = document.getElementById('parade');
+  var tip = document.getElementById('tip');
+  Kid.mountChrome();
+
+  // [字母, emoji, 名字, 叫声类型, 基频]
+  var A = [
+    ['A', '🐜', '蚂蚁', 'chirp', 900],
+    ['B', '🦋', '蝴蝶', 'chirp', 1100],
+    ['C', '🐱', '小猫', 'meow', 700],
+    ['D', '🐶', '小狗', 'bark', 300],
+    ['E', '🐘', '大象', 'trumpet', 280],
+    ['F', '🐸', '青蛙', 'quack', 380],
+    ['G', '🦒', '长颈鹿', 'hoot', 340],
+    ['H', '🐴', '小马', 'neigh', 420],
+    ['I', '🦎', '蜥蜴', 'chirp', 1300],
+    ['J', '🪼', '水母', 'glide', 500],
+    ['K', '🐨', '考拉', 'hoot', 260],
+    ['L', '🦁', '狮子', 'growl', 150],
+    ['M', '🐵', '猴子', 'chirp', 1000],
+    ['N', '🐦', '小鸟', 'chirp', 1500],
+    ['O', '🦉', '猫头鹰', 'hoot', 300],
+    ['P', '🐧', '企鹅', 'quack', 420],
+    ['Q', '🐝', '小蜜蜂', 'buzz', 220],
+    ['R', '🐰', '小兔', 'chirp', 1200],
+    ['S', '🐍', '小蛇', 'buzz', 600],
+    ['T', '🐯', '老虎', 'growl', 170],
+    ['U', '🦄', '独角兽', 'trumpet', 620],
+    ['V', '🦅', '老鹰', 'chirp', 1400],
+    ['W', '🐳', '鲸鱼', 'glide', 180],
+    ['X', '🦊', '狐狸', 'bark', 360],
+    ['Y', '🐃', '牦牛', 'growl', 130],
+    ['Z', '🦓', '斑马', 'neigh', 460]
+  ];
+  var byLetter = {};
+  A.forEach(function (a) { byLetter[a[0]] = a; });
+
+  var count = 0;
+  var current = null;
+
+  function sound(kind, base) {
+    if (kind === 'chirp') {
+      [0, .09, .18].forEach(function (d, i) { Kid.tone(base + i * 160, 0.08, { type: 'triangle', vol: 0.12, delay: d }); });
+    } else if (kind === 'bark') {
+      Kid.tone(base, 0.1, { type: 'square', vol: 0.14, to: base * 0.6 });
+      Kid.tone(base, 0.12, { type: 'square', vol: 0.12, to: base * 0.55, delay: 0.16 });
+    } else if (kind === 'meow') {
+      Kid.tone(base, 0.18, { type: 'sine', vol: 0.15, to: base * 1.5 });
+      Kid.tone(base * 1.5, 0.24, { type: 'sine', vol: 0.13, to: base * 0.8, delay: 0.18 });
+    } else if (kind === 'hoot') {
+      Kid.tone(base, 0.2, { type: 'sine', vol: 0.16 });
+      Kid.tone(base * 0.86, 0.28, { type: 'sine', vol: 0.14, delay: 0.24 });
+    } else if (kind === 'growl') {
+      Kid.tone(base, 0.34, { type: 'sawtooth', vol: 0.13, to: base * 0.7 });
+      Kid.noise(0.3, { filter: 'lowpass', freq: 500, vol: 0.1, decay: 1.6 });
+    } else if (kind === 'trumpet') {
+      Kid.tone(base, 0.14, { type: 'sawtooth', vol: 0.13, to: base * 1.8 });
+      Kid.tone(base * 1.8, 0.22, { type: 'sawtooth', vol: 0.12, to: base * 1.2, delay: 0.15 });
+    } else if (kind === 'quack') {
+      Kid.tone(base, 0.09, { type: 'square', vol: 0.13, to: base * 0.7 });
+      Kid.tone(base, 0.09, { type: 'square', vol: 0.12, to: base * 0.7, delay: 0.13 });
+    } else if (kind === 'buzz') {
+      Kid.tone(base, 0.35, { type: 'sawtooth', vol: 0.1, to: base * 1.1 });
+    } else if (kind === 'neigh') {
+      Kid.tone(base, 0.16, { type: 'sawtooth', vol: 0.12, to: base * 0.6 });
+      Kid.tone(base * 0.9, 0.2, { type: 'sawtooth', vol: 0.1, to: base * 0.5, delay: 0.14 });
+    } else {
+      Kid.tone(base, 0.4, { type: 'sine', vol: 0.13, to: base * 1.4 });
+    }
+  }
+
+  function show(a) {
+    if (current && current.parentNode) current.parentNode.removeChild(current);
+    var card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML =
+      '<div class="letter">' + a[0] + '</div>' +
+      '<div class="emoji">' + a[1] + '</div>' +
+      '<div class="name">' + a[2] + '</div>' +
+      '<div class="says">' + a[0] + ' is for ' + a[2] + '</div>';
+    stage.innerHTML = '';
+    stage.appendChild(card);
+    current = card;
+
+    sound(a[3], a[4]);
+    Kid.speak(a[0] + '，' + a[2]);
+
+    var chip = document.createElement('span');
+    chip.textContent = a[1];
+    parade.appendChild(chip);
+    while (parade.children.length > 8) parade.removeChild(parade.firstChild);
+
+    count++;
+    if (count % 6 === 0) cheer();
+    if (tip) tip.style.opacity = '0';
+  }
+
+  function cheer() {
+    parade.classList.add('cheer');
+    Kid.confetti(document.body, 26, { x: 50, y: 62 });
+    setTimeout(function () {
+      Kid.speak(Kid.name() + '，' + Kid.praise() + '，认识好多动物啦！');
+    }, 200);
+    setTimeout(function () {
+      parade.classList.remove('cheer');
+      parade.innerHTML = '';
+    }, 2400);
+  }
+
+  Kid.onKey(function (e) {
+    var letter = null;
+    var m = /^Key([A-Z])$/.exec(e.code);
+    if (m) letter = m[1];
+    else if (/^[a-zA-Z]$/.test(e.key)) letter = e.key.toUpperCase();
+    if (!letter) {
+      show(Kid.pick(A));   // 乱按其它键也给一只动物，宝宝不会按空
+      return;
+    }
+    show(byLetter[letter]);
+  }, { throttle: 160 });
+
+  setTimeout(function () {
+    show(byLetter.C);
+    Kid.speak('按 A 到 Z，一个一个认识小动物');
+  }, 1000);
+})();
+</script>
+</body>
+</html>

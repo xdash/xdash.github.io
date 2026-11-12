@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐻</text></svg>">
+<meta name="theme-color" content="#ffe6b8">
+<title>🐻 喂小熊吃饭</title>
+<link rel="stylesheet" href="../style.css">
+<style>
+  body { background: linear-gradient(170deg, #fff1cf 0%, #ffe0a8 55%, #ffd08a 100%); }
+  #stage { position: fixed; inset: 0; z-index: 10; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 12vh; }
+  .bear { position: relative; width: min(44vw, 40vh, 300px); transition: transform .45s cubic-bezier(.2,1.5,.5,1); transform-origin: 50% 100%; }
+  .bear.grow { transform: scale(1.16); }
+  .head { position: relative; width: 100%; aspect-ratio: 1; border-radius: 50%;
+    background: radial-gradient(circle at 36% 30%, #c08457, #8a5533 72%); box-shadow: inset -8px -12px 22px rgba(0,0,0,.16); }
+  .ear { position: absolute; width: 31%; aspect-ratio: 1; border-radius: 50%; background: #8a5533; top: -9%; }
+  .ear::after { content: ''; position: absolute; inset: 26%; border-radius: 50%; background: #d9a87c; }
+  .ear.l { left: 1%; } .ear.r { right: 1%; }
+  .eye { position: absolute; top: 33%; width: 12%; aspect-ratio: 1; border-radius: 50%; background: #2b1a12; animation: blink 4.2s infinite; }
+  .eye::after { content: ''; position: absolute; left: 24%; top: 18%; width: 34%; height: 34%; border-radius: 50%; background: #fff; opacity: .85; }
+  .eye.l { left: 25%; } .eye.r { right: 25%; }
+  @keyframes blink { 0%, 92%, 100% { transform: scaleY(1); } 96% { transform: scaleY(.1); } }
+  .muzzle { position: absolute; left: 50%; bottom: 11%; width: 50%; aspect-ratio: 1 / .82; transform: translateX(-50%);
+    border-radius: 50%; background: radial-gradient(circle at 42% 34%, #f6e0c8, #e2c19c); }
+  .nose { position: absolute; left: 50%; top: 14%; width: 30%; aspect-ratio: 1 / .8; transform: translateX(-50%);
+    border-radius: 50% 50% 60% 60%; background: #38221a; }
+  .mouth { position: absolute; left: 50%; top: 52%; width: 46%; height: 6%; transform: translateX(-50%);
+    background: #5b3020; border-radius: 40%; transition: height .14s, width .14s; }
+  .bear.eat .mouth { height: 34%; width: 52%; border-radius: 10% 10% 55% 55%; }
+  .body { position: relative; width: 76%; margin: -6% auto 0; aspect-ratio: 1 / .72;
+    border-radius: 44% 44% 38% 38%; background: radial-gradient(circle at 40% 22%, #bd8154, #834f2f 78%);
+    box-shadow: inset -8px -10px 20px rgba(0,0,0,.16); }
+  .belly { position: absolute; left: 50%; top: 22%; transform: translateX(-50%); width: 52%; aspect-ratio: 1 / .9;
+    border-radius: 50%; background: #e8c9a8; opacity: .9; }
+  .paw { position: absolute; bottom: 22%; width: 22%; aspect-ratio: 1; border-radius: 50%; background: #7a4829; }
+  .paw.l { left: -4%; } .paw.r { right: -4%; }
+  #plates { position: fixed; top: 56px; left: 50%; transform: translateX(-50%); z-index: 40; display: flex; gap: 7px; }
+  #plates i { width: clamp(12px, 2.4vh, 18px); aspect-ratio: 1; border-radius: 50%; background: rgba(255,255,255,.55);
+    box-shadow: inset 0 0 0 2px rgba(160,110,60,.25); transition: background .2s, transform .2s; }
+  #plates i.on { background: #ff8f4d; transform: scale(1.12); }
+  #hint {
+    position: fixed; left: 50%; transform: translateX(-50%); bottom: 2.2vh; z-index: 40;
+    background: rgba(255,255,255,.9); color: #8a5533; border-radius: 22px;
+    padding: 8px 22px; font-weight: 800; font-size: clamp(15px, 3vh, 22px);
+    box-shadow: 0 4px 14px rgba(160,90,40,.26); white-space: nowrap; pointer-events: none;
+  }
+  .food { position: fixed; z-index: 30; font-size: clamp(26px, 6vh, 52px); pointer-events: none; will-change: transform; }
+</style>
+</head>
+<body>
+<div id="plates"></div>
+<div id="stage">
+  <div class="bear" id="bear">
+    <div class="head">
+      <div class="ear l"></div><div class="ear r"></div>
+      <div class="eye l"></div><div class="eye r"></div>
+      <div class="muzzle">
+        <div class="nose"></div>
+        <div class="mouth" id="mouth"></div>
+      </div>
+    </div>
+    <div class="body">
+      <div class="belly"></div>
+      <div class="paw l"></div><div class="paw r"></div>
+    </div>
+  </div>
+</div>
+<div id="hint">按任何键，喂小熊吃一口 🍎</div>
+<script src="../common.js"></script>
+<script>
+(function () {
+  var bear = document.getElementById('bear');
+  var mouth = document.getElementById('mouth');
+  var hint = document.getElementById('hint');
+  var plates = document.getElementById('plates');
+  Kid.mountChrome();
+
+  var FOODS = ['🍎', '🍌', '🍪', '🥕', '🍇', '🍞', '🍊', '🥞', '🍓', '🍯'];
+  var GOAL = 10;
+  var eaten = 0;
+  var flying = [];
+  var mouthOpen = false;
+
+  for (var i = 0; i < GOAL; i++) plates.appendChild(document.createElement('i'));
+
+  function mouthPoint() {
+    var r = mouth.getBoundingClientRect();
+    return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+  }
+
+  function feed() {
+    if (flying.length > 8) return;
+    var W = window.innerWidth, H = window.innerHeight;
+    var fromLeft = Math.random() < 0.5;
+    var start = { x: fromLeft ? -40 : W + 40, y: H * Kid.rand(0.55, 0.85) };
+    var end = mouthPoint();
+    var ctrl = { x: (start.x + end.x) / 2 + (fromLeft ? 1 : -1) * Kid.rand(60, 200), y: Math.min(start.y, end.y) - Kid.rand(110, 260) };
+    var node = document.createElement('div');
+    node.className = 'food';
+    node.textContent = Kid.pick(FOODS);
+    node.style.left = '0px'; node.style.top = '0px';
+    document.body.appendChild(node);
+    flying.push({ node: node, t: 0, a: start, b: ctrl, c: end, dur: Kid.rand(620, 860), start: performance.now() });
+
+    bear.classList.add('eat');
+    mouthOpen = true;
+    Kid.tone(660, 0.1, { to: 880, type: 'sine', vol: 0.1 });
+    Kid.speak('啊——', { rate: 0.9 });
+  }
+
+  function arrive(f) {
+    if (f.node.parentNode) f.node.parentNode.removeChild(f.node);
+    bear.classList.remove('eat');
+    mouthOpen = false;
+    Kid.tone(180, 0.14, { to: 110, type: 'triangle', vol: 0.14 });
+    Kid.noise(0.14, { filter: 'lowpass', freq: 800, vol: 0.14, decay: 2 });
+    eaten++;
+    plates.children[eaten - 1] && plates.children[eaten - 1].classList.add('on');
+    if (eaten === GOAL) full();
+    else if (eaten % 3 === 0) Kid.speak(Kid.name() + '，' + Kid.praise() + '，小熊吃饱饱！');
+  }
+
+  function full() {
+    bear.classList.add('grow');
+    Kid.tone(120, 0.5, { to: 60, type: 'sawtooth', vol: 0.16 });
+    setTimeout(function () {
+      Kid.noise(0.36, { filter: 'lowpass', freq: 500, to: 140, vol: 0.22, decay: 1.4 });
+      Kid.speak('嗝——' + Kid.name() + '喂饱小熊啦！');
+    }, 260);
+    Kid.confetti(document.body, 34, { x: 50, y: 46 });
+    hint.textContent = '🐻 小熊吃饱啦！摸摸肚子再来一轮';
+    setTimeout(function () {
+      bear.classList.remove('grow');
+      eaten = 0;
+      [].forEach.call(plates.children, function (p) { p.classList.remove('on'); });
+      hint.textContent = '按任何键，喂小熊吃一口 🍎';
+    }, 3400);
+  }
+
+  Kid.onKey(function () {
+    feed();
+  }, { throttle: 170 });
+
+  function tick(t) {
+    for (var i = flying.length - 1; i >= 0; i--) {
+      var f = flying[i];
+      f.t = Math.min(1, (t - f.start) / f.dur);
+      if (f.t >= 1) { arrive(f); flying.splice(i, 1); continue; }
+      var u = 1 - f.t;
+      var x = u * u * f.a.x + 2 * u * f.t * f.b.x + f.t * f.t * f.c.x;
+      var y = u * u * f.a.y + 2 * u * f.t * f.b.y + f.t * f.t * f.c.y;
+      var rot = (f.t * 220) * (f.a.x < f.c.x ? 1 : -1);
+      f.node.style.transform = 'translate(' + x + 'px,' + y + 'px) translate(-50%,-50%) rotate(' + rot + 'deg)';
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  setTimeout(function () { Kid.speak('按键盘，给小熊喂好吃的'); }, 900);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐣</text></svg>">
+<meta name="theme-color" content="#7ec8ff">
+<title>🐣 躲猫猫小窗户</title>
+<link rel="stylesheet" href="../style.css">
+<style>
+  body { background: linear-gradient(170deg, #9fdcff 0%, #bdeaff 40%, #ffe9c9 100%); }
+  .wall {
+    position: fixed; inset: 0; z-index: 5;
+    background:
+      repeating-linear-gradient(0deg, rgba(255,255,255,.16) 0 2px, transparent 2px 64px),
+      repeating-linear-gradient(90deg, rgba(255,255,255,.16) 0 2px, transparent 2px 128px);
+  }
+  #stage { position: fixed; inset: 0; z-index: 10; display: flex; align-items: center; justify-content: center; padding: 6vh 4vw 8vh; }
+  .windows {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(10px, 2.4vh, 20px);
+    width: min(84vw, 68vh, 660px);
+  }
+  .win {
+    position: relative; aspect-ratio: 1 / 1; border-radius: 16px;
+    background: #ffe9c2;
+    box-shadow: inset 0 0 0 clamp(5px, 1vh, 9px) #fff, 0 8px 22px rgba(31,94,150,.28);
+    overflow: hidden; cursor: pointer;
+  }
+  .win .animal {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-size: clamp(38px, 8.6vh, 84px); transform: scale(.1); opacity: 0;
+    transition: transform .28s cubic-bezier(.2,1.6,.5,1), opacity .2s;
+  }
+  .win.open .animal { transform: scale(1); opacity: 1; }
+  .curtain {
+    position: absolute; top: 0; bottom: 0; width: 51%;
+    background: linear-gradient(180deg, #ff8fa8, #e4607d);
+    box-shadow: inset 0 0 18px rgba(120,20,50,.28);
+    transition: transform .34s cubic-bezier(.4,1.5,.6,1);
+    z-index: 3;
+  }
+  .curtain::after {
+    content: ''; position: absolute; inset: 0;
+    background: repeating-linear-gradient(90deg, rgba(255,255,255,.16) 0 6px, transparent 6px 16px);
+  }
+  .cl { left: 0; border-radius: 10px 0 0 10px; }
+  .cr { right: 0; border-radius: 0 10px 10px 0; }
+  .win.open .cl { transform: translateX(-102%); }
+  .win.open .cr { transform: translateX(102%); }
+  .win .name {
+    position: absolute; left: 0; right: 0; bottom: 4%; text-align: center;
+    font-size: clamp(11px, 1.9vh, 17px); font-weight: 900; color: #8a5a2b;
+    opacity: 0; transition: opacity .3s; z-index: 2;
+  }
+  .win.open .name { opacity: 1; }
+  #hint {
+    position: fixed; left: 50%; transform: translateX(-50%); bottom: 2.2vh; z-index: 40;
+    background: rgba(255,255,255,.9); color: #1d4e8f; border-radius: 22px;
+    padding: 8px 22px; font-weight: 800; font-size: clamp(15px, 3vh, 22px);
+    box-shadow: 0 4px 14px rgba(31,94,150,.28); white-space: nowrap; pointer-events: none;
+  }
+  .win.dance .animal { animation: dance .45s ease-in-out 6; }
+  @keyframes dance {
+    0%, 100% { transform: scale(1) rotate(0); }
+    30% { transform: scale(1.14) rotate(-9deg); }
+    70% { transform: scale(1.14) rotate(9deg); }
+  }
+</style>
+</head>
+<body>
+<div class="wall"></div>
+<div id="stage"><div class="windows" id="grid"></div></div>
+<div id="hint">按任何键，打开一扇小窗户 🪟</div>
+<script src="../common.js"></script>
+<script>
+(function () {
+  var grid = document.getElementById('grid');
+  var hint = document.getElementById('hint');
+  Kid.mountChrome();
+
+  var ANIMALS = [
+    { e: '🐶', n: '小狗', say: '汪汪', s: [[330, .1, 0, 'square'], [250, .12, .13, 'square']] },
+    { e: '🐱', n: '小猫', say: '喵——', s: [[620, .3, 0, 'sine'], [780, .22, .18, 'sine']] },
+    { e: '🐰', n: '小兔', say: '蹦蹦跳', s: [[520, .1, 0, 'triangle'], [660, .1, .1, 'triangle'], [820, .12, .2, 'triangle']] },
+    { e: '🐼', n: '熊猫', say: '咕噜咕噜', s: [[180, .22, 0, 'triangle'], [150, .26, .16, 'triangle']] },
+    { e: '🐸', n: '青蛙', say: '呱呱', s: [[210, .1, 0, 'square'], [190, .12, .12, 'square'], [210, .1, .26, 'square']] },
+    { e: '🐷', n: '小猪', say: '哼哼', s: [[150, .16, 0, 'sawtooth'], [130, .2, .16, 'sawtooth']] },
+    { e: '🐵', n: '猴子', say: '吱吱', s: [[900, .08, 0, 'square'], [1150, .08, .09, 'square'], [980, .08, .18, 'square']] },
+    { e: '🐔', n: '小鸡', say: '叽叽', s: [[1050, .07, 0, 'triangle'], [1200, .07, .08, 'triangle']] },
+    { e: '🐻', n: '小熊', say: '嗷呜', s: [[170, .3, 0, 'sawtooth'], [240, .26, .16, 'sawtooth']] }
+  ];
+
+  var wins = [];
+  var order = [];
+
+  function build() {
+    grid.innerHTML = '';
+    wins = [];
+    order = ANIMALS.slice().sort(function () { return Math.random() - 0.5; });
+    for (var i = 0; i < 9; i++) {
+      var w = document.createElement('div');
+      w.className = 'win';
+      w.dataset.i = i;
+      w.innerHTML =
+        '<div class="curtain cl"></div>' +
+        '<div class="curtain cr"></div>' +
+        '<div class="animal">' + order[i].e + '</div>' +
+        '<div class="name">' + order[i].n + '</div>';
+      grid.appendChild(w);
+      wins.push({ el: w, open: false, animal: order[i], i: i });
+      w.addEventListener('pointerdown', (function (win) {
+        return function () { openWin(win); };
+      })(wins[i]));
+    }
+  }
+
+  function animalSound(a) {
+    a.s.forEach(function (note) {
+      Kid.tone(note[0], note[1], { type: note[3], vol: 0.15, delay: note[2] });
+    });
+  }
+
+  function openWin(w) {
+    if (w.open) return;
+    w.open = true;
+    w.el.classList.add('open');
+    animalSound(w.animal);
+    Kid.speak(w.animal.n + '，' + w.animal.say);
+    if (wins.every(function (x) { return x.open; })) {
+      setTimeout(allOpen, 420);
+    } else if (openCount() === 5) {
+      setTimeout(function () { Kid.speak(Kid.name() + '，' + Kid.praise() + '，继续找！'); }, 500);
+    }
+  }
+
+  function openCount() {
+    return wins.filter(function (x) { return x.open; }).length;
+  }
+
+  function allOpen() {
+    hint.textContent = '🎉 小动物全出来啦！';
+    Kid.confetti(document.body, 40, { x: 50, y: 30 });
+    wins.forEach(function (w, i) {
+      setTimeout(function () {
+        w.el.classList.add('dance');
+        animalSound(w.animal);
+      }, i * 90);
+    });
+    setTimeout(function () {
+      Kid.speak('哇！' + Kid.name() + '，小动物都出来啦！我们再来一次！');
+    }, 500);
+    setTimeout(function () {
+      wins.forEach(function (w) { w.el.classList.remove('dance'); });
+      build();
+      hint.textContent = '按任何键，打开一扇小窗户 🪟';
+    }, 3600);
+  }
+
+  // 按键 → 打开离「这个键在键盘上的位置」最近的那扇窗，宝宝能感觉到按哪儿开哪儿
+  Kid.onKey(function (e) {
+    var p = Kid.keyPos(e, true);
+    var best = null, bestD = 9;
+    wins.forEach(function (w) {
+      if (w.open) return;
+      var col = w.i % 3, row = Math.floor(w.i / 3);
+      var wx = (col + 0.5) / 3, wy = (row + 0.5) / 3;
+      var d = Math.pow(wx - p.x, 2) * 1.1 + Math.pow(wy - p.y, 2);
+      if (d < bestD) { bestD = d; best = w; }
+    });
+    if (best) openWin(best);
+  }, { throttle: 220 });
+
+  build();
+  setTimeout(function () { Kid.speak('按键盘，小窗户会打开哦'); }, 800);
+})();
+</script>
+</body>
+</html>

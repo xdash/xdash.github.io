@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌈</text></svg>">
+<meta name="theme-color" content="#fff7e0">
+<title>🌈 键盘画笔</title>
+<link rel="stylesheet" href="../style.css">
+<style>
+  body { background: #fdfbf4; }
+  canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 10; display: block; background: #fffdf7; }
+  .hud { z-index: 60; }
+  #hint {
+    position: fixed; left: 50%; transform: translateX(-50%); bottom: 1.6vh; z-index: 40;
+    background: rgba(255,255,255,.92); color: #7a5a2b; border-radius: 20px;
+    padding: 6px 20px; font-weight: 800; font-size: clamp(13px, 2.6vh, 19px);
+    box-shadow: 0 4px 14px rgba(120,90,40,.18); white-space: nowrap; pointer-events: none;
+  }
+  #hint.hide { opacity: 0; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="hint">按任何键，画一笔彩虹 🌈</div>
+<script src="../common.js"></script>
+<script>
+(function () {
+  var cv = document.getElementById('c');
+  var g = cv.getContext('2d');
+  var W = 0, H = 0, DPR = 1;
+  var hint = document.getElementById('hint');
+  var last = null;
+  var hue = Math.random() * 360;
+  var strokes = 0;
+  var driftY = 0;
+
+  function resize() {
+    // 保留已画内容
+    var snap = null;
+    if (W && H) { try { snap = cv.toDataURL(); } catch (e) {} }
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = cv.clientWidth; H = cv.clientHeight;
+    cv.width = Math.floor(W * DPR); cv.height = Math.floor(H * DPR);
+    g.setTransform(DPR, 0, 0, DPR, 0, 0);
+    g.lineCap = 'round';
+    g.lineJoin = 'round';
+    if (snap) {
+      var img = new Image();
+      img.onload = function () { g.drawImage(img, 0, 0, W, H); };
+      img.src = snap;
+    }
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function clearAll() {
+    g.clearRect(0, 0, W, H);
+    g.fillStyle = '#fffdf7';
+    g.fillRect(0, 0, W, H);
+    last = null;
+    strokes = 0;
+    Kid.speak('擦干净啦，重新画');
+  }
+
+  function savePng() {
+    try {
+      var a = document.createElement('a');
+      a.download = '宝宝画作-' + new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-') + '.png';
+      a.href = cv.toDataURL('image/png');
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      Kid.speak('画作保存好啦');
+    } catch (e) {
+      Kid.speak('保存不了，可以截图哦');
+    }
+  }
+
+  Kid.mountChrome([
+    { label: '💾 保存', onClick: savePng },
+    { label: '🧽 擦掉', onClick: clearAll }
+  ]);
+
+  var PALETTE = [
+    '#ff5b7f', '#ff9a3d', '#ffd93b', '#5fd068', '#31c7d8',
+    '#4b8bff', '#a86bff', '#ff6bd0', '#ff7b4a', '#2fc4a0'
+  ];
+
+  // 带一点抖动，避免线太死板
+  function jitter(v, amt) { return v + (Math.random() * 2 - 1) * amt; }
+
+  Kid.onKey(function (e) {
+    if (hint) hint.classList.add('hide');
+    var p = Kid.keyPos(e);
+    var x = Kid.clamp(p.x * W * 1.02 - W * 0.01, 20, W - 20);
+    driftY = Kid.clamp(driftY + Kid.rand(-0.09, 0.09) * H, -H * 0.3, H * 0.3);
+    var y = Kid.clamp(H * 0.08 + p.y * H * 0.72 + driftY + jitter(0, H * 0.05), 80, H - 60);
+
+    hue = (hue + 17 + Math.random() * 24) % 360;
+    var color = Math.random() < 0.45 ? PALETTE[Math.floor(Math.random() * PALETTE.length)] : 'hsl(' + hue + ',92%,62%)';
+    var width = 20 + Math.random() * 34;
+
+    g.strokeStyle = color;
+    g.fillStyle = color;
+    g.globalAlpha = 0.82;
+
+    // 从上一笔连过来，乱按就成一幅scribble
+    if (last) {
+      g.lineWidth = width;
+      g.beginPath();
+      g.moveTo(last.x, last.y);
+      var mx = (last.x + x) / 2 + jitter(0, 40);
+      var my = (last.y + y) / 2 + jitter(0, 40);
+      g.quadraticCurveTo(mx, my, x, y);
+      g.stroke();
+    }
+
+    // 落笔的颜料团
+    var blobs = 2 + Math.floor(Math.random() * 3);
+    for (var i = 0; i < blobs; i++) {
+      g.beginPath();
+      var r = width * (0.3 + Math.random() * 0.5);
+      g.arc(x + jitter(0, width * 0.7), y + jitter(0, width * 0.7), r, 0, 6.2832);
+      g.fill();
+    }
+
+    // 飞溅小点
+    for (var k = 0; k < 4; k++) {
+      g.globalAlpha = 0.5 + Math.random() * 0.4;
+      g.beginPath();
+      g.arc(x + jitter(0, 120), y + jitter(0, 120), 1.5 + Math.random() * 3.5, 0, 6.2832);
+      g.fill();
+    }
+    g.globalAlpha = 1;
+
+    last = { x: x, y: y };
+    strokes++;
+
+    Kid.tone(300 + Math.random() * 500, 0.08, { type: 'sine', vol: 0.05 });
+
+    if (strokes === 25) {
+      Kid.speak(Kid.name() + '，画得真好看！');
+    }
+  }, { throttle: 45 });
+
+  setTimeout(function () { Kid.speak('按键盘，在纸上画画'); }, 900);
+})();
+</script>
+</body>
+</html>

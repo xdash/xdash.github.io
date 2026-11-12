@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏗️</text></svg>">
+<meta name="theme-color" content="#7ec8ff">
+<title>🏗️ 积木高楼</title>
+<link rel="stylesheet" href="../style.css">
+<style>
+  canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 10; display: block; }
+  #tip {
+    position: fixed; left: 50%; bottom: clamp(14px, 3vh, 26px); transform: translateX(-50%);
+    z-index: 40; background: rgba(255,255,255,.9); color: #1d4e8f;
+    border-radius: 22px; padding: 8px 22px; font-weight: 800;
+    font-size: clamp(16px, 3.2vh, 24px); box-shadow: 0 4px 16px rgba(31,94,150,.3);
+    pointer-events: none; white-space: nowrap;
+  }
+  #count {
+    position: fixed; right: 14px; top: 58px; z-index: 40;
+    background: rgba(255,255,255,.9); color: #e05a2a; border-radius: 18px;
+    padding: 6px 16px; font-weight: 900; font-size: clamp(15px, 2.8vh, 21px);
+    box-shadow: 0 3px 12px rgba(31,94,150,.28);
+  }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="tip">按任何键，往上叠一块积木 🧱</div>
+<div id="count">🧱 0 层</div>
+<script src="../common.js"></script>
+<script>
+(function () {
+  var cv = document.getElementById('c');
+  var g = cv.getContext('2d');
+  var W = 0, H = 0, DPR = 1, groundY = 0;
+  var tip = document.getElementById('tip');
+  var countEl = document.getElementById('count');
+  Kid.mountChrome();
+
+  var TARGET = 12;
+  var COLORS = [
+    ['#ff6b6b', '#d64545'], ['#ffb45e', '#e08a2e'], ['#ffe14d', '#e0b62a'],
+    ['#8be58b', '#4fbf4f'], ['#6fc3ff', '#3d8fe0'], ['#c98bff', '#9b56d6'],
+    ['#ff9ad5', '#e05aa0'], ['#7ee0d0', '#3fb3a2']
+  ];
+  var blocks = [], debris = [];
+  var state = 'building';       // building | wobble | collapsing | reset
+  var stateAt = 0;
+  var placed = 0;
+  var bw = 96, bh = 38;
+
+  function resize() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = cv.clientWidth; H = cv.clientHeight;
+    cv.width = Math.floor(W * DPR); cv.height = Math.floor(H * DPR);
+    g.setTransform(DPR, 0, 0, DPR, 0, 0);
+    groundY = H - Math.max(56, H * 0.09);
+    bw = Math.min(120, W * 0.24);
+    bh = Math.min(44, (groundY - H * 0.16) / TARGET);
+    blocks.forEach(function (b, i) { b.w = bw; b.h = bh; if (b.settled) b.y = stackY(i); });
+  }
+  window.addEventListener('resize', resize);
+
+  function stackY(i) {
+    var y = groundY;
+    for (var k = 0; k < i; k++) y -= blocks[k].h;
+    return y - blocks[i].h / 2;
+  }
+
+  function addBlock() {
+    if (state !== 'building') return;
+    if (blocks.length >= TARGET) return;
+    var i = blocks.length;
+    var c = COLORS[i % COLORS.length];
+    var x = W / 2 + Kid.rand(-16, 16);
+    var b = {
+      x: x, y: -60, w: bw, h: bh,
+      color: c[0], dark: c[1],
+      vy: 0, settled: false, rot: 0, vr: 0, index: i,
+      face: Math.random() < 0.85
+    };
+    blocks.push(b);
+    Kid.tone(150 + i * 14, 0.12, { to: 80, type: 'triangle', vol: 0.12 });
+  }
+
+  function thunk(i) {
+    Kid.tone(110 - i * 1.5, 0.12, { to: 62, type: 'triangle', vol: 0.18 });
+    Kid.noise(0.09, { filter: 'lowpass', freq: 900, to: 200, vol: 0.12, decay: 3 });
+    placed++;
+    countEl.textContent = '🧱 ' + blocks.length + ' 层';
+    if (blocks.length === TARGET) {
+      state = 'wobble';
+      stateAt = performance.now();
+      tip.textContent = '要倒啦 ——';
+      for (var k = 0; k < 5; k++) {
+        (function (k) { setTimeout(function () { Kid.tone(320 + k * 60, 0.1, { type: 'sine', vol: 0.08 }); }, k * 110); })(k);
+      }
+    } else if (blocks.length === TARGET - 3) {
+      tip.textContent = '再叠 3 块就倒啦！';
+    } else if (blocks.length === 1) {
+      tip.textContent = '继续继续，越高越好 🧱';
+    }
+  }
+
+  function collapse() {
+    state = 'collapsing';
+    stateAt = performance.now();
+    var top = blocks.length - 1;
+    blocks.forEach(function (b, i) {
+      var fromTop = top - i;
+      b.settled = false;
+      b.wob = 0;
+      b.vx = (i % 2 === 0 ? 1 : -1) * Kid.rand(130, 320) * (0.6 + fromTop * 0.12);
+      b.vy = Kid.rand(-540, -150) * (0.5 + fromTop * 0.1);
+      b.vr = Kid.rand(-4, 4);
+      b.rot = Kid.rand(-0.05, 0.05);
+    });
+    Kid.noise(0.5, { filter: 'lowpass', freq: 1400, to: 120, vol: 0.3, decay: 1.6 });
+    Kid.tone(90, 0.4, { to: 40, type: 'triangle', vol: 0.2 });
+    for (var i = 0; i < 22; i++) {
+      debris.push({ x: W / 2 + Kid.rand(-70, 70), y: groundY - Kid.rand(0, 220), vx: Kid.rand(-210, 210), vy: Kid.rand(-240, 60), r: Kid.rand(3, 8), a: 1 });
+    }
+    Kid.confetti(document.body, 34, { x: 50, y: 30 });
+    setTimeout(function () {
+      Kid.speak('哇！' + Kid.name() + '，高楼倒啦！我们再搭一个！');
+    }, 260);
+  }
+
+  function reset() {
+    state = 'building';
+    blocks = [];
+    placed = 0;
+    countEl.textContent = '🧱 0 层';
+    tip.textContent = '按任何键，往上叠一块积木 🧱';
+  }
+
+  Kid.onKey(function (e) {
+    if (state === 'building') addBlock();
+  }, { throttle: 110 });
+
+  function roundRect(x, y, w, h, r) {
+    g.beginPath();
+    g.moveTo(x + r, y);
+    g.arcTo(x + w, y, x + w, y + h, r);
+    g.arcTo(x + w, y + h, x, y + h, r);
+    g.arcTo(x, y + h, x, y, r);
+    g.arcTo(x, y, x + w, y, r);
+    g.closePath();
+  }
+
+  function drawBlock(b) {
+    g.save();
+    g.translate(b.x + (b.wob || 0), b.y);
+    g.rotate(b.rot);
+    var x = -b.w / 2, y = -b.h / 2;
+    g.fillStyle = b.dark;
+    roundRect(x, y + 4, b.w, b.h, 9); g.fill();
+    g.fillStyle = b.color;
+    roundRect(x, y, b.w, b.h, 9); g.fill();
+    g.fillStyle = 'rgba(255,255,255,.45)';
+    roundRect(x + 6, y + 4, b.w - 12, b.h * 0.26, 6); g.fill();
+    if (b.face) {
+      var cx = 0, cy = 2, eye = b.h * 0.15;
+      g.fillStyle = 'rgba(40,40,60,.85)';
+      g.beginPath(); g.arc(-b.w * 0.16, cy, eye, 0, 6.2832); g.fill();
+      g.beginPath(); g.arc(b.w * 0.16, cy, eye, 0, 6.2832); g.fill();
+      g.strokeStyle = 'rgba(40,40,60,.75)';
+      g.lineWidth = Math.max(2, b.h * 0.06);
+      g.beginPath();
+      g.arc(0, cy + b.h * 0.06, b.w * 0.12, 0.15, Math.PI - 0.15);
+      g.stroke();
+    }
+    g.restore();
+  }
+
+  var lastT = 0;
+
+  function frame(t) {
+    var dt = lastT ? Math.min(0.05, (t - lastT) / 1000) : 0.016;
+    lastT = t;
+    g.clearRect(0, 0, W, H);
+
+    // 地面
+    g.fillStyle = '#7ed37e';
+    g.fillRect(0, groundY, W, H - groundY);
+    g.fillStyle = '#69c46b';
+    g.fillRect(0, groundY, W, 8);
+    g.fillStyle = 'rgba(255,255,255,.35)';
+    for (var i = 0; i < 26; i++) {
+      var gx = (i * 137.5) % W;
+      g.fillRect(gx, groundY + 18 + (i % 3) * 14, 3, 6);
+    }
+
+    if (state === 'wobble') {
+      var el = t - stateAt;
+      if (el > 900) collapse();
+      else {
+        var shake = Math.sin(el / 34) * Math.min(1, el / 700) * 7;
+        blocks.forEach(function (b, i) { b.wob = i === 0 ? 0 : shake * (0.35 + i * 0.05); });
+      }
+    }
+
+    for (var j = 0; j < blocks.length; j++) {
+      var b = blocks[j];
+      if (!b.settled) {
+        if (state === 'collapsing') {
+          b.vy += 2200 * dt;
+          b.x += b.vx * dt; b.y += b.vy * dt;
+          b.rot += b.vr * dt;
+          if (b.y + b.h / 2 > groundY) {
+            b.y = groundY - b.h / 2;
+            if (Math.abs(b.vy) > 90) {
+              b.vy *= -0.34; b.vx *= 0.74; b.vr *= 0.6;
+            } else { b.vy = 0; b.vx *= 0.9; b.vr *= 0.85; b.settled = true; b.rot = b.rot > 0 ? 1.5708 : -1.5708; }
+          }
+        } else {
+          b.vy += 2600 * dt;
+          b.y += b.vy * dt;
+          var ty = stackY(j);
+          if (b.y >= ty) {
+            b.y = ty; b.vy = 0; b.settled = true;
+            thunk(j);
+          }
+        }
+      }
+      drawBlock(b);
+    }
+
+    for (var d = debris.length - 1; d >= 0; d--) {
+      var p = debris[d];
+      p.vy += 900 * dt; p.x += p.vx * dt; p.y += p.vy * dt; p.a -= 0.7 * dt;
+      if (p.a <= 0) { debris.splice(d, 1); continue; }
+      g.fillStyle = 'rgba(220,205,170,' + p.a.toFixed(2) + ')';
+      g.beginPath(); g.arc(p.x, p.y, p.r, 0, 6.2832); g.fill();
+    }
+
+    if (state === 'collapsing' && t - stateAt > 2400) reset();
+
+    requestAnimationFrame(frame);
+  }
+
+  resize();
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
