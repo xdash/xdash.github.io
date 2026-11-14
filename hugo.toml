@@ -65,6 +65,12 @@ paginate     = 20
     weight     = 30
 
   [[menu.main]]
+    identifier = "learning"
+    name       = "Learning"
+    url        = "/learning/"
+    weight     = 25
+
+  [[menu.main]]
     identifier = "podcast"
     name       = "Podcast"
     url        = "https://www.xiaoyuzhoufm.com/podcast/61df010313704eb05c10dece"

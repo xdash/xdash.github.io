@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f7fb">
+<meta name="description" content="K 线形态道场：用多邻国式的交互练习，认识头肩顶、双底、三角旗等 K 线形态的中英文名称、识别要点与常见误区。">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕯️</text></svg>">
+<title>K 线形态道场 · 交互式学习</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app" id="app">
+  <header class="topbar" id="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">🕯️</span>
+      <div class="brand-text">
+        <h1>K 线形态道场</h1>
+        <p>看形态 · 记术语 · 练眼力</p>
+      </div>
+    </div>
+    <div class="topstats">
+      <span class="chip chip-streak" id="chipStreak" title="连续学习天数">🔥 0</span>
+      <span class="chip chip-xp" id="chipXp" title="累计经验值">⚡ 0</span>
+    </div>
+  </header>
+
+  <main id="view" class="view"></main>
+
+  <nav class="tabbar" id="tabbar" aria-label="主导航">
+    <button class="tab is-active" data-tab="home"><span>🗺️</span><em>学习</em></button>
+    <button class="tab" data-tab="library"><span>📖</span><em>图鉴</em></button>
+    <button class="tab" data-tab="review"><span>🎯</span><em>复习</em></button>
+    <button class="tab" data-tab="stats"><span>🧭</span><em>我的</em></button>
+  </nav>
+</div>
+
+<canvas id="fx" class="fx" aria-hidden="true"></canvas>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<noscript><div style="padding:40px;text-align:center;font-family:sans-serif">这个页面需要 JavaScript 才能显示交互式 K 线图。</div></noscript>
+
+<script src="patterns.js"></script>
+<script src="charts.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f7fb">
+<meta name="description" content="XDash 的自学实验室：把想弄懂的东西，做成能练的东西。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+<title>Learning · 自学实验室</title>
+<style>
+  :root {
+    --bg: #f5f7fb; --ink: #25303f; --muted: #7d899b; --line: #e5eaf2;
+    --primary: #6c5ce7; --primary-d: #5243c9; --green: #58cc02; --green-d: #46a302;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100dvh; color: var(--ink);
+    background:
+      radial-gradient(900px 420px at 12% -8%, #eae6ff 0%, rgba(234,230,255,0) 60%),
+      radial-gradient(760px 380px at 92% 4%, #e3f4ff 0%, rgba(227,244,255,0) 62%),
+      var(--bg);
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB",
+      "Microsoft YaHei", "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 34px 20px 60px; }
+  .top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand .mark {
+    width: 48px; height: 48px; border-radius: 15px; background: #fff;
+    display: grid; place-items: center; font-size: 24px;
+    box-shadow: 0 1px 2px rgba(37,48,63,.05), 0 10px 26px rgba(37,48,63,.07);
+  }
+  .brand h1 { font-size: 20px; margin: 0; letter-spacing: .3px; }
+  .brand p { margin: 2px 0 0; font-size: 11.5px; color: var(--muted); }
+  .home-link {
+    font-size: 12.5px; font-weight: 700; color: var(--primary);
+    text-decoration: none; background: #fff; border-radius: 999px;
+    padding: 8px 14px; box-shadow: 0 2px 8px rgba(37,48,63,.07);
+  }
+  .intro { margin: 30px 2px 20px; }
+  .intro h2 { font-size: clamp(24px, 5vw, 32px); margin: 0; line-height: 1.3; letter-spacing: -.4px; }
+  .intro p { margin: 8px 0 0; color: var(--muted); font-size: 14px; line-height: 1.7; max-width: 46em; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-top: 8px; }
+  .card {
+    display: flex; flex-direction: column; text-decoration: none; color: inherit;
+    background: #fff; border-radius: 22px; padding: 12px 12px 16px;
+    box-shadow: 0 1px 2px rgba(37,48,63,.05), 0 12px 30px rgba(37,48,63,.08);
+    border: 1px solid #eef1f7;
+    transition: transform .16s ease, box-shadow .16s ease;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 1px 2px rgba(37,48,63,.05), 0 18px 38px rgba(37,48,63,.12); }
+  .preview { border-radius: 16px; background: linear-gradient(160deg, #f7f5ff, #eef7ff); padding: 8px; }
+  .preview svg { display: block; width: 100%; height: 150px; }
+  .card .body { padding: 12px 6px 0; display: flex; flex-direction: column; flex: 1; }
+  .card h3 { margin: 0; font-size: 18px; letter-spacing: .2px; }
+  .card .en { font-size: 11.5px; color: var(--primary); font-weight: 700; margin-top: 3px; }
+  .card p { margin: 8px 0 12px; font-size: 13px; color: var(--muted); line-height: 1.65; flex: 1; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .tag { font-size: 10.5px; font-weight: 800; padding: 3px 9px; border-radius: 999px; background: #f0f3f9; color: #5d6a7e; }
+  .tag.green { background: #edffdb; color: #3f7a00; }
+  .tag.purple { background: #efecff; color: #5243c9; }
+  .go {
+    align-self: flex-start; font-size: 13px; font-weight: 800; color: #fff;
+    background: var(--green); border-radius: 13px; padding: 9px 16px;
+    box-shadow: 0 3px 0 var(--green-d);
+  }
+  .soon {
+    border: 2px dashed #d9e0ec; background: rgba(255,255,255,.55);
+    border-radius: 22px; display: grid; place-items: center; text-align: center;
+    padding: 30px 20px; color: var(--muted); font-size: 13px; line-height: 1.7; min-height: 260px;
+  }
+  .soon b { display: block; color: var(--ink); font-size: 15px; margin-bottom: 4px; }
+  .foot { margin-top: 34px; font-size: 11.5px; color: var(--muted); line-height: 1.7; }
+  .foot a { color: var(--primary); text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand">
+      <div class="mark">📚</div>
+      <div><h1>Learning</h1><p>XDash 的自学实验室</p></div>
+    </div>
+    <a class="home-link" href="https://xdash.me/">← 回 xdash.me</a>
+  </div>
+
+  <div class="intro">
+    <h2>把想弄懂的东西，<br>做成能练的东西。</h2>
+    <p>这里放我自己做的交互式学习工具：有解释、有练习、有即时反馈，而不是一堆看完就忘的图文。所有页面都能离线打开，进度只存在你自己的浏览器里。</p>
+  </div>
+
+  <div class="grid">
+    <a class="card" href="kline-patterns/">
+      <div class="preview" aria-hidden="true">
+        <svg viewBox="0 0 320 150" role="img">
+          <g stroke="#e3e8f2" stroke-width="1">
+            <line x1="0" y1="38" x2="320" y2="38"/>
+            <line x1="0" y1="76" x2="320" y2="76"/>
+            <line x1="0" y1="114" x2="320" y2="114"/>
+          </g>
+          <polyline points="8,104 34,92 58,70 80,84 104,86 128,40 150,78 174,82 198,60 220,80 244,96 268,116 292,124 312,132"
+            fill="none" stroke="#6c5ce7" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" opacity=".55"/>
+          <g stroke="#e5484d" stroke-width="4" stroke-linecap="round">
+            <line x1="20" y1="94" x2="20" y2="106"/><line x1="36" y1="82" x2="36" y2="96"/>
+            <line x1="52" y1="62" x2="52" y2="78"/><line x1="68" y1="76" x2="68" y2="90"/>
+            <line x1="84" y1="80" x2="84" y2="94"/><line x1="100" y1="70" x2="100" y2="88"/>
+            <line x1="132" y1="32" x2="132" y2="50"/><line x1="148" y1="70" x2="148" y2="86"/>
+            <line x1="164" y1="74" x2="164" y2="90"/><line x1="180" y1="52" x2="180" y2="68"/>
+            <line x1="196" y1="72" x2="196" y2="88"/><line x1="212" y1="88" x2="212" y2="104"/>
+            <line x1="228" y1="106" x2="228" y2="122"/><line x1="244" y1="114" x2="244" y2="130"/>
+            <line x1="260" y1="120" x2="260" y2="136"/><line x1="276" y1="116" x2="276" y2="134"/>
+            <line x1="292" y1="126" x2="292" y2="140"/>
+          </g>
+          <g stroke="#12a150" stroke-width="4" stroke-linecap="round">
+            <line x1="116" y1="44" x2="116" y2="62"/>
+          </g>
+          <circle cx="58" cy="70" r="4" fill="#6c5ce7"/><circle cx="128" cy="40" r="4" fill="#6c5ce7"/>
+          <circle cx="198" cy="60" r="4" fill="#6c5ce7"/>
+        </svg>
+      </div>
+      <div class="body">
+        <h3>K 线形态道场</h3>
+        <div class="en">K-Line Pattern Dojo</div>
+        <p>用多邻国式的闯关练习，认识头肩顶、双顶、三角旗等 18 种经典形态。同一形态有多种正确图示，练的是结构，不是背图。</p>
+        <div class="tags">
+          <span class="tag green">18 种形态</span>
+          <span class="tag purple">中英术语</span>
+          <span class="tag">7 种题型</span>
+          <span class="tag">进度本地保存</span>
+        </div>
+        <span class="go">开始学习 →</span>
+      </div>
+    </a>
+
+    <div class="soon">
+      <div><b>更多自学工具</b>以后新增的自我学习类项目都放在这个目录下。<br>先专注把 K 线这一件事练明白。</div>
+    </div>
+  </div>
+
+  <div class="foot">
+    页面零依赖，不加载任何外部资源，可离线使用。学习进度存在浏览器 localStorage 里，换设备或清缓存会重置。<br>
+    <a href="https://xdash.me/">xdash.me</a> · <a href="https://xdash.me/about/">关于我</a>
+  </div>
+</div>
+</body>
+</html>
