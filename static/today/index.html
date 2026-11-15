@@ -205,7 +205,7 @@
     <button id="tab-pos">行情</button>
     <button id="tab-usage">用量</button>
   </div>
-  <div class="qstrip" id="qstrip"><div class="q"><span class="q-name">上证指数</span><b>3,634.35</b><i class="down">-0.59%</i></div><div class="q"><span class="q-name">BTCUSD</span><b>63,576.20</b><i class="down">-7.06%</i></div><span class="q-time">08:50 更新</span></div>
+  <div class="qstrip" id="qstrip"><div class="q"><span class="q-name">上证指数</span><b>3,634.35</b><i class="down">-0.59%</i></div><div class="q"><span class="q-name">BTCUSD</span><b>62,566.90</b><i class="down">-8.43%</i></div><span class="q-time">09:50 更新</span></div>
   <div class="daynav" id="daynav">
     <button id="prev" title="更早一天">‹</button>
     <div class="cur"><span id="cur-date"></span><span class="n" id="cur-count"></span></div>
@@ -382,6 +382,29 @@ async function loadTab(name){
   prev.addEventListener('click', ()=>{ if (idx < days.length-1) { idx++; show(true); } });
   next.addEventListener('click', ()=>{ if (idx > 0) { idx--; show(true); } });
   todayBtn.addEventListener('click', ()=>{ idx = 0; show(true); });
+
+  /* 左右滑动切换上一天/下一天：横向位移超阈值且明显大于纵向才翻页，不干扰上下滚动 */
+  let swipeX = 0, swipeY = 0, swiping = false;
+  viewFeed.addEventListener('touchstart', e => {
+    swiping = false;
+    if (e.touches.length !== 1) return;
+    /* 起点在横向可滚动区域（代码块等）内时不接管滑动 */
+    for (let el = e.target; el && el !== viewFeed; el = el.parentElement) {
+      if (el.scrollWidth > el.clientWidth + 8) return;
+    }
+    swipeX = e.touches[0].clientX;
+    swipeY = e.touches[0].clientY;
+    swiping = true;
+  }, { passive: true });
+  viewFeed.addEventListener('touchend', e => {
+    if (!swiping) return;
+    swiping = false;
+    const dx = e.changedTouches[0].clientX - swipeX;
+    const dy = e.changedTouches[0].clientY - swipeY;
+    if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+    if (dx < 0 && idx > 0) { idx--; show(true); }                 // 左滑 → 下一天
+    else if (dx > 0 && idx < days.length - 1) { idx++; show(true); }  // 右滑 → 上一天
+  }, { passive: true });
 
   /* tab 切换：信息流 / 上海 / X 涨粉 / 行情 / 用量；加载成功后再显示视图 */
   const tabFeed = document.getElementById('tab-feed');
