@@ -9,7 +9,8 @@
   <meta name="description" content="An unofficial, non-commercial fan transmission for Tony Stark, Doctor Doom, and every story that led to Avengers: Doomsday.">
   <title>TONYSTARK.AI — Every Story Was a Countdown</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020505'/%3E%3Ccircle cx='32' cy='32' r='19' fill='none' stroke='%237bd8c8' stroke-width='2'/%3E%3Ccircle cx='32' cy='32' r='8' fill='%23f2eee4'/%3E%3C/svg%3E">
-  <link rel="preload" href="./assets/iron-man-hall.webp" as="image" type="image/webp" fetchpriority="high">
+  <link rel="preload" href="./assets/iron-man-repulse.webp" as="image" type="image/webp" fetchpriority="high">
+  <link rel="preload" href="./assets/doom-lightning.webp" as="image" type="image/webp" fetchpriority="high">
   <link rel="preload" href="./assets/bodoni-moda-regular.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="./assets/bodoni-moda-italic.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="./styles.css">
@@ -18,32 +19,62 @@
 <body>
   <a class="skip-link" href="#main">Skip to the story</a>
   <header class="site-header">
-    <a class="brand" href="#legacy" aria-label="Tonystark.ai, back to the beginning">
+    <a class="brand" href="#countdown" aria-label="Tonystark.ai, back to the beginning">
       <span>TONYSTARK.AI</span>
       <small>A NON-COMMERCIAL FAN TRANSMISSION</small>
     </a>
     <nav class="site-nav" aria-label="Chapters">
-      <a href="#legacy" data-nav="legacy" aria-current="location">LEGACY</a>
+      <a href="#countdown" data-nav="countdown" aria-current="location">COUNTDOWN</a>
+      <a href="#legacy" data-nav="legacy">LEGACY</a>
       <a href="#doom" data-nav="doom">DOOM</a>
-      <a href="#countdown" data-nav="countdown">COUNTDOWN</a>
     </nav>
     <button class="motion-toggle" type="button" data-motion-toggle aria-pressed="true">MOTION ON</button>
   </header>
 
   <main id="main">
-    <section class="chapter chapter--legacy" id="legacy" data-chapter aria-labelledby="legacy-title">
-      <div class="chapter__media" aria-hidden="true">
-        <img src="./assets/iron-man-hall.webp" alt="" width="2000" height="1139" fetchpriority="high" decoding="async">
+    <section class="chapter chapter--faceoff" id="countdown" data-chapter aria-labelledby="faceoff-title">
+      <div class="faceoff__panel faceoff__panel--tony" aria-hidden="true">
+        <img src="./assets/iron-man-repulse.webp" alt="" width="2000" height="667" fetchpriority="high" decoding="async">
       </div>
-      <div class="chapter__content">
-        <p class="eyebrow">CHAPTER I / THE LEGACY</p>
-        <p class="archive-mark">MCU ARCHIVE / 2008—2026</p>
-        <h1 id="legacy-title" class="display display--legacy">
+      <div class="faceoff__panel faceoff__panel--doom" aria-hidden="true">
+        <img src="./assets/doom-lightning.webp" alt="" width="1560" height="876" fetchpriority="high" decoding="async">
+      </div>
+      <p class="character-name character-name--tony">TONY STARK</p>
+      <p class="character-name character-name--doom">VICTOR VON DOOM</p>
+      <div class="chapter__content faceoff__content">
+        <p class="eyebrow">ONE UNIVERSE / TWO MASKS</p>
+        <h1 id="faceoff-title" class="display display--faceoff" data-countdown-title>
           <span>EVERY STORY</span>
           <em>WAS A COUNTDOWN.</em>
         </h1>
-        <p class="fan-line">FOR TONY. FOR EVERYTHING THAT CAME AFTER.</p>
-        <a class="chapter-link" href="#doom">ENTER THE UNIVERSE <span aria-hidden="true">↘</span></a>
+        <div class="faceoff-countdown" role="timer" aria-live="off" aria-label="Countdown to December 18, 2026, midnight North American Eastern Time">
+          <div><span data-days>031</span><small>DAYS</small></div>
+          <i>:</i>
+          <div><span data-hours>00</span><small>HOURS</small></div>
+          <i>:</i>
+          <div><span data-minutes>00</span><small>MINUTES</small></div>
+          <i>:</i>
+          <div><span data-seconds>00</span><small>SECONDS</small></div>
+        </div>
+        <p class="release-note">DECEMBER 18, 2026 · 00:00 ET</p>
+        <a class="chapter-link" href="#legacy">THE STORY SO FAR <span aria-hidden="true">↓</span></a>
+        <noscript><p class="noscript-note">The theatrical release date is December 18, 2026.</p></noscript>
+      </div>
+      <p class="image-credit">OFFICIAL PROMOTIONAL IMAGES / MARVEL</p>
+    </section>
+
+    <section class="chapter chapter--legacy" id="legacy" data-chapter aria-labelledby="legacy-title">
+      <div class="chapter__media" aria-hidden="true">
+        <img src="./assets/iron-man-hall.webp" alt="" width="2000" height="1139" loading="lazy" decoding="async">
+      </div>
+      <div class="chapter__content">
+        <p class="eyebrow">CHAPTER II / THE LEGACY</p>
+        <p class="archive-mark">MCU ARCHIVE / 2008—2026</p>
+        <h2 id="legacy-title" class="display display--legacy">
+          <span>FOR TONY.</span>
+          <em>FOR EVERYTHING<br>THAT CAME AFTER.</em>
+        </h2>
+        <p class="fan-line">THE ARMOR WAS NEVER THE WHOLE STORY.</p>
       </div>
       <p class="image-credit">OFFICIAL PROMOTIONAL IMAGE / MARVEL</p>
     </section>
@@ -53,7 +84,7 @@
         <img src="./assets/doom-lightning.webp" alt="" width="1560" height="876" loading="lazy" decoding="async">
       </div>
       <div class="chapter__content">
-        <p class="eyebrow">CHAPTER II / THE ARRIVAL</p>
+        <p class="eyebrow">CHAPTER III / THE ARRIVAL</p>
         <p class="archive-mark">VICTOR VON DOOM</p>
         <h2 id="doom-title" class="display display--doom">
           <span>NOT A RETURN.</span>
@@ -66,34 +97,6 @@
       </div>
       <p class="image-credit">OFFICIAL TRAILER IMAGE / MARVEL</p>
     </section>
-
-    <section class="chapter chapter--countdown" id="countdown" data-chapter aria-labelledby="countdown-title">
-      <div class="eclipse" aria-hidden="true">
-        <div class="eclipse__core">
-          <time datetime="2026-12-18">12.18.26</time>
-          <span>IN THEATERS</span>
-        </div>
-      </div>
-      <div class="chapter__content countdown-layout">
-        <p class="eyebrow">CHAPTER III / ZERO HOUR</p>
-        <p class="archive-mark">RETURN TO THE UNIVERSE</p>
-        <h2 id="countdown-title" class="display display--countdown" data-countdown-title>THE COUNTDOWN IS ON.</h2>
-        <div class="countdown" role="timer" aria-live="off" aria-label="Countdown to December 18, 2026, midnight North American Eastern Time">
-          <div class="countdown__days">
-            <span data-days>032</span>
-            <small>DAYS</small>
-          </div>
-          <div class="countdown__minor">
-            <div><span data-hours>00</span><small>HOURS</small></div>
-            <div><span data-minutes>00</span><small>MINUTES</small></div>
-            <div><span data-seconds>00</span><small>SECONDS</small></div>
-          </div>
-        </div>
-        <p class="release-note">DECEMBER 18, 2026 · 00:00 ET</p>
-        <p class="fan-line">UNTIL THE UNIVERSE CHANGES. AGAIN.</p>
-        <noscript><p class="noscript-note">Enable JavaScript for the live countdown. The theatrical release date is December 18, 2026.</p></noscript>
-      </div>
-    </section>
   </main>
 
   <footer class="site-footer">
@@ -102,6 +105,7 @@
       <p>An unofficial, non-commercial fan site. Not affiliated with or endorsed by Marvel or Disney. Promotional images and characters belong to their respective rights holders.</p>
     </div>
     <div class="source-links" aria-label="Sources">
+      <a href="https://www.marvel.com/characters/iron-man-tony-stark" target="_blank" rel="noopener noreferrer">TONY STARK / SOURCE</a>
       <a href="https://www.marvel.com/movies/iron-man-3" target="_blank" rel="noopener noreferrer">IRON MAN III / SOURCE</a>
       <a href="https://www.marvel.com/articles/movies/avengers-doomsday-trailer-infinity-vision-tickets" target="_blank" rel="noopener noreferrer">DOOMSDAY / SOURCE</a>
       <a href="https://www.youtube.com/watch?v=3pnpz8SqRI8" target="_blank" rel="noopener noreferrer">COUNTDOWN / TRAILER</a>
