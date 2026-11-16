@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7 天启动你的 AI 写作产线 · Neon Cyber</title>
+<link href="https://api.fontshare.com/v2/css?f[]=clash-display@600,700&f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+<style>
+/* ============ VIEWPORT BASE (MANDATORY) ============ */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+.slide { width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; }
+.slide-content { flex: 1; display: flex; flex-direction: column; justify-content: center; max-height: 100%; overflow: hidden; padding: var(--slide-padding); }
+:root {
+  --title-size: clamp(1.5rem, 5vw, 4rem);
+  --h2-size: clamp(1.25rem, 3.5vw, 2.5rem);
+  --h3-size: clamp(1rem, 2.5vw, 1.75rem);
+  --body-size: clamp(0.75rem, 1.5vw, 1.125rem);
+  --small-size: clamp(0.65rem, 1vw, 0.875rem);
+  --slide-padding: clamp(1rem, 4vw, 4rem);
+  --content-gap: clamp(0.5rem, 2vw, 2rem);
+  --element-gap: clamp(0.25rem, 1vw, 1rem);
+}
+@media (max-height: 700px) {
+  :root { --slide-padding: clamp(0.75rem, 3vw, 2rem); --content-gap: clamp(0.4rem, 1.5vw, 1rem); --title-size: clamp(1.25rem, 4.5vw, 2.5rem); --h2-size: clamp(1rem, 3vw, 1.75rem); }
+}
+@media (max-height: 600px) {
+  :root { --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem); --content-gap: clamp(0.3rem, 1vw, 0.75rem); --title-size: clamp(1.1rem, 4vw, 2rem); --body-size: clamp(0.7rem, 1.2vw, 0.95rem); }
+  .nav-dots, .keyboard-hint, .decorative { display: none; }
+}
+@media (max-height: 500px) {
+  :root { --slide-padding: clamp(0.4rem, 2vw, 1rem); --title-size: clamp(1rem, 3.5vw, 1.5rem); --h2-size: clamp(0.9rem, 2.5vw, 1.25rem); --body-size: clamp(0.65rem, 1vw, 0.85rem); }
+}
+@media (max-width: 600px) {
+  :root { --title-size: clamp(1.25rem, 7vw, 2.5rem); }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+  html { scroll-behavior: auto; }
+}
+
+/* ============ PRESET: NEON CYBER ============ */
+:root {
+  --bg-navy: #0a0f1c;
+  --bg-panel: #101728;
+  --accent-cyan: #00ffcc;
+  --accent-magenta: #ff00aa;
+  --text-primary: #e8ecf4;
+  --text-dim: #7a86a0;
+  --font-display: 'Clash Display', sans-serif;
+  --font-body: 'Satoshi', sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font-body); background: var(--bg-navy); color: var(--text-primary); }
+.slide { background: var(--bg-navy); }
+/* grid pattern */
+.slide::before {
+  content: ''; position: absolute; inset: 0; z-index: 0;
+  background-image: linear-gradient(rgba(0,255,204,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,204,0.05) 1px, transparent 1px);
+  background-size: 48px 48px; pointer-events: none;
+}
+/* particle field (two drifting dot layers) */
+.particles { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.particles i { position: absolute; border-radius: 50%; background: var(--accent-cyan); opacity: 0.5; animation: drift linear infinite; }
+.particles i.m { background: var(--accent-magenta); }
+@keyframes drift {
+  from { transform: translateY(10vh); opacity: 0; }
+  15% { opacity: 0.6; }
+  85% { opacity: 0.6; }
+  to { transform: translateY(-110vh); opacity: 0; }
+}
+.slide-content { z-index: 1; gap: var(--content-gap); }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 700; }
+h1 { font-size: var(--title-size); line-height: 1.05; letter-spacing: 0.01em; text-transform: uppercase; }
+h2 { font-size: var(--h2-size); line-height: 1.12; }
+.neon { color: var(--accent-cyan); text-shadow: 0 0 12px rgba(0,255,204,0.55), 0 0 42px rgba(0,255,204,0.25); }
+.neon-m { color: var(--accent-magenta); text-shadow: 0 0 12px rgba(255,0,170,0.55), 0 0 42px rgba(255,0,170,0.25); }
+p, li { font-size: var(--body-size); line-height: 1.6; color: var(--text-dim); font-weight: 400; }
+strong { color: var(--accent-cyan); font-weight: 700; }
+.kicker { font-size: var(--small-size); font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; color: var(--accent-magenta); }
+.tag { display: inline-block; font-size: var(--small-size); font-weight: 700; letter-spacing: 0.1em; padding: 0.3em 1em; border: 1px solid var(--accent-cyan); color: var(--accent-cyan); border-radius: 2px; box-shadow: 0 0 10px rgba(0,255,204,0.2), inset 0 0 8px rgba(0,255,204,0.06); margin: 0.15em 0.25em 0.15em 0; }
+.tag.m { border-color: var(--accent-magenta); color: var(--accent-magenta); box-shadow: 0 0 10px rgba(255,0,170,0.2), inset 0 0 8px rgba(255,0,170,0.06); }
+.panel { background: rgba(16,23,40,0.85); border: 1px solid rgba(0,255,204,0.25); border-radius: 4px; padding: clamp(0.8rem, 2vw, 1.5rem); box-shadow: 0 0 24px rgba(0,255,204,0.08); max-width: min(90vw, 1000px); }
+.idx { position: absolute; top: clamp(1rem, 2.5vh, 1.8rem); right: var(--slide-padding); font-size: var(--small-size); font-weight: 700; letter-spacing: 0.25em; color: var(--accent-cyan); opacity: 0.7; z-index: 2; }
+.style-tag { position: absolute; bottom: clamp(0.8rem, 2vh, 1.2rem); right: var(--slide-padding); font-size: var(--small-size); font-weight: 500; letter-spacing: 0.15em; color: rgba(122,134,160,0.7); z-index: 2; }
+.toc-list { list-style: none; display: flex; flex-direction: column; gap: clamp(0.45rem, 1.3vh, 0.9rem); }
+.toc-list li { display: flex; align-items: baseline; gap: 1em; }
+.toc-list .no { font-family: var(--font-display); font-weight: 600; color: var(--accent-magenta); font-size: var(--h3-size); min-width: 1.8em; text-shadow: 0 0 10px rgba(255,0,170,0.4); }
+.toc-list .tx { font-size: var(--body-size); color: var(--text-primary); border-bottom: 1px solid rgba(0,255,204,0.25); padding-bottom: 0.45em; flex: 1; }
+.duo { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(0.6rem, 1.6vw, 1.2rem); }
+.duo .cell { border: 1px solid rgba(0,255,204,0.3); background: rgba(16,23,40,0.7); padding: clamp(0.7rem, 1.6vw, 1.2rem); }
+.duo .cell .t { font-family: var(--font-display); font-weight: 600; color: var(--accent-cyan); font-size: var(--body-size); letter-spacing: 0.08em; }
+@media (max-width: 600px) { .duo { grid-template-columns: 1fr; } }
+.steps { display: flex; flex-direction: column; gap: clamp(0.45rem, 1.3vh, 0.85rem); }
+.step { display: flex; gap: 1em; align-items: flex-start; background: rgba(16,23,40,0.7); border-left: 2px solid var(--accent-cyan); padding: clamp(0.55rem, 1.5vw, 1rem) clamp(0.8rem, 1.8vw, 1.2rem); }
+.step .no { font-family: var(--font-display); font-weight: 600; color: var(--accent-magenta); font-size: var(--h3-size); flex-shrink: 0; text-shadow: 0 0 10px rgba(255,0,170,0.4); }
+.step .txt h3 { font-size: var(--body-size); font-weight: 600; color: var(--text-primary); }
+.step .txt p { font-size: var(--body-size); line-height: 1.5; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: var(--accent-cyan); box-shadow: 0 0 12px var(--accent-cyan); width: 0; z-index: 100; transition: width 0.2s ease; }
+.nav-dots { position: fixed; right: 1rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.5rem; z-index: 100; }
+.nav-dots button { width: 8px; height: 8px; border-radius: 50%; border: 1px solid rgba(0,255,204,0.4); background: transparent; cursor: pointer; padding: 0; }
+.nav-dots button.active { background: var(--accent-cyan); box-shadow: 0 0 10px var(--accent-cyan); transform: scale(1.4); }
+.keyboard-hint { position: fixed; bottom: 1rem; left: 50%; transform: translateX(-50%); font-size: var(--small-size); color: rgba(122,134,160,0.5); z-index: 100; letter-spacing: 0.15em; }
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1); }
+.slide.visible .reveal { opacity: 1; transform: translateY(0); }
+.reveal:nth-child(1) { transition-delay: 0.1s; }
+.reveal:nth-child(2) { transition-delay: 0.2s; }
+.reveal:nth-child(3) { transition-delay: 0.3s; }
+.reveal:nth-child(4) { transition-delay: 0.4s; }
+.reveal:nth-child(5) { transition-delay: 0.5s; }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- S1 封面 -->
+<section class="slide">
+  <div class="particles decorative"></div>
+  <span class="idx">[ 01 / 06 ]</span>
+  <div class="slide-content">
+    <span class="kicker reveal">// AI Writing Engineering</span>
+    <h1 class="reveal">7 天启动你的<br><span class="neon">AI 写作产线</span></h1>
+    <div class="reveal">
+      <span class="tag">零基础友好</span><span class="tag m">跟着做就行</span><span class="tag">7 天启动</span>
+    </div>
+    <p class="reveal">不教你背提示词，教你搭一条能写书、也能降维写公众号和播客稿的产线。从今天睡前 30 分钟开始。</p>
+    <p class="reveal" style="font-size:var(--small-size)">范冰 XDash · 《AI 写作工程学》课后行动版</p>
+  </div>
+  <span class="style-tag">Style: Neon Cyber</span>
+</section>
+
+<!-- S2 目录 -->
+<section class="slide">
+  <div class="particles decorative"></div>
+  <span class="idx">[ 02 / 06 ]</span>
+  <div class="slide-content">
+    <span class="kicker reveal">// Agenda</span>
+    <h2 class="reveal">这 7 天<span class="neon">怎么走</span></h2>
+    <ul class="toc-list reveal" style="margin-top:0.5em; max-width:min(85vw,760px)">
+      <li><span class="no">01</span><span class="tx">为什么是「7 天」而不是「1 年」</span></li>
+      <li><span class="no">02</span><span class="tx">第 1 天 · 立项第一性三问（30 分钟）</span></li>
+      <li><span class="no">03</span><span class="tx">第 3 天 · 跑出你的黄金样张（2 小时）</span></li>
+      <li><span class="no">04</span><span class="tx">今晚就开始 · 30 分钟开机</span></li>
+    </ul>
+  </div>
+  <span class="style-tag">Style: Neon Cyber</span>
+</section>
+
+<!-- S3 为什么 7 天 -->
+<section class="slide">
+  <div class="particles decorative"></div>
+  <span class="idx">[ 03 / 06 ]</span>
+  <div class="slide-content">
+    <span class="kicker reveal">// Why 7 Days</span>
+    <h2 class="reveal">为什么是「7 天」<br>而不是<span class="neon-m">「1 年」</span>？</h2>
+    <p class="reveal" style="max-width:min(85vw,860px)">一门课值不值，看的是学员七天后手里有没有多出一个<strong>能给别人看的东西</strong>。不要宏大口号，把动力外包给最小即时反馈：每步都有产物，每步都能拿出手。</p>
+    <div class="duo reveal" style="max-width:min(85vw,860px)">
+      <div class="cell"><span class="t">▸ 第一天产物</span><p style="margin-top:0.4em">一页纸的《第一性选题诊断合同》+ 第一张五段式案例卡</p></div>
+      <div class="cell"><span class="t">▸ 第三天产物</span><p style="margin-top:0.4em">一篇 3000 字、带出版质感的黄金样张</p></div>
+    </div>
+    <p class="reveal">那个手感，会推着你停不下来地把整本书写完。</p>
+  </div>
+  <span class="style-tag">Style: Neon Cyber</span>
+</section>
+
+<!-- S4 第一天 -->
+<section class="slide">
+  <div class="particles decorative"></div>
+  <span class="idx">[ 04 / 06 ]</span>
+  <div class="slide-content">
+    <span class="kicker reveal">// Day 1 · 今晚睡前 · 30 分钟</span>
+    <h2 class="reveal">立项<span class="neon">第一性三问</span></h2>
+    <div class="steps reveal" style="max-width:min(85vw,900px)">
+      <div class="step"><span class="no">01</span><div class="txt"><h3>打开 T2《第一性选题诊断合同》</h3><p>诚实填完「立项第一性三问」，填不出就不动笔。</p></div></div>
+      <div class="step"><span class="no">02</span><div class="txt"><h3>建三个空文件夹</h3><p>raw / anchors / chapters —— 你的工程脚手架。</p></div></div>
+      <div class="step"><span class="no">03</span><div class="txt"><h3>丢入 5 份一手材料</h3><p>人生里最痛、最得意的 5 份原始材料：复盘长文、录音转写、深度访谈。</p></div></div>
+      <div class="step"><span class="no">04</span><div class="txt"><h3>拆出第一张五段式案例卡</h3><p>起点 → 动作 → 阻力 → 转折 → 结果 + 当事人原话。按 T3 格式。</p></div></div>
+    </div>
+  </div>
+  <span class="style-tag">Style: Neon Cyber</span>
+</section>
+
+<!-- S5 第三天 -->
+<section class="slide">
+  <div class="particles decorative"></div>
+  <span class="idx">[ 05 / 06 ]</span>
+  <div class="slide-content">
+    <span class="kicker reveal">// Day 3 · 本周末 · 2 小时</span>
+    <h2 class="reveal">跑出你的<span class="neon-m">黄金样张</span></h2>
+    <div class="steps reveal" style="max-width:min(85vw,900px)">
+      <div class="step"><span class="no">01</span><div class="txt"><h3>挑素材最肥沃的那 1 章</h3><p>按 T4 填满 15 条去重事实锚点 + 心流三推演。</p></div></div>
+      <div class="step"><span class="no">02</span><div class="txt"><h3>接上你能触达的最强旗舰模型</h3><p>如 Gemini 4.0——长上下文、语感好的那种。</p></div></div>
+      <div class="step"><span class="no">03</span><div class="txt"><h3>按 T5 的 IPO 批注法起草</h3><p>先出骨架 → 人写批注 → 再合成 3000 字。</p></div></div>
+      <div class="step"><span class="no">04</span><div class="txt"><h3>确立 Golden Copy</h3><p>逐段精修到出版级手感，这就是全书的语调标杆。</p></div></div>
+    </div>
+  </div>
+  <span class="style-tag">Style: Neon Cyber</span>
+</section>
+
+<!-- S6 收束 -->
+<section class="slide">
+  <div class="particles decorative"></div>
+  <span class="idx">[ 06 / 06 ]</span>
+  <div class="slide-content">
+    <span class="kicker reveal">// Execute Tonight</span>
+    <h2 class="reveal">今晚<span class="neon">就开始</span></h2>
+    <p class="reveal" style="max-width:min(85vw,760px)">选题三问、三个文件夹、五份材料、一张案例卡——30 分钟，你的产线就开机了。</p>
+    <div class="panel reveal">
+      <p style="font-family:var(--font-display); font-weight:600; color:var(--text-primary); font-size:var(--h3-size)"><span class="neon">起草的快，</span>是用素材的慢换来的。<br><span class="neon-m">手里有粮，心中不慌。</span></p>
+    </div>
+    <p class="reveal" style="font-size:var(--small-size)">然后，让它推着你，把整本书写完。</p>
+  </div>
+  <span class="style-tag">Style: Neon Cyber</span>
+</section>
+
+<div class="keyboard-hint">← → 翻页 · 空格下一页</div>
+<script>
+// particle field generator
+document.querySelectorAll('.particles').forEach((field) => {
+  for (let i = 0; i < 26; i++) {
+    const p = document.createElement('i');
+    const size = Math.random() * 3 + 1;
+    p.style.width = size + 'px';
+    p.style.height = size + 'px';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.bottom = '-5vh';
+    p.style.animationDuration = (Math.random() * 14 + 10) + 's';
+    p.style.animationDelay = (Math.random() * 14) + 's';
+    if (Math.random() < 0.3) p.classList.add('m');
+    field.appendChild(p);
+  }
+});
+class SlidePresentation {
+  constructor() {
+    this.slides = document.querySelectorAll('.slide');
+    this.current = 0;
+    this.setupNav();
+    this.setupKeyboard();
+    this.setupTouch();
+    this.setupWheel();
+    this.observe();
+  }
+  setupNav() {
+    const dots = document.getElementById('navDots');
+    this.slides.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.addEventListener('click', () => this.go(i));
+      dots.appendChild(b);
+    });
+    this.dots = dots.children;
+    this.update();
+  }
+  go(i) {
+    this.current = Math.max(0, Math.min(this.slides.length - 1, i));
+    this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
+    this.update();
+  }
+  update() {
+    Array.from(this.dots).forEach((d, i) => d.classList.toggle('active', i === this.current));
+    document.getElementById('progressBar').style.width = ((this.current + 1) / this.slides.length * 100) + '%';
+  }
+  setupKeyboard() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); this.go(this.current + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); this.go(this.current - 1); }
+      if (e.key === 'Home') this.go(0);
+      if (e.key === 'End') this.go(this.slides.length - 1);
+    });
+  }
+  setupTouch() {
+    let y0 = null;
+    document.addEventListener('touchstart', (e) => { y0 = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      if (y0 === null) return;
+      const dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dy) > 40) this.go(this.current + (dy < 0 ? 1 : -1));
+      y0 = null;
+    }, { passive: true });
+  }
+  setupWheel() {
+    let lock = false;
+    document.addEventListener('wheel', (e) => {
+      if (lock) return;
+      lock = true;
+      setTimeout(() => { lock = false; }, 650);
+      if (Math.abs(e.deltaY) < 20) return;
+      this.go(this.current + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+  observe() {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) {
+          en.target.classList.add('visible');
+          this.current = Array.from(this.slides).indexOf(en.target);
+          this.update();
+        }
+      });
+    }, { threshold: 0.6 });
+    this.slides.forEach((s) => io.observe(s));
+  }
+}
+new SlidePresentation();
+</script>
+</body>
+</html>
