@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>作者性 · 借假修真</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+/* ============ VIEWPORT BASE (MANDATORY) ============ */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+.slide { width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; }
+.slide-content { flex: 1; display: flex; flex-direction: column; justify-content: center; max-height: 100%; overflow: hidden; padding: var(--slide-padding); }
+:root {
+  --title-size: clamp(1.5rem, 5vw, 4rem);
+  --h2-size: clamp(1.25rem, 3.5vw, 2.5rem);
+  --h3-size: clamp(1rem, 2.5vw, 1.75rem);
+  --body-size: clamp(0.75rem, 1.5vw, 1.125rem);
+  --small-size: clamp(0.65rem, 1vw, 0.875rem);
+  --slide-padding: clamp(1rem, 4vw, 4rem);
+  --content-gap: clamp(0.5rem, 2vw, 2rem);
+  --element-gap: clamp(0.25rem, 1vw, 1rem);
+}
+.card, .container, .content-box { max-width: min(90vw, 1000px); max-height: min(80vh, 700px); }
+.feature-list, .bullet-list { gap: clamp(0.4rem, 1vh, 1rem); }
+.feature-list li, .bullet-list li { font-size: var(--body-size); line-height: 1.4; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: clamp(0.5rem, 1.5vw, 1rem); }
+img, .image-container { max-width: 100%; max-height: min(50vh, 400px); object-fit: contain; }
+@media (max-height: 700px) {
+  :root { --slide-padding: clamp(0.75rem, 3vw, 2rem); --content-gap: clamp(0.4rem, 1.5vw, 1rem); --title-size: clamp(1.25rem, 4.5vw, 2.5rem); --h2-size: clamp(1rem, 3vw, 1.75rem); }
+}
+@media (max-height: 600px) {
+  :root { --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem); --content-gap: clamp(0.3rem, 1vw, 0.75rem); --title-size: clamp(1.1rem, 4vw, 2rem); --body-size: clamp(0.7rem, 1.2vw, 0.95rem); }
+  .nav-dots, .keyboard-hint, .decorative { display: none; }
+}
+@media (max-height: 500px) {
+  :root { --slide-padding: clamp(0.4rem, 2vw, 1rem); --title-size: clamp(1rem, 3.5vw, 1.5rem); --h2-size: clamp(0.9rem, 2.5vw, 1.25rem); --body-size: clamp(0.65rem, 1vw, 0.85rem); }
+}
+@media (max-width: 600px) {
+  :root { --title-size: clamp(1.25rem, 7vw, 2.5rem); }
+  .grid { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+  html { scroll-behavior: auto; }
+}
+
+/* ============ PRESET: PAPER & INK ============ */
+:root {
+  --bg-paper: #faf9f7;
+  --text-primary: #1a1a1a;
+  --text-secondary: #5a5a5a;
+  --accent-crimson: #c41e3a;
+  --rule-color: #ddd8d0;
+  --font-display: 'Cormorant Garamond', serif;
+  --font-body: 'Source Serif 4', serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font-body); background: var(--bg-paper); color: var(--text-primary); }
+.slide { background: var(--bg-paper); }
+.slide::after { content: ''; position: absolute; bottom: 0; left: var(--slide-padding); right: var(--slide-padding); height: 1px; background: var(--rule-color); }
+.slide-content { gap: var(--content-gap); max-width: min(92vw, 1100px); margin: 0 auto; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 700; }
+h1 { font-size: var(--title-size); line-height: 1.08; }
+h2 { font-size: var(--h2-size); line-height: 1.12; }
+h3 { font-size: var(--h3-size); }
+p, li { font-size: var(--body-size); line-height: 1.7; color: var(--text-secondary); }
+strong { color: var(--accent-crimson); font-weight: 600; }
+.dropcap::first-letter { font-family: var(--font-display); font-size: 2.8em; font-weight: 700; float: left; line-height: 0.85; margin-right: 0.12em; color: var(--accent-crimson); }
+.pullquote { border-left: 3px solid var(--accent-crimson); padding-left: 1.4em; font-family: var(--font-display); font-size: var(--h2-size); font-style: italic; line-height: 1.35; color: var(--text-primary); }
+.pullquote .attrib { display: block; font-family: var(--font-body); font-style: normal; font-size: var(--body-size); color: var(--text-secondary); margin-top: 0.8em; }
+.hr { border: none; border-top: 1px solid var(--rule-color); margin: 0.5em 0; }
+.rule-list { list-style: none; display: flex; flex-direction: column; gap: var(--element-gap); }
+.rule-list li { padding-left: 1.6em; position: relative; }
+.rule-list li::before { content: '§'; position: absolute; left: 0; color: var(--accent-crimson); font-family: var(--font-display); font-weight: 700; }
+.chapter { display: flex; gap: 1.2em; align-items: baseline; }
+.chapter .no { font-family: var(--font-display); font-weight: 700; font-size: var(--h2-size); color: var(--accent-crimson); min-width: 2em; }
+.chapter .body h3 { font-family: var(--font-body); font-weight: 600; }
+.chapter .body p { font-size: var(--body-size); }
+.crimson-line { width: 60px; height: 2px; background: var(--accent-crimson); }
+.progress-bar { position: fixed; top: 0; left: 0; height: 2px; background: var(--accent-crimson); width: 0; z-index: 100; transition: width 0.2s ease; }
+.nav-dots { position: fixed; right: 1rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.5rem; z-index: 100; }
+.nav-dots button { width: 6px; height: 6px; border-radius: 50%; border: none; background: #c9c4bc; cursor: pointer; padding: 0; }
+.nav-dots button.active { background: var(--accent-crimson); transform: scale(1.4); }
+.keyboard-hint { position: fixed; bottom: 1rem; left: 50%; transform: translateX(-50%); font-size: var(--small-size); color: #aaa; z-index: 100; font-family: var(--font-body); }
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.slide.visible .reveal { opacity: 1; transform: translateY(0); }
+.reveal:nth-child(1) { transition-delay: 0.15s; }
+.reveal:nth-child(2) { transition-delay: 0.3s; }
+.reveal:nth-child(3) { transition-delay: 0.45s; }
+.reveal:nth-child(4) { transition-delay: 0.6s; }
+.reveal:nth-child(5) { transition-delay: 0.75s; }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- S1 封面 -->
+<section class="slide">
+  <div class="slide-content">
+    <p class="reveal" style="letter-spacing:0.3em; color:var(--accent-crimson); font-size:var(--small-size); text-transform:uppercase;">AI 写作工程学 · 终章</p>
+    <h1 class="reveal">借假修真</h1>
+    <div class="crimson-line reveal"></div>
+    <p class="reveal" style="font-family:var(--font-display); font-size:var(--h3-size); font-style:italic;">初稿的诞生，从来不是学习的结束，而是你以「作者」之名开启深度学习的发令枪。</p>
+    <p class="reveal" style="font-size:var(--small-size); color:#999;">范冰 XDash · 用 AI 产线写出《前线部署工程师》的那个人</p>
+  </div>
+</section>
+
+<!-- S2 冒名顶替 -->
+<section class="slide">
+  <div class="slide-content">
+    <p class="reveal" style="letter-spacing:0.2em; color:var(--accent-crimson); font-size:var(--small-size);">第一章 · 深夜的自我怀疑</p>
+    <h2 class="reveal">「写得太快，我怕自己没吃透」</h2>
+    <p class="reveal dropcap" style="max-width:min(80vw,820px)">如果你用 AI 在一两周内写完了一本书，却觉得其中有些章节自己只有七分懂——封面上印着你的名字，别人来请教，你心里发虚。这不是矫情，这是一个真实的陷阱。香港大学与斯德哥尔摩大学的学者追踪过 26,811 名初高中生：撤掉 AI 的突击闭卷月考，成绩平均暴跌 20%。他们把这种现象命名为——<strong>学习惩罚</strong>。没有认知摩擦，就会空心化。</p>
+    <div class="pullquote reveal" style="max-width:min(80vw,820px)">
+      真正的学习，必须有认知摩擦。
+    </div>
+  </div>
+</section>
+
+<!-- S3 四道摩擦 -->
+<section class="slide">
+  <div class="slide-content">
+    <p class="reveal" style="letter-spacing:0.2em; color:var(--accent-crimson); font-size:var(--small-size);">第二章 · 四道硬摩擦</p>
+    <h2 class="reveal">为什么你不会变成空心大佬</h2>
+    <div class="chapter reveal">
+      <span class="no">一</span>
+      <div class="body"><h3>成稿后逐行改稿</h3><p>双模型挑出几十处裂缝，你被迫像侦探一样逐字重读——修改本身就是第一轮精读。</p></div>
+    </div>
+    <div class="chapter reveal">
+      <span class="no">二</span>
+      <div class="body"><h3>出版社三审三校</h3><p>责任编辑上百条批注倒逼你翻回底稿，把模糊处彻底想透——这是第二遍。</p></div>
+    </div>
+    <div class="chapter reveal">
+      <span class="no">三</span>
+      <div class="body"><h3>宣发费曼转述</h3><p>把书压缩成播客、短视频、PPT，五分钟讲清一个模型——第三轮主动复习。</p></div>
+    </div>
+    <div class="chapter reveal">
+      <span class="no">四</span>
+      <div class="body"><h3>线下真实交锋</h3><p>企业老板盯着你追问水下代价，求生欲逼你连夜恶补——第四遍，逃无可逃。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- S4 假壳与真知 -->
+<section class="slide">
+  <div class="slide-content">
+    <p class="reveal" style="letter-spacing:0.2em; color:var(--accent-crimson); font-size:var(--small-size);">第三章 · 假壳</p>
+    <h2 class="reveal">先立起假壳，再修成真知</h2>
+    <p class="reveal" style="max-width:min(80vw,820px)">那十万字初稿从管线里吐出来时，你对某些旁支推演的理解确实只有七分熟。它是一具借了机器算力搭起来的「假壳」。但只要你有勇气把这个壳子署上真名、推入真实的交付闭环——四道摩擦会像四张砂纸，逼你把夹生饭一口口嚼碎咽下去。</p>
+    <p class="reveal" style="max-width:min(80vw,820px)">走到那天，最初究竟是「你先懂透了才写出这本书」，还是「书反过来逼着你把自己修成了行业大拿」——界限早已消融。</p>
+    <div class="hr reveal"></div>
+    <p class="reveal" style="font-family:var(--font-display); font-style:italic; font-size:var(--h3-size); color:var(--text-primary);">写书是最高阶的背书：出版级长篇都能跑通，公众号、播客、短视频都只是同一产线的降维缩短版。</p>
+  </div>
+</section>
+
+<!-- S5 从选择伦理到分工伦理 -->
+<section class="slide">
+  <div class="slide-content">
+    <p class="reveal" style="letter-spacing:0.2em; color:var(--accent-crimson); font-size:var(--small-size);">第四章 · 思想的转向</p>
+    <h2 class="reveal">从「选择伦理」到「分工伦理」</h2>
+    <p class="reveal" style="max-width:min(80vw,820px)">旧时代纠缠于「用不用 AI」的选择伦理。但当算力像水电一样不可逆转地浸入各行各业，真正的命题是分工伦理：<strong>人机之间如何重新划分清晰的权责界面。</strong></p>
+    <div class="grid reveal" style="grid-template-columns:1fr 1fr">
+      <div class="chapter" style="align-items:flex-start"><span class="no">机</span><div class="body"><h3>机器负责</h3><p>海量检索、句式拼装、信息对齐</p></div></div>
+      <div class="chapter" style="align-items:flex-start"><span class="no">人</span><div class="body"><h3>人负责</h3><p>价值定标、逻辑审查、法律问责</p></div></div>
+    </div>
+    <p class="reveal" style="max-width:min(80vw,820px)">你的工作从「做事」变成「审事」。三类事永远不交给 AI：<strong>对外承诺、资金动作、判断假需求</strong>——责任没法代理。</p>
+  </div>
+</section>
+
+<!-- S6 品位不可替代 -->
+<section class="slide">
+  <div class="slide-content">
+    <p class="reveal" style="letter-spacing:0.2em; color:var(--accent-crimson); font-size:var(--small-size);">第五章 · 万维钢之问</p>
+    <h2 class="reveal">当 AI 吃透你的过去，人还剩什么？</h2>
+    <p class="reveal" style="max-width:min(80vw,820px)">大模型是一面照向过去的镜子，可以把你十年沉淀的经验模式吃得一干二净。但万维钢在硅谷对谈里的回答是：<strong>品位，以及在变化中持续成长的能力。</strong></p>
+    <p class="reveal" style="max-width:min(80vw,820px)">人最根本的优势，恰恰在于时间有限。正因为生命与注意力不可再生，人类做决策时自带沉重的机会成本，必须做痛苦的取舍——无限廉价的算力，永远体会不了这种「时间有限性」带来的认知张力。</p>
+    <div class="pullquote reveal" style="max-width:min(80vw,820px)">
+      把有限的生命，投掷在真正的作者性上。
+    </div>
+  </div>
+</section>
+
+<!-- S7 作者性是什么 -->
+<section class="slide">
+  <div class="slide-content">
+    <p class="reveal" style="letter-spacing:0.2em; color:var(--accent-crimson); font-size:var(--small-size);">第六章 · 不可伪造</p>
+    <h2 class="reveal">什么是一本书真正的护城河</h2>
+    <ul class="rule-list reveal" style="max-width:min(80vw,820px)">
+      <li><strong>你的独家素材</strong>——124 份访谈逐字稿、46 张案例卡，大模型绝对不知道的水下暗礁</li>
+      <li><strong>你付过的代价</strong>——客户餐桌上的真话、翻车现场的冷汗，那是 Unmade Data Set</li>
+      <li><strong>你署名的责任</strong>——判断归人，合成归 AI；每个数字、每句原话，你负全责</li>
+      <li><strong>你的时间取舍</strong>——合租房的深夜、生娃后劈成三瓣的时间，机器复制不了痛苦</li>
+    </ul>
+    <p class="reveal" style="max-width:min(80vw,820px)">稀缺的从来不是修辞技巧，而是那个活生生经历过疼痛的具体的人。</p>
+  </div>
+</section>
+
+<!-- S8 证据与坦诚 -->
+<section class="slide">
+  <div class="slide-content">
+    <p class="reveal" style="letter-spacing:0.2em; color:var(--accent-crimson); font-size:var(--small-size);">第七章 · 坦诚的工程</p>
+    <h2 class="reveal">二手车维保级的白盒台账</h2>
+    <p class="reveal" style="max-width:min(80vw,820px)">卖顶级二手保时捷，拍胸脯发毒誓没用。最狠的动作，是从手套箱里掏出一叠从落地第一天起、每次保养换过哪颗螺丝、技师签字的<strong>原厂维保记录</strong>。</p>
+    <div class="grid reveal" style="grid-template-columns:1fr 1fr">
+      <div class="chapter" style="align-items:flex-start"><span class="no">Ⅰ</span><div class="body"><h3>原始输入存根</h3><p>每份语料几时几分入库</p></div></div>
+      <div class="chapter" style="align-items:flex-start"><span class="no">Ⅱ</span><div class="body"><h3>架构碰撞留档</h3><p>哪版大纲被你推翻重来</p></div></div>
+      <div class="chapter" style="align-items:flex-start"><span class="no">Ⅲ</span><div class="body"><h3>模型边界声明</h3><p>哪道工序用了什么模型</p></div></div>
+      <div class="chapter" style="align-items:flex-start"><span class="no">Ⅳ</span><div class="body"><h3>人工终审签字</h3><p>每处数据的作者裁决</p></div></div>
+    </div>
+    <p class="reveal" style="max-width:min(80vw,820px)">伪造这套工程记录的成本，比老老实实写一本书还高十倍。披露在读者掏钱之前，披露到工序环节，作者本人负全责。</p>
+  </div>
+</section>
+
+<!-- S9 信任的媒介 -->
+<section class="slide">
+  <div class="slide-content">
+    <p class="reveal" style="letter-spacing:0.2em; color:var(--accent-crimson); font-size:var(--small-size);">第八章 · 压舱石</p>
+    <h2 class="reveal">书，是唯一不会被算法关停的扩音器</h2>
+    <p class="reveal" style="max-width:min(80vw,820px)">社交网络上的发帖，不过是随时会被算法关停的扩音器。科幻作家 John Scalzi 在独立站点坚持写作 28 年得出的定论是：<strong>书籍，才是你唯一的「机构记忆」与终身信誉压舱石。</strong></p>
+    <p class="reveal" style="max-width:min(80vw,820px)">一篇文章读者看完就走；一条视频平台抽走大半；只有一本带书号、过三审三校、能在书店被翻到的实体书，会在每一次别人介绍你的时候替你说话，而且一说好几年。</p>
+    <div class="pullquote reveal" style="max-width:min(80vw,820px)">
+      书卖的不是字，是「这个人说的话，可以拿去用」这个判断。
+    </div>
+  </div>
+</section>
+
+<!-- S10 收束 -->
+<section class="slide">
+  <div class="slide-content">
+    <p class="reveal" style="letter-spacing:0.2em; color:var(--accent-crimson); font-size:var(--small-size);">终章 · 受命者</p>
+    <h1 class="reveal">你不是冒名顶替者</h1>
+    <div class="pullquote reveal" style="max-width:min(85vw,900px); border-left:none; border-top:3px solid var(--accent-crimson); padding-left:0; padding-top:1em; text-align:center;">
+      「当你取得某种突破或成功时，你可能真的会觉得自己是个冒名顶替者。但只要你调动了你独特的才能、经历和判断，组合出了这个世界上原本不存在的特别之物，你就绝对不是冒名顶替者——你是天选的受命者，注定要完成那些只有你能达成的使命。」
+      <span class="attrib">—— 凯文·凯利《宝贵的人生建议》</span>
+    </div>
+    <p class="reveal" style="max-width:min(80vw,820px); text-align:center; margin:0 auto;">不要因为起草阶段借助了机器的杠杆，就在心理上把自己矮化成局外人。<br>初稿是发令枪，四道摩擦是修行，真知终将长进你的骨肉里。</p>
+  </div>
+</section>
+
+<div class="keyboard-hint">← → 翻页 · 空格下一页</div>
+<script>
+class SlidePresentation {
+  constructor() {
+    this.slides = document.querySelectorAll('.slide');
+    this.current = 0;
+    this.setupNav();
+    this.setupKeyboard();
+    this.setupTouch();
+    this.setupWheel();
+    this.observe();
+  }
+  setupNav() {
+    const dots = document.getElementById('navDots');
+    this.slides.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.addEventListener('click', () => this.go(i));
+      dots.appendChild(b);
+    });
+    this.dots = dots.children;
+    this.update();
+  }
+  go(i) {
+    this.current = Math.max(0, Math.min(this.slides.length - 1, i));
+    this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
+    this.update();
+  }
+  update() {
+    Array.from(this.dots).forEach((d, i) => d.classList.toggle('active', i === this.current));
+    document.getElementById('progressBar').style.width = ((this.current + 1) / this.slides.length * 100) + '%';
+  }
+  setupKeyboard() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); this.go(this.current + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); this.go(this.current - 1); }
+      if (e.key === 'Home') this.go(0);
+      if (e.key === 'End') this.go(this.slides.length - 1);
+    });
+  }
+  setupTouch() {
+    let y0 = null;
+    document.addEventListener('touchstart', (e) => { y0 = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      if (y0 === null) return;
+      const dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dy) > 40) this.go(this.current + (dy < 0 ? 1 : -1));
+      y0 = null;
+    }, { passive: true });
+  }
+  setupWheel() {
+    let lock = false;
+    document.addEventListener('wheel', (e) => {
+      if (lock) return;
+      lock = true;
+      setTimeout(() => { lock = false; }, 700);
+      if (Math.abs(e.deltaY) < 20) return;
+      this.go(this.current + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+  observe() {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) {
+          en.target.classList.add('visible');
+          this.current = Array.from(this.slides).indexOf(en.target);
+          this.update();
+        }
+      });
+    }, { threshold: 0.6 });
+    this.slides.forEach((s) => io.observe(s));
+  }
+}
+new SlidePresentation();
+</script>
+</body>
+</html>

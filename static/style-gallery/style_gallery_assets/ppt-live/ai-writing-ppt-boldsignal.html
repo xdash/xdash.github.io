@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 写作工程学 · 全课总览</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ============ VIEWPORT BASE (MANDATORY) ============ */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+.slide { width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; }
+.slide-content { flex: 1; display: flex; flex-direction: column; justify-content: center; max-height: 100%; overflow: hidden; padding: var(--slide-padding); }
+:root {
+  --title-size: clamp(1.5rem, 5vw, 4rem);
+  --h2-size: clamp(1.25rem, 3.5vw, 2.5rem);
+  --h3-size: clamp(1rem, 2.5vw, 1.75rem);
+  --body-size: clamp(0.75rem, 1.5vw, 1.125rem);
+  --small-size: clamp(0.65rem, 1vw, 0.875rem);
+  --slide-padding: clamp(1rem, 4vw, 4rem);
+  --content-gap: clamp(0.5rem, 2vw, 2rem);
+  --element-gap: clamp(0.25rem, 1vw, 1rem);
+}
+.card, .container, .content-box { max-width: min(90vw, 1000px); max-height: min(80vh, 700px); }
+.feature-list, .bullet-list { gap: clamp(0.4rem, 1vh, 1rem); }
+.feature-list li, .bullet-list li { font-size: var(--body-size); line-height: 1.4; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: clamp(0.5rem, 1.5vw, 1rem); }
+img, .image-container { max-width: 100%; max-height: min(50vh, 400px); object-fit: contain; }
+@media (max-height: 700px) {
+  :root { --slide-padding: clamp(0.75rem, 3vw, 2rem); --content-gap: clamp(0.4rem, 1.5vw, 1rem); --title-size: clamp(1.25rem, 4.5vw, 2.5rem); --h2-size: clamp(1rem, 3vw, 1.75rem); }
+}
+@media (max-height: 600px) {
+  :root { --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem); --content-gap: clamp(0.3rem, 1vw, 0.75rem); --title-size: clamp(1.1rem, 4vw, 2rem); --body-size: clamp(0.7rem, 1.2vw, 0.95rem); }
+  .nav-dots, .keyboard-hint, .decorative { display: none; }
+}
+@media (max-height: 500px) {
+  :root { --slide-padding: clamp(0.4rem, 2vw, 1rem); --title-size: clamp(1rem, 3.5vw, 1.5rem); --h2-size: clamp(0.9rem, 2.5vw, 1.25rem); --body-size: clamp(0.65rem, 1vw, 0.85rem); }
+}
+@media (max-width: 600px) {
+  :root { --title-size: clamp(1.25rem, 7vw, 2.5rem); }
+  .grid { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+  html { scroll-behavior: auto; }
+}
+
+/* ============ PRESET: BOLD SIGNAL ============ */
+:root {
+  --bg-primary: #1a1a1a;
+  --bg-gradient: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+  --card-bg: #FF5722;
+  --text-primary: #ffffff;
+  --text-on-card: #1a1a1a;
+  --text-secondary: #b8b8b8;
+  --font-display: 'Archivo Black', sans-serif;
+  --font-body: 'Space Grotesk', sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font-body); background: var(--bg-primary); color: var(--text-primary); }
+.slide { background: var(--bg-gradient); }
+.slide-num { position: absolute; top: clamp(1rem, 3vh, 2rem); left: clamp(1rem, 4vw, 3rem); font-family: var(--font-display); font-size: clamp(2rem, 6vw, 4.5rem); color: rgba(255,255,255,0.12); z-index: 2; }
+.crumb { position: absolute; top: clamp(1.2rem, 3vh, 2.2rem); right: clamp(1rem, 4vw, 3rem); font-size: var(--small-size); color: var(--text-secondary); letter-spacing: 0.12em; z-index: 2; }
+.slide-content { z-index: 1; gap: var(--content-gap); }
+h1, h2 { font-family: var(--font-display); font-weight: 900; line-height: 1.05; }
+h1 { font-size: var(--title-size); }
+h2 { font-size: var(--h2-size); }
+h3 { font-family: var(--font-body); font-weight: 700; font-size: var(--h3-size); }
+p, li { font-size: var(--body-size); line-height: 1.5; color: var(--text-secondary); }
+.accent-card { background: var(--card-bg); color: var(--text-on-card); padding: clamp(1rem, 2.5vw, 2.5rem); border-radius: 4px; }
+.accent-card h3, .accent-card p { color: var(--text-on-card); }
+.accent-card .big { font-family: var(--font-display); font-size: clamp(2rem, 6vw, 4.5rem); line-height: 1; }
+.feature-list { list-style: none; display: flex; flex-direction: column; }
+.feature-list li { padding-left: 1.4em; position: relative; }
+.feature-list li::before { content: '→'; position: absolute; left: 0; color: var(--card-bg); font-weight: 700; }
+.grid .cell { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: clamp(0.8rem, 1.8vw, 1.6rem); }
+.grid .cell .idx { font-family: var(--font-display); color: var(--card-bg); font-size: var(--h3-size); }
+.grid .cell .lbl { font-weight: 700; color: var(--text-primary); font-size: var(--body-size); margin: 0.3em 0 0.2em; }
+.grid .cell .desc { font-size: var(--small-size); color: var(--text-secondary); }
+.rule { display: flex; gap: 1em; align-items: center; }
+.rule .num { font-family: var(--font-display); font-size: var(--h2-size); color: var(--card-bg); flex-shrink: 0; }
+.quote { font-family: var(--font-display); font-size: var(--h2-size); line-height: 1.3; }
+.quote .from { display: block; font-family: var(--font-body); font-weight: 400; font-size: var(--body-size); color: var(--text-secondary); margin-top: 1em; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: var(--card-bg); width: 0; z-index: 100; transition: width 0.2s ease; }
+.nav-dots { position: fixed; right: 1rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.5rem; z-index: 100; }
+.nav-dots button { width: 8px; height: 8px; border-radius: 50%; border: none; background: rgba(255,255,255,0.25); cursor: pointer; padding: 0; }
+.nav-dots button.active { background: var(--card-bg); transform: scale(1.4); }
+.keyboard-hint { position: fixed; bottom: 1rem; left: 50%; transform: translateX(-50%); font-size: var(--small-size); color: rgba(255,255,255,0.35); z-index: 100; letter-spacing: 0.08em; }
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.6s cubic-bezier(0.16,1,0.3,1), transform 0.6s cubic-bezier(0.16,1,0.3,1); }
+.slide.visible .reveal { opacity: 1; transform: translateY(0); }
+.reveal:nth-child(1) { transition-delay: 0.1s; }
+.reveal:nth-child(2) { transition-delay: 0.2s; }
+.reveal:nth-child(3) { transition-delay: 0.3s; }
+.reveal:nth-child(4) { transition-delay: 0.4s; }
+.reveal:nth-child(5) { transition-delay: 0.5s; }
+.reveal:nth-child(6) { transition-delay: 0.6s; }
+.big-num-row { display: flex; gap: clamp(1rem, 3vw, 3rem); flex-wrap: wrap; }
+.big-num { flex: 1; min-width: 140px; }
+.big-num .v { font-family: var(--font-display); font-size: clamp(2.2rem, 6vw, 4.5rem); color: var(--card-bg); line-height: 1; }
+.big-num .k { font-size: var(--small-size); color: var(--text-secondary); margin-top: 0.4em; }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- S1 封面 -->
+<section class="slide title-slide">
+  <div class="slide-num">01</div>
+  <div class="crumb">AI 写作工程学 · 9 模块总览</div>
+  <div class="slide-content">
+    <div class="accent-card reveal" style="max-width:min(90vw,1000px)">
+      <p style="font-size:var(--body-size); letter-spacing:0.2em; text-transform:uppercase; margin-bottom:1em;">从空白文档到纸质书出版 · 人机协作产线</p>
+      <h1 style="font-size:clamp(2rem,6.5vw,5rem)">AI 写作工程学</h1>
+      <p style="margin-top:1.2em; font-size:var(--h3-size); font-weight:500;">用软件工程的思路写书，用出版级的标尺降维一切内容</p>
+    </div>
+    <div class="big-num-row reveal">
+      <div class="big-num"><div class="v">24 万</div><div class="k">字纯正文（全稿 32.7 万）</div></div>
+      <div class="big-num"><div class="v">112</div><div class="k">个带出处案例</div></div>
+      <div class="big-num"><div class="v">10</div><div class="k">个大版本对抗审校</div></div>
+      <div class="big-num"><div class="v">1 月</div><div class="k">过审 · 2 月上市</div></div>
+    </div>
+    <p class="reveal" style="margin-top:0.5em;">讲师：范冰 XDash · 人民邮电出版社重点立项 · fde4.ai 开源破圈</p>
+  </div>
+</section>
+
+<!-- S2 为什么现在该写书 -->
+<section class="slide">
+  <div class="slide-num">02</div>
+  <div class="crumb">立论 · 成本端塌缩，收益端没有</div>
+  <div class="slide-content">
+    <h2 class="reveal">我的写书系统：6 块钱 token，卖出 3000 块</h2>
+    <p class="reveal" style="max-width:min(80vw,900px)">这不是段子，是我 2026 年 10 月 14 日写在 flomo 里的原话。把这句话拆开，就是这门课的第一笔账：<strong style="color:var(--text-primary)">成本端正在塌缩，收益端没有。</strong></p>
+    <div class="grid reveal" style="grid-template-columns:1fr 1fr">
+      <div class="cell">
+        <div class="idx">成本端</div>
+        <div class="lbl">过去：买时间</div>
+        <div class="desc">辞职、请假、熬夜——几十万的机会成本。今天一次完整交付的模型开销是个位数人民币。</div>
+      </div>
+      <div class="cell">
+        <div class="idx">收益端</div>
+        <div class="lbl">不是版税</div>
+        <div class="desc">首印三五千册的版税只够交电费。真正的大账在书之后：内训、咨询、高客单——定价单位差三个数量级。</div>
+      </div>
+    </div>
+    <div class="accent-card reveal" style="max-width:min(80vw,900px)">
+      <p class="big">书卖的不是字，是「这个人说的话，可以拿去用」这个判断。</p>
+    </div>
+  </div>
+</section>
+
+<!-- S3 宽进严出 vs 严进宽出 -->
+<section class="slide">
+  <div class="slide-num">03</div>
+  <div class="crumb">认知反转 · 门槛的位置</div>
+  <div class="slide-content">
+    <h2 class="reveal">直觉骗了你：自媒体的宽门是陷阱</h2>
+    <div class="grid reveal" style="grid-template-columns:1fr 1fr">
+      <div class="cell">
+        <div class="idx">自媒体</div>
+        <div class="lbl">宽进严出</div>
+        <div class="desc">注册即发，零门槛。但算法红海厮杀、随时改版抽干流量、完播率苛刻——把自己卷成算法的奴隶。</div>
+      </div>
+      <div class="cell" style="border-color:var(--card-bg)">
+        <div class="idx" style="color:var(--card-bg)">出版</div>
+        <div class="lbl">严进宽出</div>
+        <div class="desc">数万字逻辑自洽 + 选题审查 + 三审三校。一旦跨过窄门，四大杠杆瞬间为你所用。</div>
+      </div>
+    </div>
+    <ul class="feature-list reveal">
+      <li><strong style="color:var(--text-primary)">编辑杠杆</strong>：资深编辑帮你重构骨架、校准呼吸感</li>
+      <li><strong style="color:var(--text-primary)">渠道与印务杠杆</strong>：出版社承担印刷与全国铺货</li>
+      <li><strong style="color:var(--text-primary)">书号与背书杠杆</strong>：ISBN + 机构营销 + 垂直榜单爆破</li>
+      <li><strong style="color:var(--text-primary)">榜单杠杆</strong>：新书一周卖数百本即可打入畅销新书榜前列</li>
+    </ul>
+  </div>
+</section>
+
+<!-- S4 九模块地图 -->
+<section class="slide">
+  <div class="slide-num">04</div>
+  <div class="crumb">全课地图 · 判断归人，合成归 AI</div>
+  <div class="slide-content">
+    <h2 class="reveal">九模块 = 一条「判断归人，合成归 AI」的产线</h2>
+    <div class="grid reveal" style="grid-template-columns:repeat(3,1fr)">
+      <div class="cell"><div class="idx">01</div><div class="lbl">开局立论</div><div class="desc">6 块钱→3000 块的账本 + 四大杠杆</div></div>
+      <div class="cell"><div class="idx">02</div><div class="lbl">选题破局</div><div class="desc">选题决定成败六成 · 第一性三问</div></div>
+      <div class="cell"><div class="idx">03</div><div class="lbl">素材基建</div><div class="desc">100X 萃取 → Obsidian 活水工厂</div></div>
+      <div class="cell"><div class="idx">04</div><div class="lbl">架构合同</div><div class="desc">事实锚点表 + 母章注册制</div></div>
+      <div class="cell"><div class="idx">05</div><div class="lbl">合成起草</div><div class="desc">IPO 管线 + Golden Copy + 一力降十会</div></div>
+      <div class="cell"><div class="idx">06</div><div class="lbl">修订去味</div><div class="desc">级联纪律 + 双模型捉鬼 + 呼吸保卫战</div></div>
+      <div class="cell"><div class="idx">06·5</div><div class="lbl">技巧库</div><div class="desc">Humanizer + 三轨分体裁 + 规则沉淀</div></div>
+      <div class="cell"><div class="idx">07</div><div class="lbl">信任披露</div><div class="desc">二手车维保级台账 + 三档声明</div></div>
+      <div class="cell"><div class="idx">08</div><div class="lbl">出版闭环</div><div class="desc">三通道 + 借假修真四道硬摩擦</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- S5 八工位与软件工程 -->
+<section class="slide">
+  <div class="slide-num">05</div>
+  <div class="crumb">元主线 · 拿开发软件的思路写书</div>
+  <div class="slide-content">
+    <h2 class="reveal">写书，就是一次软件的完整开发生命周期</h2>
+    <div class="grid reveal" style="grid-template-columns:1fr 1fr">
+      <div class="cell"><div class="lbl">选题 = 需求分析</div><div class="desc">AI 替你做不了主的第一步</div></div>
+      <div class="cell"><div class="lbl">素材 = 资源文件</div><div class="desc">A/B/C 分级守住输入纯度</div></div>
+      <div class="cell"><div class="lbl">锚点表 = 接口契约</div><div class="desc">锁死事实，模型无法跑偏</div></div>
+      <div class="cell"><div class="lbl">起草 = 编码实现</div><div class="desc">旗舰模型合成</div></div>
+      <div class="cell"><div class="lbl">修订 = 代码评审</div><div class="desc">双模型对抗捉鬼</div></div>
+      <div class="cell"><div class="lbl">去味 = 代码审查细化</div><div class="desc">修辞姿势 + 分体裁</div></div>
+      <div class="cell"><div class="lbl">台账 = 变更日志</div><div class="desc">白盒过程可审计</div></div>
+      <div class="cell"><div class="lbl">出版 = 发布上线</div><div class="desc">三通道 + 长期运维</div></div>
+    </div>
+    <p class="reveal" style="margin-top:0.5em;">程序员靠仓库、commit、状态文件写代码；写书也该一样——不靠一口气聊到底。</p>
+  </div>
+</section>
+
+<!-- S6 选题六成 + 东贩 -->
+<section class="slide">
+  <div class="slide-num">06</div>
+  <div class="crumb">模块二 · 选题决定成败的六成</div>
+  <div class="slide-content">
+    <h2 class="reveal">内容死于选题，而不是死于文笔</h2>
+    <div class="accent-card reveal" style="max-width:min(80vw,900px)">
+      <p class="big">「当下社会思潮与垂直群体的真实焦虑里，恰有一句只有我能说的话」</p>
+    </div>
+    <p class="reveal" style="max-width:min(80vw,900px)">日本「失去的三十年」东贩畅销榜 640 本 → 400 本非虚构：纯知识科普年均进榜不足 2 席；<strong style="color:var(--text-primary)">意义供给 62 席、身体管理 31 席、关系与技能约 40 席、孩子 30+ 席</strong>。</p>
+    <p class="reveal" style="max-width:min(80vw,900px)">社会越不确定，解释框架越值钱。日本三十年买的是「如何在不确定里安顿自己」——别卖快消信息，卖经过现实敲打的解释框架。</p>
+  </div>
+</section>
+
+<!-- S7 素材/锚点/起草 -->
+<section class="slide">
+  <div class="slide-num">07</div>
+  <div class="crumb">模块三·四·五 · 进料与合成</div>
+  <div class="slide-content">
+    <h2 class="reveal">起草的快，是用素材的慢换来的</h2>
+    <div class="grid reveal" style="grid-template-columns:repeat(3,1fr)">
+      <div class="cell"><div class="idx">A/B/C</div><div class="lbl">素材分级</div><div class="desc">A 类一手逐字稿才是骨肉；B 类只许找线索；C 类只搭框架。来源五字段防「四家转载其实同源」。</div></div>
+      <div class="cell"><div class="idx">锚点</div><div class="lbl">章节事实合同</div><div class="desc">每章 ≥15–20 条去重事实锚点 + 3 张案例卡 + 1 个反例，凑不齐就关进停职区。</div></div>
+      <div class="cell"><div class="idx">IPO</div><div class="lbl">批注式起草</div><div class="desc">先出骨架，人写批注，再合成。首章精修成 Golden Copy，后续章节挂载同款语调。</div></div>
+    </div>
+    <div class="accent-card reveal" style="max-width:min(80vw,900px)">
+      <p style="font-size:var(--h3-size); font-weight:700;">模型选型是生死问题：推理型模型 4000 token 全耗思考链、正文 0 字符；非推理型模型给 4660 字成稿。</p>
+    </div>
+  </div>
+</section>
+
+<!-- S8 修订去味 + case-041 -->
+<section class="slide">
+  <div class="slide-num">08</div>
+  <div class="crumb">模块六 · 全课干货最高峰</div>
+  <div class="slide-content">
+    <h2 class="reveal">指标全绿，但文章死了</h2>
+    <p class="reveal" style="max-width:min(80vw,900px)">case-041：我自己的 <code style="background:rgba(255,255,255,0.1);padding:0.2em 0.5em;border-radius:3px">check_chapter.py</code> 死卡单句段 10%–35%，改写 Agent 为了跑绿灯，把锋利的单句段缝成水泥方块砖——<strong style="color:var(--text-primary)">古德哈特定律：指标异化成目标，反过来杀死作品的生命力。</strong></p>
+    <div class="grid reveal" style="grid-template-columns:1fr 1fr">
+      <div class="cell"><div class="idx">硬红线</div><div class="lbl">一票否决</div><div class="desc">弯引号=0、中英粘连=0、模具句≤5、无「待调研」残留</div></div>
+      <div class="cell"><div class="idx">软节奏</div><div class="lbl">放宽呼吸</div><div class="desc">单句段 10%–55%、无证据段 25%–40%——给意群留白</div></div>
+    </div>
+    <p class="reveal" style="max-width:min(80vw,900px)">加上卡兹克「活人感四件套」探针：犹豫、过程、方差、局限。别让安全带勒死你的呼吸。</p>
+  </div>
+</section>
+
+<!-- S9 信任与出版 -->
+<section class="slide">
+  <div class="slide-num">09</div>
+  <div class="crumb">模块七·八 · 白盒与闭环</div>
+  <div class="slide-content">
+    <h2 class="reveal">告别自证死局，拿出二手车维保记录</h2>
+    <ul class="feature-list reveal" style="max-width:min(80vw,900px)">
+      <li><strong style="color:var(--text-primary)">原始输入存根</strong>：research/notes.md + processed.json 记录每一份语料入库时间</li>
+      <li><strong style="color:var(--text-primary)">架构碰撞留档</strong>：README 版本史 + parked.md 停职区 + 锚点批注</li>
+      <li><strong style="color:var(--text-primary)">智能体边界声明</strong>：哪道工序用了什么模型</li>
+      <li><strong style="color:var(--text-primary)">人工放行终审表</strong>：每一处数据的作者签字</li>
+    </ul>
+    <div class="accent-card reveal" style="max-width:min(80vw,900px)">
+      <p class="big" style="font-size:clamp(1.5rem,3.5vw,2.5rem)">出版三通道：数字先行验证 → 正规纸书加冕 → POD 内训变现</p>
+    </div>
+  </div>
+</section>
+
+<!-- S10 借假修真 + 行动 -->
+<section class="slide">
+  <div class="slide-num">10</div>
+  <div class="crumb">终章 · 借假修真</div>
+  <div class="slide-content">
+    <h2 class="reveal">初稿只是学习的发令枪</h2>
+    <p class="reveal" style="max-width:min(80vw,900px)">哪怕初稿是七分熟的「假壳」，推进真实交付闭环后，四道硬摩擦会逼你百炼成钢：<strong style="color:var(--text-primary)">成稿逐行改稿 → 出版社三审三校 → 宣发费曼转述 → 线下真实交锋。</strong></p>
+    <div class="grid reveal" style="grid-template-columns:repeat(3,1fr)">
+      <div class="cell"><div class="idx">1</div><div class="lbl">今晚 30 分钟</div><div class="desc">T2 第一性三问 + raw/anchors/chapters + 5 份语料 + 第 1 张案例卡</div></div>
+      <div class="cell"><div class="idx">3</div><div class="lbl">周末 2 小时</div><div class="desc">T4 填满 15 条锚点 + T5 跑出 3000 字 Golden Copy</div></div>
+      <div class="cell"><div class="idx">7</div><div class="lbl">下周 1 小时</div><div class="desc">双模型找茬 + T6 洗腔 + T6b 分体裁自检 + 3 人盲测</div></div>
+    </div>
+    <div class="quote reveal" style="margin-top:1em;">
+      「当你调动独特的经历与品味创造出原本不存在的作品时，你绝不是冒名顶替者——你是这件作品唯一的受命者。」
+      <span class="from">—— 凯文·凯利《宝贵的人生建议》</span>
+    </div>
+  </div>
+</section>
+
+<div class="keyboard-hint">← → 翻页 · 空格下一页</div>
+<script>
+class SlidePresentation {
+  constructor() {
+    this.slides = document.querySelectorAll('.slide');
+    this.current = 0;
+    this.setupNav();
+    this.setupKeyboard();
+    this.setupTouch();
+    this.setupWheel();
+    this.setupProgress();
+    this.observe();
+  }
+  setupNav() {
+    const dots = document.getElementById('navDots');
+    this.slides.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.addEventListener('click', () => this.go(i));
+      dots.appendChild(b);
+    });
+    this.dots = dots.children;
+    this.update();
+  }
+  go(i) {
+    this.current = Math.max(0, Math.min(this.slides.length - 1, i));
+    this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
+    this.update();
+  }
+  update() {
+    Array.from(this.dots).forEach((d, i) => d.classList.toggle('active', i === this.current));
+    document.getElementById('progressBar').style.width = ((this.current + 1) / this.slides.length * 100) + '%';
+  }
+  setupKeyboard() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); this.go(this.current + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); this.go(this.current - 1); }
+      if (e.key === 'Home') { this.go(0); }
+      if (e.key === 'End') { this.go(this.slides.length - 1); }
+    });
+  }
+  setupTouch() {
+    let y0 = null;
+    document.addEventListener('touchstart', (e) => { y0 = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      if (y0 === null) return;
+      const dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dy) > 40) this.go(this.current + (dy < 0 ? 1 : -1));
+      y0 = null;
+    }, { passive: true });
+  }
+  setupWheel() {
+    let lock = false;
+    document.addEventListener('wheel', (e) => {
+      if (lock) return;
+      lock = true;
+      setTimeout(() => { lock = false; }, 500);
+      if (Math.abs(e.deltaY) < 20) return;
+      this.go(this.current + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+  setupProgress() {
+    this.progress = document.getElementById('progressBar');
+  }
+  observe() {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) {
+          en.target.classList.add('visible');
+          this.current = Array.from(this.slides).indexOf(en.target);
+          this.update();
+        }
+      });
+    }, { threshold: 0.6 });
+    this.slides.forEach((s) => io.observe(s));
+  }
+}
+new SlidePresentation();
+</script>
+</body>
+</html>

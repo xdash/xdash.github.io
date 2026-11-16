@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>一条产线，多账号降维 · 分体裁三轨</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ============ VIEWPORT BASE (MANDATORY) ============ */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+.slide { width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; }
+.slide-content { flex: 1; display: flex; flex-direction: column; justify-content: center; max-height: 100%; overflow: hidden; padding: var(--slide-padding); }
+:root {
+  --title-size: clamp(1.5rem, 5vw, 4rem);
+  --h2-size: clamp(1.25rem, 3.5vw, 2.5rem);
+  --h3-size: clamp(1rem, 2.5vw, 1.75rem);
+  --body-size: clamp(0.75rem, 1.5vw, 1.125rem);
+  --small-size: clamp(0.65rem, 1vw, 0.875rem);
+  --slide-padding: clamp(1rem, 4vw, 4rem);
+  --content-gap: clamp(0.5rem, 2vw, 2rem);
+  --element-gap: clamp(0.25rem, 1vw, 1rem);
+}
+.card, .container, .content-box { max-width: min(90vw, 1000px); max-height: min(80vh, 700px); }
+.feature-list, .bullet-list { gap: clamp(0.4rem, 1vh, 1rem); }
+.feature-list li, .bullet-list li { font-size: var(--body-size); line-height: 1.4; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: clamp(0.5rem, 1.5vw, 1rem); }
+img, .image-container { max-width: 100%; max-height: min(50vh, 400px); object-fit: contain; }
+@media (max-height: 700px) {
+  :root { --slide-padding: clamp(0.75rem, 3vw, 2rem); --content-gap: clamp(0.4rem, 1.5vw, 1rem); --title-size: clamp(1.25rem, 4.5vw, 2.5rem); --h2-size: clamp(1rem, 3vw, 1.75rem); }
+}
+@media (max-height: 600px) {
+  :root { --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem); --content-gap: clamp(0.3rem, 1vw, 0.75rem); --title-size: clamp(1.1rem, 4vw, 2rem); --body-size: clamp(0.7rem, 1.2vw, 0.95rem); }
+  .nav-dots, .keyboard-hint, .decorative { display: none; }
+}
+@media (max-height: 500px) {
+  :root { --slide-padding: clamp(0.4rem, 2vw, 1rem); --title-size: clamp(1rem, 3.5vw, 1.5rem); --h2-size: clamp(0.9rem, 2.5vw, 1.25rem); --body-size: clamp(0.65rem, 1vw, 0.85rem); }
+}
+@media (max-width: 600px) {
+  :root { --title-size: clamp(1.25rem, 7vw, 2.5rem); }
+  .grid { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+  html { scroll-behavior: auto; }
+}
+
+/* ============ PRESET: NOTEBOOK TABS ============ */
+:root {
+  --bg-outer: #2d2d2d;
+  --bg-page: #f8f6f1;
+  --text-primary: #1a1a1a;
+  --text-secondary: #5c5c5c;
+  --tab-1: #98d4bb; /* Mint */
+  --tab-2: #c7b8ea; /* Lavender */
+  --tab-3: #f4b8c5; /* Pink */
+  --tab-4: #a8d8ea; /* Sky */
+  --tab-5: #ffe6a7; /* Cream */
+  --font-display: 'Bodoni Moda', serif;
+  --font-body: 'DM Sans', sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font-body); background: var(--bg-outer); color: var(--text-primary); }
+.slide { background: var(--bg-outer); }
+.page { background: var(--bg-page); border-radius: 6px 6px 0 0; box-shadow: 0 20px 60px rgba(0,0,0,0.4); max-width: min(88vw, 1050px); margin: 0 auto; padding: clamp(1.4rem, 3.5vw, 3rem) clamp(1.6rem, 4vw, 3.5rem) clamp(1.4rem, 3vw, 2.5rem); position: relative; flex: 0 1 auto; overflow: hidden; }
+.page::before { content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: 2.4em; background: repeating-linear-gradient(0deg, transparent 0 1.4em, rgba(26,26,26,0.06) 1.4em 1.55em); }
+.page .inner { padding-left: 1.2em; }
+.tab-rail { position: absolute; right: 0; top: 0; bottom: 0; width: clamp(1.2rem, 3vw, 2.6rem); display: flex; flex-direction: column; gap: 0.25em; padding: 0.8em 0; z-index: 3; }
+.tab-rail .tab { border-radius: 8px 0 0 8px; display: flex; align-items: center; justify-content: center; font-size: clamp(0.5rem, 1vh, 0.7rem); writing-mode: vertical-rl; text-orientation: mixed; font-weight: 700; letter-spacing: 0.1em; color: rgba(26,26,26,0.6); padding: 0.4em 0.1em; }
+.tab-rail .tab:nth-child(1) { background: var(--tab-1); height: 18%; }
+.tab-rail .tab:nth-child(2) { background: var(--tab-2); height: 22%; }
+.tab-rail .tab:nth-child(3) { background: var(--tab-3); height: 26%; }
+.tab-rail .tab:nth-child(4) { background: var(--tab-4); height: 18%; }
+.tab-rail .tab:nth-child(5) { background: var(--tab-5); height: 16%; }
+h1, h2 { font-family: var(--font-display); font-weight: 700; }
+h1 { font-size: var(--title-size); line-height: 1.05; }
+h2 { font-size: var(--h2-size); line-height: 1.1; }
+h3 { font-family: var(--font-body); font-weight: 700; font-size: var(--h3-size); }
+p, li { font-size: var(--body-size); line-height: 1.65; color: var(--text-secondary); }
+strong { color: var(--text-primary); font-weight: 700; }
+.memo { border-left: 3px solid var(--tab-2); padding-left: 1em; margin: 0.5em 0; }
+.memo .tag { font-size: var(--small-size); font-weight: 700; letter-spacing: 0.08em; color: var(--tab-2); }
+.track { background: #fff; border-radius: 10px; padding: clamp(0.9rem, 2vw, 1.4rem); box-shadow: 0 3px 12px rgba(0,0,0,0.06); border-top: 6px solid; }
+.track .name { font-family: var(--font-display); font-weight: 700; font-size: var(--h3-size); }
+.track .rule { font-size: var(--body-size); color: var(--text-secondary); margin-top: 0.4em; }
+.track .point { font-size: var(--body-size); color: var(--text-secondary); margin-top: 0.5em; }
+.track.a { border-top-color: var(--tab-1); }
+.track.b { border-top-color: var(--tab-3); }
+.track.c { border-top-color: var(--tab-4); }
+.track-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(0.6rem, 1.5vw, 1.2rem); }
+.dual { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(0.8rem, 2vw, 1.6rem); }
+.card { background: #fff; border-radius: 10px; padding: clamp(0.9rem, 2vw, 1.4rem); box-shadow: 0 3px 12px rgba(0,0,0,0.06); }
+.card .h { font-weight: 700; font-size: var(--body-size); }
+.card .b { font-size: var(--body-size); color: var(--text-secondary); margin-top: 0.4em; }
+.stamp { display: inline-block; border: 2px solid var(--tab-3); color: var(--text-primary); border-radius: 6px; padding: 0.3em 1em; font-weight: 700; font-size: var(--small-size); transform: rotate(-3deg); letter-spacing: 0.1em; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 4px; background: var(--tab-3); width: 0; z-index: 100; transition: width 0.2s ease; }
+.nav-dots { position: fixed; right: 1rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.5rem; z-index: 100; }
+.nav-dots button { width: 8px; height: 8px; border-radius: 50%; border: none; background: rgba(248,246,241,0.3); cursor: pointer; padding: 0; }
+.nav-dots button.active { background: var(--tab-3); transform: scale(1.4); }
+.keyboard-hint { position: fixed; bottom: 1rem; left: 50%; transform: translateX(-50%); font-size: var(--small-size); color: rgba(248,246,241,0.35); z-index: 100; }
+.reveal { opacity: 0; transform: translateY(26px); transition: opacity 0.65s cubic-bezier(0.16,1,0.3,1), transform 0.65s cubic-bezier(0.16,1,0.3,1); }
+.slide.visible .reveal { opacity: 1; transform: translateY(0); }
+.reveal:nth-child(1) { transition-delay: 0.12s; }
+.reveal:nth-child(2) { transition-delay: 0.24s; }
+.reveal:nth-child(3) { transition-delay: 0.36s; }
+.reveal:nth-child(4) { transition-delay: 0.48s; }
+.reveal:nth-child(5) { transition-delay: 0.6s; }
+.reveal:nth-child(6) { transition-delay: 0.72s; }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- S1 封面 -->
+<section class="slide">
+  <div class="tab-rail"><i class="tab">选题</i><i class="tab">素材</i><i class="tab">起草</i><i class="tab">去味</i><i class="tab">出版</i></div>
+  <div class="slide-content">
+    <div class="page">
+      <div class="inner">
+        <p class="reveal" style="letter-spacing:0.25em; color:var(--text-secondary); font-size:var(--small-size);">内容操盘手手记 · 模块六·五</p>
+        <h1 class="reveal" style="margin-top:0.3em">一条产线，多账号降维</h1>
+        <p class="reveal" style="margin-top:0.8em; font-size:var(--h3-size); font-family:var(--font-display);">同一台产线，换规则文件就能写书、写公众号、写多个人设的号。</p>
+        <div class="memo reveal" style="margin-top:1.2em">
+          <span class="tag">手记</span>
+          <p style="margin-top:0.3em">体裁差异、人设差异，本质都是「多个规则文件的自动路由」——进哪个目录，就加载哪个人设。</p>
+        </div>
+        <p class="reveal" style="margin-top:1em; font-size:var(--small-size); color:#999;">范冰 XDash · AI 写作工程学</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S2 三轨铁律 -->
+<section class="slide">
+  <div class="tab-rail"><i class="tab">选题</i><i class="tab">素材</i><i class="tab">起草</i><i class="tab">去味</i><i class="tab">出版</i></div>
+  <div class="slide-content">
+    <div class="page">
+      <div class="inner">
+        <p class="reveal" style="letter-spacing:0.2em; color:var(--text-secondary); font-size:var(--small-size);">分体裁 · 三轨铁律</p>
+        <h2 class="reveal" style="margin-top:0.3em">同样让 AI 写，体裁不同写法完全不同</h2>
+        <p class="reveal" style="margin-top:0.7em">「让 AI 写」不是一招通吃。同一句 prompt，商业纪实、自我成长、工具教程——结构、人称、案例形态、一章职责，全得换一套。</p>
+        <div class="track-grid reveal" style="margin-top:1em">
+          <div class="track a">
+            <div class="name">A 轨 · 商业操盘</div>
+            <div class="rule">第一人称在场 + 真实企业五段式卡片（起点/动作/阻力/转折/结果+原话）</div>
+            <div class="point">专门揭示利益错位和水下账本</div>
+          </div>
+          <div class="track b">
+            <div class="name">B 轨 · 认知自助</div>
+            <div class="rule">第二人称「你」沉浸式 + 案例三条腿（读者场景/群像速写/实验现场）</div>
+            <div class="point">严禁虚构个案</div>
+          </div>
+          <div class="track c">
+            <div class="name">C 轨 · 工具 SOP</div>
+            <div class="rule">一章一产物，输入/处理/输出闭环</div>
+            <div class="point">严禁伪文学修辞</div>
+          </div>
+        </div>
+        <div class="memo reveal" style="margin-top:1em">
+          <span class="tag">判据一句话</span>
+          <p style="margin-top:0.3em"><strong>「有当事人可采访，用五段式；没有当事人，用三条腿。」</strong>机制解释类硬套五段式，必然编造个案。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S3 三个最外显差异 -->
+<section class="slide">
+  <div class="tab-rail"><i class="tab">选题</i><i class="tab">素材</i><i class="tab">起草</i><i class="tab">去味</i><i class="tab">出版</i></div>
+  <div class="slide-content">
+    <div class="page">
+      <div class="inner">
+        <p class="reveal" style="letter-spacing:0.2em; color:var(--text-secondary); font-size:var(--small-size);">分体裁 · 抄这三个差异点</p>
+        <h2 class="reveal" style="margin-top:0.3em">先抄最外显的三个差异</h2>
+        <div class="dual reveal" style="margin-top:1em">
+          <div class="card"><div class="h">① 人称站位</div><div class="b">A 轨第一人称「我在场、我判断」；B 轨「你」密度 ≥8‰，但第二人称只能描述、不能诊断。</div></div>
+          <div class="card"><div class="h">② 案例形态</div><div class="b">A 轨五段式卡片（要阻力、要原话）；B 轨三条腿（场景/群像/实验）；C 轨一个可复现的输入输出闭环。</div></div>
+          <div class="card"><div class="h">③ 一章职责</div><div class="b">A/C 轨一章一产物；B 轨一章一论证台阶。一章想回答两个问题就拆章，一个都回答不了就停职。</div></div>
+        </div>
+        <div class="memo reveal" style="margin-top:1em">
+          <span class="tag">防混淆</span>
+          <p style="margin-top:0.3em">这里的 A/B/C 三轨是<strong>体裁打法</strong>分流；模块三的 A/B/C 是<strong>素材可信度</strong>分级。字母一样，管的事完全不同。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S4 我的翻车坑 -->
+<section class="slide">
+  <div class="tab-rail"><i class="tab">选题</i><i class="tab">素材</i><i class="tab">起草</i><i class="tab">去味</i><i class="tab">出版</i></div>
+  <div class="slide-content">
+    <div class="page">
+      <div class="inner">
+        <p class="reveal" style="letter-spacing:0.2em; color:var(--text-secondary); font-size:var(--small-size);">分体裁 · 真实翻车</p>
+        <span class="stamp reveal">学费 1.6 万→0</span>
+        <h2 class="reveal" style="margin-top:0.5em">机制类硬套商业五段式</h2>
+        <p class="reveal" style="margin-top:0.8em">早期写自我认知题材《讲了三遍还是不会》，我按 A 轨思路给机制解释类章节硬套五段式案例卡——结果锚点收集了 22 条全齐，<strong>案例层却 0/3</strong>，卡了三轮都判定「素材缺失」。</p>
+        <p class="reveal" style="margin-top:0.6em">后来才想通：不是缺素材，是<strong>体裁错配</strong>。没有当事人可采访的机制类题材，硬套五段式，结果必然是编造个案。</p>
+        <div class="memo reveal" style="margin-top:1em">
+          <span class="tag">修正</span>
+          <p style="margin-top:0.3em">该走 B 轨三条腿，且第三条腿优先用<strong>实验现场</strong>——名人育儿故事没有被试、没有对照、不可核，写进去毁掉全书的引用纪律。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S5 多账号路由 -->
+<section class="slide">
+  <div class="tab-rail"><i class="tab">选题</i><i class="tab">素材</i><i class="tab">起草</i><i class="tab">去味</i><i class="tab">出版</i></div>
+  <div class="slide-content">
+    <div class="page">
+      <div class="inner">
+        <p class="reveal" style="letter-spacing:0.2em; color:var(--text-secondary); font-size:var(--small-size);">降维 · 多账号自动路由</p>
+        <h2 class="reveal" style="margin-top:0.3em">规则文件是身，人设是换装</h2>
+        <p class="reveal" style="margin-top:0.8em">公众号作者「饼干哥哥 AGI」在本地 Obsidian 里管两个号：给每个号各放一份独立规则文件（<code style="background:#eee;padding:0.1em 0.4em;border-radius:4px;font-size:0.9em">CLAUDE.md</code> + 风格指南），<strong>进哪个目录就加载哪个人设</strong>，AI 写稿天然不串味。</p>
+        <div class="dual reveal" style="margin-top:1em">
+          <div class="card"><div class="h">目录 A</div><div class="b">「饼干哥哥 AGI」· CLAUDE.md + 风格指南一 → 技术科普号文风</div></div>
+          <div class="card"><div class="h">目录 B</div><div class="b">「第二曲线增长」· CLAUDE.md + 风格指南二 → 商业增长号文风</div></div>
+        </div>
+        <div class="memo reveal" style="margin-top:1em">
+          <span class="tag">抽象收口</span>
+          <p style="margin-top:0.3em">写出版级书是一套规则，写公众号是另一套规则，写多个人设的号又是另一套——<strong>规则文件是身，体裁和人设是它的换装。</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S6 去味工具箱 -->
+<section class="slide">
+  <div class="tab-rail"><i class="tab">选题</i><i class="tab">素材</i><i class="tab">起草</i><i class="tab">去味</i><i class="tab">出版</i></div>
+  <div class="slide-content">
+    <div class="page">
+      <div class="inner">
+        <p class="reveal" style="letter-spacing:0.2em; color:var(--text-secondary); font-size:var(--small-size);">去味 · 现成工具箱</p>
+        <h2 class="reveal" style="margin-top:0.3em">别再手搓黑名单了</h2>
+        <p class="reveal" style="margin-top:0.7em">基于维基《Signs of AI writing》的开源 Humanizer / <code style="background:#eee;padding:0.1em 0.4em;border-radius:4px;font-size:0.9em">humanizer-zh</code> skill，给了你一套<strong>可逐条核对的 21 类 AI 特征清单</strong>，每类带「特征 → 问题 → 改写前 → 改写后」四件套。</p>
+        <div class="dual reveal" style="margin-top:1em">
+          <div class="card"><div class="h">过度强调意义</div><div class="b">「标志着演变史上的关键时刻」→ 砍掉「标志着」，老实说它成立在哪年、做了什么</div></div>
+          <div class="card"><div class="h">否定式排比</div><div class="b">「不仅是 X，更是 Y」→ 人说话更平，直接说那个 Y 是什么</div></div>
+          <div class="card"><div class="h">三段式法则</div><div class="b">强行凑三组显得全面 → 人通常说两件具体的事，或者干脆一件</div></div>
+          <div class="card"><div class="h">破折号与加粗</div><div class="b">机械模仿「有力」文案 → 人的手不这样打字</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S7 姿态先于词表 -->
+<section class="slide">
+  <div class="tab-rail"><i class="tab">选题</i><i class="tab">素材</i><i class="tab">起草</i><i class="tab">去味</i><i class="tab">出版</i></div>
+  <div class="slide-content">
+    <div class="page">
+      <div class="inner">
+        <p class="reveal" style="letter-spacing:0.2em; color:var(--text-secondary); font-size:var(--small-size);">去味 · 第一条注意项</p>
+        <h2 class="reveal" style="margin-top:0.3em">姿态先于词表，删是术后、取材是术前</h2>
+        <p class="reveal" style="margin-top:0.8em">光删高频词和模具句，稿子不会变活——模型生成的素材，是从「面向所有人的公约数」里舀的。同一段口述：让它<strong>复述</strong>，贴着感受生长；让它<strong>写文案</strong>，立刻套模板磨平细节。差别不在词表，在姿态。</p>
+        <div class="memo reveal" style="margin-top:1em">
+          <span class="tag">写前自检三问</span>
+          <p style="margin-top:0.3em">① 这篇写给谁？（具体到能量出特征的人）<br>② 我跟他是什么关系？（关系决定语气，语气决定句式）<br>③ 哪些是他已经知道、可以跳过的？（越不敢跳过，越退回公约数）</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S8 规则沉淀 -->
+<section class="slide">
+  <div class="tab-rail"><i class="tab">选题</i><i class="tab">素材</i><i class="tab">起草</i><i class="tab">去味</i><i class="tab">出版</i></div>
+  <div class="slide-content">
+    <div class="page">
+      <div class="inner">
+        <p class="reveal" style="letter-spacing:0.2em; color:var(--text-secondary); font-size:var(--small-size);">让 AI 越用越懂你 · 规则沉淀</p>
+        <h2 class="reveal" style="margin-top:0.3em">把不满意，当成攒规则的矿</h2>
+        <div class="track-grid reveal" style="margin-top:1em">
+          <div class="track a"><div class="name">① 引诱失败稿</div><div class="rule">先让 AI 写一稿——我们要的不是满意文稿，是引诱它写一份不满意的，再探讨不满意的原因。</div></div>
+          <div class="track b"><div class="name">② 定位具体不满</div><div class="rule">必须落到具体句子/手法，不接受「感觉不对」。把改稿对照的过程本身沉淀成规则。</div></div>
+          <div class="track c"><div class="name">③ 沉淀规则</div><div class="rule">固定四要素：规则名 + 原因 + 反面例句 + 正面例句。写完后问 AI「和已有规则冲突吗」。</div></div>
+          <div class="track a"><div class="name">④ 写入唯一所有者</div><div class="rule">规则落在一个地方，不散落各处漂移。</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S9 有效迭代三段式 -->
+<section class="slide">
+  <div class="tab-rail"><i class="tab">选题</i><i class="tab">素材</i><i class="tab">起草</i><i class="tab">去味</i><i class="tab">出版</i></div>
+  <div class="slide-content">
+    <div class="page">
+      <div class="inner">
+        <p class="reveal" style="letter-spacing:0.2em; color:var(--text-secondary); font-size:var(--small-size);">让 AI 越用越懂你 · 迭代心法</p>
+        <h2 class="reveal" style="margin-top:0.3em">别「打地鼠」，要「三段式」</h2>
+        <p class="reveal" style="margin-top:0.8em">迭代任何提示词或 skill，必须给齐三块：<strong>① 提示词本身 ② 实际输入输出 ③ 你的问题反馈</strong>。迭代到第 N 版时，把前 N-1 版全部三块都发过去，要求新版不能出现任何一个历史问题——一般 5 版内收敛。</p>
+        <div class="dual reveal" style="margin-top:1em">
+          <div class="card"><div class="h">反面教材：打地鼠</div><div class="b">只发当前版本 + 一句「不满意」→ AI 永远原地打转，改一处漏一处。</div></div>
+          <div class="card"><div class="h">因果检验三问</div><div class="b">因果链成立吗？换个体裁还成立吗？能构造反例吗？答不上因果链的，降级为观察记录。</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S10 收束 -->
+<section class="slide">
+  <div class="tab-rail"><i class="tab">选题</i><i class="tab">素材</i><i class="tab">起草</i><i class="tab">去味</i><i class="tab">出版</i></div>
+  <div class="slide-content">
+    <div class="page">
+      <div class="inner">
+        <p class="reveal" style="letter-spacing:0.2em; color:var(--text-secondary); font-size:var(--small-size);">手记 · 收束</p>
+        <h1 class="reveal" style="margin-top:0.3em">同一台产线，向下兼容一切</h1>
+        <div class="memo reveal" style="margin-top:1em">
+          <span class="tag">降维打击</span>
+          <p style="margin-top:0.3em">出版级长篇是文字工业的珠穆朗玛峰。一旦你跑通了能过出版社三审三校的产线，50 分钟播客稿、2 小时视频课逐字稿、深度公众号长文，全部只是这条产线的「降维缩短版」。</p>
+        </div>
+        <p class="reveal" style="margin-top:1em; font-size:var(--h3-size); font-family:var(--font-display);">先抄工具、再换打法、最后把每一次「不满意」攒成你自己的规则。</p>
+        <p class="reveal" style="margin-top:0.8em">这三件套里最贵的，是第三件——你愿不愿意，把对 AI 的不满，当成攒规则的矿。</p>
+        <p class="reveal" style="margin-top:1.2em; font-size:var(--small-size); color:#999;">下一站：模块七 · 白盒披露与信任</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="keyboard-hint">← → 翻页 · 空格下一页</div>
+<script>
+class SlidePresentation {
+  constructor() {
+    this.slides = document.querySelectorAll('.slide');
+    this.current = 0;
+    this.setupNav();
+    this.setupKeyboard();
+    this.setupTouch();
+    this.setupWheel();
+    this.observe();
+  }
+  setupNav() {
+    const dots = document.getElementById('navDots');
+    this.slides.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.addEventListener('click', () => this.go(i));
+      dots.appendChild(b);
+    });
+    this.dots = dots.children;
+    this.update();
+  }
+  go(i) {
+    this.current = Math.max(0, Math.min(this.slides.length - 1, i));
+    this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
+    this.update();
+  }
+  update() {
+    Array.from(this.dots).forEach((d, i) => d.classList.toggle('active', i === this.current));
+    document.getElementById('progressBar').style.width = ((this.current + 1) / this.slides.length * 100) + '%';
+  }
+  setupKeyboard() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); this.go(this.current + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); this.go(this.current - 1); }
+      if (e.key === 'Home') this.go(0);
+      if (e.key === 'End') this.go(this.slides.length - 1);
+    });
+  }
+  setupTouch() {
+    let y0 = null;
+    document.addEventListener('touchstart', (e) => { y0 = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      if (y0 === null) return;
+      const dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dy) > 40) this.go(this.current + (dy < 0 ? 1 : -1));
+      y0 = null;
+    }, { passive: true });
+  }
+  setupWheel() {
+    let lock = false;
+    document.addEventListener('wheel', (e) => {
+      if (lock) return;
+      lock = true;
+      setTimeout(() => { lock = false; }, 700);
+      if (Math.abs(e.deltaY) < 20) return;
+      this.go(this.current + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+  observe() {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) {
+          en.target.classList.add('visible');
+          this.current = Array.from(this.slides).indexOf(en.target);
+          this.update();
+        }
+      });
+    }, { threshold: 0.6 });
+    this.slides.forEach((s) => io.observe(s));
+  }
+}
+new SlidePresentation();
+</script>
+</body>
+</html>

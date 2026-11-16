@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>写书即编程 · AI 写作工程学（开发者版）</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============ VIEWPORT BASE (MANDATORY) ============ */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+.slide { width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; }
+.slide-content { flex: 1; display: flex; flex-direction: column; justify-content: center; max-height: 100%; overflow: hidden; padding: var(--slide-padding); }
+:root {
+  --title-size: clamp(1.5rem, 5vw, 4rem);
+  --h2-size: clamp(1.25rem, 3.5vw, 2.5rem);
+  --h3-size: clamp(1rem, 2.5vw, 1.75rem);
+  --body-size: clamp(0.75rem, 1.5vw, 1.125rem);
+  --small-size: clamp(0.65rem, 1vw, 0.875rem);
+  --slide-padding: clamp(1rem, 4vw, 4rem);
+  --content-gap: clamp(0.5rem, 2vw, 2rem);
+  --element-gap: clamp(0.25rem, 1vw, 1rem);
+}
+.card, .container, .content-box { max-width: min(90vw, 1000px); max-height: min(80vh, 700px); }
+.feature-list, .bullet-list { gap: clamp(0.4rem, 1vh, 1rem); }
+.feature-list li, .bullet-list li { font-size: var(--body-size); line-height: 1.4; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: clamp(0.5rem, 1.5vw, 1rem); }
+img, .image-container { max-width: 100%; max-height: min(50vh, 400px); object-fit: contain; }
+@media (max-height: 700px) {
+  :root { --slide-padding: clamp(0.75rem, 3vw, 2rem); --content-gap: clamp(0.4rem, 1.5vw, 1rem); --title-size: clamp(1.25rem, 4.5vw, 2.5rem); --h2-size: clamp(1rem, 3vw, 1.75rem); }
+}
+@media (max-height: 600px) {
+  :root { --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem); --content-gap: clamp(0.3rem, 1vw, 0.75rem); --title-size: clamp(1.1rem, 4vw, 2rem); --body-size: clamp(0.7rem, 1.2vw, 0.95rem); }
+  .nav-dots, .keyboard-hint, .decorative { display: none; }
+}
+@media (max-height: 500px) {
+  :root { --slide-padding: clamp(0.4rem, 2vw, 1rem); --title-size: clamp(1rem, 3.5vw, 1.5rem); --h2-size: clamp(0.9rem, 2.5vw, 1.25rem); --body-size: clamp(0.65rem, 1vw, 0.85rem); }
+}
+@media (max-width: 600px) {
+  :root { --title-size: clamp(1.25rem, 7vw, 2.5rem); }
+  .grid { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+  html { scroll-behavior: auto; }
+}
+
+/* ============ PRESET: TERMINAL GREEN ============ */
+:root {
+  --bg-primary: #0d1117;
+  --bg-panel: #161b22;
+  --bg-line: #21262d;
+  --text-primary: #e6edf3;
+  --text-dim: #8b949e;
+  --accent: #39d353;
+  --accent-dim: rgba(57, 211, 83, 0.25);
+  --warning: #f0a93c;
+  --danger: #ff6363;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font-mono); background: var(--bg-primary); color: var(--text-primary); }
+.slide { background: var(--bg-primary); }
+.slide::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 3px); pointer-events: none; z-index: 0; }
+.slide-content { z-index: 1; gap: var(--content-gap); }
+h1, h2, h3 { font-family: var(--font-mono); font-weight: 800; }
+h1 { font-size: var(--title-size); }
+h2 { font-size: var(--h2-size); color: var(--accent); }
+h3 { font-size: var(--h3-size); color: var(--text-primary); }
+p, li { font-size: var(--body-size); line-height: 1.55; color: var(--text-dim); }
+strong { color: var(--accent); font-weight: 700; }
+.prompt-line::before { content: '$ '; color: var(--accent); font-weight: 700; }
+.cursor { display: inline-block; width: 0.6em; height: 1.1em; background: var(--accent); vertical-align: text-bottom; animation: blink 1s step-end infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.term-window { background: var(--bg-panel); border: 1px solid var(--bg-line); border-radius: 6px; overflow: hidden; max-width: min(90vw, 1000px); }
+.term-bar { display: flex; gap: 0.4em; padding: 0.6em 1em; background: var(--bg-line); }
+.term-bar i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.term-bar i:nth-child(1) { background: var(--danger); }
+.term-bar i:nth-child(2) { background: var(--warning); }
+.term-bar i:nth-child(3) { background: var(--accent); }
+.term-body { padding: clamp(0.8rem, 2vw, 1.6rem); font-size: var(--body-size); }
+.term-body .line { display: block; line-height: 1.7; }
+.term-body .c { color: var(--accent); }
+.term-body .w { color: var(--text-primary); }
+.term-body .d { color: var(--text-dim); }
+.term-body .y { color: var(--warning); }
+.map-row { display: flex; align-items: center; gap: clamp(0.4rem, 1vw, 0.8rem); font-size: var(--body-size); flex-wrap: wrap; }
+.map-row .stage { font-weight: 800; color: var(--accent); min-width: 5em; }
+.map-row .arrow { color: var(--text-dim); }
+.map-row .sd { color: var(--text-primary); }
+.map-row .cmt { color: var(--text-dim); font-size: var(--small-size); }
+.pipeline { display: flex; flex-direction: column; gap: clamp(0.3rem, 1vh, 0.6rem); }
+.pipeline .step { display: flex; gap: 1em; align-items: baseline; }
+.pipeline .n { color: var(--accent); font-weight: 800; min-width: 2.2em; }
+.pipeline .t { color: var(--text-primary); font-weight: 700; min-width: 9em; }
+.pipeline .s { color: var(--text-dim); }
+.rule-box { border-left: 3px solid var(--accent); background: var(--bg-panel); padding: clamp(0.8rem, 1.8vw, 1.4rem); max-width: min(85vw, 900px); }
+.rule-box .code { color: var(--accent); }
+.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: var(--accent); width: 0; z-index: 100; transition: width 0.2s ease; }
+.nav-dots { position: fixed; right: 1rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.5rem; z-index: 100; }
+.nav-dots button { width: 8px; height: 8px; border-radius: 50%; border: none; background: rgba(230,237,243,0.25); cursor: pointer; padding: 0; }
+.nav-dots button.active { background: var(--accent); transform: scale(1.4); }
+.keyboard-hint { position: fixed; bottom: 1rem; left: 50%; transform: translateX(-50%); font-size: var(--small-size); color: rgba(230,237,243,0.3); z-index: 100; }
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1); }
+.slide.visible .reveal { opacity: 1; transform: translateY(0); }
+.reveal:nth-child(1) { transition-delay: 0.1s; }
+.reveal:nth-child(2) { transition-delay: 0.2s; }
+.reveal:nth-child(3) { transition-delay: 0.3s; }
+.reveal:nth-child(4) { transition-delay: 0.4s; }
+.reveal:nth-child(5) { transition-delay: 0.5s; }
+.reveal:nth-child(6) { transition-delay: 0.6s; }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- S1 封面 -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="term-window reveal">
+      <div class="term-bar"><i></i><i></i><i></i><span style="color:var(--text-dim);font-size:var(--small-size);margin-left:0.5em">~/.writing-pipeline</span></div>
+      <div class="term-body">
+        <span class="line prompt-line">xdash: 写书工程化 <span class="cursor"></span></span>
+        <span class="line"><span class="d"># 24万字 / 112案例 / 过三审三校 / 1月过审 2月上市</span></span>
+        <span class="line"><span class="c">$</span> <span class="w">echo "写书 = 软件开发生命周期"</span></span>
+        <span class="line"><span class="d">写书 = 软件开发生命周期</span></span>
+        <span class="line"><span class="c">$</span> <span class="w">echo "AI 是合成师，不是创作者"</span></span>
+        <span class="line"><span class="d">AI 是合成师，不是创作者</span></span>
+      </div>
+    </div>
+    <h1 class="reveal" style="margin-top:0.3em">写书即编程</h1>
+    <p class="reveal">AI 写作工程学 · 开发者视角 · 范冰 XDash</p>
+  </div>
+</section>
+
+<!-- S2 为什么是工程 -->
+<section class="slide">
+  <div class="slide-num decorative" style="position:absolute;top:2rem;left:3rem;color:var(--accent);font-weight:800">02</div>
+  <div class="slide-content">
+    <h2 class="reveal">为什么写书要「工程化」？</h2>
+    <div class="rule-box reveal">
+      <p><span class="code">// 没有版本管理的写作 = 野路子编程</span></p>
+      <p style="margin-top:0.6em">写代码的人不靠一口气聊到底——靠<strong>仓库、commit、状态文件</strong>。写书也该一样。公众号作者「忒修斯的船板」独立推导出：编程 Agent 能跑几百轮不出事，是因为有文件系统随时刷新状态；写作只能靠聊天记录，聊到后面近因效应一上来，模型就当墙头草。</p>
+    </div>
+    <div class="map-row reveal"><span class="stage">解法</span><span class="arrow">→</span><span class="sd">查状态 → 写正文 → 更新状态文档</span><span class="cmt"># 三步循环，把写作也变成有状态的工作流</span></div>
+  </div>
+</section>
+
+<!-- S3 八工位映射 -->
+<section class="slide">
+  <div class="slide-num decorative" style="position:absolute;top:2rem;left:3rem;color:var(--accent);font-weight:800">03</div>
+  <div class="slide-content">
+    <h2 class="reveal">八工位 ↔ 软件开发生命周期</h2>
+    <div class="pipeline reveal">
+      <div class="step"><span class="n">01</span><span class="t">选题</span><span class="s">= 需求分析</span></div>
+      <div class="step"><span class="n">02</span><span class="t">素材</span><span class="s">= 资源文件（A/B/C 分级）</span></div>
+      <div class="step"><span class="n">03</span><span class="t">锚点表</span><span class="s">= 接口契约（Anchors）</span></div>
+      <div class="step"><span class="n">04</span><span class="t">起草</span><span class="s">= 编码实现（IPO + Golden Copy）</span></div>
+      <div class="step"><span class="n">05</span><span class="t">修订</span><span class="s">= 代码评审（双模型捉鬼）</span></div>
+      <div class="step"><span class="n">06</span><span class="t">去味/分体裁</span><span class="s">= 代码审查细化（lint）</span></div>
+      <div class="step"><span class="n">07</span><span class="t">台账</span><span class="s">= 变更日志（白盒披露）</span></div>
+      <div class="step"><span class="n">08</span><span class="t">出版</span><span class="s">= 发布上线 + 长期运维</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- S4 选题=需求分析 -->
+<section class="slide">
+  <div class="slide-num decorative" style="position:absolute;top:2rem;left:3rem;color:var(--accent);font-weight:800">04</div>
+  <div class="slide-content">
+    <h2 class="reveal">选题 = 需求分析：第一性三问</h2>
+    <div class="term-window reveal">
+      <div class="term-bar"><i></i><i></i><i></i><span style="color:var(--text-dim);font-size:var(--small-size);margin-left:0.5em">README.md</span></div>
+      <div class="term-body">
+        <span class="line"><span class="y">$ question1: 不可替代价值</span> <span class="d"># 市面缺哪句只有你敢说的真话？</span></span>
+        <span class="line"><span class="y">$ question2: 独家可清点素材</span> <span class="d"># 124 份访谈逐字稿？46 张案例卡？</span></span>
+        <span class="line"><span class="y">$ question3: 读者行为改变</span> <span class="d"># 合上书当晚能照着做什么动作？</span></span>
+        <span class="line"><span class="c">$</span> <span class="w">if [ 三问答不出 ]; then</span></span>
+        <span class="line"><span class="c">    </span><span class="w">echo "项目锁死 Phase 0，严禁起草"</span></span>
+        <span class="line"><span class="c">fi</span></span>
+      </div>
+    </div>
+    <p class="reveal">反例：我亲手毙掉 1.6 万字《首席叙事官》——自造新词，本土没有真金白银的岗位案例承接，全是 AI 假想推演。</p>
+  </div>
+</section>
+
+<!-- S5 素材=资源文件 -->
+<section class="slide">
+  <div class="slide-num decorative" style="position:absolute;top:2rem;left:3rem;color:var(--accent);font-weight:800">05</div>
+  <div class="slide-content">
+    <h2 class="reveal">素材 = 资源文件：A/B/C 分级</h2>
+    <div class="term-window reveal">
+      <div class="term-bar"><i></i><i></i><i></i><span style="color:var(--text-dim);font-size:var(--small-size);margin-left:0.5em">research/notes.md</span></div>
+      <div class="term-body">
+        <span class="line"><span class="c">A类</span> <span class="w">一手物证</span> <span class="d"># 完整逐字稿 / 财报底稿 / 当事人原话 → 才是骨肉</span></span>
+        <span class="line"><span class="y">B类</span> <span class="w">二手编译</span> <span class="d"># 公众号转述 / 媒体综述 → 只许找线索</span></span>
+        <span class="line"><span class="d">C类</span> <span class="w">概念百科</span> <span class="d"># 维基词条 / 概念定义 → 只搭框架</span></span>
+        <span class="line"><span class="c">$</span> <span class="w">grep -r "同一篇原文被十家转载" sources/</span></span>
+        <span class="line"><span class="d"># 结论：转述链相同 → 证据学上永远只算「单源」</span></span>
+      </div>
+    </div>
+    <p class="reveal">引文必须过<strong>子串精确校验</strong>：模型借人之口润色金句，搜不到原句当场阻断。</p>
+  </div>
+</section>
+
+<!-- S6 锚点=接口契约 -->
+<section class="slide">
+  <div class="slide-num decorative" style="position:absolute;top:2rem;left:3rem;color:var(--accent);font-weight:800">06</div>
+  <div class="slide-content">
+    <h2 class="reveal">锚点表 = 接口契约：让模型无法跑偏</h2>
+    <div class="term-window reveal">
+      <div class="term-bar"><i></i><i></i><i></i><span style="color:var(--text-dim);font-size:var(--small-size);margin-left:0.5em">research/anchors/04.md</span></div>
+      <div class="term-body">
+        <span class="line"><span class="c">A01</span> <span class="w">主体/时间/数字/原话</span> <span class="d"># 原文首句 + 文件:行号</span></span>
+        <span class="line"><span class="c">A02</span> <span class="w">...共 15–20 条去重锚点</span></span>
+        <span class="line"><span class="c">C01</span> <span class="w">3 张五段式案例卡</span></span>
+        <span class="line"><span class="c">R01</span> <span class="w">1 个反面案例</span></span>
+        <span class="line"><span class="c">$</span> <span class="w">if [ 锚点 &lt; 15 ]; then mv chapter state/parked.md</span></span>
+        <span class="line"><span class="c">fi</span> <span class="d"># 凑不齐 → 关进停职区，绝不硬写</span></span>
+      </div>
+    </div>
+    <p class="reveal">外加<strong>母章注册制</strong>：核心案例指定唯一母章，其余章节只许一句话回指——从根源消灭跨章复述。</p>
+  </div>
+</section>
+
+<!-- S7 起草=编码实现 -->
+<section class="slide">
+  <div class="slide-num decorative" style="position:absolute;top:2rem;left:3rem;color:var(--accent);font-weight:800">07</div>
+  <div class="slide-content">
+    <h2 class="reveal">起草 = 编码实现：IPO 管线 + Golden Copy</h2>
+    <div class="term-window reveal">
+      <div class="term-bar"><i></i><i></i><i></i><span style="color:var(--text-dim);font-size:var(--small-size);margin-left:0.5em">make-a-book</span></div>
+      <div class="term-body">
+        <span class="line"><span class="c">Input</span>    <span class="w">锚点表 + 案例卡 + 风格指南</span></span>
+        <span class="line"><span class="y">Process</span>  <span class="w">骨架碰撞 + 人工批注（最贵 15 分钟）</span></span>
+        <span class="line"><span class="c">Output</span>   <span class="w">单章初稿 → 精修 → 确立 Golden Copy</span></span>
+        <span class="line"><span class="d"># 后续每章强制挂载：Golden Copy + Anchors + 母章边界</span></span>
+      </div>
+    </div>
+    <p class="reveal">选型是生死问题：推理型模型 4000 token 全耗思考链、正文 0 字符；非推理型给出 4660 字成稿。<strong>电机马力不够，齿轮雕出花也没用。</strong></p>
+  </div>
+</section>
+
+<!-- S8 修订=代码评审 -->
+<section class="slide">
+  <div class="slide-num decorative" style="position:absolute;top:2rem;left:3rem;color:var(--accent);font-weight:800">08</div>
+  <div class="slide-content">
+    <h2 class="reveal">修订 = 代码评审：级联纪律 + CI/CD</h2>
+    <div class="term-window reveal">
+      <div class="term-bar"><i></i><i></i><i></i><span style="color:var(--text-dim);font-size:var(--small-size);margin-left:0.5em">check_chapter.py</span></div>
+      <div class="term-body">
+        <span class="line"><span class="c">$</span> <span class="w">./check_chapter.py chapter-07.md</span></span>
+        <span class="line"><span class="c">  ✓</span> <span class="w">hard: 弯引号=0</span></span>
+        <span class="line"><span class="c">  ✓</span> <span class="w">hard: 中英粘连=0</span></span>
+        <span class="line"><span class="c">  ✓</span> <span class="w">hard: 模具句 ≤5</span></span>
+        <span class="line"><span class="y">  ~</span> <span class="w">soft: 单句段 10%–55%（放宽呼吸）</span></span>
+        <span class="line"><span class="y">  ~</span> <span class="w">soft: 无证据段 25%–40%（留白）</span></span>
+      </div>
+    </div>
+    <p class="reveal">case-041 教训：指标异化成目标 = 古德哈特定律。让<strong>异构模型</strong>挑刺，别让写的人审自己的稿子。</p>
+  </div>
+</section>
+
+<!-- S9 台账=变更日志 -->
+<section class="slide">
+  <div class="slide-num decorative" style="position:absolute;top:2rem;left:3rem;color:var(--accent);font-weight:800">09</div>
+  <div class="slide-content">
+    <h2 class="reveal">台账 = 变更日志：白盒披露四件套</h2>
+    <div class="term-window reveal">
+      <div class="term-bar"><i></i><i></i><i></i><span style="color:var(--text-dim);font-size:var(--small-size);margin-left:0.5em">git log --oneline</span></div>
+      <div class="term-body">
+        <span class="line"><span class="c">Input</span>     <span class="w">research/notes.md + processed.json</span></span>
+        <span class="line"><span class="c">Process</span>   <span class="w">README 版本史 + parked.md + 锚点批注</span></span>
+        <span class="line"><span class="c">Harness</span>   <span class="w">智能体调用边界声明（哪道工序用了什么模型）</span></span>
+        <span class="line"><span class="c">Reviewer</span>  <span class="w">人工放行终审表（作者逐条签字）</span></span>
+        <span class="line"><span class="d"># 伪造这套工程记录的成本，比老老实实写一本书还高十倍</span></span>
+      </div>
+    </div>
+    <p class="reveal">Jerry Falade 200 万美金手稿因拿不出过程证据一夜归零——维保记录才是自证。</p>
+  </div>
+</section>
+
+<!-- S10 出版=发布上线 -->
+<section class="slide">
+  <div class="slide-num decorative" style="position:absolute;top:2rem;left:3rem;color:var(--accent);font-weight:800">10</div>
+  <div class="slide-content">
+    <h2 class="reveal">出版 = 发布上线：三通道部署</h2>
+    <div class="pipeline reveal">
+      <div class="step"><span class="n">1</span><span class="t">数字/开源先行</span><span class="s">= 最快 24h 上线，fde4.ai 开源攒口碑，反向吸引出版社重点立项</span></div>
+      <div class="step"><span class="n">2</span><span class="t">正规纸书</span><span class="s">= 工业级手稿包 + 白盒台账，省 80% 审稿成本，拿 ISBN 背书</span></div>
+      <div class="step"><span class="n">3</span><span class="t">POD 内训</span><span class="s">= 垂直高客单圈层，跳过书店退货盘剥，直接高毛利</span></div>
+    </div>
+    <div class="rule-box reveal" style="margin-top:1em">
+      <p><span class="code">POSSE: Publish on Own Site, Syndicate Elsewhere</span></p>
+      <p style="margin-top:0.5em">永远不要把读者资产寄生在中心化算法平台上——最后一页留一扇通往你私有阵地的门。</p>
+    </div>
+    <p class="reveal">上线不是终点，是运维开始：宣发=版本推广，读者反馈=issue 工单，加印=迭代发版。</p>
+  </div>
+</section>
+
+<div class="keyboard-hint">← → 翻页 · 空格下一页</div>
+<script>
+class SlidePresentation {
+  constructor() {
+    this.slides = document.querySelectorAll('.slide');
+    this.current = 0;
+    this.setupNav();
+    this.setupKeyboard();
+    this.setupTouch();
+    this.setupWheel();
+    this.observe();
+  }
+  setupNav() {
+    const dots = document.getElementById('navDots');
+    this.slides.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.addEventListener('click', () => this.go(i));
+      dots.appendChild(b);
+    });
+    this.dots = dots.children;
+    this.update();
+  }
+  go(i) {
+    this.current = Math.max(0, Math.min(this.slides.length - 1, i));
+    this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
+    this.update();
+  }
+  update() {
+    Array.from(this.dots).forEach((d, i) => d.classList.toggle('active', i === this.current));
+    document.getElementById('progressBar').style.width = ((this.current + 1) / this.slides.length * 100) + '%';
+  }
+  setupKeyboard() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); this.go(this.current + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); this.go(this.current - 1); }
+      if (e.key === 'Home') this.go(0);
+      if (e.key === 'End') this.go(this.slides.length - 1);
+    });
+  }
+  setupTouch() {
+    let y0 = null;
+    document.addEventListener('touchstart', (e) => { y0 = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      if (y0 === null) return;
+      const dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dy) > 40) this.go(this.current + (dy < 0 ? 1 : -1));
+      y0 = null;
+    }, { passive: true });
+  }
+  setupWheel() {
+    let lock = false;
+    document.addEventListener('wheel', (e) => {
+      if (lock) return;
+      lock = true;
+      setTimeout(() => { lock = false; }, 500);
+      if (Math.abs(e.deltaY) < 20) return;
+      this.go(this.current + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+  observe() {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) {
+          en.target.classList.add('visible');
+          this.current = Array.from(this.slides).indexOf(en.target);
+          this.update();
+        }
+      });
+    }, { threshold: 0.6 });
+    this.slides.forEach((s) => io.observe(s));
+  }
+}
+new SlidePresentation();
+</script>
+</body>
+</html>
