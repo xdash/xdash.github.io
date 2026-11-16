@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7 天启动你的 AI 写作产线 · Narrative Sparkline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Inter:wght@400;600;700&family=Geist+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+/* ============ VIEWPORT BASE (MANDATORY) ============ */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+.slide { width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; }
+:root {
+  --h2-size: clamp(1.2rem, 2.9vw, 2rem);
+  --body-size: clamp(0.75rem, 1.4vw, 1.05rem);
+  --small-size: clamp(0.62rem, 0.95vw, 0.82rem);
+  --slide-padding: clamp(1.2rem, 4.5vw, 3.5rem);
+}
+@media (max-height: 600px) {
+  :root { --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem); --body-size: clamp(0.68rem, 1.1vw, 0.9rem); }
+  .nav-dots, .keyboard-hint { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+  html { scroll-behavior: auto; }
+}
+
+/* ============ PRESET: NARRATIVE SPARKLINE ============ */
+:root {
+  --bg: #0D1320;
+  --ink: #E8ECF3;
+  --dim: #9AA6BA;
+  --grid: #3A4560;
+  --grey: #B8C2D6;
+  --orange: #FF8A1F;
+  --font: 'Inter', 'Noto Sans SC', sans-serif;
+  --mono: 'Geist Mono', monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font); background: var(--bg); color: var(--ink); }
+.slide { background: var(--bg); padding: var(--slide-padding); }
+.h { font-size: var(--small-size); letter-spacing: 0.16em; color: var(--dim); font-weight: 600; text-transform: uppercase; }
+h1 { font-size: var(--h2-size); font-weight: 900; line-height: 1.3; margin-top: 0.4em; max-width: 26em; }
+h1 em { font-style: normal; color: var(--orange); }
+.wavewrap { flex: 1; min-height: 0; display: flex; align-items: center; }
+.wavewrap svg { width: 100%; height: 100%; max-height: 62vh; }
+.wavewrap text { font-family: var(--font); }
+.wavewrap .m { font-family: var(--mono); }
+.lead { font-size: var(--body-size); line-height: 1.75; color: var(--grey); max-width: 40em; margin-top: 0.8em; }
+.lead strong { color: var(--ink); font-weight: 700; }
+.lead em { font-style: normal; color: var(--orange); font-weight: 700; }
+.style-tag { position: absolute; bottom: clamp(0.6rem, 1.6vh, 1rem); right: var(--slide-padding); font-family: var(--mono); font-size: var(--small-size); color: #4A5470; z-index: 3; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 4px; background: var(--orange); width: 0; z-index: 100; transition: width 0.2s ease; }
+.nav-dots { position: fixed; right: 1rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.6rem; z-index: 100; }
+.nav-dots button { width: 9px; height: 9px; border: 1.5px solid var(--grid); border-radius: 50%; background: transparent; cursor: pointer; padding: 0; }
+.nav-dots button.active { background: var(--orange); border-color: var(--orange); }
+.keyboard-hint { position: fixed; bottom: 0.9rem; left: 50%; transform: translateX(-50%); font-family: var(--mono); font-size: var(--small-size); color: #4A5470; z-index: 100; }
+.reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1); }
+.slide.visible .reveal { opacity: 1; transform: translateY(0); }
+.reveal:nth-child(1) { transition-delay: 0.08s; }
+.reveal:nth-child(2) { transition-delay: 0.2s; }
+.reveal:nth-child(3) { transition-delay: 0.32s; }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- S1 封面 -->
+<section class="slide">
+  <span class="h reveal">AI 写作工程学 · 课后行动版 · XDash</span>
+  <h1 class="reveal">7 天启动你的 AI 写作产线：一条<em>从今晚开始爬升</em>的曲线</h1>
+  <div class="wavewrap reveal">
+    <svg viewBox="0 0 1100 420" preserveAspectRatio="xMidYMid meet">
+      <line x1="40" y1="120" x2="1060" y2="120" stroke="#3A4560" stroke-width="1.5" stroke-dasharray="3 7"/>
+      <line x1="40" y1="340" x2="1060" y2="340" stroke="#3A4560" stroke-width="1.5" stroke-dasharray="3 7"/>
+      <text x="1060" y="108" text-anchor="end" font-size="14" fill="#9AA6BA" font-weight="600" letter-spacing="2">能拿出手 · COULD BE</text>
+      <text x="1060" y="366" text-anchor="end" font-size="14" fill="#9AA6BA" font-weight="600" letter-spacing="2">只有想法 · WHAT IS</text>
+      <path d="M60,340 C160,340 180,300 260,290 C360,278 400,240 500,225 C620,206 680,150 800,135 C900,122 980,60 1060,40" fill="none" stroke="#FF8A1F" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="260" cy="290" r="8" fill="#FF8A1F"/><text x="260" y="262" text-anchor="middle" font-size="14" fill="#E8ECF3" font-weight="500">D1 · 合同+案例卡</text>
+      <circle cx="500" cy="225" r="8" fill="#FF8A1F"/><text x="500" y="197" text-anchor="middle" font-size="14" fill="#E8ECF3" font-weight="500">D3 · 黄金样张</text>
+      <circle cx="800" cy="135" r="8" fill="#FF8A1F"/><text x="800" y="107" text-anchor="middle" font-size="14" fill="#E8ECF3" font-weight="500">D7 · 停不下来</text>
+      <text x="60" y="392" font-size="15" fill="#9AA6BA" class="m" style="font-family:'Geist Mono',monospace">今晚 30 分钟开机 →</text>
+    </svg>
+  </div>
+  <p class="lead reveal">不教你背提示词，教你搭一条能写书、也能降维写公众号和播客稿的产线。<strong>从睡前 30 分钟开始。</strong></p>
+  <span class="style-tag">Style: Narrative Sparkline</span>
+</section>
+
+<!-- S2 目录 -->
+<section class="slide">
+  <span class="h reveal">Agenda</span>
+  <h1 class="reveal">这 7 天怎么走：<em>四个标注点</em></h1>
+  <div class="wavewrap reveal">
+    <svg viewBox="0 0 1100 420" preserveAspectRatio="xMidYMid meet">
+      <line x1="40" y1="360" x2="1060" y2="60" stroke="#3A4560" stroke-width="1.5" stroke-dasharray="3 7"/>
+      <path d="M60,350 C200,330 300,300 380,270 C520,220 620,200 720,170 C860,125 960,90 1060,60" fill="none" stroke="#B8C2D6" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="60" cy="350" r="7" fill="#0D1320" stroke="#B8C2D6" stroke-width="3"/>
+      <text x="60" y="396" text-anchor="middle" font-size="15" fill="#E8ECF3" font-weight="600">01 为什么是 7 天</text>
+      <circle cx="380" cy="270" r="7" fill="#0D1320" stroke="#B8C2D6" stroke-width="3"/>
+      <text x="380" y="316" text-anchor="middle" font-size="15" fill="#E8ECF3" font-weight="600">02 D1 立项三问 · 30min</text>
+      <circle cx="720" cy="170" r="7" fill="#0D1320" stroke="#B8C2D6" stroke-width="3"/>
+      <text x="720" y="216" text-anchor="middle" font-size="15" fill="#E8ECF3" font-weight="600">03 D3 黄金样张 · 2hrs</text>
+      <circle cx="1060" cy="60" r="9" fill="#FF8A1F"/>
+      <text x="1060" y="106" text-anchor="end" font-size="15" fill="#FF8A1F" font-weight="700">04 今晚就开始</text>
+    </svg>
+  </div>
+  <span class="style-tag">Style: Narrative Sparkline</span>
+</section>
+
+<!-- S3 为什么 7 天 -->
+<section class="slide">
+  <span class="h reveal">Why 7 Days</span>
+  <h1 class="reveal">为什么是「7 天」：反馈线在「现在」和「可能」之间<em>来回摆</em></h1>
+  <div class="wavewrap reveal">
+    <svg viewBox="0 0 1100 420" preserveAspectRatio="xMidYMid meet">
+      <line x1="40" y1="120" x2="1060" y2="120" stroke="#3A4560" stroke-width="1.5" stroke-dasharray="3 7"/>
+      <line x1="40" y1="340" x2="1060" y2="340" stroke="#3A4560" stroke-width="1.5" stroke-dasharray="3 7"/>
+      <text x="1060" y="108" text-anchor="end" font-size="14" fill="#9AA6BA" font-weight="600" letter-spacing="2">拿得出手</text>
+      <text x="1060" y="366" text-anchor="end" font-size="14" fill="#9AA6BA" font-weight="600" letter-spacing="2">只是想法</text>
+      <path d="M60,340 C140,350 180,120 300,140 C400,156 420,330 540,310 C640,294 660,110 780,120 C880,128 940,90 1060,80" fill="none" stroke="#B8C2D6" stroke-width="4" stroke-linecap="round"/>
+      <path d="M540,310 C640,294 660,110 780,120 C880,128 940,90 1060,80" fill="none" stroke="#FF8A1F" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="300" cy="140" r="8" fill="#0D1320" stroke="#B8C2D6" stroke-width="3"/>
+      <text x="300" y="96" text-anchor="middle" font-size="14" fill="#B8C2D6" font-weight="600">D1 产物：1 页合同</text>
+      <circle cx="540" cy="310" r="8" fill="#0D1320" stroke="#B8C2D6" stroke-width="3"/>
+      <text x="540" y="356" text-anchor="middle" font-size="14" fill="#B8C2D6" font-weight="600">口号式学习：一年后归零</text>
+      <circle cx="780" cy="120" r="9" fill="#FF8A1F"/>
+      <text x="780" y="76" text-anchor="middle" font-size="14" fill="#FF8A1F" font-weight="700">D3 产物：3000 字样张</text>
+    </svg>
+  </div>
+  <p class="lead reveal">一门课值不值，看学员七天后手里有没有多出一个<strong>能给别人看的东西</strong>。把动力外包给最小即时反馈：<em>每步都有产物，每步都能拿出手</em>。那个手感，会推着你把整本书写完。</p>
+  <span class="style-tag">Style: Narrative Sparkline</span>
+</section>
+
+<!-- S4 第一天 -->
+<section class="slide">
+  <span class="h reveal">Day 1 · 今晚睡前 · 30 分钟</span>
+  <h1 class="reveal">立项第一性三问：<em>四步上坡</em></h1>
+  <div class="wavewrap reveal">
+    <svg viewBox="0 0 1100 420" preserveAspectRatio="xMidYMid meet">
+      <path d="M60,360 C180,360 240,300 360,280 C480,260 560,210 680,185 C800,160 920,100 1060,70" fill="none" stroke="#FF8A1F" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="120" cy="350" r="8" fill="#FF8A1F"/>
+      <text x="120" y="396" text-anchor="middle" font-size="14" fill="#E8ECF3" font-weight="500">1 打开 T2 合同</text>
+      <text x="120" y="310" text-anchor="middle" font-size="12" fill="#9AA6BA" class="m" style="font-family:'Geist Mono',monospace">填不出不动笔</text>
+      <circle cx="400" cy="272" r="8" fill="#FF8A1F"/>
+      <text x="400" y="238" text-anchor="middle" font-size="14" fill="#E8ECF3" font-weight="500">2 建三个文件夹</text>
+      <text x="400" y="318" text-anchor="middle" font-size="12" fill="#9AA6BA" class="m" style="font-family:'Geist Mono',monospace">raw/anchors/chapters</text>
+      <circle cx="700" cy="182" r="8" fill="#FF8A1F"/>
+      <text x="700" y="148" text-anchor="middle" font-size="14" fill="#E8ECF3" font-weight="500">3 丢入 5 份一手材料</text>
+      <text x="700" y="228" text-anchor="middle" font-size="12" fill="#9AA6BA" class="m" style="font-family:'Geist Mono',monospace">最痛 + 最得意</text>
+      <circle cx="1000" cy="82" r="9" fill="#FF8A1F"/>
+      <text x="1000" y="48" text-anchor="end" font-size="14" fill="#FF8A1F" font-weight="700">4 第一张五段式案例卡</text>
+    </svg>
+  </div>
+  <p class="lead reveal">起点 → 动作 → 阻力 → 转折 → 结果 + 当事人原话，按 T3 格式。<strong>30 分钟，立项完成。</strong></p>
+  <span class="style-tag">Style: Narrative Sparkline</span>
+</section>
+
+<!-- S5 第三天 -->
+<section class="slide">
+  <span class="h reveal">Day 3 · 本周末 · 2 小时</span>
+  <h1 class="reveal">黄金样张：曲线在周末<em>爬出画面</em></h1>
+  <div class="wavewrap reveal">
+    <svg viewBox="0 0 1100 420" preserveAspectRatio="xMidYMid meet">
+      <line x1="40" y1="340" x2="1060" y2="340" stroke="#3A4560" stroke-width="1.5" stroke-dasharray="3 7"/>
+      <path d="M60,330 C200,320 260,290 380,270 C500,250 600,190 720,160 C840,130 940,60 1060,-20" fill="none" stroke="#B8C2D6" stroke-width="4" stroke-linecap="round"/>
+      <path d="M720,160 C840,130 940,60 1060,-20" fill="none" stroke="#FF8A1F" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="140" cy="326" r="7" fill="#0D1320" stroke="#B8C2D6" stroke-width="3"/>
+      <text x="140" y="372" text-anchor="middle" font-size="14" fill="#E8ECF3" font-weight="500">1 挑最肥沃的 1 章</text>
+      <circle cx="420" cy="258" r="7" fill="#0D1320" stroke="#B8C2D6" stroke-width="3"/>
+      <text x="420" y="304" text-anchor="middle" font-size="14" fill="#E8ECF3" font-weight="500">2 接旗舰模型 · 15 锚点</text>
+      <circle cx="720" cy="160" r="8" fill="#FF8A1F"/>
+      <text x="720" y="206" text-anchor="middle" font-size="14" fill="#FF8A1F" font-weight="700">3 IPO 批注法起草</text>
+      <text x="1010" y="60" text-anchor="end" font-size="15" fill="#FF8A1F" font-weight="700">4 Golden Copy ↗</text>
+    </svg>
+  </div>
+  <p class="lead reveal">先出骨架 → 人写批注 → 再合成 3000 字；逐段精修到<em>出版级手感</em>，这就是全书的语调标杆。</p>
+  <span class="style-tag">Style: Narrative Sparkline</span>
+</section>
+
+<!-- S6 收束 -->
+<section class="slide">
+  <span class="h reveal">Tonight</span>
+  <h1 class="reveal">手里有粮，心中不慌：<em>曲线归你继续画</em></h1>
+  <div class="wavewrap reveal">
+    <svg viewBox="0 0 1100 420" preserveAspectRatio="xMidYMid meet">
+      <path d="M60,360 C300,340 500,240 700,180 C850,135 960,70 1060,10" fill="none" stroke="#FF8A1F" stroke-width="5" stroke-linecap="round" stroke-dasharray="1 0"/>
+      <path d="M700,180 C850,135 960,70 1060,10" fill="none" stroke="#FF8A1F" stroke-width="5" stroke-linecap="round" stroke-dasharray="2 14"/>
+      <circle cx="60" cy="360" r="9" fill="#FF8A1F"/>
+      <text x="60" y="404" text-anchor="middle" font-size="15" fill="#FF8A1F" font-weight="700">今晚 · 你在这里</text>
+      <text x="1040" y="70" text-anchor="end" font-size="15" fill="#9AA6BA" font-weight="600">整本书 →</text>
+      <text x="550" y="300" font-size="20" fill="#E8ECF3" font-weight="700">起草的快，是用素材的慢换来的。</text>
+    </svg>
+  </div>
+  <p class="lead reveal">选题三问、三个文件夹、五份材料、一张案例卡——<strong>30 分钟，产线开机</strong>。然后，让它推着你，把整本书写完。</p>
+  <span class="style-tag">Style: Narrative Sparkline</span>
+</section>
+
+<div class="keyboard-hint">← → 翻页 · 空格下一页</div>
+<script>
+class SlidePresentation {
+  constructor() {
+    this.slides = document.querySelectorAll('.slide');
+    this.current = 0;
+    this.setupNav();
+    this.setupKeyboard();
+    this.setupTouch();
+    this.setupWheel();
+    this.observe();
+  }
+  setupNav() {
+    const dots = document.getElementById('navDots');
+    this.slides.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.addEventListener('click', () => this.go(i));
+      dots.appendChild(b);
+    });
+    this.dots = dots.children;
+    this.update();
+  }
+  go(i) {
+    this.current = Math.max(0, Math.min(this.slides.length - 1, i));
+    this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
+    this.update();
+  }
+  update() {
+    Array.from(this.dots).forEach((d, i) => d.classList.toggle('active', i === this.current));
+    document.getElementById('progressBar').style.width = ((this.current + 1) / this.slides.length * 100) + '%';
+  }
+  setupKeyboard() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); this.go(this.current + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); this.go(this.current - 1); }
+      if (e.key === 'Home') this.go(0);
+      if (e.key === 'End') this.go(this.slides.length - 1);
+    });
+  }
+  setupTouch() {
+    let y0 = null;
+    document.addEventListener('touchstart', (e) => { y0 = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      if (y0 === null) return;
+      const dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dy) > 40) this.go(this.current + (dy < 0 ? 1 : -1));
+      y0 = null;
+    }, { passive: true });
+  }
+  setupWheel() {
+    let lock = false;
+    document.addEventListener('wheel', (e) => {
+      if (lock) return;
+      lock = true;
+      setTimeout(() => { lock = false; }, 650);
+      if (Math.abs(e.deltaY) < 20) return;
+      this.go(this.current + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+  observe() {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) {
+          en.target.classList.add('visible');
+          this.current = Array.from(this.slides).indexOf(en.target);
+          this.update();
+        }
+      });
+    }, { threshold: 0.6 });
+    this.slides.forEach((s) => io.observe(s));
+  }
+}
+new SlidePresentation();
+</script>
+</body>
+</html>

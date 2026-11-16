@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7 天启动你的 AI 写作产线 · Full-Bleed Gradient Manifesto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;800;900&family=Anton&family=Noto+Sans+SC:wght@500;900&display=swap" rel="stylesheet">
+<style>
+/* ============ VIEWPORT BASE (MANDATORY) ============ */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+.slide { width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; }
+:root {
+  --title-size: clamp(1.5rem, 5vw, 4rem);
+  --h2-size: clamp(1.25rem, 3.5vw, 2.5rem);
+  --h3-size: clamp(1rem, 2.5vw, 1.75rem);
+  --body-size: clamp(0.75rem, 1.5vw, 1.125rem);
+  --small-size: clamp(0.65rem, 1vw, 0.875rem);
+  --slide-padding: clamp(1.2rem, 5vw, 4.5rem);
+  --content-gap: clamp(0.5rem, 2vw, 2rem);
+}
+@media (max-height: 700px) {
+  :root { --slide-padding: clamp(0.75rem, 3vw, 2rem); --content-gap: clamp(0.4rem, 1.5vw, 1rem); }
+}
+@media (max-height: 600px) {
+  :root { --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem); --content-gap: clamp(0.3rem, 1vw, 0.75rem); --body-size: clamp(0.7rem, 1.2vw, 0.95rem); }
+  .nav-dots, .keyboard-hint, .decorative { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+  html { scroll-behavior: auto; }
+}
+
+/* ============ PRESET: FULL-BLEED GRADIENT MANIFESTO ============ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Archivo', 'Noto Sans SC', sans-serif; color: #fff; }
+.slide { color: #fff; }
+.slide.g1 { background: linear-gradient(118deg, #FF7A18 0%, #F4413F 46%, #C2186B 100%); }
+.slide.g2 { background: linear-gradient(128deg, #1A2A6C 0%, #2A4BD7 52%, #00B4DB 100%); }
+.slide.g3 { background: linear-gradient(112deg, #F4413F 0%, #C2186B 55%, #5B1B8C 100%); }
+.slide.g4 { background: linear-gradient(124deg, #FF7A18 0%, #FFB347 60%, #F4413F 100%); }
+.slide.g5 { background: linear-gradient(116deg, #0F2027 0%, #203A43 50%, #2C5364 100%); }
+.slide.g6 { background: linear-gradient(120deg, #C2186B 0%, #F4413F 55%, #FF7A18 100%); }
+.eyebrow { position: absolute; left: var(--slide-padding); top: clamp(1rem, 4vh, 3rem); font-weight: 800; font-size: var(--small-size); letter-spacing: 0.2em; text-transform: uppercase; }
+.stage { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 0 var(--slide-padding); min-height: 0; }
+.big { font-family: 'Anton', 'Noto Sans SC', sans-serif; font-weight: 400; font-size: clamp(2.2rem, 9.5vw, 7rem); line-height: 0.96; text-transform: uppercase; letter-spacing: -0.005em; }
+.big span { display: block; }
+.zh { font-family: 'Noto Sans SC', sans-serif; font-weight: 900; font-size: clamp(1.2rem, 3.4vw, 2.4rem); line-height: 1.3; }
+.line { height: 2px; background: rgba(255,255,255,0.7); margin: clamp(0.7rem, 2.4vh, 1.4rem) 0; }
+.body { font-family: 'Noto Sans SC', sans-serif; font-weight: 500; font-size: var(--body-size); line-height: 1.75; max-width: 38em; }
+.body strong { font-weight: 900; }
+.tagrow { position: absolute; left: var(--slide-padding); right: var(--slide-padding); bottom: clamp(0.9rem, 3vh, 2rem); display: flex; justify-content: space-between; gap: 1em; font-weight: 800; font-size: var(--small-size); letter-spacing: 0.14em; }
+.toc { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: clamp(0.6rem, 2vh, 1.2rem) clamp(1rem, 3vw, 2.5rem); margin-top: var(--content-gap); }
+.toc li { border-top: 2px solid rgba(255,255,255,0.85); padding-top: 0.6em; }
+.toc .no { font-family: 'Anton', sans-serif; font-size: var(--h2-size); display: block; line-height: 1; }
+.toc .tx { font-family: 'Noto Sans SC', sans-serif; font-weight: 900; font-size: var(--body-size); display: block; margin-top: 0.35em; }
+@media (max-width: 600px) { .toc { grid-template-columns: 1fr; } }
+.steps { display: flex; flex-direction: column; gap: clamp(0.5rem, 1.8vh, 1rem); margin-top: var(--content-gap); }
+.step { display: flex; gap: 1.1em; align-items: baseline; border-left: 3px solid rgba(255,255,255,0.85); padding-left: 1em; }
+.step .no { font-family: 'Anton', sans-serif; font-size: var(--h2-size); line-height: 1; min-width: 1.4em; }
+.step h3 { font-family: 'Noto Sans SC', sans-serif; font-weight: 900; font-size: var(--h3-size); }
+.step p { font-family: 'Noto Sans SC', sans-serif; font-weight: 500; font-size: var(--small-size); opacity: 0.9; margin-top: 0.25em; }
+.cards { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(0.7rem, 2vw, 1.4rem); margin-top: var(--content-gap); max-width: 46em; }
+.card { border: 2px solid rgba(255,255,255,0.85); padding: clamp(0.7rem, 1.8vw, 1.2rem); }
+.card .k { font-weight: 800; font-size: var(--small-size); letter-spacing: 0.16em; text-transform: uppercase; }
+.card .v { font-family: 'Noto Sans SC', sans-serif; font-weight: 900; font-size: var(--body-size); margin-top: 0.4em; line-height: 1.5; }
+@media (max-width: 600px) { .cards { grid-template-columns: 1fr; } }
+.style-tag { position: absolute; top: clamp(1rem, 4vh, 3rem); right: var(--slide-padding); font-size: var(--small-size); color: rgba(255,255,255,0.6); z-index: 3; letter-spacing: 0.06em; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 5px; background: #fff; width: 0; z-index: 100; transition: width 0.2s ease; }
+.nav-dots { position: fixed; right: 1rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.6rem; z-index: 100; }
+.nav-dots button { width: 10px; height: 10px; border: 2px solid rgba(255,255,255,0.75); border-radius: 50%; background: transparent; cursor: pointer; padding: 0; }
+.nav-dots button.active { background: #fff; }
+.keyboard-hint { position: fixed; bottom: 1rem; left: 50%; transform: translateX(-50%); font-size: var(--small-size); color: rgba(255,255,255,0.5); z-index: 100; }
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1); }
+.slide.visible .reveal { opacity: 1; transform: translateY(0); }
+.reveal:nth-child(1) { transition-delay: 0.1s; }
+.reveal:nth-child(2) { transition-delay: 0.22s; }
+.reveal:nth-child(3) { transition-delay: 0.34s; }
+.reveal:nth-child(4) { transition-delay: 0.46s; }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- S1 封面 -->
+<section class="slide g1">
+  <div class="eyebrow reveal">The Pipeline · AI 写作工程学</div>
+  <div class="stage">
+    <div class="big reveal"><span>Seven days</span><span>to ship your</span><span>writing line.</span></div>
+    <div class="line reveal"></div>
+    <div class="zh reveal">7 天启动你的 AI 写作产线。</div>
+  </div>
+  <div class="tagrow reveal"><span>#今晚就开机</span><span>范冰 XDash · 课后行动版</span></div>
+  <span class="style-tag low">Style: Full-Bleed Gradient Manifesto</span>
+</section>
+
+<!-- S2 目录 -->
+<section class="slide g2">
+  <div class="eyebrow reveal">Agenda</div>
+  <div class="stage">
+    <div class="big reveal" style="font-size:clamp(1.8rem,6.5vw,4.6rem)"><span>The Route</span></div>
+    <div class="line reveal"></div>
+    <ul class="toc reveal">
+      <li><span class="no">01</span><span class="tx">为什么是「7 天」而不是「1 年」</span></li>
+      <li><span class="no">02</span><span class="tx">第 1 天 · 立项第一性三问（30 分钟）</span></li>
+      <li><span class="no">03</span><span class="tx">第 3 天 · 跑出你的黄金样张（2 小时）</span></li>
+      <li><span class="no">04</span><span class="tx">今晚就开始 · 30 分钟开机</span></li>
+    </ul>
+  </div>
+  <div class="tagrow reveal"><span>#这7天怎么走</span><span>02 / 06</span></div>
+  <span class="style-tag low">Style: Full-Bleed Gradient Manifesto</span>
+</section>
+
+<!-- S3 为什么 7 天 -->
+<section class="slide g3">
+  <div class="eyebrow reveal">Why Seven Days</div>
+  <div class="stage">
+    <div class="big reveal" style="font-size:clamp(1.8rem,6.5vw,4.6rem)"><span>Feedback</span><span>in seven days,</span><span>not one year.</span></div>
+    <div class="line reveal"></div>
+    <p class="body reveal">一门课值不值，看的是学员七天后手里有没有多出一个<strong>能给别人看的东西</strong>。不要宏大口号，把动力外包给最小即时反馈：每步都有产物，每步都能拿出手。</p>
+    <div class="cards reveal">
+      <div class="card"><div class="k">Day 1 Output</div><div class="v">一页纸《第一性选题诊断合同》+ 第一张五段式案例卡</div></div>
+      <div class="card"><div class="k">Day 3 Output</div><div class="v">一篇 3000 字、带出版质感的黄金样张</div></div>
+    </div>
+  </div>
+  <span class="style-tag low">Style: Full-Bleed Gradient Manifesto</span>
+</section>
+
+<!-- S4 第一天 -->
+<section class="slide g4">
+  <div class="eyebrow reveal">Day One · 30 Minutes</div>
+  <div class="stage">
+    <div class="zh reveal" style="font-size:clamp(1.4rem,3.8vw,2.6rem)">立项第一性三问</div>
+    <div class="line reveal"></div>
+    <div class="steps reveal">
+      <div class="step"><span class="no">1</span><div><h3>打开 T2《第一性选题诊断合同》</h3><p>诚实填完三问，填不出就不动笔。</p></div></div>
+      <div class="step"><span class="no">2</span><div><h3>建三个空文件夹</h3><p>raw / anchors / chapters —— 工程脚手架。</p></div></div>
+      <div class="step"><span class="no">3</span><div><h3>丢入 5 份一手材料</h3><p>最痛、最得意的原始材料：复盘、转写、访谈。</p></div></div>
+      <div class="step"><span class="no">4</span><div><h3>拆出第一张五段式案例卡</h3><p>起点 → 动作 → 阻力 → 转折 → 结果 + 原话。</p></div></div>
+    </div>
+  </div>
+  <div class="tagrow reveal"><span>#睡前30分钟</span><span>04 / 06</span></div>
+  <span class="style-tag low">Style: Full-Bleed Gradient Manifesto</span>
+</section>
+
+<!-- S5 第三天 -->
+<section class="slide g5">
+  <div class="eyebrow reveal">Day Three · Two Hours</div>
+  <div class="stage">
+    <div class="zh reveal" style="font-size:clamp(1.4rem,3.8vw,2.6rem)">跑出你的黄金样张</div>
+    <div class="line reveal"></div>
+    <div class="steps reveal">
+      <div class="step"><span class="no">1</span><div><h3>挑素材最肥沃的那 1 章</h3><p>按 T4 填满 15 条去重事实锚点 + 心流三推演。</p></div></div>
+      <div class="step"><span class="no">2</span><div><h3>接上你能触达的最强旗舰模型</h3><p>如 Gemini 4.0——长上下文、语感好的那种。</p></div></div>
+      <div class="step"><span class="no">3</span><div><h3>按 T5 的 IPO 批注法起草</h3><p>先出骨架 → 人写批注 → 再合成 3000 字。</p></div></div>
+      <div class="step"><span class="no">4</span><div><h3>确立 Golden Copy</h3><p>逐段精修到出版级手感，全书的语调标杆。</p></div></div>
+    </div>
+  </div>
+  <div class="tagrow reveal"><span>#黄金样张</span><span>05 / 06</span></div>
+  <span class="style-tag low">Style: Full-Bleed Gradient Manifesto</span>
+</section>
+
+<!-- S6 收束 -->
+<section class="slide g6">
+  <div class="eyebrow reveal">Tonight</div>
+  <div class="stage">
+    <div class="big reveal" style="font-size:clamp(1.8rem,6.5vw,4.6rem)"><span>Slow material,</span><span>fast drafts.</span></div>
+    <div class="line reveal"></div>
+    <div class="zh reveal">起草的快，是用素材的慢换来的。</div>
+    <p class="body reveal" style="margin-top:0.8em">选题三问、三个文件夹、五份材料、一张案例卡——30 分钟，产线开机。手里有粮，心中不慌。然后，让它推着你，把整本书写完。</p>
+  </div>
+  <div class="tagrow reveal"><span>#手里有粮心中不慌</span><span>06 / 06</span></div>
+  <span class="style-tag low">Style: Full-Bleed Gradient Manifesto</span>
+</section>
+
+<div class="keyboard-hint">← → 翻页 · 空格下一页</div>
+<script>
+class SlidePresentation {
+  constructor() {
+    this.slides = document.querySelectorAll('.slide');
+    this.current = 0;
+    this.setupNav();
+    this.setupKeyboard();
+    this.setupTouch();
+    this.setupWheel();
+    this.observe();
+  }
+  setupNav() {
+    const dots = document.getElementById('navDots');
+    this.slides.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.addEventListener('click', () => this.go(i));
+      dots.appendChild(b);
+    });
+    this.dots = dots.children;
+    this.update();
+  }
+  go(i) {
+    this.current = Math.max(0, Math.min(this.slides.length - 1, i));
+    this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
+    this.update();
+  }
+  update() {
+    Array.from(this.dots).forEach((d, i) => d.classList.toggle('active', i === this.current));
+    document.getElementById('progressBar').style.width = ((this.current + 1) / this.slides.length * 100) + '%';
+  }
+  setupKeyboard() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); this.go(this.current + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); this.go(this.current - 1); }
+      if (e.key === 'Home') this.go(0);
+      if (e.key === 'End') this.go(this.slides.length - 1);
+    });
+  }
+  setupTouch() {
+    let y0 = null;
+    document.addEventListener('touchstart', (e) => { y0 = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      if (y0 === null) return;
+      const dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dy) > 40) this.go(this.current + (dy < 0 ? 1 : -1));
+      y0 = null;
+    }, { passive: true });
+  }
+  setupWheel() {
+    let lock = false;
+    document.addEventListener('wheel', (e) => {
+      if (lock) return;
+      lock = true;
+      setTimeout(() => { lock = false; }, 650);
+      if (Math.abs(e.deltaY) < 20) return;
+      this.go(this.current + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+  observe() {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) {
+          en.target.classList.add('visible');
+          this.current = Array.from(this.slides).indexOf(en.target);
+          this.update();
+        }
+      });
+    }, { threshold: 0.6 });
+    this.slides.forEach((s) => io.observe(s));
+  }
+}
+new SlidePresentation();
+</script>
+</body>
+</html>

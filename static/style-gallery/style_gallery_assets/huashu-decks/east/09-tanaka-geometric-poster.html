@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7 天启动你的 AI 写作产线 · 田中一光几何构成</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Serif+SC:wght@600;900&family=Zen+Kaku+Gothic+New:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* ============ VIEWPORT BASE (MANDATORY) ============ */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+.slide { width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; }
+:root {
+  --title-size: clamp(1.5rem, 5vw, 4rem);
+  --h2-size: clamp(1.25rem, 3.5vw, 2.5rem);
+  --h3-size: clamp(1rem, 2.5vw, 1.75rem);
+  --body-size: clamp(0.75rem, 1.5vw, 1.125rem);
+  --small-size: clamp(0.65rem, 1vw, 0.875rem);
+  --slide-padding: clamp(1rem, 4vw, 4rem);
+  --content-gap: clamp(0.5rem, 2vw, 2rem);
+}
+@media (max-height: 700px) {
+  :root { --slide-padding: clamp(0.75rem, 3vw, 2rem); --content-gap: clamp(0.4rem, 1.5vw, 1rem); --title-size: clamp(1.25rem, 4.5vw, 2.5rem); --h2-size: clamp(1rem, 3vw, 1.75rem); }
+}
+@media (max-height: 600px) {
+  :root { --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem); --content-gap: clamp(0.3rem, 1vw, 0.75rem); --title-size: clamp(1.1rem, 4vw, 2rem); --body-size: clamp(0.7rem, 1.2vw, 0.95rem); }
+  .nav-dots, .keyboard-hint, .decorative { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+  html { scroll-behavior: auto; }
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 4px; background: var(--red); width: 0; z-index: 100; transition: width 0.2s ease; }
+.nav-dots { position: fixed; right: 1rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.6rem; z-index: 100; }
+.nav-dots button { width: 10px; height: 10px; border: 2px solid var(--ink); border-radius: 50%; background: transparent; cursor: pointer; padding: 0; }
+.nav-dots button.active { background: var(--red); border-color: var(--red); }
+.keyboard-hint { position: fixed; bottom: 0.8rem; left: 50%; transform: translateX(-50%); font-size: var(--small-size); color: rgba(26,26,26,0.4); z-index: 100; font-family: 'Zen Kaku Gothic New', 'Noto Sans SC', sans-serif; }
+.reveal { opacity: 0; translate: 0 22px; transition: opacity 0.5s cubic-bezier(0.16,1,0.3,1), translate 0.5s cubic-bezier(0.16,1,0.3,1); }
+.slide.visible .reveal { opacity: 1; translate: 0 0; }
+.reveal:nth-child(1) { transition-delay: 0.1s; }
+.reveal:nth-child(2) { transition-delay: 0.2s; }
+.reveal:nth-child(3) { transition-delay: 0.3s; }
+.reveal:nth-child(4) { transition-delay: 0.4s; }
+.reveal:nth-child(5) { transition-delay: 0.5s; }
+
+/* ============ PRESET: 田中一光几何构成 ============ */
+:root {
+  --paper: #F1EBDD;
+  --ink: #1A1A1A;
+  --red: #D9381E;
+  --yellow: #E6B52A;
+  --blue: #3C6E8F;
+  --u: clamp(26px, 7.2vh, 70px);
+}
+body { font-family: 'Noto Sans SC', sans-serif; background: var(--paper); color: var(--ink); }
+.vt { writing-mode: vertical-rl; font: 900 clamp(1.8rem,6vh,3.6rem)/1 'Noto Serif SC', serif; letter-spacing: .08em; }
+.en { font: 700 13px 'Zen Kaku Gothic New', 'Noto Sans SC', sans-serif; letter-spacing: .38em; writing-mode: vertical-rl; }
+small.lb { display: block; font: 700 12px 'Zen Kaku Gothic New', 'Noto Sans SC', sans-serif; letter-spacing: .3em; color: var(--red); margin-bottom: 4px; }
+.bar { position: absolute; height: 2px; background: var(--ink); }
+.foot { font: 700 13px 'Zen Kaku Gothic New', 'Noto Sans SC', sans-serif; letter-spacing: .3em; }
+.mark { width: 24px; height: 24px; background: var(--red); border-radius: 50%; }
+.style-tag { position: absolute; bottom: 0.7rem; right: 1rem; font: 500 12px 'Zen Kaku Gothic New', 'Noto Sans SC', sans-serif; color: rgba(26,26,26,0.45); z-index: 5; }
+.stage { position: absolute; }
+.stage div { position: absolute; }
+/* S1 封面 */
+.s1 .stage { left: 5%; top: 50%; transform: translateY(-50%); width: calc(var(--u) * 8); height: calc(var(--u) * 9); }
+.s1 .vt { position: absolute; left: calc(5% + var(--u) * 8 + 4%); top: 10%; }
+.s1 .en { position: absolute; left: calc(5% + var(--u) * 8 + 13%); top: 11%; }
+.s1 .info { position: absolute; right: 7%; top: 12%; width: 24%; }
+.s1 .info p { margin: 0 0 1em; font: 500 var(--body-size)/1.7 'Noto Sans SC'; letter-spacing: .04em; }
+.s1 .bar { left: calc(5% + var(--u) * 8 + 4%); right: 7%; bottom: 10%; }
+.s1 .foot { position: absolute; left: calc(5% + var(--u) * 8 + 4%); bottom: 12%; }
+.s1 .mark { position: absolute; right: 7%; bottom: 11.4%; }
+/* S2 目录 */
+.s2 .list { position: absolute; left: 10%; top: 14%; width: 52%; }
+.s2 .list h2 { font: 900 var(--h2-size)/1.2 'Noto Serif SC', serif; margin-bottom: 0.9em; }
+.s2 .item { display: flex; align-items: center; gap: 1.2em; padding: 0.8em 0; border-bottom: 1px solid var(--ink); }
+.s2 .geo { width: var(--u); height: var(--u); flex-shrink: 0; }
+.s2 .item b { font-weight: 700; font-size: var(--body-size); display: block; }
+.s2 .item span { font: 500 var(--small-size) 'Zen Kaku Gothic New', 'Noto Sans SC'; letter-spacing: .2em; color: var(--red); }
+.s2 .geoart { position: absolute; right: 6%; top: 14%; width: calc(var(--u) * 4); height: calc(var(--u) * 5); }
+/* S3 为什么 */
+.s3 .vt2 { position: absolute; left: 6%; top: 12%; writing-mode: vertical-rl; font: 900 var(--h2-size)/1.3 'Noto Serif SC', serif; letter-spacing: .12em; height: 64%; }
+.s3 .vt2 em { font-style: normal; color: var(--red); }
+.s3 .body { position: absolute; left: 22%; top: 14%; width: 36%; font-size: var(--body-size); line-height: 1.9; }
+.s3 .q { font: 900 var(--h3-size)/1.5 'Noto Serif SC', serif; margin: 0.8em 0; }
+.s3 .duo { display: grid; gap: 0.8em; margin-top: 0.8em; }
+.s3 .duo .cell { border-left: calc(var(--u) * 0.5) solid var(--yellow); padding-left: 0.9em; }
+.s3 .duo .cell:nth-child(2) { border-color: var(--blue); }
+.s3 .duo .tag { font: 700 12px 'Zen Kaku Gothic New', 'Noto Sans SC'; letter-spacing: .3em; color: var(--red); }
+.s3 .duo p { font-size: var(--small-size); line-height: 1.7; margin-top: 0.2em; }
+.s3 .geoart { position: absolute; right: 6%; top: 16%; width: calc(var(--u) * 4); height: calc(var(--u) * 6); }
+/* S4/S5 步骤 */
+.s4 .head, .s5 .head { position: absolute; left: 8%; top: 9%; right: 8%; display: flex; justify-content: space-between; align-items: baseline; }
+.s4 .head h2, .s5 .head h2 { font: 900 var(--h2-size)/1.2 'Noto Serif SC', serif; }
+.s4 .head h2 em, .s5 .head h2 em { font-style: normal; color: var(--red); }
+.s4 .head .foot, .s5 .head .foot { color: var(--ink); }
+.steps { position: absolute; left: 8%; right: 8%; top: 26%; display: grid; grid-template-columns: 1fr 1fr; gap: 1.1em 2em; }
+.step { display: flex; gap: 1em; align-items: flex-start; }
+.step .badge { width: var(--u); height: var(--u); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font: 700 var(--h3-size)/1 'Zen Kaku Gothic New'; color: var(--paper); }
+.step h3 { font-weight: 700; font-size: var(--body-size); }
+.step p { font-size: var(--small-size); line-height: 1.7; margin-top: 0.2em; color: #3A3A3A; }
+/* S6 收束 */
+.s6 .sun { position: absolute; left: 50%; top: 46%; transform: translate(-50%,-50%); width: calc(var(--u) * 6); height: calc(var(--u) * 6); background: var(--red); border-radius: 50%; }
+.s6 .inner { position: absolute; left: 50%; top: 46%; transform: translate(-50%,-50%); text-align: center; width: min(30rem, 60%); z-index: 2; }
+.s6 .inner h2 { font: 900 clamp(1.8rem,5vh,3rem)/1.3 'Noto Serif SC', serif; color: var(--paper); }
+.s6 .inner .motto { margin-top: 0.8em; font: 700 var(--small-size)/1.8 'Noto Sans SC'; color: var(--paper); }
+.s6 .lead2 { position: absolute; left: 8%; bottom: 16%; width: 34%; font-size: var(--body-size); line-height: 1.9; }
+.s6 .lead3 { position: absolute; right: 8%; bottom: 16%; width: 26%; font-size: var(--body-size); line-height: 1.9; text-align: right; }
+.s6 .bar { left: 8%; right: 8%; bottom: 10%; }
+.s6 .foot { position: absolute; left: 8%; bottom: 12%; }
+.s6 .mark { position: absolute; right: 8%; bottom: 11.4%; }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- S1 封面 -->
+<section class="slide s1">
+  <div class="stage decorative">
+    <div style="left:0;top:0;width:calc(var(--u)*4);height:calc(var(--u)*4);background:var(--red)"></div>
+    <div style="left:calc(var(--u)*4);top:0;width:calc(var(--u)*4);height:calc(var(--u)*4);background:var(--ink);border-radius:0 calc(var(--u)*4) 0 0"></div>
+    <div style="left:0;top:calc(var(--u)*4);width:calc(var(--u)*4);height:calc(var(--u)*4);background:var(--ink);border-radius:0 0 0 calc(var(--u)*4)"></div>
+    <div style="left:calc(var(--u)*4);top:calc(var(--u)*4);width:calc(var(--u)*4);height:calc(var(--u)*4);background:var(--yellow);border-radius:calc(var(--u)*2) 0 0 0"></div>
+    <div style="left:var(--u);top:var(--u);width:calc(var(--u)*2);height:calc(var(--u)*2);background:var(--paper);border-radius:50%"></div>
+    <div style="left:calc(var(--u)*5);top:calc(var(--u)*5);width:calc(var(--u)*2);height:calc(var(--u)*2);background:var(--ink);border-radius:0 calc(var(--u)*2) 0 0"></div>
+    <div style="left:calc(var(--u)*3);top:calc(var(--u)*3);width:calc(var(--u)*2);height:calc(var(--u)*2);background:var(--paper)"></div>
+    <div style="left:calc(var(--u)*3);top:calc(var(--u)*3);width:var(--u);height:var(--u);background:var(--blue);border-radius:0 0 var(--u) 0"></div>
+    <div style="left:calc(var(--u)*4);top:calc(var(--u)*4);width:var(--u);height:var(--u);background:var(--red);border-radius:var(--u) 0 0 0"></div>
+    <div style="left:0;top:calc(var(--u)*8);width:calc(var(--u)*8);height:var(--u);background:repeating-linear-gradient(90deg,var(--ink) 0 calc(var(--u)*0.5),var(--paper) calc(var(--u)*0.5) var(--u))"></div>
+  </div>
+  <div class="vt reveal">七天寫作</div>
+  <div class="en reveal">AI WRITING PIPELINE 2026</div>
+  <div class="info">
+    <p class="reveal"><small class="lb">课题</small>7 天启动你的 AI 写作产线</p>
+    <p class="reveal"><small class="lb">讲者</small>范冰 XDash</p>
+    <p class="reveal"><small class="lb">方法</small>不背提示词，搭一条能写书、也能降维写公众号和播客稿的产线</p>
+    <p class="reveal"><small class="lb">开机</small>今天睡前 30 分钟</p>
+  </div>
+  <div class="foot">AI 写作工程学 · 课后行动版</div><div class="bar decorative"></div><div class="mark decorative"></div>
+  <span class="style-tag">Style: 田中一光几何构成</span>
+</section>
+
+<!-- S2 目录 -->
+<section class="slide s2">
+  <div class="list">
+    <h2 class="reveal">目录</h2>
+    <div class="item reveal"><div class="geo" style="background:var(--red)"></div><div><span>其一</span><b>为什么是「7 天」而不是「1 年」</b></div></div>
+    <div class="item reveal"><div class="geo" style="background:var(--ink);border-radius:0 var(--u) 0 0"></div><div><span>其二</span><b>第 1 天 · 立项第一性三问（30 分钟）</b></div></div>
+    <div class="item reveal"><div class="geo" style="background:var(--yellow);border-radius:var(--u) 0 0 0"></div><div><span>其三</span><b>第 3 天 · 跑出你的黄金样张（2 小时）</b></div></div>
+    <div class="item reveal"><div class="geo" style="background:var(--blue);border-radius:50%"></div><div><span>其四</span><b>今晚就开始 · 30 分钟开机</b></div></div>
+  </div>
+  <div class="stage geoart decorative">
+    <div style="left:0;top:0;width:calc(var(--u)*2);height:calc(var(--u)*2);background:var(--ink)"></div>
+    <div style="left:calc(var(--u)*2);top:0;width:calc(var(--u)*2);height:calc(var(--u)*2);background:var(--red);border-radius:50%"></div>
+    <div style="left:0;top:calc(var(--u)*2);width:calc(var(--u)*2);height:calc(var(--u)*2);background:var(--yellow);border-radius:0 0 calc(var(--u)*2) 0"></div>
+    <div style="left:calc(var(--u)*2);top:calc(var(--u)*2);width:calc(var(--u)*2);height:calc(var(--u)*2);background:var(--blue)"></div>
+    <div style="left:0;top:calc(var(--u)*4);width:calc(var(--u)*4);height:var(--u);background:repeating-linear-gradient(90deg,var(--ink) 0 calc(var(--u)*0.5),var(--paper) calc(var(--u)*0.5) var(--u))"></div>
+  </div>
+  <span class="style-tag">Style: 田中一光几何构成</span>
+</section>
+
+<!-- S3 为什么 7 天 -->
+<section class="slide s3">
+  <div class="vt2 reveal">为什么是<em>「7 天」</em><br>而不是「1 年」</div>
+  <div class="body">
+    <p class="reveal">一门课值不值，看的是学员七天后手里有没有多出一个<strong>能给别人看的东西</strong>。不要宏大口号，把动力外包给最小即时反馈：每步都有产物，每步都能拿出手。</p>
+    <p class="q reveal">那个手感，会推着你停不下来地把整本书写完。</p>
+    <div class="duo reveal">
+      <div class="cell"><span class="tag">第一天产物</span><p>一页纸的《第一性选题诊断合同》+ 第一张五段式案例卡</p></div>
+      <div class="cell"><span class="tag">第三天产物</span><p>一篇 3000 字、带出版质感的黄金样张</p></div>
+    </div>
+  </div>
+  <div class="stage geoart decorative">
+    <div style="left:0;top:0;width:calc(var(--u)*4);height:calc(var(--u)*4);background:var(--red);border-radius:0 calc(var(--u)*4) 0 0"></div>
+    <div style="left:0;top:calc(var(--u)*4);width:calc(var(--u)*2);height:calc(var(--u)*2);background:var(--ink)"></div>
+    <div style="left:calc(var(--u)*2);top:calc(var(--u)*4);width:calc(var(--u)*2);height:calc(var(--u)*2);background:var(--yellow);border-radius:50%"></div>
+    <div style="left:calc(var(--u)*3);top:calc(var(--u)*4);width:var(--u);height:var(--u);background:var(--blue)"></div>
+  </div>
+  <span class="style-tag">Style: 田中一光几何构成</span>
+</section>
+
+<!-- S4 第一天 -->
+<section class="slide s4">
+  <div class="head"><h2 class="reveal">第 1 天 · <em>立项第一性三问</em></h2><span class="foot reveal">DAY 1 · 30 MIN</span></div>
+  <div class="steps">
+    <div class="step reveal"><span class="badge" style="background:var(--red)">1</span><div><h3>打开 T2《第一性选题诊断合同》</h3><p>诚实填完「立项第一性三问」，填不出就不动笔。</p></div></div>
+    <div class="step reveal"><span class="badge" style="background:var(--ink);border-radius:0 var(--u) 0 0">2</span><div><h3>建三个空文件夹</h3><p>raw / anchors / chapters —— 你的工程脚手架。</p></div></div>
+    <div class="step reveal"><span class="badge" style="background:var(--yellow);border-radius:var(--u) 0 0 0;color:var(--ink)">3</span><div><h3>丢入 5 份一手材料</h3><p>人生里最痛、最得意的 5 份原始材料：复盘长文、录音转写、深度访谈。</p></div></div>
+    <div class="step reveal"><span class="badge" style="background:var(--blue);border-radius:50%">4</span><div><h3>拆出第一张五段式案例卡</h3><p>起点 → 动作 → 阻力 → 转折 → 结果 + 当事人原话。按 T3 格式。</p></div></div>
+  </div>
+  <span class="style-tag">Style: 田中一光几何构成</span>
+</section>
+
+<!-- S5 第三天 -->
+<section class="slide s5">
+  <div class="head"><h2 class="reveal">第 3 天 · <em>跑出你的黄金样张</em></h2><span class="foot reveal">DAY 3 · 2 HOURS</span></div>
+  <div class="steps">
+    <div class="step reveal"><span class="badge" style="background:var(--ink);border-radius:0 0 var(--u) 0">1</span><div><h3>挑素材最肥沃的那 1 章</h3><p>按 T4 填满 15 条去重事实锚点 + 心流三推演。</p></div></div>
+    <div class="step reveal"><span class="badge" style="background:var(--blue)">2</span><div><h3>接上你能触达的最强旗舰模型</h3><p>如 Gemini 4.0——长上下文、语感好的那种。</p></div></div>
+    <div class="step reveal"><span class="badge" style="background:var(--red);border-radius:50%">3</span><div><h3>按 T5 的 IPO 批注法起草</h3><p>先出骨架 → 人写批注 → 再合成 3000 字。</p></div></div>
+    <div class="step reveal"><span class="badge" style="background:var(--yellow);border-radius:0 var(--u) 0 0;color:var(--ink)">4</span><div><h3>确立 Golden Copy</h3><p>逐段精修到出版级手感，这就是全书的语调标杆。</p></div></div>
+  </div>
+  <span class="style-tag">Style: 田中一光几何构成</span>
+</section>
+
+<!-- S6 收束 -->
+<section class="slide s6">
+  <div class="sun decorative"></div>
+  <div class="inner reveal">
+    <h2>今晚就开始</h2>
+    <p class="motto">起草的快，是用素材的慢换来的。<br>手里有粮，心中不慌。</p>
+  </div>
+  <div class="lead2 reveal">选题三问、三个文件夹、五份材料、一张案例卡——30 分钟，你的产线就开机了。</div>
+  <div class="lead3 reveal">然后，让它推着你，把整本书写完。</div>
+  <div class="foot">TONIGHT · 30 MIN</div><div class="bar decorative"></div><div class="mark decorative"></div>
+  <span class="style-tag">Style: 田中一光几何构成</span>
+</section>
+
+<div class="keyboard-hint">← → 翻页 · 空格下一页</div>
+<script>
+class SlidePresentation {
+  constructor() {
+    this.slides = document.querySelectorAll('.slide');
+    this.current = 0;
+    this.setupNav();
+    this.setupKeyboard();
+    this.setupTouch();
+    this.setupWheel();
+    this.observe();
+  }
+  setupNav() {
+    const dots = document.getElementById('navDots');
+    this.slides.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.addEventListener('click', () => this.go(i));
+      dots.appendChild(b);
+    });
+    this.dots = dots.children;
+    this.update();
+  }
+  go(i) {
+    this.current = Math.max(0, Math.min(this.slides.length - 1, i));
+    this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
+    this.update();
+  }
+  update() {
+    Array.from(this.dots).forEach((d, i) => d.classList.toggle('active', i === this.current));
+    document.getElementById('progressBar').style.width = ((this.current + 1) / this.slides.length * 100) + '%';
+  }
+  setupKeyboard() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); this.go(this.current + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); this.go(this.current - 1); }
+      if (e.key === 'Home') this.go(0);
+      if (e.key === 'End') this.go(this.slides.length - 1);
+    });
+  }
+  setupTouch() {
+    let y0 = null;
+    document.addEventListener('touchstart', (e) => { y0 = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      if (y0 === null) return;
+      const dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dy) > 40) this.go(this.current + (dy < 0 ? 1 : -1));
+      y0 = null;
+    }, { passive: true });
+  }
+  setupWheel() {
+    let lock = false;
+    document.addEventListener('wheel', (e) => {
+      if (lock) return;
+      lock = true;
+      setTimeout(() => { lock = false; }, 650);
+      if (Math.abs(e.deltaY) < 20) return;
+      this.go(this.current + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+  observe() {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) {
+          en.target.classList.add('visible');
+          this.current = Array.from(this.slides).indexOf(en.target);
+          this.update();
+        }
+      });
+    }, { threshold: 0.6 });
+    this.slides.forEach((s) => io.observe(s));
+  }
+}
+new SlidePresentation();
+</script>
+</body>
+</html>

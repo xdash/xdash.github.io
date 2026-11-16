@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7 天启动你的 AI 写作产线 · Candy Lecture Stage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@900&family=JetBrains+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;900&display=swap" rel="stylesheet">
+<style>
+/* ============ VIEWPORT BASE (MANDATORY) ============ */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+.slide { width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; }
+:root {
+  --h2-size: clamp(1.25rem, 3.5vw, 2.5rem);
+  --h3-size: clamp(1rem, 2.5vw, 1.75rem);
+  --body-size: clamp(0.75rem, 1.5vw, 1.125rem);
+  --small-size: clamp(0.65rem, 1vw, 0.875rem);
+  --slide-padding: clamp(1rem, 4vw, 3rem);
+  --content-gap: clamp(0.5rem, 2vw, 2rem);
+}
+@media (max-height: 600px) {
+  :root { --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem); --content-gap: clamp(0.3rem, 1vw, 0.75rem); --body-size: clamp(0.7rem, 1.2vw, 0.95rem); }
+  .nav-dots, .keyboard-hint { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+  html { scroll-behavior: auto; }
+}
+
+/* ============ PRESET: CANDY LECTURE STAGE ============ */
+:root {
+  --pink: #FF2D95;
+  --cyan: #00E5FF;
+  --yellow: #FFD500;
+  --lime: #39FF14;
+  --font-big: 'Inter', 'Noto Sans SC', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Noto Sans SC', monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font-big); color: #fff; }
+.slide { background: radial-gradient(ellipse 62% 58% at 50% 42%, #1b1424 0%, #0A0A0A 72%); align-items: center; justify-content: center; text-align: center; padding: var(--slide-padding); }
+.word { font-family: 'Noto Sans SC', sans-serif; font-weight: 900; font-size: clamp(4rem, 22vh, 13rem); line-height: 1; letter-spacing: -0.04em; }
+.word.pink { color: var(--pink); }
+.word.cyan { color: var(--cyan); }
+.word.yellow { color: var(--yellow); }
+.word.lime { color: var(--lime); }
+.cap { font-family: var(--font-mono); font-size: var(--body-size); letter-spacing: 0.04em; margin-top: 0.6em; }
+.cap.pink { color: var(--pink); } .cap.cyan { color: var(--cyan); } .cap.yellow { color: var(--yellow); } .cap.lime { color: var(--lime); }
+.body { font-family: 'Noto Sans SC', sans-serif; font-weight: 400; font-size: var(--body-size); line-height: 1.75; color: #cfcfcf; max-width: 36em; margin: 0.9em auto 0; }
+.body strong { color: #fff; font-weight: 900; }
+pre { margin: 1em auto 0; padding: 1em 1.6em; background: #141414; border: 1px solid #2a2a2a; border-radius: 10px; font-family: var(--font-mono); font-size: var(--body-size); line-height: 1.7; color: #e8e8e8; text-align: left; display: inline-block; max-width: 92%; }
+.k { color: var(--pink); } .f { color: var(--yellow); } .n { color: var(--lime); } .c { color: #7a7a7a; } .s { color: var(--cyan); }
+.toc { list-style: none; text-align: left; margin-top: 0.8em; }
+.toc li { font-family: var(--font-mono); font-size: var(--h3-size); padding: 0.5em 0; display: flex; gap: 1em; align-items: baseline; }
+.toc .no { font-weight: 700; }
+.toc li:nth-child(1) .no { color: var(--pink); } .toc li:nth-child(2) .no { color: var(--cyan); }
+.toc li:nth-child(3) .no { color: var(--yellow); } .toc li:nth-child(4) .no { color: var(--lime); }
+.duo { display: flex; gap: 1.5em; margin-top: 1em; justify-content: center; flex-wrap: wrap; }
+.duo .cell { background: #141414; border: 1px solid #2a2a2a; border-radius: 10px; padding: 0.9em 1.4em; text-align: left; max-width: 20em; }
+.duo .cell .k2 { font-family: var(--font-mono); font-size: var(--small-size); }
+.duo .cell p { font-family: 'Noto Sans SC', sans-serif; font-size: var(--small-size); color: #cfcfcf; margin-top: 0.4em; line-height: 1.6; }
+.f2 { position: absolute; right: var(--slide-padding); bottom: clamp(0.9rem, 2.4vh, 1.6rem); font-family: var(--font-mono); font-size: var(--small-size); color: #8a8a8a; }
+.style-tag { position: absolute; bottom: clamp(0.9rem, 2.4vh, 1.6rem); left: var(--slide-padding); font-family: var(--font-mono); font-size: var(--small-size); color: #555; z-index: 2; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 4px; background: var(--pink); width: 0; z-index: 100; transition: width 0.2s ease; }
+.nav-dots { position: fixed; right: 1rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.6rem; z-index: 100; }
+.nav-dots button { width: 9px; height: 9px; border: 1.5px solid #444; border-radius: 50%; background: transparent; cursor: pointer; padding: 0; }
+.nav-dots button.active { background: var(--cyan); border-color: var(--cyan); }
+.keyboard-hint { position: fixed; bottom: 1rem; left: 50%; transform: translateX(-50%); font-family: var(--font-mono); font-size: var(--small-size); color: #48484a; z-index: 100; }
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1); }
+.slide.visible .reveal { opacity: 1; transform: translateY(0); }
+.reveal:nth-child(1) { transition-delay: 0.1s; }
+.reveal:nth-child(2) { transition-delay: 0.25s; }
+.reveal:nth-child(3) { transition-delay: 0.4s; }
+.reveal:nth-child(4) { transition-delay: 0.55s; }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- S1 封面 -->
+<section class="slide">
+  <div>
+    <div class="word pink reveal">产线</div>
+    <div class="cap cyan reveal">// 7 天启动你的 AI 写作产线</div>
+    <p class="body reveal">不教你背提示词，教你搭一条能写书、也能降维写公众号和播客稿的产线。从今天睡前 30 分钟开始。—— 范冰 XDash</p>
+  </div>
+  <div class="f2">AI 写作工程学 · 第 1 讲</div>
+  <span class="style-tag">Style: Candy Lecture Stage</span>
+</section>
+
+<!-- S2 目录 -->
+<section class="slide">
+  <div>
+    <div class="cap cyan reveal">// agenda.py —— 这 7 天怎么走</div>
+    <ul class="toc reveal">
+      <li><span class="no">01</span><span>为什么是「7 天」而不是「1 年」</span></li>
+      <li><span class="no">02</span><span>第 1 天 · 立项第一性三问（30 分钟）</span></li>
+      <li><span class="no">03</span><span>第 3 天 · 跑出你的黄金样张（2 小时）</span></li>
+      <li><span class="no">04</span><span>今晚就开始 · 30 分钟开机</span></li>
+    </ul>
+  </div>
+  <div class="f2">02 / 06</div>
+  <span class="style-tag">Style: Candy Lecture Stage</span>
+</section>
+
+<!-- S3 为什么 7 天 -->
+<section class="slide">
+  <div>
+    <div class="word cyan reveal">反馈</div>
+    <div class="cap pink reveal">// 为什么是「7 天」而不是「1 年」</div>
+    <p class="body reveal">一门课值不值，看的是学员七天后手里有没有多出一个<strong>能给别人看的东西</strong>。把动力外包给最小即时反馈：每步都有产物，每步都能拿出手。</p>
+    <div class="duo reveal">
+      <div class="cell"><span class="k2" style="color:var(--yellow)">day1.output</span><p>一页纸《第一性选题诊断合同》+ 第一张五段式案例卡</p></div>
+      <div class="cell"><span class="k2" style="color:var(--lime)">day3.output</span><p>一篇 3000 字、带出版质感的黄金样张</p></div>
+    </div>
+  </div>
+  <div class="f2">03 / 06</div>
+  <span class="style-tag">Style: Candy Lecture Stage</span>
+</section>
+
+<!-- S4 第一天 -->
+<section class="slide">
+  <div>
+    <div class="word yellow reveal">立项</div>
+    <div class="cap lime reveal">// 第 1 天 · 今晚睡前 · 30 分钟</div>
+    <pre class="reveal"><span class="k">def</span> <span class="f">第一天</span>():
+    填(T2.选题诊断合同)        <span class="c"># 三问，填不出不动笔</span>
+    建目录([<span class="s">"raw"</span>, <span class="s">"anchors"</span>, <span class="s">"chapters"</span>])
+    丢入(一手材料, n=<span class="n">5</span>)        <span class="c"># 最痛 + 最得意</span>
+    <span class="k">return</span> 五段式案例卡(<span class="n">1</span>)     <span class="c"># T3 格式</span></pre>
+  </div>
+  <div class="f2">04 / 06</div>
+  <span class="style-tag">Style: Candy Lecture Stage</span>
+</section>
+
+<!-- S5 第三天 -->
+<section class="slide">
+  <div>
+    <div class="word lime reveal">样张</div>
+    <div class="cap yellow reveal">// 第 3 天 · 本周末 · 2 小时</div>
+    <pre class="reveal"><span class="k">def</span> <span class="f">第三天</span>():
+    章 = 挑(素材最肥沃, n=<span class="n">1</span>)   <span class="c"># T4: 15 条事实锚点</span>
+    模型 = 接(旗舰模型)          <span class="c"># 长上下文、语感好</span>
+    稿 = IPO批注法(章, 模型)     <span class="c"># T5: 骨架→批注→3000字</span>
+    <span class="k">return</span> 精修(稿, to=<span class="s">"Golden Copy"</span>)</pre>
+  </div>
+  <div class="f2">05 / 06</div>
+  <span class="style-tag">Style: Candy Lecture Stage</span>
+</section>
+
+<!-- S6 收束 -->
+<section class="slide">
+  <div>
+    <div class="word pink reveal">开机</div>
+    <div class="cap cyan reveal">// 今晚就开始 · 30 分钟</div>
+    <p class="body reveal">选题三问、三个文件夹、五份材料、一张案例卡——30 分钟，你的产线就开机了。<strong>起草的快，是用素材的慢换来的。</strong>手里有粮，心中不慌。然后，让它推着你，把整本书写完。</p>
+  </div>
+  <div class="f2">06 / 06 · EOF</div>
+  <span class="style-tag">Style: Candy Lecture Stage</span>
+</section>
+
+<div class="keyboard-hint">← → 翻页 · 空格下一页</div>
+<script>
+class SlidePresentation {
+  constructor() {
+    this.slides = document.querySelectorAll('.slide');
+    this.current = 0;
+    this.setupNav();
+    this.setupKeyboard();
+    this.setupTouch();
+    this.setupWheel();
+    this.observe();
+  }
+  setupNav() {
+    const dots = document.getElementById('navDots');
+    this.slides.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.addEventListener('click', () => this.go(i));
+      dots.appendChild(b);
+    });
+    this.dots = dots.children;
+    this.update();
+  }
+  go(i) {
+    this.current = Math.max(0, Math.min(this.slides.length - 1, i));
+    this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
+    this.update();
+  }
+  update() {
+    Array.from(this.dots).forEach((d, i) => d.classList.toggle('active', i === this.current));
+    document.getElementById('progressBar').style.width = ((this.current + 1) / this.slides.length * 100) + '%';
+  }
+  setupKeyboard() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); this.go(this.current + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); this.go(this.current - 1); }
+      if (e.key === 'Home') this.go(0);
+      if (e.key === 'End') this.go(this.slides.length - 1);
+    });
+  }
+  setupTouch() {
+    let y0 = null;
+    document.addEventListener('touchstart', (e) => { y0 = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      if (y0 === null) return;
+      const dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dy) > 40) this.go(this.current + (dy < 0 ? 1 : -1));
+      y0 = null;
+    }, { passive: true });
+  }
+  setupWheel() {
+    let lock = false;
+    document.addEventListener('wheel', (e) => {
+      if (lock) return;
+      lock = true;
+      setTimeout(() => { lock = false; }, 650);
+      if (Math.abs(e.deltaY) < 20) return;
+      this.go(this.current + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+  observe() {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) {
+          en.target.classList.add('visible');
+          this.current = Array.from(this.slides).indexOf(en.target);
+          this.update();
+        }
+      });
+    }, { threshold: 0.6 });
+    this.slides.forEach((s) => io.observe(s));
+  }
+}
+new SlidePresentation();
+</script>
+</body>
+</html>

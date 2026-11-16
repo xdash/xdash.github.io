@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7 天启动你的 AI 写作产线 · 中文实验字体海报</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;900&family=Noto+Serif+SC:wght@400;900&display=swap" rel="stylesheet">
+<style>
+/* ============ VIEWPORT BASE (MANDATORY) ============ */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+.slide { width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; }
+:root {
+  --title-size: clamp(1.5rem, 5vw, 4rem);
+  --h2-size: clamp(1.25rem, 3.5vw, 2.5rem);
+  --h3-size: clamp(1rem, 2.5vw, 1.75rem);
+  --body-size: clamp(0.75rem, 1.5vw, 1.125rem);
+  --small-size: clamp(0.65rem, 1vw, 0.875rem);
+  --slide-padding: clamp(1rem, 4vw, 4rem);
+  --content-gap: clamp(0.5rem, 2vw, 2rem);
+}
+@media (max-height: 700px) {
+  :root { --slide-padding: clamp(0.75rem, 3vw, 2rem); --content-gap: clamp(0.4rem, 1.5vw, 1rem); --title-size: clamp(1.25rem, 4.5vw, 2.5rem); --h2-size: clamp(1rem, 3vw, 1.75rem); }
+}
+@media (max-height: 600px) {
+  :root { --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem); --content-gap: clamp(0.3rem, 1vw, 0.75rem); --title-size: clamp(1.1rem, 4vw, 2rem); --body-size: clamp(0.7rem, 1.2vw, 0.95rem); }
+  .nav-dots, .keyboard-hint, .decorative { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+  html { scroll-behavior: auto; }
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 5px; background: var(--red); width: 0; z-index: 100; transition: width 0.2s ease; }
+.nav-dots { position: fixed; right: 1rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.6rem; z-index: 100; }
+.nav-dots button { width: 10px; height: 10px; border: 2px solid var(--ink); border-radius: 0; background: transparent; cursor: pointer; padding: 0; }
+.nav-dots button.active { background: var(--red); border-color: var(--red); }
+.keyboard-hint { position: fixed; bottom: 0.8rem; left: 50%; transform: translateX(-50%); font-size: var(--small-size); color: rgba(14,14,14,0.4); z-index: 100; }
+.reveal { opacity: 0; translate: 0 22px; transition: opacity 0.5s cubic-bezier(0.16,1,0.3,1), translate 0.5s cubic-bezier(0.16,1,0.3,1); }
+.slide.visible .reveal { opacity: 1; translate: 0 0; }
+.reveal:nth-child(1) { transition-delay: 0.1s; }
+.reveal:nth-child(2) { transition-delay: 0.2s; }
+.reveal:nth-child(3) { transition-delay: 0.3s; }
+.reveal:nth-child(4) { transition-delay: 0.4s; }
+.reveal:nth-child(5) { transition-delay: 0.5s; }
+
+/* ============ PRESET: 中文实验字体海报 ============ */
+:root {
+  --paper: #EFEBE1;
+  --ink: #0E0E0E;
+  --red: #E4351E;
+  --grey: #D8D2C4;
+  --gray: #555;
+}
+body { font-family: 'Noto Sans SC', sans-serif; background: var(--paper); color: var(--ink); }
+h1 { font-weight: 900; letter-spacing: -.01em; line-height: 1.1; }
+h1 em, h2 em { font-style: normal; color: var(--red); }
+.mono { font-weight: 500; font-size: 13px; letter-spacing: .3em; color: var(--gray); }
+.lead { font-family: 'Noto Serif SC', serif; font-size: var(--body-size); line-height: 1.8; color: #222; }
+.style-tag { position: absolute; bottom: 0.7rem; right: 1rem; font: 500 12px 'Noto Sans SC', sans-serif; color: rgba(14,14,14,0.45); z-index: 5; }
+.vline { position: absolute; writing-mode: vertical-rl; font-weight: 500; font-size: 13px; letter-spacing: .3em; color: var(--gray); }
+/* 巨字「七」: stroke1 横 / stroke2 竖弯钩 */
+.qi { display: block; }
+/* S1 封面 */
+.s1 .big { position: absolute; left: 4%; top: 50%; transform: translateY(-50%); height: 84%; aspect-ratio: 6/7; }
+.s1 .right { position: absolute; left: 52%; right: 6%; top: 10%; }
+.s1 h1 { font-size: var(--title-size); margin-top: 0.3em; }
+.s1 .lead { margin-top: 1em; max-width: 26em; }
+.s1 .cds { display: flex; gap: 10px; margin-top: 1.2em; }
+.s1 .cd { width: 74px; position: relative; border-top: 2px solid var(--ink); padding-top: 6px; }
+.s1 .cd svg { width: 74px; display: block; }
+.s1 .cd b { position: absolute; right: 0; top: 6px; font-weight: 500; font-size: 12px; }
+.s1 .cd span { display: block; margin-top: 4px; font-weight: 500; font-size: 13px; letter-spacing: .1em; }
+.s1 .info { position: absolute; left: 52%; right: 6%; bottom: 8%; border-top: 2px solid var(--ink); padding-top: 0.8em; display: grid; grid-template-columns: auto 1fr; gap: 4px 1.6em; font-weight: 500; font-size: var(--small-size); }
+.s1 .info i { font-style: normal; color: var(--red); font-weight: 900; letter-spacing: .2em; }
+/* S2 目录 */
+.s2 .redbar { position: absolute; left: 8%; top: 12%; bottom: 12%; width: clamp(2rem,4vw,3.4rem); background: var(--red); }
+.s2 .inner { position: absolute; left: 20%; right: 8%; top: 12%; }
+.s2 h2 { font-weight: 900; font-size: var(--h2-size); margin-bottom: 0.8em; }
+.s2 .toc { list-style: none; }
+.s2 .toc li { display: flex; align-items: baseline; gap: 1.1em; padding: 0.75em 0; border-top: 2px solid var(--ink); }
+.s2 .toc li:last-child { border-bottom: 2px solid var(--ink); }
+.s2 .toc .no { font-weight: 900; color: var(--red); font-size: var(--h3-size); }
+.s2 .toc .tx { flex: 1; font-size: var(--body-size); font-weight: 500; }
+.s2 .toc .st { font-weight: 500; font-size: 12px; letter-spacing: .2em; color: var(--gray); }
+/* S3 为什么 */
+.s3 .ghost { position: absolute; left: -9%; top: 54%; transform: translateY(-50%); height: 104%; aspect-ratio: 6/7; opacity: 1; }
+.s3 .inner { position: absolute; left: 46%; right: 7%; top: 50%; transform: translateY(-50%); }
+.s3 h2 { font-weight: 900; font-size: var(--h2-size); line-height: 1.2; margin: 0.3em 0 0.6em; }
+.s3 .q { font-family: 'Noto Serif SC', serif; font-weight: 900; font-size: var(--h3-size); border-left: 6px solid var(--red); padding-left: 0.7em; margin: 1em 0; }
+.s3 .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 1em; margin-top: 1em; }
+.s3 .duo .cell { border-top: 2px solid var(--ink); padding-top: 0.5em; }
+.s3 .duo .tag { font-weight: 900; font-size: 12px; letter-spacing: .2em; color: var(--red); }
+.s3 .duo p { font-size: var(--small-size); line-height: 1.7; margin-top: 0.3em; }
+/* S4/S5 步骤 */
+.s4 .head, .s5 .head { position: absolute; left: 7%; top: 9%; right: 7%; }
+.s4 .head h2, .s5 .head h2 { font-weight: 900; font-size: var(--h2-size); margin-top: 0.25em; }
+.steps { position: absolute; left: 7%; right: 7%; top: 30%; }
+.step { display: flex; gap: 1.2em; align-items: flex-start; border-top: 2px solid var(--ink); padding: 0.6em 0; }
+.step:last-child { border-bottom: 2px solid var(--ink); }
+.step .no { font-weight: 900; font-size: var(--h3-size); color: var(--red); min-width: 1.1em; }
+.step h3 { font-size: var(--body-size); font-weight: 900; }
+.step p { font-size: var(--small-size); line-height: 1.7; margin-top: 0.2em; color: #333; }
+.step .stname { margin-left: auto; font-weight: 500; font-size: 12px; letter-spacing: .2em; color: var(--gray); writing-mode: vertical-rl; }
+/* S6 收束 */
+.s6 .big { position: absolute; right: 4%; top: 50%; transform: translateY(-50%); height: 84%; aspect-ratio: 6/7; }
+.s6 .inner { position: absolute; left: 7%; top: 50%; transform: translateY(-50%); width: 44%; }
+.s6 h2 { font-weight: 900; font-size: var(--title-size); line-height: 1.1; margin: 0.25em 0 0.5em; }
+.s6 .lead2 { font-size: var(--body-size); line-height: 1.9; }
+.s6 .motto { display: inline-block; margin-top: 1em; background: var(--ink); color: var(--paper); font-weight: 900; font-size: var(--body-size); padding: 0.6em 1.2em; letter-spacing: .06em; }
+.s6 .motto b { color: var(--red); }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- S1 封面 -->
+<section class="slide s1">
+  <svg class="big qi decorative" viewBox="0 0 600 700">
+    <rect x="80" y="216" width="440" height="64" fill="#0E0E0E" transform="rotate(-3 300 248)"/>
+    <path d="M300 60 V500 Q300 566 380 566 H500" fill="none" stroke="#E4351E" stroke-width="64"/>
+  </svg>
+  <div class="right">
+    <div class="mono reveal">QI · 2 STROKES · AI 写作工程学 · 课后行动版</div>
+    <h1 class="reveal">7 天启动<br>你的 <em>AI 写作产线</em></h1>
+    <p class="lead reveal">不教你背提示词，教你搭一条能写书、也能降维写公众号和播客稿的产线。从今天睡前 30 分钟开始。——范冰 XDash</p>
+    <div class="cds reveal">
+      <div class="cd"><svg viewBox="0 0 600 700"><rect x="80" y="216" width="440" height="64" fill="#0E0E0E" transform="rotate(-3 300 248)"/><path d="M300 60 V500 Q300 566 380 566 H500" fill="none" stroke="#D8D2C4" stroke-width="64"/></svg><b>1</b><span>横</span></div>
+      <div class="cd"><svg viewBox="0 0 600 700"><rect x="80" y="216" width="440" height="64" fill="#D8D2C4" transform="rotate(-3 300 248)"/><path d="M300 60 V500 Q300 566 380 566 H500" fill="none" stroke="#E4351E" stroke-width="64"/></svg><b>2</b><span>竖弯钩</span></div>
+    </div>
+  </div>
+  <div class="info reveal"><i>周期</i><span>7 天 · 每天一个能拿出手的产物</span><i>开机</i><span>今晚睡前 30 分钟</span></div>
+  <span class="style-tag">Style: 中文实验字体海报</span>
+</section>
+
+<!-- S2 目录 -->
+<section class="slide s2">
+  <div class="redbar decorative"></div>
+  <div class="vline decorative" style="left:13.5%;top:12%">CONTENTS · 目 录</div>
+  <div class="inner">
+    <div class="mono reveal">CONTENTS · 四笔成课</div>
+    <h2 class="reveal">这 7 天<em>怎么走</em></h2>
+    <ul class="toc">
+      <li class="reveal"><span class="no">01</span><span class="tx">为什么是「7 天」而不是「1 年」</span><span class="st">起笔</span></li>
+      <li class="reveal"><span class="no">02</span><span class="tx">第 1 天 · 立项第一性三问（30 分钟）</span><span class="st">行笔</span></li>
+      <li class="reveal"><span class="no">03</span><span class="tx">第 3 天 · 跑出你的黄金样张（2 小时）</span><span class="st">转折</span></li>
+      <li class="reveal"><span class="no">04</span><span class="tx">今晚就开始 · 30 分钟开机</span><span class="st">收笔</span></li>
+    </ul>
+  </div>
+  <span class="style-tag">Style: 中文实验字体海报</span>
+</section>
+
+<!-- S3 为什么 7 天 -->
+<section class="slide s3">
+  <svg class="ghost decorative" viewBox="0 0 600 700">
+    <rect x="80" y="216" width="440" height="64" fill="#D8D2C4" transform="rotate(-3 300 248)"/>
+    <path d="M300 60 V500 Q300 566 380 566 H500" fill="none" stroke="#D8D2C4" stroke-width="64"/>
+  </svg>
+  <div class="inner">
+    <div class="mono reveal">WHY 7 DAYS</div>
+    <h2 class="reveal">为什么是「7 天」<br>而不是<em>「1 年」</em>？</h2>
+    <p class="lead reveal">一门课值不值，看的是学员七天后手里有没有多出一个<strong>能给别人看的东西</strong>。把动力外包给最小即时反馈：每步都有产物，每步都能拿出手。</p>
+    <p class="q reveal">那个手感，会推着你停不下来地把整本书写完。</p>
+    <div class="duo reveal">
+      <div class="cell"><span class="tag">第一天产物</span><p>一页纸的《第一性选题诊断合同》+ 第一张五段式案例卡</p></div>
+      <div class="cell"><span class="tag">第三天产物</span><p>一篇 3000 字、带出版质感的黄金样张</p></div>
+    </div>
+  </div>
+  <span class="style-tag">Style: 中文实验字体海报</span>
+</section>
+
+<!-- S4 第一天 -->
+<section class="slide s4">
+  <div class="head">
+    <div class="mono reveal">DAY 1 · 今晚睡前 · 30 分钟</div>
+    <h2 class="reveal">立项<em>第一性三问</em></h2>
+  </div>
+  <div class="steps">
+    <div class="step reveal"><span class="no">1</span><div><h3>打开 T2《第一性选题诊断合同》</h3><p>诚实填完「立项第一性三问」，填不出就不动笔。</p></div><span class="stname decorative">起笔</span></div>
+    <div class="step reveal"><span class="no">2</span><div><h3>建三个空文件夹</h3><p>raw / anchors / chapters —— 你的工程脚手架。</p></div><span class="stname decorative">行笔</span></div>
+    <div class="step reveal"><span class="no">3</span><div><h3>丢入 5 份一手材料</h3><p>人生里最痛、最得意的 5 份原始材料：复盘长文、录音转写、深度访谈。</p></div><span class="stname decorative">行笔</span></div>
+    <div class="step reveal"><span class="no">4</span><div><h3>拆出第一张五段式案例卡</h3><p>起点 → 动作 → 阻力 → 转折 → 结果 + 当事人原话。按 T3 格式。</p></div><span class="stname decorative">收笔</span></div>
+  </div>
+  <span class="style-tag">Style: 中文实验字体海报</span>
+</section>
+
+<!-- S5 第三天 -->
+<section class="slide s5">
+  <div class="head">
+    <div class="mono reveal">DAY 3 · 本周末 · 2 小时</div>
+    <h2 class="reveal">跑出你的<em>黄金样张</em></h2>
+  </div>
+  <div class="steps">
+    <div class="step reveal"><span class="no">1</span><div><h3>挑素材最肥沃的那 1 章</h3><p>按 T4 填满 15 条去重事实锚点 + 心流三推演。</p></div><span class="stname decorative">起笔</span></div>
+    <div class="step reveal"><span class="no">2</span><div><h3>接上你能触达的最强旗舰模型</h3><p>如 Gemini 4.0——长上下文、语感好的那种。</p></div><span class="stname decorative">行笔</span></div>
+    <div class="step reveal"><span class="no">3</span><div><h3>按 T5 的 IPO 批注法起草</h3><p>先出骨架 → 人写批注 → 再合成 3000 字。</p></div><span class="stname decorative">行笔</span></div>
+    <div class="step reveal"><span class="no">4</span><div><h3>确立 Golden Copy</h3><p>逐段精修到出版级手感，这就是全书的语调标杆。</p></div><span class="stname decorative">收笔</span></div>
+  </div>
+  <span class="style-tag">Style: 中文实验字体海报</span>
+</section>
+
+<!-- S6 收束 -->
+<section class="slide s6">
+  <svg class="big qi decorative" viewBox="0 0 600 700">
+    <rect x="80" y="216" width="440" height="64" fill="#E4351E" transform="rotate(-3 300 248)"/>
+    <path d="M300 60 V500 Q300 566 380 566 H500" fill="none" stroke="#0E0E0E" stroke-width="64"/>
+  </svg>
+  <div class="inner">
+    <div class="mono reveal">TONIGHT · 最后一笔</div>
+    <h2 class="reveal">今晚<br><em>就开始</em></h2>
+    <p class="lead2 reveal">选题三问、三个文件夹、五份材料、一张案例卡——30 分钟，你的产线就开机了。然后，让它推着你，把整本书写完。</p>
+    <div class="motto reveal">起草的快，是用素材的慢换来的。<b>手里有粮，心中不慌。</b></div>
+  </div>
+  <span class="style-tag">Style: 中文实验字体海报</span>
+</section>
+
+<div class="keyboard-hint">← → 翻页 · 空格下一页</div>
+<script>
+class SlidePresentation {
+  constructor() {
+    this.slides = document.querySelectorAll('.slide');
+    this.current = 0;
+    this.setupNav();
+    this.setupKeyboard();
+    this.setupTouch();
+    this.setupWheel();
+    this.observe();
+  }
+  setupNav() {
+    const dots = document.getElementById('navDots');
+    this.slides.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.addEventListener('click', () => this.go(i));
+      dots.appendChild(b);
+    });
+    this.dots = dots.children;
+    this.update();
+  }
+  go(i) {
+    this.current = Math.max(0, Math.min(this.slides.length - 1, i));
+    this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
+    this.update();
+  }
+  update() {
+    Array.from(this.dots).forEach((d, i) => d.classList.toggle('active', i === this.current));
+    document.getElementById('progressBar').style.width = ((this.current + 1) / this.slides.length * 100) + '%';
+  }
+  setupKeyboard() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); this.go(this.current + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); this.go(this.current - 1); }
+      if (e.key === 'Home') this.go(0);
+      if (e.key === 'End') this.go(this.slides.length - 1);
+    });
+  }
+  setupTouch() {
+    let y0 = null;
+    document.addEventListener('touchstart', (e) => { y0 = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      if (y0 === null) return;
+      const dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dy) > 40) this.go(this.current + (dy < 0 ? 1 : -1));
+      y0 = null;
+    }, { passive: true });
+  }
+  setupWheel() {
+    let lock = false;
+    document.addEventListener('wheel', (e) => {
+      if (lock) return;
+      lock = true;
+      setTimeout(() => { lock = false; }, 650);
+      if (Math.abs(e.deltaY) < 20) return;
+      this.go(this.current + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+  observe() {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) {
+          en.target.classList.add('visible');
+          this.current = Array.from(this.slides).indexOf(en.target);
+          this.update();
+        }
+      });
+    }, { threshold: 0.6 });
+    this.slides.forEach((s) => io.observe(s));
+  }
+}
+new SlidePresentation();
+</script>
+</body>
+</html>

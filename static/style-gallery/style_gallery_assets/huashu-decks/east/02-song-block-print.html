@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7 天启动你的 AI 写作产线 · 宋刻本版式</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600&family=Noto+Serif+SC:wght@400;600&family=Noto+Sans+SC:wght@500&display=swap" rel="stylesheet">
+<style>
+/* ============ VIEWPORT BASE (MANDATORY) ============ */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+.slide { width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; }
+:root {
+  --title-size: clamp(1.5rem, 5vw, 4rem);
+  --h2-size: clamp(1.25rem, 3.5vw, 2.5rem);
+  --h3-size: clamp(1rem, 2.5vw, 1.75rem);
+  --body-size: clamp(0.75rem, 1.5vw, 1.125rem);
+  --small-size: clamp(0.65rem, 1vw, 0.875rem);
+  --slide-padding: clamp(1rem, 4vw, 4rem);
+  --content-gap: clamp(0.5rem, 2vw, 2rem);
+}
+@media (max-height: 700px) {
+  :root { --slide-padding: clamp(0.75rem, 3vw, 2rem); --content-gap: clamp(0.4rem, 1.5vw, 1rem); --title-size: clamp(1.25rem, 4.5vw, 2.5rem); --h2-size: clamp(1rem, 3vw, 1.75rem); }
+}
+@media (max-height: 600px) {
+  :root { --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem); --content-gap: clamp(0.3rem, 1vw, 0.75rem); --title-size: clamp(1.1rem, 4vw, 2rem); --body-size: clamp(0.7rem, 1.2vw, 0.95rem); }
+  .nav-dots, .keyboard-hint, .decorative { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+  html { scroll-behavior: auto; }
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 4px; background: var(--red); width: 0; z-index: 100; transition: width 0.2s ease; }
+.nav-dots { position: fixed; right: 1rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.6rem; z-index: 100; }
+.nav-dots button { width: 9px; height: 9px; border: 1.5px solid var(--ink); border-radius: 0; background: transparent; cursor: pointer; padding: 0; }
+.nav-dots button.active { background: var(--red); border-color: var(--red); }
+.keyboard-hint { position: fixed; bottom: 0.8rem; left: 50%; transform: translateX(-50%); font-size: var(--small-size); color: rgba(31,27,22,0.45); z-index: 100; font-family: 'Noto Sans SC', sans-serif; }
+.reveal { opacity: 0; translate: 0 22px; transition: opacity 0.5s cubic-bezier(0.16,1,0.3,1), translate 0.5s cubic-bezier(0.16,1,0.3,1); }
+.slide.visible .reveal { opacity: 1; translate: 0 0; }
+.reveal:nth-child(1) { transition-delay: 0.1s; }
+.reveal:nth-child(2) { transition-delay: 0.2s; }
+.reveal:nth-child(3) { transition-delay: 0.3s; }
+.reveal:nth-child(4) { transition-delay: 0.4s; }
+.reveal:nth-child(5) { transition-delay: 0.5s; }
+
+/* ============ PRESET: 宋刻本版式 ============ */
+:root {
+  --desk: #E4D6B0;
+  --leaf: #EDE0BC;
+  --ink: #1F1B16;
+  --red: #B3261E;
+  --gray: #6B5A36;
+}
+body { font-family: 'Noto Serif SC', 'Noto Serif TC', serif; background: var(--desk); color: var(--ink); }
+.slide { align-items: center; justify-content: center; }
+.leaf { position: relative; width: min(1120px, 94vw); height: min(680px, 90vh); background: var(--leaf); box-shadow: inset 0 0 60px rgba(120,90,30,.18); }
+.frame { position: absolute; left: 3rem; right: 3rem; top: 3.4rem; bottom: 3.4rem; border: 2px solid var(--ink); outline: 1px solid var(--ink); outline-offset: 5px; display: flex; }
+.half { flex: 1; display: flex; flex-direction: row-reverse; overflow: hidden; }
+.col { writing-mode: vertical-rl; height: 100%; box-sizing: border-box; border-left: 1px solid var(--ink); font-size: clamp(13px, 2.1vh, 20px); letter-spacing: .1em; line-height: 2.1; padding-top: 0.8em; }
+.half > .col:last-child { border-left: 0; }
+.col.hd { font-weight: 600; font-size: clamp(15px, 2.6vh, 24px); }
+.col .red { color: var(--red); font-weight: 600; }
+em { font-style: normal; text-emphasis: filled circle var(--red); text-emphasis-position: over right; }
+.tc { text-combine-upright: all; }
+/* 中缝 */
+.mid { width: clamp(44px, 6vw, 76px); position: relative; border-left: 1px solid var(--ink); border-right: 1px solid var(--ink); display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+.mid .band { width: 100%; height: 5px; background: var(--ink); margin-top: 3px; }
+.fish { width: 28px; height: 20px; margin-top: 5px; background: var(--ink); clip-path: polygon(0 0,100% 0,50% 100%); }
+.mid .title { writing-mode: vertical-rl; font-size: clamp(13px, 2vh, 19px); letter-spacing: .3em; margin-top: 10px; font-weight: 600; }
+.mid .pn { writing-mode: vertical-rl; font-size: clamp(12px, 1.8vh, 17px); letter-spacing: .2em; margin-top: 1.2em; }
+.fish.dn { clip-path: polygon(50% 0,100% 100%,0 100%); margin-top: auto; margin-bottom: 8px; }
+/* 天头朱批 */
+.zhu { position: absolute; top: 0.45rem; writing-mode: vertical-rl; font: 600 11.5px/1 'Noto Serif SC', serif; color: var(--red); letter-spacing: .08em; }
+.tag { position: absolute; left: 3rem; top: 1.2rem; font: 500 12px 'Noto Sans SC', sans-serif; letter-spacing: .2em; color: var(--gray); }
+.tag2 { position: absolute; right: 3rem; top: 1.2rem; font: 500 12px 'Noto Sans SC', sans-serif; letter-spacing: .2em; color: var(--gray); }
+.seal { position: absolute; right: 4rem; bottom: 1.1rem; width: 32px; height: 32px; background: var(--red); color: var(--leaf); font: 600 17px/32px 'Noto Serif SC', serif; text-align: center; }
+.cap { position: absolute; left: 3rem; bottom: 1.2rem; font: 500 12px 'Noto Sans SC', sans-serif; letter-spacing: .14em; color: var(--gray); }
+.style-tag { position: absolute; bottom: 0.7rem; right: 1rem; font: 400 12px 'Noto Sans SC', sans-serif; color: rgba(31,27,22,0.45); z-index: 5; }
+/* S1 书名叶 */
+.s1 .btitle { writing-mode: vertical-rl; font: 600 clamp(2rem, 8vh, 4.2rem)/1.35 'Noto Serif SC', serif; letter-spacing: .18em; padding: 0.4em 0.3em; }
+.s1 .bsub { writing-mode: vertical-rl; font-size: clamp(13px, 2vh, 18px); letter-spacing: .24em; color: #4A4238; padding-top: 1em; line-height: 2; }
+/* S6 牌记 */
+.s6 .frame { display: block; }
+.s6 .paiji { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); border: 2px solid var(--ink); outline: 1px solid var(--ink); outline-offset: 4px; padding: 1.8em 2.4em; text-align: center; max-width: 70%; }
+.s6 .paiji h2 { font-size: var(--h3-size); letter-spacing: .3em; font-weight: 600; margin-bottom: 0.8em; }
+.s6 .paiji p { font-size: var(--body-size); line-height: 2; text-align: justify; }
+.s6 .paiji .motto { font-weight: 600; margin-top: 0.8em; text-align: center; }
+.s6 .paiji .motto b { color: var(--red); font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- S1 封面 · 书名叶 -->
+<section class="slide s1">
+  <div class="leaf">
+    <div class="tag">AI 写作工程学 · 课后行动版</div><div class="tag2">封面</div>
+    <div class="frame">
+      <div class="half">
+        <div class="btitle reveal">七天啟動你的寫作產線</div>
+      </div>
+      <div class="mid decorative"><div class="band"></div><div class="fish"></div><div class="title">寫作產線</div><div class="pn">一</div><div class="fish dn"></div></div>
+      <div class="half">
+        <div class="bsub reveal">不教背提示詞　教搭一條產線</div>
+        <div class="bsub reveal">能寫書　也能降維寫公眾號與播客稿</div>
+        <div class="bsub reveal">從今晚睡前<span class="tc">30</span>分鐘開始</div>
+        <div class="bsub reveal">范冰 XDash 撰</div>
+      </div>
+    </div>
+    <div class="seal decorative">寫</div>
+    <div class="cap">寫作產線 · 卷一 · 书名叶</div>
+  </div>
+  <span class="style-tag">Style: 宋刻本版式</span>
+</section>
+
+<!-- S2 目录叶 -->
+<section class="slide s2">
+  <div class="leaf">
+    <div class="tag">AI 写作工程学 · 课后行动版</div><div class="tag2">目錄</div>
+    <div class="frame">
+      <div class="half">
+        <div class="col hd reveal"><span class="red">其一</span>　為什麼是七天而不是一年</div>
+        <div class="col reveal">一門課值不值　看七日後手中有無多出之物</div>
+      </div>
+      <div class="mid decorative"><div class="band"></div><div class="fish"></div><div class="title">目錄</div><div class="pn">二</div><div class="fish dn"></div></div>
+      <div class="half">
+        <div class="col hd reveal"><span class="red">其二</span>　第一日　立項第一性三問</div>
+        <div class="col hd reveal"><span class="red">其三</span>　第三日　跑出黃金樣張</div>
+        <div class="col reveal"><span class="red">其四</span>　今晚就開始　三十分鐘開機</div>
+      </div>
+    </div>
+    <div class="seal decorative">目</div>
+    <div class="cap">寫作產線 · 卷一 · 目錄叶</div>
+  </div>
+  <span class="style-tag">Style: 宋刻本版式</span>
+</section>
+
+<!-- S3 为什么 7 天 · 正文叶 -->
+<section class="slide s3">
+  <div class="leaf">
+    <div class="tag">第一章</div><div class="tag2">為什麼是七天</div>
+    <div class="zhu reveal" style="left:24%">朱批 手中有物</div>
+    <div class="zhu reveal" style="right:24%">朱批 步有產物</div>
+    <div class="frame">
+      <div class="half">
+        <div class="col reveal">一門課值不值看的是學員七天後手裡</div>
+        <div class="col reveal">有沒有多出一個<em>能給別人看的東西</em></div>
+        <div class="col reveal">不要宏大口號把動力外包給最小即時</div>
+        <div class="col reveal">反饋每步都有產物每步都能拿出手</div>
+      </div>
+      <div class="mid decorative"><div class="band"></div><div class="fish"></div><div class="title">寫作產線</div><div class="pn">三</div><div class="fish dn"></div></div>
+      <div class="half">
+        <div class="col reveal">第一天產物　一頁紙的第一性選題診</div>
+        <div class="col reveal">斷合同　加第一張五段式案例卡</div>
+        <div class="col reveal">第三天產物　一篇三千字帶出版質感</div>
+        <div class="col reveal">的黃金樣張　那個手感會推著你停不</div>
+        <div class="col reveal">下來地把整本書寫完</div>
+      </div>
+    </div>
+    <div class="seal decorative">七</div>
+    <div class="cap">寫作產線 · 卷一 · 朱筆為批　墨為正文</div>
+  </div>
+  <span class="style-tag">Style: 宋刻本版式</span>
+</section>
+
+<!-- S4 第一天 · 步骤叶 -->
+<section class="slide s4">
+  <div class="leaf">
+    <div class="tag">第二章</div><div class="tag2">第一日 · 今晚睡前 · 30 分鐘</div>
+    <div class="zhu reveal" style="left:30%">朱批 填罷方寫</div>
+    <div class="frame">
+      <div class="half">
+        <div class="col hd reveal"><span class="red">其一</span>　打開 <span class="tc">T2</span> 第一性選題診斷合同</div>
+        <div class="col reveal">誠實填完立項第一性三問填不出就不動筆</div>
+        <div class="col hd reveal"><span class="red">其二</span>　建三個空文件夾</div>
+        <div class="col reveal">raw / anchors / chapters　你的工程腳手架</div>
+      </div>
+      <div class="mid decorative"><div class="band"></div><div class="fish"></div><div class="title">寫作產線</div><div class="pn">四</div><div class="fish dn"></div></div>
+      <div class="half">
+        <div class="col hd reveal"><span class="red">其三</span>　丟入五份一手材料</div>
+        <div class="col reveal">人生最痛最得意的原始材料　復盤長文錄音轉寫深度訪談</div>
+        <div class="col hd reveal"><span class="red">其四</span>　拆出第一張五段式案例卡</div>
+        <div class="col reveal">起點動作阻力轉折結果　加當事人原話　按 <span class="tc">T3</span> 格式</div>
+      </div>
+    </div>
+    <div class="seal decorative">壹</div>
+    <div class="cap">寫作產線 · 卷一 · 第一日功課</div>
+  </div>
+  <span class="style-tag">Style: 宋刻本版式</span>
+</section>
+
+<!-- S5 第三天 · 步骤叶 -->
+<section class="slide s5">
+  <div class="leaf">
+    <div class="tag">第三章</div><div class="tag2">第三日 · 本週末 · 2 小時</div>
+    <div class="zhu reveal" style="left:30%">朱批 先骨後肉</div>
+    <div class="frame">
+      <div class="half">
+        <div class="col hd reveal"><span class="red">其一</span>　挑素材最肥沃的那一章</div>
+        <div class="col reveal">按 <span class="tc">T4</span> 填滿十五條去重事實錨點　加心流三推演</div>
+        <div class="col hd reveal"><span class="red">其二</span>　接上你能觸達的最強旗艦模型</div>
+        <div class="col reveal">長上下文語感好的那種</div>
+      </div>
+      <div class="mid decorative"><div class="band"></div><div class="fish"></div><div class="title">寫作產線</div><div class="pn">五</div><div class="fish dn"></div></div>
+      <div class="half">
+        <div class="col hd reveal"><span class="red">其三</span>　按 <span class="tc">T5</span> 的 IPO 批注法起草</div>
+        <div class="col reveal">先出骨架　人寫批注　再合成三千字</div>
+        <div class="col hd reveal"><span class="red">其四</span>　確立 Golden Copy</div>
+        <div class="col reveal">逐段精修到出版級手感　這就是全書的語調標杆</div>
+      </div>
+    </div>
+    <div class="seal decorative">叁</div>
+    <div class="cap">寫作產線 · 卷一 · 第三日功課</div>
+  </div>
+  <span class="style-tag">Style: 宋刻本版式</span>
+</section>
+
+<!-- S6 收束 · 牌记叶 -->
+<section class="slide s6">
+  <div class="leaf">
+    <div class="tag">卷尾</div><div class="tag2">今晚就開始</div>
+    <div class="frame">
+      <div class="paiji reveal">
+        <h2>牌　記</h2>
+        <p>選題三問、三個文件夾、五份材料、一張案例卡——<span class="tc">30</span> 分鐘，你的產線就開機了。然後，讓它推著你，把整本書寫完。</p>
+        <p class="motto"><b>起草的快，是用素材的慢換來的。</b>手裡有糧，心中不慌。</p>
+      </div>
+    </div>
+    <div class="seal decorative">始</div>
+    <div class="cap">寫作產線 · 卷一終 · 今晚開機</div>
+  </div>
+  <span class="style-tag">Style: 宋刻本版式</span>
+</section>
+
+<div class="keyboard-hint">← → 翻页 · 空格下一页</div>
+<script>
+class SlidePresentation {
+  constructor() {
+    this.slides = document.querySelectorAll('.slide');
+    this.current = 0;
+    this.setupNav();
+    this.setupKeyboard();
+    this.setupTouch();
+    this.setupWheel();
+    this.observe();
+  }
+  setupNav() {
+    const dots = document.getElementById('navDots');
+    this.slides.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.addEventListener('click', () => this.go(i));
+      dots.appendChild(b);
+    });
+    this.dots = dots.children;
+    this.update();
+  }
+  go(i) {
+    this.current = Math.max(0, Math.min(this.slides.length - 1, i));
+    this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
+    this.update();
+  }
+  update() {
+    Array.from(this.dots).forEach((d, i) => d.classList.toggle('active', i === this.current));
+    document.getElementById('progressBar').style.width = ((this.current + 1) / this.slides.length * 100) + '%';
+  }
+  setupKeyboard() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); this.go(this.current + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); this.go(this.current - 1); }
+      if (e.key === 'Home') this.go(0);
+      if (e.key === 'End') this.go(this.slides.length - 1);
+    });
+  }
+  setupTouch() {
+    let y0 = null;
+    document.addEventListener('touchstart', (e) => { y0 = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      if (y0 === null) return;
+      const dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dy) > 40) this.go(this.current + (dy < 0 ? 1 : -1));
+      y0 = null;
+    }, { passive: true });
+  }
+  setupWheel() {
+    let lock = false;
+    document.addEventListener('wheel', (e) => {
+      if (lock) return;
+      lock = true;
+      setTimeout(() => { lock = false; }, 650);
+      if (Math.abs(e.deltaY) < 20) return;
+      this.go(this.current + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+  observe() {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) {
+          en.target.classList.add('visible');
+          this.current = Array.from(this.slides).indexOf(en.target);
+          this.update();
+        }
+      });
+    }, { threshold: 0.6 });
+    this.slides.forEach((s) => io.observe(s));
+  }
+}
+new SlidePresentation();
+</script>
+</body>
+</html>

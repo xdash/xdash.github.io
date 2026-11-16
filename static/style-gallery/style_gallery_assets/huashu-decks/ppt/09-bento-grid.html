@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7 天启动你的 AI 写作产线 · Bento Grid</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;800&family=Geist+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* ============ VIEWPORT BASE (MANDATORY) ============ */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+.slide { width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; }
+:root {
+  --h2-size: clamp(1.3rem, 3.2vw, 2.2rem);
+  --h3-size: clamp(1rem, 2.2vw, 1.5rem);
+  --body-size: clamp(0.75rem, 1.4vw, 1.05rem);
+  --small-size: clamp(0.62rem, 0.95vw, 0.82rem);
+  --slide-padding: clamp(1rem, 4vw, 3.5rem);
+  --content-gap: clamp(0.5rem, 2vh, 1.4rem);
+}
+@media (max-height: 600px) {
+  :root { --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem); --content-gap: clamp(0.3rem, 1vw, 0.7rem); --body-size: clamp(0.68rem, 1.1vw, 0.9rem); }
+  .nav-dots, .keyboard-hint { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+  html { scroll-behavior: auto; }
+}
+
+/* ============ PRESET: BENTO GRID ============ */
+:root {
+  --bg: #F5F5F7;
+  --ink: #1d1d1f;
+  --blue: #0071E3;
+  --dim: #6e6e73;
+  --font-sans: 'Inter', 'Noto Sans SC', sans-serif;
+  --font-mono: 'Geist Mono', monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font-sans); background: var(--bg); color: var(--ink); }
+.slide { background: var(--bg); padding: var(--slide-padding); }
+header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: var(--content-gap); }
+h1 { font-family: 'Noto Sans SC', sans-serif; font-weight: 900; font-size: var(--h2-size); letter-spacing: -0.02em; }
+.sub { font-family: var(--font-mono); font-weight: 500; font-size: var(--small-size); color: var(--dim); letter-spacing: 0.06em; }
+.grid { flex: 1; display: grid; gap: clamp(0.6rem, 1.6vw, 1rem); min-height: 0; }
+.g-cover { grid-template-columns: 1.4fr 1fr 1fr; grid-template-rows: 1.3fr 1fr; grid-template-areas: "a b c" "a d e"; }
+.g-toc { grid-template-columns: repeat(4, 1fr); grid-template-rows: 1fr; }
+.g-why { grid-template-columns: 1fr 1fr; grid-template-rows: 1.2fr 1fr; grid-template-areas: "a a" "b c"; }
+.g-steps { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+.g-end { grid-template-columns: 1.6fr 1fr; grid-template-rows: 1fr 1fr; grid-template-areas: "a b" "a c"; }
+@media (max-width: 700px) { .g-cover, .g-toc, .g-why, .g-steps, .g-end { grid-template-columns: 1fr 1fr; grid-template-areas: none; grid-template-rows: auto; } }
+.k { background: #fff; border-radius: 22px; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.04); padding: clamp(0.8rem, 2vw, 1.4rem); position: relative; overflow: hidden; display: flex; flex-direction: column; }
+.k .l { font-family: var(--font-mono); font-weight: 500; font-size: var(--small-size); color: var(--dim); letter-spacing: 0.08em; }
+.k .v { font-weight: 800; font-size: clamp(1.6rem, 4vw, 2.8rem); letter-spacing: -0.04em; margin-top: 0.3em; font-variant-numeric: tabular-nums; line-height: 1; }
+.k .v small { font-family: 'Noto Sans SC', sans-serif; font-weight: 700; font-size: 0.45em; letter-spacing: 0; margin-left: 0.15em; }
+.k .t { font-family: 'Noto Sans SC', sans-serif; font-weight: 400; font-size: var(--small-size); line-height: 1.55; color: #424245; margin-top: 0.5em; }
+.k .h { font-family: 'Noto Sans SC', sans-serif; font-weight: 900; font-size: var(--h3-size); letter-spacing: -0.01em; margin-top: 0.3em; line-height: 1.35; }
+.k.hero { background: var(--blue); color: #fff; border-color: transparent; }
+.k.hero .l, .k.hero .t { color: rgba(255,255,255,0.88); }
+.k.hero .v { font-size: clamp(3rem, 9vw, 6rem); }
+.k.hero .h { font-size: clamp(1.2rem, 2.8vw, 2rem); }
+.k.dark { background: #1d1d1f; color: #fff; border-color: transparent; }
+.k.dark .l, .k.dark .t { color: rgba(255,255,255,0.7); }
+.area-a { grid-area: a; } .area-b { grid-area: b; } .area-c { grid-area: c; } .area-d { grid-area: d; } .area-e { grid-area: e; }
+.bar { height: 10px; border-radius: 5px; background: #e8e8ed; margin-top: auto; position: relative; }
+.bar i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 5px; background: var(--blue); }
+.dots { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: auto; }
+.dots i { aspect-ratio: 1; border-radius: 50%; background: var(--blue); }
+.dots i.o { background: #e1e1e6; }
+.k svg.spark { position: absolute; left: 0; bottom: 0; width: 100%; }
+.tag { font-family: var(--font-mono); font-weight: 500; font-size: var(--small-size); color: var(--blue); letter-spacing: 0.08em; }
+.style-tag { position: absolute; bottom: clamp(0.6rem, 1.6vh, 1rem); right: var(--slide-padding); font-family: var(--font-mono); font-size: var(--small-size); color: #a1a1a6; z-index: 3; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 5px; background: var(--blue); width: 0; z-index: 100; transition: width 0.2s ease; }
+.nav-dots { position: fixed; right: 1rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.6rem; z-index: 100; }
+.nav-dots button { width: 9px; height: 9px; border: 0; border-radius: 50%; background: #d2d2d7; cursor: pointer; padding: 0; }
+.nav-dots button.active { background: var(--blue); }
+.keyboard-hint { position: fixed; bottom: 1rem; left: 50%; transform: translateX(-50%); font-family: var(--font-mono); font-size: var(--small-size); color: #a1a1a6; z-index: 100; }
+.reveal { opacity: 0; transform: translateY(20px) scale(0.99); transition: opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1); }
+.slide.visible .reveal { opacity: 1; transform: translateY(0) scale(1); }
+.grid .k:nth-child(1) { transition-delay: 0.08s; } .grid .k:nth-child(2) { transition-delay: 0.16s; }
+.grid .k:nth-child(3) { transition-delay: 0.24s; } .grid .k:nth-child(4) { transition-delay: 0.32s; }
+.grid .k:nth-child(5) { transition-delay: 0.4s; }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- S1 封面 -->
+<section class="slide">
+  <header><h1 class="reveal">7 天启动你的 AI 写作产线</h1><span class="sub reveal">AI 写作工程学 · 课后行动版</span></header>
+  <div class="grid g-cover">
+    <div class="k hero area-a reveal"><span class="l">THE PIPELINE</span><div class="v">7<small>天</small></div><div class="h">不教你背提示词，<br>教你搭一条产线。</div><div class="t">能写书，也能降维写公众号和播客稿。从今天睡前 30 分钟开始。</div></div>
+    <div class="k area-b reveal"><span class="l">开机成本</span><div class="v">30<small>min</small></div><div class="t">今晚睡前即可完成立项。</div></div>
+    <div class="k area-c reveal"><span class="l">周末产物</span><div class="v">3000<small>字</small></div><div class="t">出版质感的黄金样张。</div></div>
+    <div class="k area-d reveal"><span class="l">进度可视化</span><div class="dots"><i></i><i></i><i></i><i class="o"></i><i class="o"></i><i class="o"></i><i class="o"></i></div><div class="t">7 天走完 4 个关键节点。</div></div>
+    <div class="k area-e reveal"><span class="l">主讲</span><div class="h">范冰 XDash</div><div class="t">AI 写作工程学</div></div>
+  </div>
+  <span class="style-tag">Style: Bento Grid</span>
+</section>
+
+<!-- S2 目录 -->
+<section class="slide">
+  <header><h1 class="reveal">这 7 天怎么走</h1><span class="sub reveal">AGENDA · 02/06</span></header>
+  <div class="grid g-toc">
+    <div class="k reveal"><span class="l">SECTION 01</span><div class="v">WHY</div><div class="h">为什么是「7 天」而不是「1 年」</div></div>
+    <div class="k reveal"><span class="l">SECTION 02</span><div class="v">D1</div><div class="h">立项第一性三问（30 分钟）</div></div>
+    <div class="k reveal"><span class="l">SECTION 03</span><div class="v">D3</div><div class="h">跑出你的黄金样张（2 小时）</div></div>
+    <div class="k dark reveal"><span class="l">SECTION 04</span><div class="v">GO</div><div class="h">今晚就开始 · 30 分钟开机</div></div>
+  </div>
+  <span class="style-tag">Style: Bento Grid</span>
+</section>
+
+<!-- S3 为什么 7 天 -->
+<section class="slide">
+  <header><h1 class="reveal">为什么是「7 天」而不是「1 年」</h1><span class="sub reveal">WHY · 03/06</span></header>
+  <div class="grid g-why">
+    <div class="k area-a reveal"><span class="l">核心机制</span><div class="h" style="font-size:var(--h2-size)">把动力外包给最小即时反馈</div><div class="t">一门课值不值，看的是学员七天后手里有没有多出一个<strong>能给别人看的东西</strong>。每步都有产物，每步都能拿出手。那个手感，会推着你停不下来地把整本书写完。
+      <svg class="spark" viewBox="0 0 400 60" preserveAspectRatio="none" height="56"><path d="M0 52 L60 46 L120 48 L180 32 L240 36 L300 18 L400 8 L400 60 L0 60Z" fill="#0071E3" opacity=".08"/><path d="M0 52 L60 46 L120 48 L180 32 L240 36 L300 18 L400 8" fill="none" stroke="#0071E3" stroke-width="3"/></svg></div></div>
+    <div class="k area-b reveal"><span class="l">第一天产物</span><div class="h">1 页合同 + 1 张案例卡</div><div class="t">《第一性选题诊断合同》+ 第一张五段式案例卡</div><div class="bar"><i style="width:33%"></i></div></div>
+    <div class="k area-c reveal"><span class="l">第三天产物</span><div class="h">3000 字黄金样张</div><div class="t">带出版质感，全书的语调标杆</div><div class="bar"><i style="width:66%"></i></div></div>
+  </div>
+  <span class="style-tag">Style: Bento Grid</span>
+</section>
+
+<!-- S4 第一天 -->
+<section class="slide">
+  <header><h1 class="reveal">第 1 天 · 立项第一性三问</h1><span class="sub reveal">DAY 1 · 30 MIN</span></header>
+  <div class="grid g-steps">
+    <div class="k reveal"><span class="tag">STEP 01</span><div class="h">打开 T2《第一性选题诊断合同》</div><div class="t">诚实填完「立项第一性三问」，填不出就不动笔。</div></div>
+    <div class="k reveal"><span class="tag">STEP 02</span><div class="h">建三个空文件夹</div><div class="t">raw / anchors / chapters —— 你的工程脚手架。</div></div>
+    <div class="k reveal"><span class="tag">STEP 03</span><div class="h">丢入 5 份一手材料</div><div class="t">人生里最痛、最得意的 5 份原始材料：复盘长文、录音转写、深度访谈。</div></div>
+    <div class="k hero reveal"><span class="tag" style="color:rgba(255,255,255,.85)">STEP 04</span><div class="h">拆出第一张五段式案例卡</div><div class="t">起点 → 动作 → 阻力 → 转折 → 结果 + 当事人原话。按 T3 格式。</div></div>
+  </div>
+  <span class="style-tag">Style: Bento Grid</span>
+</section>
+
+<!-- S5 第三天 -->
+<section class="slide">
+  <header><h1 class="reveal">第 3 天 · 跑出你的黄金样张</h1><span class="sub reveal">DAY 3 · 2 HRS</span></header>
+  <div class="grid g-steps">
+    <div class="k reveal"><span class="tag">STEP 01</span><div class="h">挑素材最肥沃的那 1 章</div><div class="t">按 T4 填满 15 条去重事实锚点 + 心流三推演。</div></div>
+    <div class="k reveal"><span class="tag">STEP 02</span><div class="h">接上你能触达的最强旗舰模型</div><div class="t">如 Gemini 4.0——长上下文、语感好的那种。</div></div>
+    <div class="k reveal"><span class="tag">STEP 03</span><div class="h">按 T5 的 IPO 批注法起草</div><div class="t">先出骨架 → 人写批注 → 再合成 3000 字。</div></div>
+    <div class="k hero reveal"><span class="tag" style="color:rgba(255,255,255,.85)">STEP 04</span><div class="h">确立 Golden Copy</div><div class="t">逐段精修到出版级手感，这就是全书的语调标杆。</div></div>
+  </div>
+  <span class="style-tag">Style: Bento Grid</span>
+</section>
+
+<!-- S6 收束 -->
+<section class="slide">
+  <header><h1 class="reveal">今晚就开始</h1><span class="sub reveal">TONIGHT · 06/06</span></header>
+  <div class="grid g-end">
+    <div class="k hero area-a reveal"><span class="l">GO</span><div class="h">选题三问、三个文件夹、五份材料、一张案例卡——30 分钟，产线开机。</div><div class="t">然后，让它推着你，把整本书写完。</div></div>
+    <div class="k area-b reveal"><span class="l">金句</span><div class="h">起草的快，<br>是用素材的慢换来的。</div></div>
+    <div class="k dark area-c reveal"><span class="l">心态</span><div class="h">手里有粮，<br>心中不慌。</div></div>
+  </div>
+  <span class="style-tag">Style: Bento Grid</span>
+</section>
+
+<div class="keyboard-hint">← → 翻页 · 空格下一页</div>
+<script>
+class SlidePresentation {
+  constructor() {
+    this.slides = document.querySelectorAll('.slide');
+    this.current = 0;
+    this.setupNav();
+    this.setupKeyboard();
+    this.setupTouch();
+    this.setupWheel();
+    this.observe();
+  }
+  setupNav() {
+    const dots = document.getElementById('navDots');
+    this.slides.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.addEventListener('click', () => this.go(i));
+      dots.appendChild(b);
+    });
+    this.dots = dots.children;
+    this.update();
+  }
+  go(i) {
+    this.current = Math.max(0, Math.min(this.slides.length - 1, i));
+    this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
+    this.update();
+  }
+  update() {
+    Array.from(this.dots).forEach((d, i) => d.classList.toggle('active', i === this.current));
+    document.getElementById('progressBar').style.width = ((this.current + 1) / this.slides.length * 100) + '%';
+  }
+  setupKeyboard() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); this.go(this.current + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); this.go(this.current - 1); }
+      if (e.key === 'Home') this.go(0);
+      if (e.key === 'End') this.go(this.slides.length - 1);
+    });
+  }
+  setupTouch() {
+    let y0 = null;
+    document.addEventListener('touchstart', (e) => { y0 = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      if (y0 === null) return;
+      const dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dy) > 40) this.go(this.current + (dy < 0 ? 1 : -1));
+      y0 = null;
+    }, { passive: true });
+  }
+  setupWheel() {
+    let lock = false;
+    document.addEventListener('wheel', (e) => {
+      if (lock) return;
+      lock = true;
+      setTimeout(() => { lock = false; }, 650);
+      if (Math.abs(e.deltaY) < 20) return;
+      this.go(this.current + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+  observe() {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) {
+          en.target.classList.add('visible');
+          this.current = Array.from(this.slides).indexOf(en.target);
+          this.update();
+        }
+      });
+    }, { threshold: 0.6 });
+    this.slides.forEach((s) => io.observe(s));
+  }
+}
+new SlidePresentation();
+</script>
+</body>
+</html>

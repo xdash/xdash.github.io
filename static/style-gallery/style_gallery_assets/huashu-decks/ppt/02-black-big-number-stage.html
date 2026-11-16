@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7 天启动你的 AI 写作产线 · Black Big-Number Stage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ============ VIEWPORT BASE (MANDATORY) ============ */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+.slide { width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; }
+:root {
+  --title-size: clamp(1.5rem, 5vw, 4rem);
+  --h2-size: clamp(1.25rem, 3.5vw, 2.5rem);
+  --h3-size: clamp(1rem, 2.5vw, 1.75rem);
+  --body-size: clamp(0.75rem, 1.5vw, 1.125rem);
+  --small-size: clamp(0.65rem, 1vw, 0.875rem);
+  --slide-padding: clamp(1rem, 4vw, 4rem);
+  --content-gap: clamp(0.5rem, 2vw, 2rem);
+}
+@media (max-height: 700px) {
+  :root { --slide-padding: clamp(0.75rem, 3vw, 2rem); --content-gap: clamp(0.4rem, 1.5vw, 1rem); --title-size: clamp(1.25rem, 4.5vw, 2.5rem); --h2-size: clamp(1rem, 3vw, 1.75rem); }
+}
+@media (max-height: 600px) {
+  :root { --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem); --content-gap: clamp(0.3rem, 1vw, 0.75rem); --title-size: clamp(1.1rem, 4vw, 2rem); --body-size: clamp(0.7rem, 1.2vw, 0.95rem); }
+  .nav-dots, .keyboard-hint, .decorative { display: none; }
+}
+@media (max-height: 500px) {
+  :root { --slide-padding: clamp(0.4rem, 2vw, 1rem); --title-size: clamp(1rem, 3.5vw, 1.5rem); --h2-size: clamp(0.9rem, 2.5vw, 1.25rem); --body-size: clamp(0.65rem, 1vw, 0.85rem); }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+  html { scroll-behavior: auto; }
+}
+
+/* ============ PRESET: BLACK BIG-NUMBER STAGE ============ */
+:root {
+  --bg: #000000;
+  --ink: #ffffff;
+  --accent: #2997FF;
+  --dim: #a1a1a6;
+  --dimmer: #86868b;
+  --font-display: 'Inter', 'Noto Sans SC', sans-serif;
+  --font-body: 'Inter', 'Noto Sans SC', sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font-body); background: var(--bg); color: var(--ink); }
+.slide { background: var(--bg); align-items: center; justify-content: center; text-align: center; padding: var(--slide-padding); }
+.giant { font-weight: 800; font-size: clamp(7rem, 34vh, 19rem); line-height: 0.95; letter-spacing: -0.06em; font-variant-numeric: tabular-nums; }
+.giant .a { color: var(--accent); }
+.giant .unit { font-size: 0.36em; letter-spacing: 0; margin-left: 0.08em; }
+.sub { font-weight: 700; font-size: clamp(1.2rem, 3.4vw, 2.6rem); letter-spacing: 0.02em; margin-top: 0.4em; }
+.sub .a { color: var(--accent); }
+.note { font-weight: 400; font-size: var(--body-size); color: var(--dim); margin-top: 0.8em; max-width: 34em; margin-left: auto; margin-right: auto; line-height: 1.7; }
+.note strong { color: #fff; font-weight: 600; }
+.foot { position: absolute; left: var(--slide-padding); right: var(--slide-padding); bottom: clamp(0.9rem, 2.4vh, 1.6rem); display: flex; justify-content: space-between; font-size: var(--small-size); color: var(--dimmer); letter-spacing: 0.08em; }
+.toc { list-style: none; text-align: left; }
+.toc li { display: flex; align-items: baseline; gap: 1em; padding: 0.55em 0; border-bottom: 1px solid #1d1d1f; }
+.toc li:first-child { border-top: 1px solid #1d1d1f; }
+.toc .no { font-weight: 800; font-size: var(--h3-size); color: var(--accent); font-variant-numeric: tabular-nums; min-width: 2em; }
+.toc .tx { font-weight: 700; font-size: var(--h3-size); }
+.toc .meta { margin-left: auto; font-size: var(--small-size); color: var(--dimmer); }
+.steps { list-style: none; text-align: left; max-width: 44em; margin-top: 1em; }
+.steps li { display: flex; gap: 0.9em; align-items: baseline; padding: 0.45em 0; }
+.steps .no { color: var(--accent); font-weight: 800; font-size: var(--body-size); min-width: 1.6em; }
+.steps .t { font-weight: 700; font-size: var(--body-size); }
+.steps .d { color: var(--dim); font-size: var(--small-size); margin-top: 0.15em; }
+.duo { display: flex; gap: clamp(1rem, 4vw, 3rem); margin-top: 1.2em; }
+.duo .cell { text-align: left; }
+.duo .cell .k { font-size: var(--small-size); color: var(--dimmer); letter-spacing: 0.12em; }
+.duo .cell .v { font-weight: 800; font-size: clamp(1.4rem, 3.6vw, 2.4rem); margin-top: 0.2em; }
+.duo .cell .v .a { color: var(--accent); }
+.style-tag { position: absolute; bottom: clamp(0.7rem, 1.8vh, 1.1rem); right: var(--slide-padding); font-size: var(--small-size); color: #555; z-index: 2; letter-spacing: 0.06em; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 4px; background: var(--accent); width: 0; z-index: 100; transition: width 0.2s ease; }
+.nav-dots { position: fixed; right: 1rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.6rem; z-index: 100; }
+.nav-dots button { width: 9px; height: 9px; border: 1.5px solid #48484a; border-radius: 50%; background: transparent; cursor: pointer; padding: 0; }
+.nav-dots button.active { background: var(--accent); border-color: var(--accent); }
+.keyboard-hint { position: fixed; bottom: 1rem; left: 50%; transform: translateX(-50%); font-size: var(--small-size); color: #48484a; z-index: 100; }
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1); }
+.slide.visible .reveal { opacity: 1; transform: translateY(0); }
+.reveal:nth-child(1) { transition-delay: 0.1s; }
+.reveal:nth-child(2) { transition-delay: 0.25s; }
+.reveal:nth-child(3) { transition-delay: 0.4s; }
+.reveal:nth-child(4) { transition-delay: 0.55s; }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- S1 封面 -->
+<section class="slide">
+  <div>
+    <div class="giant reveal">7<span class="a">天</span></div>
+    <div class="sub reveal">启动你的 AI 写作产线</div>
+    <div class="note reveal">不教你背提示词，教你搭一条能写书、也能降维写公众号和播客稿的产线。—— 范冰 XDash</div>
+  </div>
+  <div class="foot"><span>AI 写作工程学 · 课后行动版</span><span>01</span></div>
+  <span class="style-tag">Style: Black Big-Number Stage</span>
+</section>
+
+<!-- S2 目录 -->
+<section class="slide">
+  <div>
+    <div class="sub reveal" style="margin-bottom:1em">这 7 天<span class="a">怎么走</span></div>
+    <ul class="toc reveal">
+      <li><span class="no">01</span><span class="tx">为什么是「7 天」而不是「1 年」</span><span class="meta">WHY</span></li>
+      <li><span class="no">02</span><span class="tx">第 1 天 · 立项第一性三问</span><span class="meta">30 MIN</span></li>
+      <li><span class="no">03</span><span class="tx">第 3 天 · 跑出你的黄金样张</span><span class="meta">2 HRS</span></li>
+      <li><span class="no">04</span><span class="tx">今晚就开始 · 30 分钟开机</span><span class="meta">GO</span></li>
+    </ul>
+  </div>
+  <div class="foot"><span>AGENDA</span><span>02</span></div>
+  <span class="style-tag">Style: Black Big-Number Stage</span>
+</section>
+
+<!-- S3 为什么 7 天 -->
+<section class="slide">
+  <div>
+    <div class="giant reveal">7<span class="a">/</span>52</div>
+    <div class="sub reveal">为什么是「7 天」而不是「1 年」</div>
+    <div class="note reveal">一门课值不值，看的是学员七天后手里有没有多出一个<strong>能给别人看的东西</strong>。把动力外包给最小即时反馈：每步都有产物，每步都能拿出手。</div>
+    <div class="duo reveal">
+      <div class="cell"><div class="k">第一天产物</div><div class="v">1 页<span class="a">合同</span></div></div>
+      <div class="cell"><div class="k">第三天产物</div><div class="v">3000 字<span class="a">样张</span></div></div>
+    </div>
+  </div>
+  <div class="foot"><span>WHY 7 DAYS</span><span>03</span></div>
+  <span class="style-tag">Style: Black Big-Number Stage</span>
+</section>
+
+<!-- S4 第一天 -->
+<section class="slide">
+  <div>
+    <div class="giant reveal">D<span class="a">1</span></div>
+    <div class="sub reveal">立项第一性三问 · 今晚睡前 30 分钟</div>
+    <ul class="steps reveal">
+      <li><span class="no">01</span><div><div class="t">打开 T2《第一性选题诊断合同》</div><div class="d">诚实填完三问，填不出就不动笔</div></div></li>
+      <li><span class="no">02</span><div><div class="t">建三个空文件夹</div><div class="d">raw / anchors / chapters —— 工程脚手架</div></div></li>
+      <li><span class="no">03</span><div><div class="t">丢入 5 份一手材料</div><div class="d">最痛、最得意的原始材料：复盘、转写、访谈</div></div></li>
+      <li><span class="no">04</span><div><div class="t">拆出第一张五段式案例卡</div><div class="d">起点 → 动作 → 阻力 → 转折 → 结果 + 原话</div></div></li>
+    </ul>
+  </div>
+  <div class="foot"><span>DAY 1</span><span>04</span></div>
+  <span class="style-tag">Style: Black Big-Number Stage</span>
+</section>
+
+<!-- S5 第三天 -->
+<section class="slide">
+  <div>
+    <div class="giant reveal">D<span class="a">3</span></div>
+    <div class="sub reveal">跑出你的黄金样张 · 本周末 2 小时</div>
+    <ul class="steps reveal">
+      <li><span class="no">01</span><div><div class="t">挑素材最肥沃的那 1 章</div><div class="d">按 T4 填满 15 条去重事实锚点</div></div></li>
+      <li><span class="no">02</span><div><div class="t">接上最强旗舰模型</div><div class="d">如 Gemini 4.0——长上下文、语感好的那种</div></div></li>
+      <li><span class="no">03</span><div><div class="t">按 T5 的 IPO 批注法起草</div><div class="d">骨架 → 人写批注 → 合成 3000 字</div></div></li>
+      <li><span class="no">04</span><div><div class="t">确立 Golden Copy</div><div class="d">逐段精修到出版级手感，全书的语调标杆</div></div></li>
+    </ul>
+  </div>
+  <div class="foot"><span>DAY 3</span><span>05</span></div>
+  <span class="style-tag">Style: Black Big-Number Stage</span>
+</section>
+
+<!-- S6 收束 -->
+<section class="slide">
+  <div>
+    <div class="sub reveal" style="font-size:clamp(1.8rem,5.5vw,4rem)">手里有粮，<span class="a">心中不慌。</span></div>
+    <div class="note reveal">起草的快，是用素材的慢换来的。选题三问、三个文件夹、五份材料、一张案例卡——30 分钟，产线开机。然后，让它推着你，把整本书写完。</div>
+  </div>
+  <div class="foot"><span>TONIGHT</span><span>06</span></div>
+  <span class="style-tag">Style: Black Big-Number Stage</span>
+</section>
+
+<div class="keyboard-hint">← → 翻页 · 空格下一页</div>
+<script>
+class SlidePresentation {
+  constructor() {
+    this.slides = document.querySelectorAll('.slide');
+    this.current = 0;
+    this.setupNav();
+    this.setupKeyboard();
+    this.setupTouch();
+    this.setupWheel();
+    this.observe();
+  }
+  setupNav() {
+    const dots = document.getElementById('navDots');
+    this.slides.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.addEventListener('click', () => this.go(i));
+      dots.appendChild(b);
+    });
+    this.dots = dots.children;
+    this.update();
+  }
+  go(i) {
+    this.current = Math.max(0, Math.min(this.slides.length - 1, i));
+    this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
+    this.update();
+  }
+  update() {
+    Array.from(this.dots).forEach((d, i) => d.classList.toggle('active', i === this.current));
+    document.getElementById('progressBar').style.width = ((this.current + 1) / this.slides.length * 100) + '%';
+  }
+  setupKeyboard() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); this.go(this.current + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); this.go(this.current - 1); }
+      if (e.key === 'Home') this.go(0);
+      if (e.key === 'End') this.go(this.slides.length - 1);
+    });
+  }
+  setupTouch() {
+    let y0 = null;
+    document.addEventListener('touchstart', (e) => { y0 = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      if (y0 === null) return;
+      const dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dy) > 40) this.go(this.current + (dy < 0 ? 1 : -1));
+      y0 = null;
+    }, { passive: true });
+  }
+  setupWheel() {
+    let lock = false;
+    document.addEventListener('wheel', (e) => {
+      if (lock) return;
+      lock = true;
+      setTimeout(() => { lock = false; }, 650);
+      if (Math.abs(e.deltaY) < 20) return;
+      this.go(this.current + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+  observe() {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) {
+          en.target.classList.add('visible');
+          this.current = Array.from(this.slides).indexOf(en.target);
+          this.update();
+        }
+      });
+    }, { threshold: 0.6 });
+    this.slides.forEach((s) => io.observe(s));
+  }
+}
+new SlidePresentation();
+</script>
+</body>
+</html>

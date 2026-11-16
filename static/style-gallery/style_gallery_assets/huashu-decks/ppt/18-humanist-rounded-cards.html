@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7 天启动你的 AI 写作产线 · Humanist Rounded Cards</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700;900&family=Noto+Sans+SC:wght@400;500;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============ VIEWPORT BASE (MANDATORY) ============ */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+.slide { width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; }
+:root {
+  --h2-size: clamp(1.4rem, 3.4vw, 2.6rem);
+  --h3-size: clamp(1rem, 2.2vw, 1.5rem);
+  --body-size: clamp(0.75rem, 1.4vw, 1.05rem);
+  --small-size: clamp(0.62rem, 0.95vw, 0.82rem);
+  --slide-padding: clamp(1.2rem, 5vw, 4rem);
+  --content-gap: clamp(0.6rem, 2.4vh, 1.6rem);
+}
+@media (max-height: 600px) {
+  :root { --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem); --content-gap: clamp(0.3rem, 1vw, 0.7rem); --body-size: clamp(0.68rem, 1.1vw, 0.9rem); }
+  .nav-dots, .keyboard-hint, .ph { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+  html { scroll-behavior: auto; }
+}
+
+/* ============ PRESET: HUMANIST ROUNDED CARDS ============ */
+:root {
+  --bg: #FBF6EC;
+  --ink: #21302B;
+  --deep: #0A3D32;
+  --green: #0A5C4B;
+  --green-l: #14BF96;
+  --mint: #D9F2EA;
+  --amber: #F6C453;
+  --orange: #EE9B5B;
+  --blue: #5B8BD6;
+  --font-serif: 'Source Serif 4', 'Noto Serif SC', serif;
+  --font-sans: 'Nunito Sans', 'Noto Sans SC', sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font-sans); background: var(--bg); color: var(--ink); }
+.slide { background: var(--bg); padding: var(--slide-padding); display: flex; flex-direction: column; }
+.head { display: flex; justify-content: space-between; align-items: center; gap: 1em; flex-wrap: wrap; }
+.eyebrow { display: inline-block; background: var(--mint); color: var(--green); border-radius: 999px; padding: 0.45em 1.1em; font-size: var(--small-size); font-weight: 700; }
+.cta { background: var(--green); color: #fff; border-radius: 999px; padding: 0.8em 1.5em; font-size: var(--body-size); font-weight: 700; }
+h1 { font-family: var(--font-serif); font-weight: 700; font-size: var(--h2-size); line-height: 1.3; color: var(--deep); margin-top: 0.5em; max-width: 20em; }
+.lead { font-size: var(--body-size); line-height: 1.75; color: #3E4F49; max-width: 38em; margin-top: 0.8em; }
+.lead strong { color: var(--deep); }
+.stage { flex: 1; display: flex; flex-direction: column; justify-content: center; min-height: 0; }
+.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(0.7rem, 2vw, 1.5rem); margin-top: var(--content-gap); }
+.cards.c4 { grid-template-columns: repeat(4, 1fr); }
+.cards.c2 { grid-template-columns: repeat(2, 1fr); max-width: 46em; }
+@media (max-width: 720px) { .cards, .cards.c4 { grid-template-columns: 1fr 1fr; } }
+.card { background: #fff; border-radius: 26px; padding: clamp(0.8rem, 2vw, 1.3rem); box-shadow: 0 6px 22px rgba(10,61,50,0.10); }
+.card h3 { font-family: var(--font-serif); font-size: var(--h3-size); font-weight: 700; color: var(--deep); line-height: 1.35; }
+.card p { font-size: var(--small-size); line-height: 1.65; color: #4A5B55; margin-top: 0.4em; }
+.card .no { display: inline-flex; align-items: center; justify-content: center; width: 2em; height: 2em; border-radius: 50%; background: var(--mint); color: var(--green); font-weight: 800; font-size: var(--body-size); margin-bottom: 0.6em; }
+.ph { height: clamp(3.5rem, 12vh, 7rem); border-radius: 18px; position: relative; overflow: hidden; margin-bottom: 0.9em; }
+.ph i { position: absolute; border-radius: 50%; }
+.ph.p1 { background: #BFE8DB; } .ph.p1 i:nth-child(1) { width: 55%; aspect-ratio: 1; background: var(--green-l); right: -12%; top: -30%; } .ph.p1 i:nth-child(2) { width: 28%; aspect-ratio: 1; background: var(--amber); left: 14%; top: 30%; }
+.ph.p2 { background: #F9DDBB; } .ph.p2 i:nth-child(1) { width: 60%; aspect-ratio: 1; background: var(--orange); left: -14%; top: 12%; } .ph.p2 i:nth-child(2) { width: 30%; aspect-ratio: 1; background: var(--green); right: 14%; top: -16%; }
+.ph.p3 { background: #D5E3F6; } .ph.p3 i:nth-child(1) { width: 50%; aspect-ratio: 1; background: var(--blue); right: 8%; top: 24%; } .ph.p3 i:nth-child(2) { width: 24%; aspect-ratio: 1; background: var(--amber); left: 12%; top: -14%; }
+.chips { display: flex; gap: 0.5em; flex-wrap: wrap; margin-top: 0.7em; }
+.chips b { font-size: var(--small-size); font-weight: 700; background: #F1ECDF; color: #4B4A3F; border-radius: 999px; padding: 0.3em 0.85em; }
+.chips b.g { background: var(--mint); color: var(--green); }
+.note { background: #FFF1CC; border-radius: 22px; padding: 0.9em 1.2em; font-size: var(--small-size); line-height: 1.6; color: #5A4A12; transform: rotate(1.2deg); max-width: 18em; }
+.note b { font-family: var(--font-serif); font-size: 1.35em; color: #4B3C08; display: block; margin-bottom: 0.2em; }
+.big-quote { font-family: var(--font-serif); font-weight: 700; font-size: clamp(1.5rem, 4vw, 2.8rem); line-height: 1.35; color: var(--deep); }
+.big-quote em { font-style: normal; color: var(--green); }
+.style-tag { position: absolute; bottom: clamp(0.6rem, 1.6vh, 1rem); right: var(--slide-padding); font-size: var(--small-size); color: #B9AE97; z-index: 3; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 5px; background: var(--green); width: 0; z-index: 100; transition: width 0.2s ease; }
+.nav-dots { position: fixed; right: 1rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.6rem; z-index: 100; }
+.nav-dots button { width: 10px; height: 10px; border: 0; border-radius: 50%; background: #DCD2BC; cursor: pointer; padding: 0; }
+.nav-dots button.active { background: var(--green); }
+.keyboard-hint { position: fixed; bottom: 0.9rem; left: 50%; transform: translateX(-50%); font-size: var(--small-size); color: #B9AE97; z-index: 100; }
+.reveal { opacity: 0; transform: translateY(18px) scale(0.99); transition: opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1); }
+.slide.visible .reveal { opacity: 1; transform: translateY(0) scale(1); }
+.reveal:nth-child(1) { transition-delay: 0.08s; }
+.reveal:nth-child(2) { transition-delay: 0.18s; }
+.reveal:nth-child(3) { transition-delay: 0.28s; }
+.reveal:nth-child(4) { transition-delay: 0.38s; }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- S1 封面 -->
+<section class="slide">
+  <div class="head"><span class="eyebrow reveal">AI 写作工程学 · 课后行动版</span><span class="cta reveal">今晚 30 分钟开机</span></div>
+  <div class="stage">
+    <h1 class="reveal">7 天启动你的 AI 写作产线</h1>
+    <p class="lead reveal">不教你背提示词，教你搭一条能写书、也能降维写公众号和播客稿的产线。不用考试，也不用比谁写得快——从今天睡前 30 分钟开始就好。—— 范冰 XDash</p>
+    <div class="cards">
+      <div class="card reveal"><div class="ph p1"><i></i><i></i></div><h3>不背提示词</h3><p>学的是产线，不是咒语。</p><div class="chips"><b class="g">零基础友好</b></div></div>
+      <div class="card reveal"><div class="ph p2"><i></i><i></i></div><h3>每步有产物</h3><p>合同、案例卡、黄金样张。</p><div class="chips"><b class="g">可展示</b><b>即时反馈</b></div></div>
+      <div class="card reveal"><div class="ph p3"><i></i><i></i></div><h3>今晚就开机</h3><p>睡前 30 分钟，四件小事。</p><div class="chips"><b class="g">30 分钟</b><b>无压力</b></div></div>
+    </div>
+  </div>
+  <span class="style-tag">Style: Humanist Rounded Cards</span>
+</section>
+
+<!-- S2 目录 -->
+<section class="slide">
+  <div class="head"><span class="eyebrow reveal">Agenda</span></div>
+  <div class="stage">
+    <h1 class="reveal">这 7 天，我们这样走</h1>
+    <div class="cards c4">
+      <div class="card reveal"><span class="no">1</span><h3>为什么是「7 天」而不是「1 年」</h3><p>聊聊动力这件事。</p><div class="chips"><b>WHY</b></div></div>
+      <div class="card reveal"><span class="no">2</span><h3>第 1 天 · 立项第一性三问</h3><p>睡前 30 分钟就能完成。</p><div class="chips"><b>30 MIN</b></div></div>
+      <div class="card reveal"><span class="no">3</span><h3>第 3 天 · 跑出黄金样张</h3><p>周末抽 2 小时。</p><div class="chips"><b>2 HRS</b></div></div>
+      <div class="card reveal"><span class="no">4</span><h3>今晚就开始</h3><p>30 分钟，产线开机。</p><div class="chips"><b class="g">GO</b></div></div>
+    </div>
+  </div>
+  <span class="style-tag">Style: Humanist Rounded Cards</span>
+</section>
+
+<!-- S3 为什么 7 天 -->
+<section class="slide">
+  <div class="head"><span class="eyebrow reveal">Why 7 Days</span><span class="note reveal deco"><b>小提醒</b>手感比口号更能推着你走。</span></div>
+  <div class="stage">
+    <h1 class="reveal">为什么是「7 天」而不是「1 年」</h1>
+    <p class="lead reveal">一门课值不值，看的是学员七天后手里有没有多出一个<strong>能给别人看的东西</strong>。所以不喊宏大口号，把动力交给最小即时反馈：每步都有产物，每步都能拿出手。</p>
+    <div class="cards c2">
+      <div class="card reveal"><h3>第一天的小成果</h3><p>一页纸的《第一性选题诊断合同》+ 第一张五段式案例卡。</p><div class="chips"><b class="g">今晚就有</b></div></div>
+      <div class="card reveal"><h3>第三天的小成果</h3><p>一篇 3000 字、带出版质感的黄金样张。</p><div class="chips"><b class="g">周末交付</b></div></div>
+    </div>
+    <p class="lead reveal" style="font-weight:700;color:var(--deep)">那个手感，会推着你停不下来地把整本书写完。</p>
+  </div>
+  <span class="style-tag">Style: Humanist Rounded Cards</span>
+</section>
+
+<!-- S4 第一天 -->
+<section class="slide">
+  <div class="head"><span class="eyebrow reveal">Day 1 · 今晚睡前 · 30 分钟</span></div>
+  <div class="stage">
+    <h1 class="reveal">立项第一性三问，四件小事</h1>
+    <div class="cards c4">
+      <div class="card reveal"><span class="no">1</span><h3>打开 T2 诊断合同</h3><p>诚实填完三问，填不出就不动笔。</p><div class="chips"><b>诚实就好</b></div></div>
+      <div class="card reveal"><span class="no">2</span><h3>建三个空文件夹</h3><p>raw / anchors / chapters，你的脚手架。</p><div class="chips"><b>1 分钟</b></div></div>
+      <div class="card reveal"><span class="no">3</span><h3>丢入 5 份一手材料</h3><p>最痛、最得意的：复盘、转写、访谈。</p><div class="chips"><b>你的故事</b></div></div>
+      <div class="card reveal"><span class="no">4</span><h3>拆第一张案例卡</h3><p>起点→动作→阻力→转折→结果+原话。</p><div class="chips"><b class="g">T3 格式</b></div></div>
+    </div>
+  </div>
+  <span class="style-tag">Style: Humanist Rounded Cards</span>
+</section>
+
+<!-- S5 第三天 -->
+<section class="slide">
+  <div class="head"><span class="eyebrow reveal">Day 3 · 本周末 · 2 小时</span></div>
+  <div class="stage">
+    <h1 class="reveal">跑出你的黄金样张</h1>
+    <div class="cards c4">
+      <div class="card reveal"><span class="no">1</span><h3>挑最肥沃的那 1 章</h3><p>按 T4 填满 15 条去重事实锚点。</p><div class="chips"><b>15 锚点</b></div></div>
+      <div class="card reveal"><span class="no">2</span><h3>接上最强旗舰模型</h3><p>长上下文、语感好的那种。</p><div class="chips"><b>Gemini 4.0</b></div></div>
+      <div class="card reveal"><span class="no">3</span><h3>IPO 批注法起草</h3><p>骨架 → 人写批注 → 合成 3000 字。</p><div class="chips"><b>T5</b></div></div>
+      <div class="card reveal"><span class="no">4</span><h3>确立 Golden Copy</h3><p>逐段精修到出版级手感。</p><div class="chips"><b class="g">语调标杆</b></div></div>
+    </div>
+  </div>
+  <span class="style-tag">Style: Humanist Rounded Cards</span>
+</section>
+
+<!-- S6 收束 -->
+<section class="slide">
+  <div class="head"><span class="eyebrow reveal">Tonight · 今晚就开始</span></div>
+  <div class="stage">
+    <p class="big-quote reveal">起草的快，是用<em>素材的慢</em>换来的。</p>
+    <p class="lead reveal">选题三问、三个文件夹、五份材料、一张案例卡——30 分钟，你的产线就开机了。手里有粮，心中不慌。然后，让它推着你，把整本书写完。</p>
+    <div class="cards c2">
+      <div class="card reveal"><h3>今晚的清单</h3><p>三问 · 三文件夹 · 五份材料 · 一张卡。</p><div class="chips"><b class="g">30 分钟</b></div></div>
+      <div class="card reveal"><h3>接下来</h3><p>让手感推着你，把整本书写完。</p><div class="chips"><b class="g">手里有粮</b><b>心中不慌</b></div></div>
+    </div>
+  </div>
+  <span class="style-tag">Style: Humanist Rounded Cards</span>
+</section>
+
+<div class="keyboard-hint">← → 翻页 · 空格下一页</div>
+<script>
+class SlidePresentation {
+  constructor() {
+    this.slides = document.querySelectorAll('.slide');
+    this.current = 0;
+    this.setupNav();
+    this.setupKeyboard();
+    this.setupTouch();
+    this.setupWheel();
+    this.observe();
+  }
+  setupNav() {
+    const dots = document.getElementById('navDots');
+    this.slides.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.addEventListener('click', () => this.go(i));
+      dots.appendChild(b);
+    });
+    this.dots = dots.children;
+    this.update();
+  }
+  go(i) {
+    this.current = Math.max(0, Math.min(this.slides.length - 1, i));
+    this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
+    this.update();
+  }
+  update() {
+    Array.from(this.dots).forEach((d, i) => d.classList.toggle('active', i === this.current));
+    document.getElementById('progressBar').style.width = ((this.current + 1) / this.slides.length * 100) + '%';
+  }
+  setupKeyboard() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); this.go(this.current + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); this.go(this.current - 1); }
+      if (e.key === 'Home') this.go(0);
+      if (e.key === 'End') this.go(this.slides.length - 1);
+    });
+  }
+  setupTouch() {
+    let y0 = null;
+    document.addEventListener('touchstart', (e) => { y0 = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      if (y0 === null) return;
+      const dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dy) > 40) this.go(this.current + (dy < 0 ? 1 : -1));
+      y0 = null;
+    }, { passive: true });
+  }
+  setupWheel() {
+    let lock = false;
+    document.addEventListener('wheel', (e) => {
+      if (lock) return;
+      lock = true;
+      setTimeout(() => { lock = false; }, 650);
+      if (Math.abs(e.deltaY) < 20) return;
+      this.go(this.current + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+  observe() {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) {
+          en.target.classList.add('visible');
+          this.current = Array.from(this.slides).indexOf(en.target);
+          this.update();
+        }
+      });
+    }, { threshold: 0.6 });
+    this.slides.forEach((s) => io.observe(s));
+  }
+}
+new SlidePresentation();
+</script>
+</body>
+</html>

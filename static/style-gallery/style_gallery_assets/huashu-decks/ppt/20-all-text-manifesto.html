@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7 天启动你的 AI 写作产线 · All-Text Manifesto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@400;500;700&family=Newsreader:opsz,wght@6..72,400;6..72,600&display=swap" rel="stylesheet">
+<style>
+/* ============ VIEWPORT BASE (MANDATORY) ============ */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+.slide { width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; }
+:root {
+  --title-size: clamp(1.6rem, 4.6vw, 3.4rem);
+  --h2-size: clamp(1.3rem, 3.4vw, 2.4rem);
+  --body-size: clamp(0.78rem, 1.5vw, 1.1rem);
+  --small-size: clamp(0.62rem, 0.95vw, 0.82rem);
+  --slide-padding: clamp(1.4rem, 7vw, 6rem);
+  --content-gap: clamp(0.6rem, 2.6vh, 1.8rem);
+}
+@media (max-height: 600px) {
+  :root { --slide-padding: clamp(0.6rem, 3vw, 1.6rem); --content-gap: clamp(0.4rem, 1.2vw, 0.9rem); --title-size: clamp(1.3rem, 4vw, 2.2rem); --body-size: clamp(0.7rem, 1.2vw, 0.95rem); }
+  .nav-dots, .keyboard-hint { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+  html { scroll-behavior: auto; }
+}
+
+/* ============ PRESET: ALL-TEXT MANIFESTO ============ */
+:root {
+  --bg: #0A0A0A;
+  --ink: #F2F2F2;
+  --red: #E50914;
+  --grey: #C9C9C9;
+  --dim: #8A8A8A;
+  --font-serif: 'Noto Serif SC', 'Newsreader', serif;
+  --font-sans: 'Noto Sans SC', sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font-serif); background: var(--bg); color: var(--ink); }
+.slide { background: var(--bg); padding: var(--slide-padding); justify-content: center; }
+.q { font-weight: 900; font-size: var(--title-size); line-height: 1.42; letter-spacing: 0.01em; max-width: 20em; }
+.q em { font-style: normal; color: var(--red); }
+.pr { margin-top: var(--content-gap); max-width: 36em; font-size: var(--body-size); line-height: 2; color: var(--grey); font-weight: 400; }
+.pr p + p { margin-top: 0.9em; }
+.pr b { color: #fff; font-weight: 700; border-bottom: 2px solid var(--red); }
+.kicker { font-family: var(--font-sans); font-size: var(--small-size); letter-spacing: 0.2em; color: var(--dim); margin-bottom: var(--content-gap); text-transform: uppercase; }
+.toc { list-style: none; margin-top: var(--content-gap); max-width: 40em; counter-reset: t; }
+.toc li { font-weight: 700; font-size: var(--h2-size); line-height: 1.45; padding: 0.22em 0; counter-increment: t; }
+.toc li::before { content: counter(t, decimal-leading-zero) "　"; color: var(--red); font-weight: 900; }
+.toc li .m { font-family: var(--font-sans); font-weight: 400; font-size: var(--small-size); color: var(--dim); margin-left: 1em; letter-spacing: 0.1em; }
+.ft { position: absolute; left: var(--slide-padding); right: var(--slide-padding); bottom: clamp(0.9rem, 2.6vh, 2rem); display: flex; justify-content: space-between; font-family: var(--font-sans); font-size: var(--small-size); color: var(--dim); letter-spacing: 0.08em; }
+.style-tag { position: absolute; bottom: calc(clamp(0.9rem, 2.6vh, 2rem) + 1.6em); right: var(--slide-padding); font-family: var(--font-sans); font-size: var(--small-size); color: #555; z-index: 3; letter-spacing: 0.06em; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 4px; background: var(--red); width: 0; z-index: 100; transition: width 0.2s ease; }
+.nav-dots { position: fixed; right: 1rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.6rem; z-index: 100; }
+.nav-dots button { width: 8px; height: 8px; border: 1.5px solid #444; border-radius: 50%; background: transparent; cursor: pointer; padding: 0; }
+.nav-dots button.active { background: var(--red); border-color: var(--red); }
+.keyboard-hint { position: fixed; bottom: 0.8rem; left: 50%; transform: translateX(-50%); font-family: var(--font-sans); font-size: var(--small-size); color: #444; z-index: 100; }
+.reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.55s ease, transform 0.55s ease; }
+.slide.visible .reveal { opacity: 1; transform: translateY(0); }
+.reveal:nth-child(1) { transition-delay: 0.1s; }
+.reveal:nth-child(2) { transition-delay: 0.25s; }
+.reveal:nth-child(3) { transition-delay: 0.4s; }
+.reveal:nth-child(4) { transition-delay: 0.55s; }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- S1 封面 -->
+<section class="slide">
+  <div class="kicker reveal">AI 写作工程学 · 课后行动备忘录</div>
+  <h1 class="q reveal">我们只做一件事：<br>用 <em>7 天</em>，启动你的 AI 写作产线。</h1>
+  <div class="pr reveal">
+    <p>不教你背提示词。教你搭一条能写书、也能降维写公众号和播客稿的产线。</p>
+    <p>从<b>今晚睡前 30 分钟</b>开始。—— 范冰 XDash</p>
+  </div>
+  <div class="ft"><span>写作产线备忘录</span><span>1</span></div>
+  <span class="style-tag">Style: All-Text Manifesto</span>
+</section>
+
+<!-- S2 目录 -->
+<section class="slide">
+  <div class="kicker reveal">议程</div>
+  <ol class="toc reveal">
+    <li>为什么是「7 天」而不是「1 年」<span class="m">WHY</span></li>
+    <li>第 1 天 · 立项第一性三问<span class="m">30 分钟</span></li>
+    <li>第 3 天 · 跑出你的黄金样张<span class="m">2 小时</span></li>
+    <li>今晚就开始<span class="m">30 分钟开机</span></li>
+  </ol>
+  <div class="pr reveal" style="margin-top:1.2em"><p>没有图表，没有要点符号。每一节都是一句<b>可以照做的断言</b>。</p></div>
+  <div class="ft"><span>写作产线备忘录</span><span>2</span></div>
+  <span class="style-tag">Style: All-Text Manifesto</span>
+</section>
+
+<!-- S3 为什么 7 天 -->
+<section class="slide">
+  <div class="kicker reveal">动力机制</div>
+  <h1 class="q reveal">一门课值不值，只看一件事：七天后，你手里有没有多出<em>能给别人看的东西</em>。</h1>
+  <div class="pr reveal">
+    <p>所以我们拒绝宏大口号。动力被外包给<b>最小即时反馈</b>：每走一步都有产物，每步产物都能拿出手。</p>
+    <p>第一天，一页纸的《第一性选题诊断合同》加第一张五段式案例卡。第三天，一篇 3000 字、带出版质感的黄金样张。那个手感，会推着你停不下来地把整本书写完。</p>
+  </div>
+  <div class="ft"><span>写作产线备忘录</span><span>3</span></div>
+  <span class="style-tag">Style: All-Text Manifesto</span>
+</section>
+
+<!-- S4 第一天 -->
+<section class="slide">
+  <div class="kicker reveal">第 1 天 · 今晚睡前 · 30 分钟</div>
+  <h1 class="q reveal" style="font-size:var(--h2-size)">立项第一性三问：四件事，做完再睡。</h1>
+  <div class="pr reveal">
+    <p>一，打开 <b>T2《第一性选题诊断合同》</b>，诚实填完三问——填不出，就不动笔。</p>
+    <p>二，建三个空文件夹：raw、anchors、chapters。这是你的工程脚手架。三，丢入 5 份一手材料：人生里最痛、最得意的复盘长文、录音转写、深度访谈。</p>
+    <p>四，按 T3 格式拆出第一张<b>五段式案例卡</b>：起点、动作、阻力、转折、结果，加当事人原话。</p>
+  </div>
+  <div class="ft"><span>写作产线备忘录</span><span>4</span></div>
+  <span class="style-tag">Style: All-Text Manifesto</span>
+</section>
+
+<!-- S5 第三天 -->
+<section class="slide">
+  <div class="kicker reveal">第 3 天 · 本周末 · 2 小时</div>
+  <h1 class="q reveal" style="font-size:var(--h2-size)">跑出你的黄金样张，确立全书的语调标杆。</h1>
+  <div class="pr reveal">
+    <p>挑素材最肥沃的那一章，按 T4 填满 <b>15 条去重事实锚点</b>，做心流三推演。接上你能触达的最强旗舰模型——长上下文、语感好的那种。</p>
+    <p>按 T5 的 <b>IPO 批注法</b>起草：先出骨架，人写批注，再合成 3000 字。然后逐段精修到出版级手感。这就是你的 Golden Copy。</p>
+  </div>
+  <div class="ft"><span>写作产线备忘录</span><span>5</span></div>
+  <span class="style-tag">Style: All-Text Manifesto</span>
+</section>
+
+<!-- S6 收束 -->
+<section class="slide">
+  <div class="kicker reveal">今晚</div>
+  <h1 class="q reveal">起草的快，是用<em>素材的慢</em>换来的。</h1>
+  <div class="pr reveal">
+    <p>选题三问、三个文件夹、五份材料、一张案例卡——30 分钟，你的产线就开机了。</p>
+    <p><b>手里有粮，心中不慌。</b>然后，让它推着你，把整本书写完。</p>
+  </div>
+  <div class="ft"><span>写作产线备忘录 · 完</span><span>6</span></div>
+  <span class="style-tag">Style: All-Text Manifesto</span>
+</section>
+
+<div class="keyboard-hint">← → 翻页 · 空格下一页</div>
+<script>
+class SlidePresentation {
+  constructor() {
+    this.slides = document.querySelectorAll('.slide');
+    this.current = 0;
+    this.setupNav();
+    this.setupKeyboard();
+    this.setupTouch();
+    this.setupWheel();
+    this.observe();
+  }
+  setupNav() {
+    const dots = document.getElementById('navDots');
+    this.slides.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.addEventListener('click', () => this.go(i));
+      dots.appendChild(b);
+    });
+    this.dots = dots.children;
+    this.update();
+  }
+  go(i) {
+    this.current = Math.max(0, Math.min(this.slides.length - 1, i));
+    this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
+    this.update();
+  }
+  update() {
+    Array.from(this.dots).forEach((d, i) => d.classList.toggle('active', i === this.current));
+    document.getElementById('progressBar').style.width = ((this.current + 1) / this.slides.length * 100) + '%';
+  }
+  setupKeyboard() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); this.go(this.current + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); this.go(this.current - 1); }
+      if (e.key === 'Home') this.go(0);
+      if (e.key === 'End') this.go(this.slides.length - 1);
+    });
+  }
+  setupTouch() {
+    let y0 = null;
+    document.addEventListener('touchstart', (e) => { y0 = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      if (y0 === null) return;
+      const dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dy) > 40) this.go(this.current + (dy < 0 ? 1 : -1));
+      y0 = null;
+    }, { passive: true });
+  }
+  setupWheel() {
+    let lock = false;
+    document.addEventListener('wheel', (e) => {
+      if (lock) return;
+      lock = true;
+      setTimeout(() => { lock = false; }, 650);
+      if (Math.abs(e.deltaY) < 20) return;
+      this.go(this.current + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+  observe() {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) {
+          en.target.classList.add('visible');
+          this.current = Array.from(this.slides).indexOf(en.target);
+          this.update();
+        }
+      });
+    }, { threshold: 0.6 });
+    this.slides.forEach((s) => io.observe(s));
+  }
+}
+new SlidePresentation();
+</script>
+</body>
+</html>

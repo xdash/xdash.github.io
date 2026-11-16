@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7 天启动你的 AI 写作产线 · 杉浦康平信息曼荼罗</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;900&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ============ VIEWPORT BASE (MANDATORY) ============ */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+.slide { width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; }
+:root {
+  --title-size: clamp(1.5rem, 5vw, 4rem);
+  --h2-size: clamp(1.25rem, 3.5vw, 2.5rem);
+  --h3-size: clamp(1rem, 2.5vw, 1.75rem);
+  --body-size: clamp(0.75rem, 1.5vw, 1.125rem);
+  --small-size: clamp(0.65rem, 1vw, 0.875rem);
+  --slide-padding: clamp(1rem, 4vw, 4rem);
+  --content-gap: clamp(0.5rem, 2vw, 2rem);
+}
+@media (max-height: 700px) {
+  :root { --slide-padding: clamp(0.75rem, 3vw, 2rem); --content-gap: clamp(0.4rem, 1.5vw, 1rem); --title-size: clamp(1.25rem, 4.5vw, 2.5rem); --h2-size: clamp(1rem, 3vw, 1.75rem); }
+}
+@media (max-height: 600px) {
+  :root { --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem); --content-gap: clamp(0.3rem, 1vw, 0.75rem); --title-size: clamp(1.1rem, 4vw, 2rem); --body-size: clamp(0.7rem, 1.2vw, 0.95rem); }
+  .nav-dots, .keyboard-hint, .decorative { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+  html { scroll-behavior: auto; }
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 4px; background: var(--gold); width: 0; z-index: 100; transition: width 0.2s ease; }
+.nav-dots { position: fixed; right: 1rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.6rem; z-index: 100; }
+.nav-dots button { width: 9px; height: 9px; border: 1.5px solid var(--cream); border-radius: 50%; background: transparent; cursor: pointer; padding: 0; }
+.nav-dots button.active { background: var(--red); border-color: var(--red); }
+.keyboard-hint { position: fixed; bottom: 0.8rem; left: 50%; transform: translateX(-50%); font-size: var(--small-size); color: rgba(237,230,211,0.4); z-index: 100; font-family: 'Noto Sans SC', sans-serif; }
+.reveal { opacity: 0; translate: 0 22px; transition: opacity 0.5s cubic-bezier(0.16,1,0.3,1), translate 0.5s cubic-bezier(0.16,1,0.3,1); }
+.slide.visible .reveal { opacity: 1; translate: 0 0; }
+.reveal:nth-child(1) { transition-delay: 0.1s; }
+.reveal:nth-child(2) { transition-delay: 0.2s; }
+.reveal:nth-child(3) { transition-delay: 0.3s; }
+.reveal:nth-child(4) { transition-delay: 0.4s; }
+.reveal:nth-child(5) { transition-delay: 0.5s; }
+
+/* ============ PRESET: 杉浦康平信息曼荼罗 ============ */
+:root {
+  --bg: #14110E;
+  --cream: #EDE6D3;
+  --gold: #D9A93B;
+  --red: #D8402A;
+  --note: #CFC8B5;
+  --dim: #8F897A;
+}
+body { font-family: 'Noto Sans SC', sans-serif; background: var(--bg); color: var(--cream); }
+.vt { writing-mode: vertical-rl; font-family: 'Noto Serif SC', serif; }
+.vtitle { font: 900 clamp(1.8rem,5vh,3.4rem)/1.15 'Noto Serif SC', serif; color: var(--gold); letter-spacing: .1em; }
+.vsub { font: 500 var(--small-size)/1.8 'Noto Serif SC', serif; letter-spacing: .3em; color: var(--cream); }
+.note { font-size: var(--small-size); line-height: 1.7; color: var(--note); }
+.note b { display: block; font: 700 13px 'Noto Serif SC', serif; color: var(--cream); letter-spacing: .06em; margin-bottom: 2px; }
+.note .rd { color: var(--red); font-weight: 700; letter-spacing: .2em; font-size: 12px; }
+.numdot { display: inline-flex; width: 1.7em; height: 1.7em; border-radius: 50%; background: var(--gold); color: var(--bg); font: 700 0.85em/1 'Noto Sans SC', sans-serif; align-items: center; justify-content: center; flex-shrink: 0; }
+.tb { border-top: 2px solid var(--cream); font: 500 13px/1 'Noto Sans SC', sans-serif; }
+.tb div { display: flex; justify-content: space-between; padding: 0.6em 0; border-bottom: 1px solid rgba(237,230,211,.4); }
+.tb span:last-child { color: var(--gold); }
+.style-tag { position: absolute; bottom: 0.7rem; right: 1rem; font: 400 12px 'Noto Sans SC', sans-serif; color: rgba(237,230,211,0.4); z-index: 5; }
+.fine { font-size: 12px; letter-spacing: .2em; color: var(--dim); }
+/* S1 封面 */
+.s1 .mandala { position: absolute; right: 6%; top: 50%; transform: translateY(-50%); height: 86%; aspect-ratio: 1; }
+.s1 .vt1 { position: absolute; left: 7%; top: 8%; }
+.s1 .vt2 { position: absolute; left: 16%; top: 9%; }
+.s1 .t3 { position: absolute; left: 7%; top: 56%; width: 24%; }
+.s1 .tb { position: absolute; left: 7%; top: 74%; width: 24%; }
+/* S2 目录 */
+.s2 .mandala-s { position: absolute; right: 4%; top: 50%; transform: translateY(-50%); height: 70%; aspect-ratio: 1; opacity: .9; }
+.s2 .list { position: absolute; left: 8%; top: 16%; width: 48%; }
+.s2 .list h2 { font: 900 var(--h2-size)/1.2 'Noto Serif SC', serif; color: var(--gold); margin-bottom: 0.8em; }
+.s2 .item { display: flex; gap: 1em; align-items: flex-start; padding: 0.8em 0; border-bottom: 1px solid rgba(237,230,211,.3); }
+.s2 .item .tx b { display: block; font: 700 var(--body-size)/1.4 'Noto Serif SC', serif; letter-spacing: .04em; }
+.s2 .item .tx span { font-size: var(--small-size); color: var(--note); }
+/* S3 时间距离图 */
+.s3 .vt1 { position: absolute; left: 7%; top: 10%; }
+.s3 .body { position: absolute; left: 20%; top: 12%; width: 34%; font-size: var(--body-size); line-height: 1.9; color: var(--note); }
+.s3 .body strong { color: var(--cream); }
+.s3 .tl { position: absolute; left: 20%; right: 8%; top: 56%; }
+.s3 .tl .l { font: 700 13px 'Noto Sans SC', sans-serif; letter-spacing: .22em; color: var(--red); margin-bottom: 6px; }
+.s3 .note1 { position: absolute; right: 8%; top: 14%; width: 22%; }
+.s3 .note2 { position: absolute; right: 8%; top: 34%; width: 22%; }
+/* S4/S5 步骤 */
+.s4 .vt1, .s5 .vt1 { position: absolute; left: 7%; top: 10%; }
+.s4 .rings, .s5 .rings { position: absolute; right: 6%; top: 50%; transform: translateY(-50%); height: 64%; aspect-ratio: 1; opacity: .55; }
+.s4 .steps, .s5 .steps { position: absolute; left: 20%; top: 14%; width: 46%; }
+.step { display: flex; gap: 1em; align-items: flex-start; padding: 0.75em 0; border-bottom: 1px solid rgba(237,230,211,.3); }
+.step h3 { font: 700 var(--body-size)/1.4 'Noto Serif SC', serif; letter-spacing: .04em; }
+.step p { font-size: var(--small-size); color: var(--note); line-height: 1.7; margin-top: 0.2em; }
+/* S6 收束 */
+.s6 .mandala-c { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); height: 92%; aspect-ratio: 1; }
+.s6 .center { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); text-align: center; width: 34%; }
+.s6 .center h2 { font: 900 var(--h2-size)/1.3 'Noto Serif SC', serif; color: var(--bg); }
+.s6 .center .motto { margin-top: 0.7em; font: 700 var(--small-size)/1.7 'Noto Sans SC', sans-serif; color: var(--bg); }
+.s6 .cap-b { position: absolute; left: 8%; bottom: 8%; width: 30%; }
+.s6 .cap-r { position: absolute; right: 8%; bottom: 8%; width: 26%; text-align: right; }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- S1 封面 -->
+<section class="slide s1">
+  <svg class="mandala decorative" viewBox="0 0 600 600">
+    <circle cx="300" cy="300" r="290" fill="none" stroke="#EDE6D3" stroke-width="1.5"/>
+    <circle cx="300" cy="300" r="272" fill="none" stroke="#EDE6D3" stroke-width="8" stroke-dasharray="1.5 34.1"/>
+    <circle cx="300" cy="300" r="238" fill="none" stroke="#EDE6D3" stroke-width="1"/>
+    <circle cx="300" cy="300" r="238" fill="none" stroke="#D9A93B" stroke-width="26" stroke-dasharray="180 1315" transform="rotate(-90 300 300)"/>
+    <circle cx="300" cy="300" r="238" fill="none" stroke="#D8402A" stroke-width="26" stroke-dasharray="120 1375" transform="rotate(40 300 300)"/>
+    <circle cx="300" cy="300" r="238" fill="none" stroke="#EDE6D3" stroke-width="26" stroke-dasharray="150 1345" transform="rotate(150 300 300)"/>
+    <circle cx="300" cy="300" r="190" fill="none" stroke="#EDE6D3" stroke-width="1"/>
+    <circle cx="300" cy="300" r="150" fill="none" stroke="#EDE6D3" stroke-width="1.5"/>
+    <circle cx="300" cy="300" r="165" fill="none" stroke="#EDE6D3" stroke-width="22" stroke-dasharray="4 82.3"/>
+    <circle cx="300" cy="300" r="108" fill="#EDE6D3"/>
+    <g stroke="#14110E" stroke-width="1.5" fill="none"><circle cx="300" cy="300" r="86"/><circle cx="300" cy="300" r="58"/><line x1="192" y1="300" x2="408" y2="300"/><line x1="300" y1="192" x2="300" y2="408"/><line x1="224" y1="224" x2="376" y2="376"/><line x1="376" y1="224" x2="224" y2="376"/></g>
+    <circle cx="300" cy="300" r="34" fill="#D8402A"/>
+    <text x="300" y="301" text-anchor="middle" dominant-baseline="central" font-family="Noto Serif SC" font-weight="900" font-size="26" fill="#EDE6D3">写</text>
+  </svg>
+  <div class="vt vt1 vtitle reveal">七天啟動寫作產線</div>
+  <div class="vt vt2 vsub reveal">AI 寫作工程學 · 課後行動版<br>范冰 XDash</div>
+  <div class="t3 note reveal"><b class="rd">一年之盘 · 七天之轮</b>不教你背提示词，教你搭一条能写书、也能降维写公众号和播客稿的产线。从今天睡前 30 分钟开始。</div>
+  <div class="tb reveal"><div><span>周期</span><span>7 天</span></div><div><span>开机</span><span>30 分钟</span></div><div><span>样张</span><span>3000 字</span></div><div><span>产物</span><span>每步一件</span></div></div>
+  <span class="style-tag">Style: 杉浦康平信息曼荼罗</span>
+</section>
+
+<!-- S2 目录 -->
+<section class="slide s2">
+  <svg class="mandala-s decorative" viewBox="0 0 600 600">
+    <circle cx="300" cy="300" r="280" fill="none" stroke="#EDE6D3" stroke-width="1"/>
+    <circle cx="300" cy="300" r="230" fill="none" stroke="#EDE6D3" stroke-width="1"/>
+    <circle cx="300" cy="300" r="230" fill="none" stroke="#D9A93B" stroke-width="22" stroke-dasharray="240 1205" transform="rotate(-70 300 300)"/>
+    <circle cx="300" cy="300" r="150" fill="none" stroke="#EDE6D3" stroke-width="1.5"/>
+    <circle cx="300" cy="300" r="100" fill="#EDE6D3"/>
+    <circle cx="300" cy="300" r="32" fill="#D8402A"/>
+    <text x="300" y="301" text-anchor="middle" dominant-baseline="central" font-family="Noto Serif SC" font-weight="900" font-size="24" fill="#EDE6D3">目</text>
+  </svg>
+  <div class="list">
+    <h2 class="reveal">目录 · 四环</h2>
+    <div class="item reveal"><span class="numdot">1</span><div class="tx"><b>为什么是「7 天」而不是「1 年」</b><span>反馈周期 · 最小即时反馈</span></div></div>
+    <div class="item reveal"><span class="numdot">2</span><div class="tx"><b>第 1 天 · 立项第一性三问</b><span>今晚睡前 · 30 分钟</span></div></div>
+    <div class="item reveal"><span class="numdot">3</span><div class="tx"><b>第 3 天 · 跑出你的黄金样张</b><span>本周末 · 2 小时</span></div></div>
+    <div class="item reveal"><span class="numdot">4</span><div class="tx"><b>今晚就开始 · 30 分钟开机</b><span>卷尾</span></div></div>
+  </div>
+  <span class="style-tag">Style: 杉浦康平信息曼荼罗</span>
+</section>
+
+<!-- S3 为什么 7 天 · 时间距离图 -->
+<section class="slide s3">
+  <div class="vt vt1 vtitle reveal">為什麼是七天</div>
+  <div class="body reveal">一门课值不值，看的是学员七天后手里有没有多出一个<strong>能给别人看的东西</strong>。不要宏大口号，把动力外包给最小即时反馈：每步都有产物，每步都能拿出手。那个手感，会推着你停不下来地把整本书写完。</div>
+  <div class="note note1 reveal"><b>① 第一天产物</b>一页纸的《第一性选题诊断合同》+ 第一张五段式案例卡。</div>
+  <div class="note note2 reveal"><b>② 第三天产物</b>一篇 3000 字、带出版质感的黄金样张。</div>
+  <div class="tl reveal">
+    <div class="l">时间距离图 · 七天</div>
+    <svg width="100%" height="92" viewBox="-36 0 762 92" preserveAspectRatio="none">
+      <line x1="20" y1="50" x2="700" y2="50" stroke="#EDE6D3" stroke-width="1.5"/>
+      <g fill="#EDE6D3"><circle cx="20" cy="50" r="5"/><circle cx="213" cy="50" r="5"/><circle cx="407" cy="50" r="5"/><circle cx="700" cy="50" r="5"/></g>
+      <circle cx="310" cy="50" r="9" fill="#D8402A"/>
+      <g font-family="Noto Sans SC" font-size="13" fill="#EDE6D3" text-anchor="middle"><text x="20" y="30">第 1 天</text><text x="213" y="30">第 2 天</text><text x="310" y="30" fill="#D8402A" font-weight="700">第 3 天</text><text x="407" y="30">第 4 天</text><text x="692" y="30">第 7 天</text></g>
+      <g font-family="Noto Sans SC" font-size="13" fill="#CFC8B5" text-anchor="middle"><text x="20" y="76">立项三问</text><text x="213" y="76">素材</text><text x="310" y="76" fill="#D9A93B">黄金样张</text><text x="407" y="76">精修</text><text x="692" y="76">成书节奏</text></g>
+    </svg>
+  </div>
+  <span class="style-tag">Style: 杉浦康平信息曼荼罗</span>
+</section>
+
+<!-- S4 第一天 -->
+<section class="slide s4">
+  <div class="vt vt1 vtitle reveal">第一日 · 立項三問</div>
+  <svg class="rings decorative" viewBox="0 0 600 600">
+    <circle cx="300" cy="300" r="280" fill="none" stroke="#EDE6D3" stroke-width="1"/>
+    <circle cx="300" cy="300" r="215" fill="none" stroke="#D9A93B" stroke-width="20" stroke-dasharray="300 1051" transform="rotate(-30 300 300)"/>
+    <circle cx="300" cy="300" r="150" fill="none" stroke="#EDE6D3" stroke-width="1"/>
+    <circle cx="300" cy="300" r="90" fill="none" stroke="#EDE6D3" stroke-width="1.5"/>
+    <circle cx="300" cy="300" r="30" fill="#D8402A"/>
+  </svg>
+  <div class="steps">
+    <div class="step reveal"><span class="numdot">1</span><div><h3>打开 T2《第一性选题诊断合同》</h3><p>诚实填完「立项第一性三问」，填不出就不动笔。</p></div></div>
+    <div class="step reveal"><span class="numdot">2</span><div><h3>建三个空文件夹</h3><p>raw / anchors / chapters —— 你的工程脚手架。</p></div></div>
+    <div class="step reveal"><span class="numdot">3</span><div><h3>丢入 5 份一手材料</h3><p>人生里最痛、最得意的 5 份原始材料：复盘长文、录音转写、深度访谈。</p></div></div>
+    <div class="step reveal"><span class="numdot">4</span><div><h3>拆出第一张五段式案例卡</h3><p>起点 → 动作 → 阻力 → 转折 → 结果 + 当事人原话。按 T3 格式。</p></div></div>
+  </div>
+  <div class="fine" style="position:absolute;left:20%;bottom:8%">DAY 1 · 今晚睡前 · 30 分钟</div>
+  <span class="style-tag">Style: 杉浦康平信息曼荼罗</span>
+</section>
+
+<!-- S5 第三天 -->
+<section class="slide s5">
+  <div class="vt vt1 vtitle reveal">第三日 · 黃金樣張</div>
+  <svg class="rings decorative" viewBox="0 0 600 600">
+    <circle cx="300" cy="300" r="280" fill="none" stroke="#EDE6D3" stroke-width="1"/>
+    <circle cx="300" cy="300" r="215" fill="none" stroke="#D8402A" stroke-width="20" stroke-dasharray="300 1051" transform="rotate(120 300 300)"/>
+    <circle cx="300" cy="300" r="150" fill="none" stroke="#EDE6D3" stroke-width="1"/>
+    <circle cx="300" cy="300" r="90" fill="none" stroke="#EDE6D3" stroke-width="1.5"/>
+    <circle cx="300" cy="300" r="30" fill="#D9A93B"/>
+  </svg>
+  <div class="steps">
+    <div class="step reveal"><span class="numdot">1</span><div><h3>挑素材最肥沃的那 1 章</h3><p>按 T4 填满 15 条去重事实锚点 + 心流三推演。</p></div></div>
+    <div class="step reveal"><span class="numdot">2</span><div><h3>接上你能触达的最强旗舰模型</h3><p>如 Gemini 4.0——长上下文、语感好的那种。</p></div></div>
+    <div class="step reveal"><span class="numdot">3</span><div><h3>按 T5 的 IPO 批注法起草</h3><p>先出骨架 → 人写批注 → 再合成 3000 字。</p></div></div>
+    <div class="step reveal"><span class="numdot">4</span><div><h3>确立 Golden Copy</h3><p>逐段精修到出版级手感，这就是全书的语调标杆。</p></div></div>
+  </div>
+  <div class="fine" style="position:absolute;left:20%;bottom:8%">DAY 3 · 本周末 · 2 小时</div>
+  <span class="style-tag">Style: 杉浦康平信息曼荼罗</span>
+</section>
+
+<!-- S6 收束 -->
+<section class="slide s6">
+  <svg class="mandala-c decorative" viewBox="0 0 600 600">
+    <circle cx="300" cy="300" r="292" fill="none" stroke="#EDE6D3" stroke-width="1.5"/>
+    <circle cx="300" cy="300" r="274" fill="none" stroke="#EDE6D3" stroke-width="6" stroke-dasharray="1.5 35"/>
+    <circle cx="300" cy="300" r="240" fill="none" stroke="#D9A93B" stroke-width="22" stroke-dasharray="380 1128" transform="rotate(-90 300 300)"/>
+    <circle cx="300" cy="300" r="240" fill="none" stroke="#D8402A" stroke-width="22" stroke-dasharray="380 1128" transform="rotate(90 300 300)"/>
+    <circle cx="300" cy="300" r="196" fill="none" stroke="#EDE6D3" stroke-width="1"/>
+    <circle cx="300" cy="300" r="160" fill="#EDE6D3"/>
+    <g stroke="#14110E" stroke-width="1.5" fill="none"><circle cx="300" cy="300" r="128"/><line x1="140" y1="300" x2="460" y2="300"/><line x1="300" y1="140" x2="300" y2="460"/></g>
+  </svg>
+  <div class="center reveal">
+    <h2>今晚就开始</h2>
+    <p class="motto">起草的快，是用素材的慢换来的。<br>手里有粮，心中不慌。</p>
+  </div>
+  <div class="note cap-b reveal"><b class="rd">卷尾 · 开机</b>选题三问、三个文件夹、五份材料、一张案例卡——30 分钟，你的产线就开机了。</div>
+  <div class="note cap-r reveal"><b>然后</b>让它推着你，把整本书写完。</div>
+  <span class="style-tag">Style: 杉浦康平信息曼荼罗</span>
+</section>
+
+<div class="keyboard-hint">← → 翻页 · 空格下一页</div>
+<script>
+class SlidePresentation {
+  constructor() {
+    this.slides = document.querySelectorAll('.slide');
+    this.current = 0;
+    this.setupNav();
+    this.setupKeyboard();
+    this.setupTouch();
+    this.setupWheel();
+    this.observe();
+  }
+  setupNav() {
+    const dots = document.getElementById('navDots');
+    this.slides.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.addEventListener('click', () => this.go(i));
+      dots.appendChild(b);
+    });
+    this.dots = dots.children;
+    this.update();
+  }
+  go(i) {
+    this.current = Math.max(0, Math.min(this.slides.length - 1, i));
+    this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
+    this.update();
+  }
+  update() {
+    Array.from(this.dots).forEach((d, i) => d.classList.toggle('active', i === this.current));
+    document.getElementById('progressBar').style.width = ((this.current + 1) / this.slides.length * 100) + '%';
+  }
+  setupKeyboard() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); this.go(this.current + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); this.go(this.current - 1); }
+      if (e.key === 'Home') this.go(0);
+      if (e.key === 'End') this.go(this.slides.length - 1);
+    });
+  }
+  setupTouch() {
+    let y0 = null;
+    document.addEventListener('touchstart', (e) => { y0 = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      if (y0 === null) return;
+      const dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dy) > 40) this.go(this.current + (dy < 0 ? 1 : -1));
+      y0 = null;
+    }, { passive: true });
+  }
+  setupWheel() {
+    let lock = false;
+    document.addEventListener('wheel', (e) => {
+      if (lock) return;
+      lock = true;
+      setTimeout(() => { lock = false; }, 650);
+      if (Math.abs(e.deltaY) < 20) return;
+      this.go(this.current + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+  observe() {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) {
+          en.target.classList.add('visible');
+          this.current = Array.from(this.slides).indexOf(en.target);
+          this.update();
+        }
+      });
+    }, { threshold: 0.6 });
+    this.slides.forEach((s) => io.observe(s));
+  }
+}
+new SlidePresentation();
+</script>
+</body>
+</html>

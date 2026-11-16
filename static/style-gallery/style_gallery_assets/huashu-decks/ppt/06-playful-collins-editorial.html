@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7 天启动你的 AI 写作产线 · Playful Collins Editorial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,700..900,100&family=Noto+Serif+SC:wght@500;900&family=Inter:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* ============ VIEWPORT BASE (MANDATORY) ============ */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+.slide { width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; }
+:root {
+  --h2-size: clamp(1.25rem, 3.2vw, 2.3rem);
+  --h3-size: clamp(1rem, 2.4vw, 1.6rem);
+  --body-size: clamp(0.75rem, 1.5vw, 1.1rem);
+  --small-size: clamp(0.65rem, 1vw, 0.875rem);
+  --slide-padding: clamp(1.2rem, 5vw, 4rem);
+  --content-gap: clamp(0.5rem, 2vw, 1.6rem);
+}
+@media (max-height: 600px) {
+  :root { --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem); --content-gap: clamp(0.3rem, 1vw, 0.75rem); --body-size: clamp(0.7rem, 1.2vw, 0.95rem); }
+  .nav-dots, .keyboard-hint, .deco { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+  html { scroll-behavior: auto; }
+}
+
+/* ============ PRESET: PLAYFUL COLLINS EDITORIAL ============ */
+:root {
+  --yellow: #FFE01B;
+  --ink: #111111;
+  --red: #E8472B;
+  --blue: #2B6BFF;
+  --font-serif: 'Noto Serif SC', 'Fraunces', serif;
+  --font-display: 'Fraunces', 'Noto Serif SC', serif;
+  --font-sans: 'Inter', 'Noto Serif SC', sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font-sans); background: var(--yellow); color: var(--ink); }
+.slide { background: var(--yellow); padding: var(--slide-padding); }
+.kick { font-family: var(--font-sans); font-weight: 700; font-size: var(--small-size); letter-spacing: 0.12em; }
+h1 { font-family: var(--font-serif); font-weight: 900; font-size: clamp(2.2rem, 8vw, 5.6rem); line-height: 1.1; letter-spacing: -0.02em; margin-top: 0.4em; }
+h1 em { font-style: normal; display: inline-block; transform: rotate(-3deg); background: var(--ink); color: var(--yellow); padding: 0 0.25em; margin-left: 0.1em; }
+h2 { font-family: var(--font-serif); font-weight: 900; font-size: var(--h2-size); line-height: 1.2; margin-top: 0.3em; }
+h2 em { font-style: normal; display: inline-block; transform: rotate(-2deg); background: var(--ink); color: var(--yellow); padding: 0 0.25em; }
+.sub { font-family: var(--font-serif); font-weight: 500; font-size: var(--body-size); line-height: 1.7; max-width: 26em; margin-top: var(--content-gap); }
+.stage { flex: 1; display: flex; flex-direction: column; justify-content: center; min-height: 0; position: relative; z-index: 1; }
+.note { position: absolute; background: #fff; border: 3px solid var(--ink); padding: 0.6em 1em; font-family: var(--font-serif); font-weight: 700; font-size: var(--small-size); line-height: 1.4; transform: rotate(3deg); z-index: 2; }
+.bigno { font-family: var(--font-display); font-weight: 900; font-size: clamp(4rem, 16vh, 9rem); line-height: 1; letter-spacing: -0.04em; }
+.sq { display: inline-flex; align-items: center; justify-content: center; width: 1.6em; height: 1.6em; background: var(--ink); transform: rotate(-6deg); }
+.sq i { font-family: var(--font-display); font-style: normal; font-weight: 900; color: var(--yellow); font-size: 0.9em; transform: rotate(6deg); }
+.wave { display: block; margin-top: var(--content-gap); }
+.toc { list-style: none; margin-top: var(--content-gap); display: flex; flex-direction: column; gap: 0.55em; }
+.toc li { display: flex; align-items: center; gap: 0.9em; }
+.toc .no { flex-shrink: 0; }
+.toc .tx { font-family: var(--font-serif); font-weight: 900; font-size: var(--h3-size); border-bottom: 4px solid var(--ink); padding-bottom: 0.15em; }
+.toc li:nth-child(odd) .tx { transform: rotate(-0.6deg); }
+.toc li:nth-child(even) .tx { transform: rotate(0.7deg); }
+.toc .meta { font-family: var(--font-sans); font-weight: 700; font-size: var(--small-size); background: #fff; border: 2px solid var(--ink); padding: 0.15em 0.6em; transform: rotate(2deg); }
+.steps { display: flex; flex-direction: column; gap: 0.6em; margin-top: var(--content-gap); max-width: 44em; }
+.step { display: flex; gap: 0.9em; align-items: flex-start; }
+.step .no { font-family: var(--font-display); font-weight: 900; font-size: var(--h2-size); line-height: 1; color: var(--red); flex-shrink: 0; }
+.step .t { font-family: var(--font-serif); font-weight: 900; font-size: var(--body-size); }
+.step .d { font-family: var(--font-serif); font-weight: 500; font-size: var(--small-size); line-height: 1.6; margin-top: 0.15em; }
+.duo { display: flex; gap: 1em; margin-top: var(--content-gap); flex-wrap: wrap; }
+.duo .cell { background: #fff; border: 3px solid var(--ink); padding: 0.8em 1.1em; max-width: 20em; }
+.duo .cell:nth-child(1) { transform: rotate(-1.2deg); }
+.duo .cell:nth-child(2) { transform: rotate(1.4deg); }
+.duo .k { font-family: var(--font-sans); font-weight: 700; font-size: var(--small-size); letter-spacing: 0.1em; color: var(--red); }
+.duo p { font-family: var(--font-serif); font-weight: 500; font-size: var(--small-size); line-height: 1.6; margin-top: 0.4em; }
+.blob { position: absolute; z-index: 0; pointer-events: none; }
+.blob.red { width: clamp(6rem, 18vw, 13rem); height: clamp(6rem, 18vw, 13rem); border-radius: 50%; background: var(--red); right: 8%; top: 8%; }
+.blob.blue { width: clamp(5rem, 14vw, 10rem); height: clamp(2.5rem, 7vw, 5rem); border-radius: 10rem 10rem 0 0; background: var(--blue); right: 22%; bottom: 12%; transform: rotate(12deg); }
+.style-tag { position: absolute; bottom: clamp(0.7rem, 1.8vh, 1.1rem); right: var(--slide-padding); font-family: var(--font-sans); font-size: var(--small-size); color: rgba(17,17,17,0.55); z-index: 3; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 6px; background: var(--ink); width: 0; z-index: 100; transition: width 0.2s ease; }
+.nav-dots { position: fixed; right: 1rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.6rem; z-index: 100; }
+.nav-dots button { width: 11px; height: 11px; border: 2.5px solid var(--ink); border-radius: 50%; background: transparent; cursor: pointer; padding: 0; }
+.nav-dots button.active { background: var(--ink); }
+.keyboard-hint { position: fixed; bottom: 1rem; left: 50%; transform: translateX(-50%); font-family: var(--font-sans); font-size: var(--small-size); color: rgba(17,17,17,0.45); z-index: 100; }
+.reveal { opacity: 0; transform: translateY(22px) rotate(-0.5deg); transition: opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1); }
+.slide.visible .reveal { opacity: 1; transform: translateY(0); }
+.reveal:nth-child(1) { transition-delay: 0.1s; }
+.reveal:nth-child(2) { transition-delay: 0.22s; }
+.reveal:nth-child(3) { transition-delay: 0.34s; }
+.reveal:nth-child(4) { transition-delay: 0.46s; }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- S1 封面 -->
+<section class="slide">
+  <i class="blob red deco"></i><i class="blob blue deco"></i>
+  <div class="stage">
+    <span class="kick reveal">AI 写作工程学 · 课后行动版 / 第 1 稿</span>
+    <h1 class="reveal">7 天启动<br>你的 <em>写作产线</em></h1>
+    <p class="sub reveal">不教你背提示词，教你搭一条能写书、也能降维写公众号和播客稿的产线。从今天睡前 30 分钟开始。—— 范冰 XDash</p>
+    <svg class="wave reveal deco" width="320" height="36" viewBox="0 0 360 40"><path d="M2 20 Q 22 2 42 20 T 82 20 T 122 20 T 162 20 T 202 20 T 242 20 T 282 20 T 322 20 T 358 20" fill="none" stroke="#111" stroke-width="5" stroke-linecap="round"/></svg>
+  </div>
+  <span class="note deco" style="right:6%;bottom:10%">本页没有<br>速成秘诀。故意的。</span>
+  <span class="style-tag">Style: Playful Collins Editorial</span>
+</section>
+
+<!-- S2 目录 -->
+<section class="slide">
+  <div class="stage">
+    <span class="kick reveal">Agenda</span>
+    <h2 class="reveal">这 7 天<em>怎么走</em></h2>
+    <ul class="toc reveal">
+      <li><span class="no sq"><i>1</i></span><span class="tx">为什么是「7 天」而不是「1 年」</span><span class="meta">WHY</span></li>
+      <li><span class="no sq"><i>2</i></span><span class="tx">第 1 天 · 立项第一性三问</span><span class="meta">30 MIN</span></li>
+      <li><span class="no sq"><i>3</i></span><span class="tx">第 3 天 · 跑出你的黄金样张</span><span class="meta">2 HRS</span></li>
+      <li><span class="no sq"><i>4</i></span><span class="tx">今晚就开始 · 30 分钟开机</span><span class="meta">GO</span></li>
+    </ul>
+  </div>
+  <span class="style-tag">Style: Playful Collins Editorial</span>
+</section>
+
+<!-- S3 为什么 7 天 -->
+<section class="slide">
+  <i class="blob blue deco" style="top:12%;bottom:auto"></i>
+  <div class="stage">
+    <span class="kick reveal">Why 7 Days</span>
+    <h2 class="reveal">为什么是「7 天」，<br>不是<em>「1 年」</em>？</h2>
+    <p class="sub reveal">一门课值不值，看的是学员七天后手里有没有多出一个能给别人看的东西。不要宏大口号，把动力外包给最小即时反馈：每步都有产物，每步都能拿出手。</p>
+    <div class="duo reveal">
+      <div class="cell"><span class="k">第一天产物</span><p>一页纸的《第一性选题诊断合同》+ 第一张五段式案例卡</p></div>
+      <div class="cell"><span class="k">第三天产物</span><p>一篇 3000 字、带出版质感的黄金样张</p></div>
+    </div>
+    <p class="sub reveal" style="font-weight:900">那个手感，会推着你停不下来地把整本书写完。</p>
+  </div>
+  <span class="note deco" style="right:5%;top:10%;transform:rotate(-4deg)">7 ÷ 365<br>= 立刻开始</span>
+  <span class="style-tag">Style: Playful Collins Editorial</span>
+</section>
+
+<!-- S4 第一天 -->
+<section class="slide">
+  <div class="stage">
+    <span class="kick reveal">Day 1 · 今晚睡前 · 30 分钟</span>
+    <h2 class="reveal">立项<em>第一性三问</em></h2>
+    <div class="steps reveal">
+      <div class="step"><span class="no">1</span><div><div class="t">打开 T2《第一性选题诊断合同》</div><div class="d">诚实填完「立项第一性三问」，填不出就不动笔。</div></div></div>
+      <div class="step"><span class="no">2</span><div><div class="t">建三个空文件夹</div><div class="d">raw / anchors / chapters —— 你的工程脚手架。</div></div></div>
+      <div class="step"><span class="no">3</span><div><div class="t">丢入 5 份一手材料</div><div class="d">人生里最痛、最得意的 5 份原始材料：复盘长文、录音转写、深度访谈。</div></div></div>
+      <div class="step"><span class="no">4</span><div><div class="t">拆出第一张五段式案例卡</div><div class="d">起点 → 动作 → 阻力 → 转折 → 结果 + 当事人原话。按 T3 格式。</div></div></div>
+    </div>
+  </div>
+  <span class="style-tag">Style: Playful Collins Editorial</span>
+</section>
+
+<!-- S5 第三天 -->
+<section class="slide">
+  <i class="blob red deco" style="top:auto;bottom:8%"></i>
+  <div class="stage">
+    <span class="kick reveal">Day 3 · 本周末 · 2 小时</span>
+    <h2 class="reveal">跑出你的<em>黄金样张</em></h2>
+    <div class="steps reveal">
+      <div class="step"><span class="no">1</span><div><div class="t">挑素材最肥沃的那 1 章</div><div class="d">按 T4 填满 15 条去重事实锚点 + 心流三推演。</div></div></div>
+      <div class="step"><span class="no">2</span><div><div class="t">接上你能触达的最强旗舰模型</div><div class="d">如 Gemini 4.0——长上下文、语感好的那种。</div></div></div>
+      <div class="step"><span class="no">3</span><div><div class="t">按 T5 的 IPO 批注法起草</div><div class="d">先出骨架 → 人写批注 → 再合成 3000 字。</div></div></div>
+      <div class="step"><span class="no">4</span><div><div class="t">确立 Golden Copy</div><div class="d">逐段精修到出版级手感，这就是全书的语调标杆。</div></div></div>
+    </div>
+  </div>
+  <span class="style-tag">Style: Playful Collins Editorial</span>
+</section>
+
+<!-- S6 收束 -->
+<section class="slide">
+  <i class="blob red deco" style="right:12%"></i>
+  <div class="stage">
+    <span class="kick reveal">Tonight</span>
+    <h1 class="reveal" style="font-size:clamp(2rem,7vw,4.6rem)">今晚就<em>开始</em>。</h1>
+    <p class="sub reveal">选题三问、三个文件夹、五份材料、一张案例卡——30 分钟，你的产线就开机了。</p>
+    <p class="sub reveal" style="font-weight:900;font-size:var(--h3-size)">起草的快，是用素材的慢换来的。</p>
+    <p class="sub reveal">手里有粮，心中不慌。然后，让它推着你，把整本书写完。</p>
+    <svg class="wave reveal deco" width="320" height="36" viewBox="0 0 360 40"><path d="M2 20 Q 22 2 42 20 T 82 20 T 122 20 T 162 20 T 202 20 T 242 20 T 282 20 T 322 20 T 358 20" fill="none" stroke="#111" stroke-width="5" stroke-linecap="round"/></svg>
+  </div>
+  <span class="style-tag">Style: Playful Collins Editorial</span>
+</section>
+
+<div class="keyboard-hint">← → 翻页 · 空格下一页</div>
+<script>
+class SlidePresentation {
+  constructor() {
+    this.slides = document.querySelectorAll('.slide');
+    this.current = 0;
+    this.setupNav();
+    this.setupKeyboard();
+    this.setupTouch();
+    this.setupWheel();
+    this.observe();
+  }
+  setupNav() {
+    const dots = document.getElementById('navDots');
+    this.slides.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.addEventListener('click', () => this.go(i));
+      dots.appendChild(b);
+    });
+    this.dots = dots.children;
+    this.update();
+  }
+  go(i) {
+    this.current = Math.max(0, Math.min(this.slides.length - 1, i));
+    this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
+    this.update();
+  }
+  update() {
+    Array.from(this.dots).forEach((d, i) => d.classList.toggle('active', i === this.current));
+    document.getElementById('progressBar').style.width = ((this.current + 1) / this.slides.length * 100) + '%';
+  }
+  setupKeyboard() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); this.go(this.current + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); this.go(this.current - 1); }
+      if (e.key === 'Home') this.go(0);
+      if (e.key === 'End') this.go(this.slides.length - 1);
+    });
+  }
+  setupTouch() {
+    let y0 = null;
+    document.addEventListener('touchstart', (e) => { y0 = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      if (y0 === null) return;
+      const dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dy) > 40) this.go(this.current + (dy < 0 ? 1 : -1));
+      y0 = null;
+    }, { passive: true });
+  }
+  setupWheel() {
+    let lock = false;
+    document.addEventListener('wheel', (e) => {
+      if (lock) return;
+      lock = true;
+      setTimeout(() => { lock = false; }, 650);
+      if (Math.abs(e.deltaY) < 20) return;
+      this.go(this.current + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+  observe() {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) {
+          en.target.classList.add('visible');
+          this.current = Array.from(this.slides).indexOf(en.target);
+          this.update();
+        }
+      });
+    }, { threshold: 0.6 });
+    this.slides.forEach((s) => io.observe(s));
+  }
+}
+new SlidePresentation();
+</script>
+</body>
+</html>

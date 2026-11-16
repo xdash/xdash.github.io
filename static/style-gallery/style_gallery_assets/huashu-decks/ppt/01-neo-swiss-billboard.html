@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7 天启动你的 AI 写作产线 · Neo-Swiss Billboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;900&family=Geist+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;900&display=swap" rel="stylesheet">
+<style>
+/* ============ VIEWPORT BASE (MANDATORY) ============ */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+.slide { width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; }
+:root {
+  --title-size: clamp(1.5rem, 5vw, 4rem);
+  --h2-size: clamp(1.25rem, 3.5vw, 2.5rem);
+  --h3-size: clamp(1rem, 2.5vw, 1.75rem);
+  --body-size: clamp(0.75rem, 1.5vw, 1.125rem);
+  --small-size: clamp(0.65rem, 1vw, 0.875rem);
+  --slide-padding: clamp(1rem, 4vw, 3.5rem);
+  --content-gap: clamp(0.5rem, 2vw, 2rem);
+  --element-gap: clamp(0.25rem, 1vw, 1rem);
+}
+@media (max-height: 700px) {
+  :root { --slide-padding: clamp(0.75rem, 3vw, 2rem); --content-gap: clamp(0.4rem, 1.5vw, 1rem); --title-size: clamp(1.25rem, 4.5vw, 2.5rem); --h2-size: clamp(1rem, 3vw, 1.75rem); }
+}
+@media (max-height: 600px) {
+  :root { --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem); --content-gap: clamp(0.3rem, 1vw, 0.75rem); --title-size: clamp(1.1rem, 4vw, 2rem); --body-size: clamp(0.7rem, 1.2vw, 0.95rem); }
+  .nav-dots, .keyboard-hint, .decorative { display: none; }
+}
+@media (max-height: 500px) {
+  :root { --slide-padding: clamp(0.4rem, 2vw, 1rem); --title-size: clamp(1rem, 3.5vw, 1.5rem); --h2-size: clamp(0.9rem, 2.5vw, 1.25rem); --body-size: clamp(0.65rem, 1vw, 0.85rem); }
+}
+@media (max-width: 600px) {
+  :root { --title-size: clamp(1.25rem, 7vw, 2.5rem); }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+  html { scroll-behavior: auto; }
+}
+
+/* ============ PRESET: NEO-SWISS BILLBOARD ============ */
+:root {
+  --bg: #ffffff;
+  --ink: #0A0A0A;
+  --blue: #2D5BFF;
+  --line: #E5E5E5;
+  --font-display: 'Inter', 'Noto Sans SC', sans-serif;
+  --font-body: 'Inter', 'Noto Sans SC', sans-serif;
+  --font-mono: 'Geist Mono', monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font-body); background: var(--bg); color: var(--ink); }
+.slide { background: var(--bg); padding: var(--slide-padding); display: flex; flex-direction: column; }
+.topbar { display: flex; justify-content: space-between; font-family: var(--font-mono); font-weight: 500; font-size: var(--small-size); letter-spacing: 0.06em; padding-bottom: 0.9em; border-bottom: 2px solid var(--ink); }
+.topbar span:last-child { color: #555; }
+.stage { flex: 1; display: flex; flex-direction: column; justify-content: center; min-height: 0; }
+h1, h2 { font-family: var(--font-display); font-weight: 900; letter-spacing: -0.02em; }
+h1 { font-size: clamp(2rem, 7vw, 5.5rem); line-height: 1.05; }
+h2 { font-size: var(--h2-size); line-height: 1.15; }
+h1 .blue, h2 .blue { color: var(--blue); }
+p, li { font-size: var(--body-size); line-height: 1.55; }
+strong { font-weight: 700; }
+.hero-num { font-family: var(--font-display); font-weight: 900; font-size: clamp(6rem, 26vh, 15rem); line-height: 0.95; letter-spacing: -0.06em; color: var(--blue); font-variant-numeric: tabular-nums; }
+.hero-num small { font-size: 0.42em; letter-spacing: -0.02em; color: var(--ink); }
+.mono { font-family: var(--font-mono); font-weight: 500; font-size: var(--small-size); letter-spacing: 0.08em; color: #666; text-transform: uppercase; }
+.lead { font-weight: 900; font-size: clamp(1.1rem, 3vw, 2.2rem); line-height: 1.25; letter-spacing: -0.01em; }
+.statcols { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--ink); margin-top: var(--content-gap); }
+.statcols .c { padding: 0.9em 1em 0 0; border-right: 1px solid var(--line); margin-right: 1em; }
+.statcols .c:last-child { border-right: 0; }
+.statcols .c i { font-family: var(--font-mono); font-style: normal; font-weight: 500; font-size: var(--small-size); color: #666; letter-spacing: 0.06em; display: block; margin-bottom: 0.5em; }
+.statcols .c b { display: block; font-weight: 700; font-size: var(--h3-size); letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.statcols .c b.up { color: var(--blue); }
+.statcols .c p { font-size: var(--small-size); color: #444; margin-top: 0.4em; }
+.toc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(0.8rem, 2vw, 1.6rem); margin-top: var(--content-gap); }
+.toc-grid .t { border-top: 3px solid var(--ink); padding-top: 0.8em; }
+.toc-grid .t .no { font-weight: 900; font-size: clamp(1.6rem, 4vw, 3rem); color: var(--blue); letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+.toc-grid .t .tx { display: block; margin-top: 0.5em; font-weight: 700; font-size: var(--body-size); line-height: 1.45; }
+@media (max-width: 700px) { .toc-grid { grid-template-columns: 1fr 1fr; } .statcols { grid-template-columns: 1fr 1fr; } }
+.split { display: grid; grid-template-columns: auto 1fr; gap: clamp(1rem, 4vw, 3.5rem); align-items: start; }
+.duo { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(0.7rem, 1.8vw, 1.4rem); margin-top: var(--content-gap); }
+.duo .cell { border: 2px solid var(--ink); padding: clamp(0.7rem, 1.6vw, 1.2rem); }
+.duo .cell .tag { font-family: var(--font-mono); font-weight: 500; font-size: var(--small-size); letter-spacing: 0.08em; text-transform: uppercase; color: var(--blue); display: block; margin-bottom: 0.5em; }
+@media (max-width: 600px) { .duo { grid-template-columns: 1fr; } }
+.steps { display: flex; flex-direction: column; margin-top: var(--content-gap); }
+.step { display: flex; gap: 1.2em; align-items: baseline; padding: 0.7em 0; border-bottom: 1px solid var(--line); }
+.step:first-child { border-top: 2px solid var(--ink); }
+.step .no { font-weight: 900; font-size: var(--h3-size); color: var(--blue); font-variant-numeric: tabular-nums; flex-shrink: 0; min-width: 1.4em; }
+.step h3 { font-size: var(--body-size); font-weight: 700; }
+.step p { font-size: var(--small-size); color: #444; margin-top: 0.2em; }
+.grid22 { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(0.7rem, 1.8vw, 1.4rem); margin-top: var(--content-gap); }
+.grid22 .cell { border-top: 3px solid var(--blue); padding-top: 0.8em; }
+.grid22 .cell .no { font-family: var(--font-mono); font-weight: 500; font-size: var(--small-size); color: #666; letter-spacing: 0.08em; }
+.grid22 .cell h3 { font-size: var(--h3-size); font-weight: 900; letter-spacing: -0.01em; margin-top: 0.3em; }
+.grid22 .cell p { font-size: var(--body-size); color: #333; margin-top: 0.5em; }
+@media (max-width: 600px) { .grid22 { grid-template-columns: 1fr; } }
+.big-quote { font-weight: 900; font-size: clamp(1.4rem, 4.2vw, 3.2rem); line-height: 1.2; letter-spacing: -0.02em; }
+.big-quote .blue { color: var(--blue); }
+.style-tag { position: absolute; bottom: clamp(0.7rem, 1.8vh, 1.1rem); right: var(--slide-padding); font-family: var(--font-mono); font-size: var(--small-size); color: #999; z-index: 2; letter-spacing: 0.06em; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 5px; background: var(--blue); width: 0; z-index: 100; transition: width 0.2s ease; }
+.nav-dots { position: fixed; right: 1rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.6rem; z-index: 100; }
+.nav-dots button { width: 10px; height: 10px; border: 2px solid var(--ink); border-radius: 0; background: transparent; cursor: pointer; padding: 0; }
+.nav-dots button.active { background: var(--blue); border-color: var(--blue); }
+.keyboard-hint { position: fixed; bottom: 1rem; left: 50%; transform: translateX(-50%); font-size: var(--small-size); color: rgba(0,0,0,0.4); z-index: 100; }
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1); }
+.slide.visible .reveal { opacity: 1; transform: translateY(0); }
+.reveal:nth-child(1) { transition-delay: 0.1s; }
+.reveal:nth-child(2) { transition-delay: 0.2s; }
+.reveal:nth-child(3) { transition-delay: 0.3s; }
+.reveal:nth-child(4) { transition-delay: 0.4s; }
+.reveal:nth-child(5) { transition-delay: 0.5s; }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- S1 封面 -->
+<section class="slide">
+  <div class="topbar"><span>AI 写作工程学 · 课后行动版</span><span>XDash · 2026</span></div>
+  <div class="stage">
+    <div class="hero-num reveal">7<small>天</small></div>
+    <p class="lead reveal" style="margin-top:0.3em">启动你的 <span style="color:var(--blue)">AI 写作产线</span>。</p>
+    <p class="reveal" style="margin-top:0.8em; max-width:36em; color:#333">不教你背提示词，教你搭一条能写书、也能降维写公众号和播客稿的产线。从今天睡前 30 分钟开始。—— 范冰 XDash</p>
+  </div>
+  <span class="style-tag">Style: Neo-Swiss Billboard</span>
+</section>
+
+<!-- S2 目录 -->
+<section class="slide">
+  <div class="topbar"><span>Agenda</span><span>02 / 06</span></div>
+  <div class="stage">
+    <h2 class="reveal">这 7 天<span class="blue">怎么走</span></h2>
+    <div class="toc-grid reveal">
+      <div class="t"><span class="no">01</span><span class="tx">为什么是「7 天」而不是「1 年」</span></div>
+      <div class="t"><span class="no">02</span><span class="tx">第 1 天 · 立项第一性三问（30 分钟）</span></div>
+      <div class="t"><span class="no">03</span><span class="tx">第 3 天 · 跑出你的黄金样张（2 小时）</span></div>
+      <div class="t"><span class="no">04</span><span class="tx">今晚就开始 · 30 分钟开机</span></div>
+    </div>
+  </div>
+  <span class="style-tag">Style: Neo-Swiss Billboard</span>
+</section>
+
+<!-- S3 为什么 7 天 -->
+<section class="slide">
+  <div class="topbar"><span>Why 7 Days</span><span>03 / 06</span></div>
+  <div class="stage">
+    <div class="split">
+      <div class="hero-num reveal">7</div>
+      <div>
+        <h2 class="reveal">为什么是「7 天」<br>而不是<span class="blue">「1 年」</span>？</h2>
+        <p class="reveal" style="margin-top:0.8em; max-width:36em">一门课值不值，看的是学员七天后手里有没有多出一个<strong>能给别人看的东西</strong>。不要宏大口号，把动力外包给最小即时反馈：每步都有产物，每步都能拿出手。</p>
+      </div>
+    </div>
+    <div class="duo reveal">
+      <div class="cell"><span class="tag">第一天产物</span><p>一页纸的《第一性选题诊断合同》+ 第一张五段式案例卡</p></div>
+      <div class="cell"><span class="tag">第三天产物</span><p>一篇 3000 字、带出版质感的黄金样张</p></div>
+    </div>
+    <p class="reveal" style="margin-top:0.9em; font-weight:700">那个手感，会推着你停不下来地把整本书写完。</p>
+  </div>
+  <span class="style-tag">Style: Neo-Swiss Billboard</span>
+</section>
+
+<!-- S4 第一天 -->
+<section class="slide">
+  <div class="topbar"><span>Day 1 · 今晚睡前 · 30 分钟</span><span>04 / 06</span></div>
+  <div class="stage">
+    <h2 class="reveal">立项<span class="blue">第一性三问</span></h2>
+    <div class="steps reveal">
+      <div class="step"><span class="no">1</span><div><h3>打开 T2《第一性选题诊断合同》</h3><p>诚实填完「立项第一性三问」，填不出就不动笔。</p></div></div>
+      <div class="step"><span class="no">2</span><div><h3>建三个空文件夹</h3><p>raw / anchors / chapters —— 你的工程脚手架。</p></div></div>
+      <div class="step"><span class="no">3</span><div><h3>丢入 5 份一手材料</h3><p>人生里最痛、最得意的 5 份原始材料：复盘长文、录音转写、深度访谈。</p></div></div>
+      <div class="step"><span class="no">4</span><div><h3>拆出第一张五段式案例卡</h3><p>起点 → 动作 → 阻力 → 转折 → 结果 + 当事人原话。按 T3 格式。</p></div></div>
+    </div>
+  </div>
+  <span class="style-tag">Style: Neo-Swiss Billboard</span>
+</section>
+
+<!-- S5 第三天 -->
+<section class="slide">
+  <div class="topbar"><span>Day 3 · 本周末 · 2 小时</span><span>05 / 06</span></div>
+  <div class="stage">
+    <h2 class="reveal">跑出你的<span class="blue">黄金样张</span></h2>
+    <div class="grid22 reveal">
+      <div class="cell"><span class="no">STEP 01</span><h3>挑素材最肥沃的那 1 章</h3><p>按 T4 填满 15 条去重事实锚点 + 心流三推演。</p></div>
+      <div class="cell"><span class="no">STEP 02</span><h3>接上最强旗舰模型</h3><p>如 Gemini 4.0——长上下文、语感好的那种。</p></div>
+      <div class="cell"><span class="no">STEP 03</span><h3>按 T5 的 IPO 批注法起草</h3><p>先出骨架 → 人写批注 → 再合成 3000 字。</p></div>
+      <div class="cell"><span class="no">STEP 04</span><h3>确立 Golden Copy</h3><p>逐段精修到出版级手感，这就是全书的语调标杆。</p></div>
+    </div>
+  </div>
+  <span class="style-tag">Style: Neo-Swiss Billboard</span>
+</section>
+
+<!-- S6 收束 -->
+<section class="slide">
+  <div class="topbar"><span>Tonight</span><span>06 / 06</span></div>
+  <div class="stage">
+    <p class="big-quote reveal">选题三问、三个文件夹、五份材料、一张案例卡——<span class="blue">30 分钟，你的产线就开机了。</span></p>
+    <div class="statcols reveal">
+      <div class="c"><i>开机成本</i><b>30<span style="font-size:0.5em"> min</span></b><p>今晚睡前即可完成</p></div>
+      <div class="c"><i>第一产物</i><b class="up">1 页</b><p>选题诊断合同 + 案例卡</p></div>
+      <div class="c"><i>周末产物</i><b class="up">3000 字</b><p>出版质感黄金样张</p></div>
+      <div class="c"><i>动力机制</i><b>即时反馈</b><p>每步都有能拿出手的东西</p></div>
+    </div>
+    <p class="reveal" style="margin-top:1em; font-weight:900; font-size:var(--h3-size)">手里有粮，心中不慌。<span style="color:var(--blue)">然后，让它推着你，把整本书写完。</span></p>
+  </div>
+  <span class="style-tag">Style: Neo-Swiss Billboard</span>
+</section>
+
+<div class="keyboard-hint">← → 翻页 · 空格下一页</div>
+<script>
+class SlidePresentation {
+  constructor() {
+    this.slides = document.querySelectorAll('.slide');
+    this.current = 0;
+    this.setupNav();
+    this.setupKeyboard();
+    this.setupTouch();
+    this.setupWheel();
+    this.observe();
+  }
+  setupNav() {
+    const dots = document.getElementById('navDots');
+    this.slides.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.addEventListener('click', () => this.go(i));
+      dots.appendChild(b);
+    });
+    this.dots = dots.children;
+    this.update();
+  }
+  go(i) {
+    this.current = Math.max(0, Math.min(this.slides.length - 1, i));
+    this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
+    this.update();
+  }
+  update() {
+    Array.from(this.dots).forEach((d, i) => d.classList.toggle('active', i === this.current));
+    document.getElementById('progressBar').style.width = ((this.current + 1) / this.slides.length * 100) + '%';
+  }
+  setupKeyboard() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); this.go(this.current + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); this.go(this.current - 1); }
+      if (e.key === 'Home') this.go(0);
+      if (e.key === 'End') this.go(this.slides.length - 1);
+    });
+  }
+  setupTouch() {
+    let y0 = null;
+    document.addEventListener('touchstart', (e) => { y0 = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      if (y0 === null) return;
+      const dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dy) > 40) this.go(this.current + (dy < 0 ? 1 : -1));
+      y0 = null;
+    }, { passive: true });
+  }
+  setupWheel() {
+    let lock = false;
+    document.addEventListener('wheel', (e) => {
+      if (lock) return;
+      lock = true;
+      setTimeout(() => { lock = false; }, 650);
+      if (Math.abs(e.deltaY) < 20) return;
+      this.go(this.current + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+  observe() {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) {
+          en.target.classList.add('visible');
+          this.current = Array.from(this.slides).indexOf(en.target);
+          this.update();
+        }
+      });
+    }, { threshold: 0.6 });
+    this.slides.forEach((s) => io.observe(s));
+  }
+}
+new SlidePresentation();
+</script>
+</body>
+</html>

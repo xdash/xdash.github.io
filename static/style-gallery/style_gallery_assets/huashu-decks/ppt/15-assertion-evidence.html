@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7 天启动你的 AI 写作产线 · Assertion-Evidence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700&family=Noto+Sans+SC:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============ VIEWPORT BASE (MANDATORY) ============ */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+.slide { width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; }
+:root {
+  --h2-size: clamp(1.1rem, 2.6vw, 1.9rem);
+  --body-size: clamp(0.72rem, 1.35vw, 1rem);
+  --small-size: clamp(0.6rem, 0.9vw, 0.8rem);
+  --slide-padding: clamp(1.2rem, 5.5vw, 4.5rem);
+  --content-gap: clamp(0.5rem, 2vh, 1.4rem);
+}
+@media (max-height: 600px) {
+  :root { --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem); --body-size: clamp(0.65rem, 1.1vw, 0.88rem); }
+  .nav-dots, .keyboard-hint { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+  html { scroll-behavior: auto; }
+}
+
+/* ============ PRESET: ASSERTION-EVIDENCE (TUFTE) ============ */
+:root {
+  --bg: #FFFEFB;
+  --ink: #1A1A1A;
+  --accent: #A63A2B;
+  --dim: #666666;
+  --font-serif: 'Source Serif 4', 'Noto Serif SC', serif;
+  --font-sans: 'Inter', 'Noto Sans SC', sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font-sans); background: var(--bg); color: var(--ink); }
+.slide { background: var(--bg); padding: var(--slide-padding); display: flex; flex-direction: column; }
+h1 { font-family: var(--font-serif); font-weight: 700; font-size: var(--h2-size); line-height: 1.4; max-width: 34em; }
+h1 em { font-style: normal; color: var(--accent); }
+.evidence { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; margin-top: var(--content-gap); }
+.evidence svg { width: 100%; height: 100%; max-height: 64vh; }
+.evidence text { font-family: var(--font-sans); fill: #444; font-size: 14px; }
+.src { margin-top: auto; padding-top: 0.6em; font-size: var(--small-size); color: var(--dim); border-top: 1px solid #DDD; display: flex; justify-content: space-between; }
+.body { font-size: var(--body-size); line-height: 1.85; color: #333; max-width: 44em; }
+.body + .body { margin-top: 0.8em; }
+.body b { font-weight: 700; border-bottom: 2px solid var(--accent); }
+table.toc { border-collapse: collapse; margin: 0 auto; font-size: var(--body-size); }
+table.toc td { padding: 0.55em 1.2em; border-bottom: 1px solid #DDD; text-align: left; }
+table.toc tr td:first-child { font-family: var(--font-serif); font-weight: 700; color: var(--accent); }
+table.toc tr td:last-child { color: var(--dim); font-size: var(--small-size); }
+.style-tag { position: absolute; top: clamp(0.7rem, 1.8vh, 1.1rem); right: var(--slide-padding); font-size: var(--small-size); color: #AAA; z-index: 3; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: var(--accent); width: 0; z-index: 100; transition: width 0.2s ease; }
+.nav-dots { position: fixed; right: 1rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.6rem; z-index: 100; }
+.nav-dots button { width: 8px; height: 8px; border: 1px solid #999; border-radius: 50%; background: transparent; cursor: pointer; padding: 0; }
+.nav-dots button.active { background: var(--accent); border-color: var(--accent); }
+.keyboard-hint { position: fixed; bottom: 0.9rem; left: 50%; transform: translateX(-50%); font-size: var(--small-size); color: #BBB; z-index: 100; }
+.reveal { opacity: 0; transform: translateY(14px); transition: opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1); }
+.slide.visible .reveal { opacity: 1; transform: translateY(0); }
+.reveal:nth-child(1) { transition-delay: 0.08s; }
+.reveal:nth-child(2) { transition-delay: 0.2s; }
+.reveal:nth-child(3) { transition-delay: 0.32s; }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- S1 封面 -->
+<section class="slide">
+  <h1 class="reveal">本方案主张：用 7 天启动一条 AI 写作产线，<em>从今晚睡前 30 分钟开始</em>，而不是花 1 年背提示词</h1>
+  <div class="evidence reveal">
+    <svg viewBox="0 0 1000 420">
+      <line x1="80" y1="340" x2="940" y2="340" stroke="#444"/>
+      <text x="80" y="368">今晚</text><text x="510" y="368" text-anchor="middle">第 3 天</text><text x="940" y="368" text-anchor="end">第 7 天</text>
+      <path d="M80,320 C300,300 420,240 510,220 C640,190 800,120 940,90" fill="none" stroke="#1A1A1A" stroke-width="2.2"/>
+      <circle cx="80" cy="320" r="5" fill="#1A1A1A"/>
+      <text x="92" y="310" style="fill:#1A1A1A">30 分钟开机：合同 + 案例卡</text>
+      <circle cx="510" cy="220" r="5" fill="#A63A2B"/>
+      <text x="510" y="196" text-anchor="middle" style="fill:#A63A2B;font-weight:500">3000 字黄金样张（出版级）</text>
+      <circle cx="940" cy="90" r="5" fill="#1A1A1A"/>
+      <text x="928" y="80" text-anchor="end" style="fill:#1A1A1A">手感驱动，停不下来的整本书</text>
+      <text x="500" y="410" text-anchor="middle" style="fill:#666">时间 →</text>
+    </svg>
+  </div>
+  <div class="src"><span>范冰 XDash · AI 写作工程学课后行动版；产线可写书，亦可降维写公众号与播客稿。</span><span>01</span></div>
+  <span class="style-tag">Style: Assertion-Evidence</span>
+</section>
+
+<!-- S2 目录 -->
+<section class="slide">
+  <h1 class="reveal">这份行动方案由四个部分组成，每一部分都对应<em>一个可交付的产物</em></h1>
+  <div class="evidence reveal">
+    <table class="toc">
+      <tr><td>01</td><td>为什么是「7 天」而不是「1 年」</td><td>动力机制论证</td></tr>
+      <tr><td>02</td><td>第 1 天 · 立项第一性三问</td><td>30 分钟 · 合同 + 案例卡</td></tr>
+      <tr><td>03</td><td>第 3 天 · 跑出你的黄金样张</td><td>2 小时 · 3000 字</td></tr>
+      <tr><td>04</td><td>今晚就开始 · 30 分钟开机</td><td>行动指令</td></tr>
+    </table>
+  </div>
+  <div class="src"><span>结构说明：先论证动力机制，再给两个时间盒，最后落到今晚的动作。</span><span>02</span></div>
+  <span class="style-tag">Style: Assertion-Evidence</span>
+</section>
+
+<!-- S3 为什么 7 天 -->
+<section class="slide">
+  <h1 class="reveal">「7 天」优于「1 年」的原因：反馈延迟缩短约 98%，<em>每步都有能拿出手的产物</em></h1>
+  <div class="evidence reveal">
+    <svg viewBox="0 0 1000 420">
+      <rect x="140" y="90" width="60" height="14" fill="#A63A2B"/>
+      <text x="140" y="74" style="fill:#A63A2B;font-weight:500">7 天方案：第 1 天即有产物</text>
+      <rect x="140" y="140" width="60" height="14" fill="#A63A2B" opacity="0.65"/>
+      <text x="216" y="152">第 3 天：3000 字样张</text>
+      <rect x="140" y="250" width="760" height="14" fill="#C9C2B6"/>
+      <text x="140" y="234" style="fill:#666">「1 年」方案：首次可展示产物在 12 个月后</text>
+      <line x1="140" y1="300" x2="900" y2="300" stroke="#444"/>
+      <text x="140" y="328">0</text><text x="520" y="328" text-anchor="middle">6 个月</text><text x="900" y="328" text-anchor="end">12 个月</text>
+      <text x="140" y="392" style="fill:#1A1A1A">结论：把动力外包给最小即时反馈——每步都有产物，每步都能拿出手。</text>
+    </svg>
+  </div>
+  <div class="src"><span>示意：首次可展示产物出现时间对比；课程价值判据为「七天后手里是否多出能给别人看的东西」。</span><span>03</span></div>
+  <span class="style-tag">Style: Assertion-Evidence</span>
+</section>
+
+<!-- S4 第一天 -->
+<section class="slide">
+  <h1 class="reveal">第 1 天的 30 分钟被分配给四个动作，其产出是<em>一页合同与一张案例卡</em></h1>
+  <div class="evidence reveal">
+    <svg viewBox="0 0 1000 420">
+      <line x1="100" y1="60" x2="100" y2="360" stroke="#444"/>
+      <g>
+        <rect x="100" y="60" width="180" height="56" fill="#1A1A1A"/><text x="116" y="94" fill="#fff" style="fill:#fff">1 填 T2 选题合同</text>
+        <rect x="300" y="132" width="180" height="56" fill="#1A1A1A" opacity="0.8"/><text x="316" y="166" fill="#fff" style="fill:#fff">2 建三个文件夹</text>
+        <rect x="500" y="204" width="180" height="56" fill="#1A1A1A" opacity="0.6"/><text x="516" y="238" fill="#fff" style="fill:#fff">3 丢入 5 份材料</text>
+        <rect x="700" y="276" width="180" height="56" fill="#A63A2B"/><text x="716" y="310" fill="#fff" style="fill:#fff">4 拆五段式案例卡</text>
+      </g>
+      <text x="60" y="90" text-anchor="end">≈8′</text><text x="60" y="162" text-anchor="end">≈5′</text><text x="60" y="234" text-anchor="end">≈10′</text><text x="60" y="306" text-anchor="end">≈7′</text>
+      <text x="100" y="396">注：三问填不出则不动笔；材料取最痛与最得意的复盘长文、录音转写、深度访谈；案例卡按 T3：起点→动作→阻力→转折→结果+原话。</text>
+    </svg>
+  </div>
+  <div class="src"><span>时间分配为建议值；文件夹结构 raw / anchors / chapters 为工程脚手架。</span><span>04</span></div>
+  <span class="style-tag">Style: Assertion-Evidence</span>
+</section>
+
+<!-- S5 第三天 -->
+<section class="slide">
+  <h1 class="reveal">第 3 天的 2 小时按 IPO 批注法推进，最终确立<em>全书的语调标杆</em></h1>
+  <div class="evidence reveal">
+    <svg viewBox="0 0 1000 420">
+      <line x1="80" y1="340" x2="940" y2="340" stroke="#444"/>
+      <text x="80" y="368">骨架</text><text x="365" y="368" text-anchor="middle">批注</text><text x="650" y="368" text-anchor="middle">合成</text><text x="920" y="368" text-anchor="end">精修</text>
+      <path d="M80,300 L365,240 L650,170 L920,110" fill="none" stroke="#1A1A1A" stroke-width="2.2"/>
+      <circle cx="80" cy="300" r="5" fill="#1A1A1A"/><text x="92" y="292" style="fill:#1A1A1A">T4：15 条去重事实锚点</text>
+      <circle cx="365" cy="240" r="5" fill="#1A1A1A"/><text x="377" y="232" style="fill:#1A1A1A">人写批注（心流三推演）</text>
+      <circle cx="650" cy="170" r="5" fill="#1A1A1A"/><text x="662" y="162" style="fill:#1A1A1A">旗舰模型合成 3000 字</text>
+      <circle cx="920" cy="110" r="5.5" fill="#A63A2B"/><text x="908" y="100" text-anchor="end" style="fill:#A63A2B;font-weight:500">Golden Copy（出版级）</text>
+      <text x="500" y="408" text-anchor="middle" style="fill:#666">T5 IPO 批注法工序 →</text>
+    </svg>
+  </div>
+  <div class="src"><span>模型选择标准：长上下文、语感好（如 Gemini 4.0）；精修目标是「出版级手感」。</span><span>05</span></div>
+  <span class="style-tag">Style: Assertion-Evidence</span>
+</section>
+
+<!-- S6 收束 -->
+<section class="slide">
+  <h1 class="reveal">结论：今晚用 30 分钟完成开机，<em>让产线推着你把整本书写完</em></h1>
+  <div class="evidence reveal" style="justify-content:flex-start">
+    <div>
+      <p class="body">选题三问、三个文件夹、五份材料、一张案例卡——30 分钟，你的产线就开机了。</p>
+      <p class="body"><b>起草的快，是用素材的慢换来的。</b>手里有粮，心中不慌。然后，让它推着你，把整本书写完。</p>
+    </div>
+  </div>
+  <div class="src"><span>范冰 XDash · AI 写作工程学课后行动版 · 完</span><span>06</span></div>
+  <span class="style-tag">Style: Assertion-Evidence</span>
+</section>
+
+<div class="keyboard-hint">← → 翻页 · 空格下一页</div>
+<script>
+class SlidePresentation {
+  constructor() {
+    this.slides = document.querySelectorAll('.slide');
+    this.current = 0;
+    this.setupNav();
+    this.setupKeyboard();
+    this.setupTouch();
+    this.setupWheel();
+    this.observe();
+  }
+  setupNav() {
+    const dots = document.getElementById('navDots');
+    this.slides.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.addEventListener('click', () => this.go(i));
+      dots.appendChild(b);
+    });
+    this.dots = dots.children;
+    this.update();
+  }
+  go(i) {
+    this.current = Math.max(0, Math.min(this.slides.length - 1, i));
+    this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
+    this.update();
+  }
+  update() {
+    Array.from(this.dots).forEach((d, i) => d.classList.toggle('active', i === this.current));
+    document.getElementById('progressBar').style.width = ((this.current + 1) / this.slides.length * 100) + '%';
+  }
+  setupKeyboard() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); this.go(this.current + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); this.go(this.current - 1); }
+      if (e.key === 'Home') this.go(0);
+      if (e.key === 'End') this.go(this.slides.length - 1);
+    });
+  }
+  setupTouch() {
+    let y0 = null;
+    document.addEventListener('touchstart', (e) => { y0 = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      if (y0 === null) return;
+      const dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dy) > 40) this.go(this.current + (dy < 0 ? 1 : -1));
+      y0 = null;
+    }, { passive: true });
+  }
+  setupWheel() {
+    let lock = false;
+    document.addEventListener('wheel', (e) => {
+      if (lock) return;
+      lock = true;
+      setTimeout(() => { lock = false; }, 650);
+      if (Math.abs(e.deltaY) < 20) return;
+      this.go(this.current + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+  observe() {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) {
+          en.target.classList.add('visible');
+          this.current = Array.from(this.slides).indexOf(en.target);
+          this.update();
+        }
+      });
+    }, { threshold: 0.6 });
+    this.slides.forEach((s) => io.observe(s));
+  }
+}
+new SlidePresentation();
+</script>
+</body>
+</html>

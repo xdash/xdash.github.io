@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7 天启动你的 AI 写作产线 · 中国传统色·节气色谱</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;900&family=Noto+Sans+SC:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============ VIEWPORT BASE (MANDATORY) ============ */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+.slide { width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; }
+:root {
+  --title-size: clamp(1.5rem, 5vw, 4rem);
+  --h2-size: clamp(1.25rem, 3.5vw, 2.5rem);
+  --h3-size: clamp(1rem, 2.5vw, 1.75rem);
+  --body-size: clamp(0.75rem, 1.5vw, 1.125rem);
+  --small-size: clamp(0.65rem, 1vw, 0.875rem);
+  --slide-padding: clamp(1rem, 4vw, 4rem);
+  --content-gap: clamp(0.5rem, 2vw, 2rem);
+}
+@media (max-height: 700px) {
+  :root { --slide-padding: clamp(0.75rem, 3vw, 2rem); --content-gap: clamp(0.4rem, 1.5vw, 1rem); --title-size: clamp(1.25rem, 4.5vw, 2.5rem); --h2-size: clamp(1rem, 3vw, 1.75rem); }
+}
+@media (max-height: 600px) {
+  :root { --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem); --content-gap: clamp(0.3rem, 1vw, 0.75rem); --title-size: clamp(1.1rem, 4vw, 2rem); --body-size: clamp(0.7rem, 1.2vw, 0.95rem); }
+  .nav-dots, .keyboard-hint, .decorative { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+  html { scroll-behavior: auto; }
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 4px; background: #26221D; width: 0; z-index: 100; transition: width 0.2s ease; }
+.nav-dots { position: fixed; right: 1rem; top: 40%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.6rem; z-index: 100; }
+.nav-dots button { width: 9px; height: 9px; border: 1.5px solid #26221D; border-radius: 50%; background: transparent; cursor: pointer; padding: 0; }
+.nav-dots button.active { background: #26221D; }
+.keyboard-hint { position: fixed; bottom: 0.6rem; left: 50%; transform: translateX(-50%); font-size: var(--small-size); color: rgba(38,34,29,0.4); z-index: 100; font-family: 'Noto Sans SC', sans-serif; }
+body .keyboard-hint { bottom: calc(15vh + 0.4rem); }
+.reveal { opacity: 0; translate: 0 22px; transition: opacity 0.5s cubic-bezier(0.16,1,0.3,1), translate 0.5s cubic-bezier(0.16,1,0.3,1); }
+.slide.visible .reveal { opacity: 1; translate: 0 0; }
+.reveal:nth-child(1) { transition-delay: 0.1s; }
+.reveal:nth-child(2) { transition-delay: 0.2s; }
+.reveal:nth-child(3) { transition-delay: 0.3s; }
+.reveal:nth-child(4) { transition-delay: 0.4s; }
+.reveal:nth-child(5) { transition-delay: 0.5s; }
+
+/* ============ PRESET: 中国传统色·节气色谱 ============ */
+:root {
+  --paper: #F5F0E4;
+  --card: #FBF8EF;
+  --ink: #26221D;
+  --gray: #7A6F60;
+}
+body { font-family: 'Noto Serif SC', serif; background: var(--paper); color: var(--ink); }
+.slide { --accent: #D8411F; --accent-ink: #F6F1E6; padding-bottom: 15vh; }
+.style-tag { position: absolute; bottom: calc(15vh + 0.6rem); right: 1.2rem; font: 400 12px 'Noto Sans SC', sans-serif; color: rgba(38,34,29,0.45); z-index: 5; }
+.topnav { position: absolute; left: 5%; right: 5%; top: 4%; display: flex; justify-content: space-between; align-items: center; font: 500 13px 'Noto Sans SC', sans-serif; letter-spacing: .16em; color: #4C443A; }
+.topnav b { font: 900 18px 'Noto Serif SC', serif; letter-spacing: .2em; color: var(--ink); }
+.topnav .term { color: var(--accent); border-bottom: 2px solid var(--accent); padding-bottom: 3px; }
+.k { font: 500 13px 'Noto Sans SC', sans-serif; letter-spacing: .3em; color: var(--gray); }
+h1 em, h2 em { font-style: normal; color: var(--accent); }
+/* 节气色条 */
+.strip { position: absolute; left: 0; right: 0; bottom: 0; height: 15vh; display: flex; align-items: flex-end; z-index: 2; }
+.b { flex: 1; height: 10vh; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 8px 0 7px; box-sizing: border-box; }
+.b span { writing-mode: vertical-rl; font: 600 clamp(10px,1.7vh,15px)/1 'Noto Serif SC', serif; letter-spacing: .18em; }
+.b small { writing-mode: vertical-rl; font: 400 clamp(8px,1.3vh,11px)/1 'Noto Sans SC', sans-serif; letter-spacing: .12em; opacity: .9; }
+.b.cur { height: 15vh; flex: 1.7; }
+.b.cur span { font-size: clamp(12px,2vh,18px); }
+/* S1 首屏 */
+.s1 .hero { position: absolute; left: 5%; top: 14%; width: 52%; }
+.s1 h1 { margin: 0.2em 0 0; font: 900 var(--title-size)/1.16 'Noto Serif SC', serif; letter-spacing: .02em; }
+.s1 .hero p { margin-top: 1em; width: 92%; font-size: var(--body-size); line-height: 1.95; color: #3A342C; }
+.s1 .btn { display: inline-block; margin-top: 1.2em; padding: 0.7em 1.6em; background: var(--ink); color: var(--paper); font: 500 var(--small-size) 'Noto Sans SC', sans-serif; letter-spacing: .24em; }
+.s1 .card { position: absolute; right: 5%; top: 16%; width: 30%; background: var(--card); border: 1px solid var(--ink); padding: 1.2em 1.4em; }
+.s1 .card .t { display: flex; justify-content: space-between; font: 500 12px 'Noto Sans SC', sans-serif; letter-spacing: .2em; color: var(--gray); border-bottom: 1px solid var(--ink); padding-bottom: 0.6em; }
+.s1 .card h3 { margin: 0.5em 0 0.3em; font: 900 var(--h3-size)/1.3 'Noto Serif SC', serif; letter-spacing: .06em; }
+.s1 .card .sw { display: flex; gap: 6px; margin-top: 0.8em; }
+.s1 .card .sw i { flex: 1; height: 26px; display: block; }
+.s1 .card .r { display: grid; grid-template-columns: repeat(3,1fr); margin-top: 0.9em; border-top: 1px solid #CFC6B2; }
+.s1 .card .r div { padding-top: 0.6em; }
+.s1 .card .r b { display: block; font: 600 var(--h3-size)/1 'Noto Serif SC', serif; }
+.s1 .card .r small { font: 400 11px 'Noto Sans SC', sans-serif; color: #6A6054; letter-spacing: .1em; }
+/* S2 目录 */
+.s2 .inner { position: absolute; left: 50%; top: 46%; transform: translate(-50%,-50%); width: min(44rem, 82%); }
+.s2 h2 { font: 900 var(--h2-size)/1.3 'Noto Serif SC', serif; margin: 0.3em 0 0.8em; }
+.s2 .toc { list-style: none; }
+.s2 .toc li { display: flex; align-items: center; gap: 1em; padding: 0.75em 0; border-bottom: 1px solid #CFC6B2; }
+.s2 .toc .chip { width: 1.1em; height: 2.6em; flex-shrink: 0; }
+.s2 .toc .tx { flex: 1; font-size: var(--body-size); letter-spacing: .05em; }
+.s2 .toc .nm { font: 500 12px 'Noto Sans SC', sans-serif; letter-spacing: .2em; color: var(--gray); }
+/* S3 为什么 */
+.s3 .inner { position: absolute; left: 8%; right: 8%; top: 44%; transform: translateY(-50%); }
+.s3 h2 { font: 900 var(--h2-size)/1.4 'Noto Serif SC', serif; margin: 0.3em 0 0.6em; }
+.s3 .lead2 { max-width: 44em; font-size: var(--body-size); line-height: 1.95; color: #3A342C; }
+.s3 .q { margin: 1em 0; font-weight: 600; font-size: var(--h3-size); }
+.s3 .q b { color: var(--accent); font-weight: 600; }
+.s3 .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2em; max-width: 44em; }
+.s3 .duo .cell { border-top: 4px solid var(--accent); padding-top: 0.5em; }
+.s3 .duo .tag { font: 500 12px 'Noto Sans SC', sans-serif; letter-spacing: .2em; color: var(--gray); }
+.s3 .duo p { font-size: var(--small-size); line-height: 1.8; margin-top: 0.25em; }
+/* S4/S5 步骤 */
+.s4 .vt, .s5 .vt { position: absolute; left: 6%; top: 16%; writing-mode: vertical-rl; font: 900 var(--h2-size)/1.4 'Noto Serif SC', serif; letter-spacing: .2em; height: 55%; }
+.s4 .vt i, .s5 .vt i { font-style: normal; color: var(--accent); }
+.s4 .meta, .s5 .meta { position: absolute; left: 17%; top: 16%; }
+.s4 .meta h2, .s5 .meta h2 { font: 900 var(--h3-size)/1.3 'Noto Serif SC', serif; margin-top: 0.3em; }
+.s4 .steps, .s5 .steps { position: absolute; left: 17%; right: 7%; top: 30%; display: grid; grid-template-columns: 1fr 1fr; gap: 0.9em 1.6em; }
+.step { background: var(--card); border: 1px solid var(--ink); padding: 0.9em 1.1em; }
+.step .no { font: 900 var(--h3-size)/1 'Noto Serif SC', serif; color: var(--accent); display: block; }
+.step h3 { font-size: var(--body-size); font-weight: 600; margin-top: 0.25em; }
+.step p { font: 400 var(--small-size)/1.7 'Noto Sans SC', sans-serif; color: #4C443A; margin-top: 0.25em; }
+/* S6 收束 */
+.s6 .inner { position: absolute; left: 50%; top: 42%; transform: translate(-50%,-50%); text-align: center; width: min(44rem, 82%); }
+.s6 h2 { font: 900 clamp(2rem,6vh,3.6rem)/1.3 'Noto Serif SC', serif; margin: 0.3em 0 0.5em; }
+.s6 .lead2 { font-size: var(--body-size); line-height: 1.95; color: #3A342C; }
+.s6 .motto { display: inline-block; margin-top: 1.2em; background: var(--ink); color: var(--paper); padding: 0.7em 1.6em; font-size: var(--body-size); letter-spacing: .12em; }
+.s6 .motto b { color: var(--accent); font-weight: 600; }
+.s6[style*="--accent:#26241F"] .motto b { color: #F2A93A; }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- 节气色条模板：每页 .cur 落在当页节气 -->
+<!-- S1 封面 · 寒露 -->
+<section class="slide s1" style="--accent:#D8411F;--accent-ink:#F6F1E6">
+  <div class="topnav"><b>写作产线 · 七日</b><span class="term">寒露 · 朱砂</span></div>
+  <div class="hero">
+    <div class="k reveal">AI 写作工程学 · 课后行动版</div>
+    <h1 class="reveal">7 天启动<br>你的 <em>AI 写作产线</em></h1>
+    <p class="reveal">不教你背提示词，教你搭一条能写书、也能降维写公众号和播客稿的产线。从今天睡前 30 分钟开始。</p>
+    <a class="btn reveal">范冰 XDash</a>
+  </div>
+  <div class="card reveal">
+    <div class="t"><span>本周功课</span><span>第 1 天</span></div>
+    <h3>立项第一性三问</h3>
+    <div class="sw"><i style="background:#D8411F"></i><i style="background:#C1832B"></i><i style="background:#A05A3A"></i><i style="background:#F2A93A"></i></div>
+    <div class="r"><div><b>30</b><small>分钟</small></div><div><b>3</b><small>问</small></div><div><b>1</b><small>案例卡</small></div></div>
+  </div>
+  <div class="strip decorative"><div class="b" style="background:#8CC7B5;color:#1F1B16"><span>立春</span><small>缥碧</small></div><div class="b" style="background:#B4C98B;color:#1F1B16"><span>雨水</span><small>柳染</small></div><div class="b" style="background:#A3B87A;color:#1F1B16"><span>惊蛰</span><small>豆青</small></div><div class="b" style="background:#F0AEB2;color:#1F1B16"><span>春分</span><small>桃夭</small></div><div class="b" style="background:#789262;color:#F6F1E6"><span>清明</span><small>竹青</small></div><div class="b" style="background:#5FB3A1;color:#1F1B16"><span>谷雨</span><small>天水碧</small></div><div class="b" style="background:#2B9C8E;color:#F6F1E6"><span>立夏</span><small>松石绿</small></div><div class="b" style="background:#D8C26A;color:#1F1B16"><span>小满</span><small>缃叶</small></div><div class="b" style="background:#F2B91A;color:#1F1B16"><span>芒种</span><small>藤黄</small></div><div class="b" style="background:#1B5E9B;color:#F6F1E6"><span>夏至</span><small>石青</small></div><div class="b" style="background:#CFE8EE;color:#1F1B16"><span>小暑</span><small>月白</small></div><div class="b" style="background:#E27A8B;color:#1F1B16"><span>大暑</span><small>荷花红</small></div><div class="b" style="background:#C9B03A;color:#1F1B16"><span>立秋</span><small>秋香</small></div><div class="b" style="background:#F2A93A;color:#1F1B16"><span>处暑</span><small>杏黄</small></div><div class="b" style="background:#EEE9DC;color:#1F1B16"><span>白露</span><small>缟</small></div><div class="b" style="background:#C1832B;color:#F6F1E6"><span>秋分</span><small>琥珀</small></div><div class="b cur" style="background:#D8411F;color:#F6F1E6"><span>寒露</span><small>朱砂</small></div><div class="b" style="background:#A05A3A;color:#F6F1E6"><span>霜降</span><small>赭石</small></div><div class="b" style="background:#3C4558;color:#F6F1E6"><span>立冬</span><small>黛</small></div><div class="b" style="background:#4B5666;color:#F6F1E6"><span>小雪</span><small>鸦青</small></div><div class="b" style="background:#E6E3DA;color:#1F1B16"><span>大雪</span><small>素</small></div><div class="b" style="background:#26241F;color:#F6F1E6"><span>冬至</span><small>墨</small></div><div class="b" style="background:#2B4A6B;color:#F6F1E6"><span>小寒</span><small>靛青</small></div><div class="b" style="background:#6B7B8C;color:#F6F1E6"><span>大寒</span><small>苍</small></div></div>
+  <span class="style-tag">Style: 中国传统色·节气色谱</span>
+</section>
+
+<!-- S2 目录 · 秋分 -->
+<section class="slide s2" style="--accent:#C1832B;--accent-ink:#F6F1E6">
+  <div class="topnav"><b>写作产线 · 七日</b><span class="term">秋分 · 琥珀</span></div>
+  <div class="inner">
+    <div class="k reveal">目录 · 四站</div>
+    <h2 class="reveal">这 7 天<em>怎么走</em></h2>
+    <ul class="toc">
+      <li class="reveal"><span class="chip" style="background:#D8411F"></span><span class="tx">为什么是「7 天」而不是「1 年」</span><span class="nm">朱砂</span></li>
+      <li class="reveal"><span class="chip" style="background:#1B5E9B"></span><span class="tx">第 1 天 · 立项第一性三问（30 分钟）</span><span class="nm">石青</span></li>
+      <li class="reveal"><span class="chip" style="background:#789262"></span><span class="tx">第 3 天 · 跑出你的黄金样张（2 小时）</span><span class="nm">竹青</span></li>
+      <li class="reveal"><span class="chip" style="background:#26241F"></span><span class="tx">今晚就开始 · 30 分钟开机</span><span class="nm">墨</span></li>
+    </ul>
+  </div>
+  <div class="strip decorative"><div class="b" style="background:#8CC7B5;color:#1F1B16"><span>立春</span><small>缥碧</small></div><div class="b" style="background:#B4C98B;color:#1F1B16"><span>雨水</span><small>柳染</small></div><div class="b" style="background:#A3B87A;color:#1F1B16"><span>惊蛰</span><small>豆青</small></div><div class="b" style="background:#F0AEB2;color:#1F1B16"><span>春分</span><small>桃夭</small></div><div class="b" style="background:#789262;color:#F6F1E6"><span>清明</span><small>竹青</small></div><div class="b" style="background:#5FB3A1;color:#1F1B16"><span>谷雨</span><small>天水碧</small></div><div class="b" style="background:#2B9C8E;color:#F6F1E6"><span>立夏</span><small>松石绿</small></div><div class="b" style="background:#D8C26A;color:#1F1B16"><span>小满</span><small>缃叶</small></div><div class="b" style="background:#F2B91A;color:#1F1B16"><span>芒种</span><small>藤黄</small></div><div class="b" style="background:#1B5E9B;color:#F6F1E6"><span>夏至</span><small>石青</small></div><div class="b" style="background:#CFE8EE;color:#1F1B16"><span>小暑</span><small>月白</small></div><div class="b" style="background:#E27A8B;color:#1F1B16"><span>大暑</span><small>荷花红</small></div><div class="b" style="background:#C9B03A;color:#1F1B16"><span>立秋</span><small>秋香</small></div><div class="b" style="background:#F2A93A;color:#1F1B16"><span>处暑</span><small>杏黄</small></div><div class="b" style="background:#EEE9DC;color:#1F1B16"><span>白露</span><small>缟</small></div><div class="b cur" style="background:#C1832B;color:#F6F1E6"><span>秋分</span><small>琥珀</small></div><div class="b" style="background:#D8411F;color:#F6F1E6"><span>寒露</span><small>朱砂</small></div><div class="b" style="background:#A05A3A;color:#F6F1E6"><span>霜降</span><small>赭石</small></div><div class="b" style="background:#3C4558;color:#F6F1E6"><span>立冬</span><small>黛</small></div><div class="b" style="background:#4B5666;color:#F6F1E6"><span>小雪</span><small>鸦青</small></div><div class="b" style="background:#E6E3DA;color:#1F1B16"><span>大雪</span><small>素</small></div><div class="b" style="background:#26241F;color:#F6F1E6"><span>冬至</span><small>墨</small></div><div class="b" style="background:#2B4A6B;color:#F6F1E6"><span>小寒</span><small>靛青</small></div><div class="b" style="background:#6B7B8C;color:#F6F1E6"><span>大寒</span><small>苍</small></div></div>
+  <span class="style-tag">Style: 中国传统色·节气色谱</span>
+</section>
+
+<!-- S3 为什么 7 天 · 夏至 -->
+<section class="slide s3" style="--accent:#1B5E9B;--accent-ink:#F6F1E6">
+  <div class="topnav"><b>写作产线 · 七日</b><span class="term">夏至 · 石青</span></div>
+  <div class="inner">
+    <div class="k reveal">第一章 · 为什么</div>
+    <h2 class="reveal">为什么是「7 天」<br>而不是<em>「1 年」</em>？</h2>
+    <p class="lead2 reveal">一门课值不值，看的是学员七天后手里有没有多出一个<strong>能给别人看的东西</strong>。不要宏大口号，把动力外包给最小即时反馈：每步都有产物，每步都能拿出手。</p>
+    <p class="q reveal"><b>「</b>那个手感，会推着你停不下来地把整本书写完。<b>」</b></p>
+    <div class="duo reveal">
+      <div class="cell"><span class="tag">第一天产物</span><p>一页纸的《第一性选题诊断合同》+ 第一张五段式案例卡</p></div>
+      <div class="cell"><span class="tag">第三天产物</span><p>一篇 3000 字、带出版质感的黄金样张</p></div>
+    </div>
+  </div>
+  <div class="strip decorative"><div class="b" style="background:#8CC7B5;color:#1F1B16"><span>立春</span><small>缥碧</small></div><div class="b" style="background:#B4C98B;color:#1F1B16"><span>雨水</span><small>柳染</small></div><div class="b" style="background:#A3B87A;color:#1F1B16"><span>惊蛰</span><small>豆青</small></div><div class="b" style="background:#F0AEB2;color:#1F1B16"><span>春分</span><small>桃夭</small></div><div class="b" style="background:#789262;color:#F6F1E6"><span>清明</span><small>竹青</small></div><div class="b" style="background:#5FB3A1;color:#1F1B16"><span>谷雨</span><small>天水碧</small></div><div class="b" style="background:#2B9C8E;color:#F6F1E6"><span>立夏</span><small>松石绿</small></div><div class="b" style="background:#D8C26A;color:#1F1B16"><span>小满</span><small>缃叶</small></div><div class="b" style="background:#F2B91A;color:#1F1B16"><span>芒种</span><small>藤黄</small></div><div class="b cur" style="background:#1B5E9B;color:#F6F1E6"><span>夏至</span><small>石青</small></div><div class="b" style="background:#CFE8EE;color:#1F1B16"><span>小暑</span><small>月白</small></div><div class="b" style="background:#E27A8B;color:#1F1B16"><span>大暑</span><small>荷花红</small></div><div class="b" style="background:#C9B03A;color:#1F1B16"><span>立秋</span><small>秋香</small></div><div class="b" style="background:#F2A93A;color:#1F1B16"><span>处暑</span><small>杏黄</small></div><div class="b" style="background:#EEE9DC;color:#1F1B16"><span>白露</span><small>缟</small></div><div class="b" style="background:#C1832B;color:#F6F1E6"><span>秋分</span><small>琥珀</small></div><div class="b" style="background:#D8411F;color:#F6F1E6"><span>寒露</span><small>朱砂</small></div><div class="b" style="background:#A05A3A;color:#F6F1E6"><span>霜降</span><small>赭石</small></div><div class="b" style="background:#3C4558;color:#F6F1E6"><span>立冬</span><small>黛</small></div><div class="b" style="background:#4B5666;color:#F6F1E6"><span>小雪</span><small>鸦青</small></div><div class="b" style="background:#E6E3DA;color:#1F1B16"><span>大雪</span><small>素</small></div><div class="b" style="background:#26241F;color:#F6F1E6"><span>冬至</span><small>墨</small></div><div class="b" style="background:#2B4A6B;color:#F6F1E6"><span>小寒</span><small>靛青</small></div><div class="b" style="background:#6B7B8C;color:#F6F1E6"><span>大寒</span><small>苍</small></div></div>
+  <span class="style-tag">Style: 中国传统色·节气色谱</span>
+</section>
+
+<!-- S4 第一天 · 清明 -->
+<section class="slide s4" style="--accent:#789262;--accent-ink:#F6F1E6">
+  <div class="topnav"><b>写作产线 · 七日</b><span class="term">清明 · 竹青</span></div>
+  <div class="vt reveal">第<i>一</i>天 · 睡前 30 分钟</div>
+  <div class="meta"><div class="k reveal">第二章 · 立项</div><h2 class="reveal">立项第一性三问</h2></div>
+  <div class="steps">
+    <div class="step reveal"><span class="no">一</span><h3>打开 T2《第一性选题诊断合同》</h3><p>诚实填完「立项第一性三问」，填不出就不动笔。</p></div>
+    <div class="step reveal"><span class="no">二</span><h3>建三个空文件夹</h3><p>raw / anchors / chapters —— 你的工程脚手架。</p></div>
+    <div class="step reveal"><span class="no">三</span><h3>丢入 5 份一手材料</h3><p>人生里最痛、最得意的 5 份原始材料：复盘长文、录音转写、深度访谈。</p></div>
+    <div class="step reveal"><span class="no">四</span><h3>拆出第一张五段式案例卡</h3><p>起点 → 动作 → 阻力 → 转折 → 结果 + 当事人原话。按 T3 格式。</p></div>
+  </div>
+  <div class="strip decorative"><div class="b" style="background:#8CC7B5;color:#1F1B16"><span>立春</span><small>缥碧</small></div><div class="b" style="background:#B4C98B;color:#1F1B16"><span>雨水</span><small>柳染</small></div><div class="b" style="background:#A3B87A;color:#1F1B16"><span>惊蛰</span><small>豆青</small></div><div class="b" style="background:#F0AEB2;color:#1F1B16"><span>春分</span><small>桃夭</small></div><div class="b cur" style="background:#789262;color:#F6F1E6"><span>清明</span><small>竹青</small></div><div class="b" style="background:#5FB3A1;color:#1F1B16"><span>谷雨</span><small>天水碧</small></div><div class="b" style="background:#2B9C8E;color:#F6F1E6"><span>立夏</span><small>松石绿</small></div><div class="b" style="background:#D8C26A;color:#1F1B16"><span>小满</span><small>缃叶</small></div><div class="b" style="background:#F2B91A;color:#1F1B16"><span>芒种</span><small>藤黄</small></div><div class="b" style="background:#1B5E9B;color:#F6F1E6"><span>夏至</span><small>石青</small></div><div class="b" style="background:#CFE8EE;color:#1F1B16"><span>小暑</span><small>月白</small></div><div class="b" style="background:#E27A8B;color:#1F1B16"><span>大暑</span><small>荷花红</small></div><div class="b" style="background:#C9B03A;color:#1F1B16"><span>立秋</span><small>秋香</small></div><div class="b" style="background:#F2A93A;color:#1F1B16"><span>处暑</span><small>杏黄</small></div><div class="b" style="background:#EEE9DC;color:#1F1B16"><span>白露</span><small>缟</small></div><div class="b" style="background:#C1832B;color:#F6F1E6"><span>秋分</span><small>琥珀</small></div><div class="b" style="background:#D8411F;color:#F6F1E6"><span>寒露</span><small>朱砂</small></div><div class="b" style="background:#A05A3A;color:#F6F1E6"><span>霜降</span><small>赭石</small></div><div class="b" style="background:#3C4558;color:#F6F1E6"><span>立冬</span><small>黛</small></div><div class="b" style="background:#4B5666;color:#F6F1E6"><span>小雪</span><small>鸦青</small></div><div class="b" style="background:#E6E3DA;color:#1F1B16"><span>大雪</span><small>素</small></div><div class="b" style="background:#26241F;color:#F6F1E6"><span>冬至</span><small>墨</small></div><div class="b" style="background:#2B4A6B;color:#F6F1E6"><span>小寒</span><small>靛青</small></div><div class="b" style="background:#6B7B8C;color:#F6F1E6"><span>大寒</span><small>苍</small></div></div>
+  <span class="style-tag">Style: 中国传统色·节气色谱</span>
+</section>
+
+<!-- S5 第三天 · 芒种 -->
+<section class="slide s5" style="--accent:#B8860B;--accent-ink:#1F1B16">
+  <div class="topnav"><b>写作产线 · 七日</b><span class="term">芒种 · 藤黄</span></div>
+  <div class="vt reveal">第<i>三</i>天 · 周末 2 小时</div>
+  <div class="meta"><div class="k reveal">第三章 · 样张</div><h2 class="reveal">跑出你的黄金样张</h2></div>
+  <div class="steps">
+    <div class="step reveal"><span class="no">一</span><h3>挑素材最肥沃的那 1 章</h3><p>按 T4 填满 15 条去重事实锚点 + 心流三推演。</p></div>
+    <div class="step reveal"><span class="no">二</span><h3>接上你能触达的最强旗舰模型</h3><p>如 Gemini 4.0——长上下文、语感好的那种。</p></div>
+    <div class="step reveal"><span class="no">三</span><h3>按 T5 的 IPO 批注法起草</h3><p>先出骨架 → 人写批注 → 再合成 3000 字。</p></div>
+    <div class="step reveal"><span class="no">四</span><h3>确立 Golden Copy</h3><p>逐段精修到出版级手感，这就是全书的语调标杆。</p></div>
+  </div>
+  <div class="strip decorative"><div class="b" style="background:#8CC7B5;color:#1F1B16"><span>立春</span><small>缥碧</small></div><div class="b" style="background:#B4C98B;color:#1F1B16"><span>雨水</span><small>柳染</small></div><div class="b" style="background:#A3B87A;color:#1F1B16"><span>惊蛰</span><small>豆青</small></div><div class="b" style="background:#F0AEB2;color:#1F1B16"><span>春分</span><small>桃夭</small></div><div class="b" style="background:#789262;color:#F6F1E6"><span>清明</span><small>竹青</small></div><div class="b" style="background:#5FB3A1;color:#1F1B16"><span>谷雨</span><small>天水碧</small></div><div class="b" style="background:#2B9C8E;color:#F6F1E6"><span>立夏</span><small>松石绿</small></div><div class="b" style="background:#D8C26A;color:#1F1B16"><span>小满</span><small>缃叶</small></div><div class="b cur" style="background:#F2B91A;color:#1F1B16"><span>芒种</span><small>藤黄</small></div><div class="b" style="background:#1B5E9B;color:#F6F1E6"><span>夏至</span><small>石青</small></div><div class="b" style="background:#CFE8EE;color:#1F1B16"><span>小暑</span><small>月白</small></div><div class="b" style="background:#E27A8B;color:#1F1B16"><span>大暑</span><small>荷花红</small></div><div class="b" style="background:#C9B03A;color:#1F1B16"><span>立秋</span><small>秋香</small></div><div class="b" style="background:#F2A93A;color:#1F1B16"><span>处暑</span><small>杏黄</small></div><div class="b" style="background:#EEE9DC;color:#1F1B16"><span>白露</span><small>缟</small></div><div class="b" style="background:#C1832B;color:#F6F1E6"><span>秋分</span><small>琥珀</small></div><div class="b" style="background:#D8411F;color:#F6F1E6"><span>寒露</span><small>朱砂</small></div><div class="b" style="background:#A05A3A;color:#F6F1E6"><span>霜降</span><small>赭石</small></div><div class="b" style="background:#3C4558;color:#F6F1E6"><span>立冬</span><small>黛</small></div><div class="b" style="background:#4B5666;color:#F6F1E6"><span>小雪</span><small>鸦青</small></div><div class="b" style="background:#E6E3DA;color:#1F1B16"><span>大雪</span><small>素</small></div><div class="b" style="background:#26241F;color:#F6F1E6"><span>冬至</span><small>墨</small></div><div class="b" style="background:#2B4A6B;color:#F6F1E6"><span>小寒</span><small>靛青</small></div><div class="b" style="background:#6B7B8C;color:#F6F1E6"><span>大寒</span><small>苍</small></div></div>
+  <span class="style-tag">Style: 中国传统色·节气色谱</span>
+</section>
+
+<!-- S6 收束 · 冬至 -->
+<section class="slide s6" style="--accent:#26241F;--accent-ink:#F6F1E6">
+  <div class="topnav"><b>写作产线 · 七日</b><span class="term">冬至 · 墨</span></div>
+  <div class="inner">
+    <div class="k reveal">卷尾 · 今晚</div>
+    <h2 class="reveal">今晚<em>就</em>开始</h2>
+    <p class="lead2 reveal">选题三问、三个文件夹、五份材料、一张案例卡——30 分钟，你的产线就开机了。然后，让它推着你，把整本书写完。</p>
+    <div class="motto reveal">起草的快，是用素材的慢换来的。<b>手里有粮，心中不慌。</b></div>
+  </div>
+  <div class="strip decorative"><div class="b" style="background:#8CC7B5;color:#1F1B16"><span>立春</span><small>缥碧</small></div><div class="b" style="background:#B4C98B;color:#1F1B16"><span>雨水</span><small>柳染</small></div><div class="b" style="background:#A3B87A;color:#1F1B16"><span>惊蛰</span><small>豆青</small></div><div class="b" style="background:#F0AEB2;color:#1F1B16"><span>春分</span><small>桃夭</small></div><div class="b" style="background:#789262;color:#F6F1E6"><span>清明</span><small>竹青</small></div><div class="b" style="background:#5FB3A1;color:#1F1B16"><span>谷雨</span><small>天水碧</small></div><div class="b" style="background:#2B9C8E;color:#F6F1E6"><span>立夏</span><small>松石绿</small></div><div class="b" style="background:#D8C26A;color:#1F1B16"><span>小满</span><small>缃叶</small></div><div class="b" style="background:#F2B91A;color:#1F1B16"><span>芒种</span><small>藤黄</small></div><div class="b" style="background:#1B5E9B;color:#F6F1E6"><span>夏至</span><small>石青</small></div><div class="b" style="background:#CFE8EE;color:#1F1B16"><span>小暑</span><small>月白</small></div><div class="b" style="background:#E27A8B;color:#1F1B16"><span>大暑</span><small>荷花红</small></div><div class="b" style="background:#C9B03A;color:#1F1B16"><span>立秋</span><small>秋香</small></div><div class="b" style="background:#F2A93A;color:#1F1B16"><span>处暑</span><small>杏黄</small></div><div class="b" style="background:#EEE9DC;color:#1F1B16"><span>白露</span><small>缟</small></div><div class="b" style="background:#C1832B;color:#F6F1E6"><span>秋分</span><small>琥珀</small></div><div class="b" style="background:#D8411F;color:#F6F1E6"><span>寒露</span><small>朱砂</small></div><div class="b" style="background:#A05A3A;color:#F6F1E6"><span>霜降</span><small>赭石</small></div><div class="b" style="background:#3C4558;color:#F6F1E6"><span>立冬</span><small>黛</small></div><div class="b" style="background:#4B5666;color:#F6F1E6"><span>小雪</span><small>鸦青</small></div><div class="b" style="background:#E6E3DA;color:#1F1B16"><span>大雪</span><small>素</small></div><div class="b cur" style="background:#26241F;color:#F6F1E6"><span>冬至</span><small>墨</small></div><div class="b" style="background:#2B4A6B;color:#F6F1E6"><span>小寒</span><small>靛青</small></div><div class="b" style="background:#6B7B8C;color:#F6F1E6"><span>大寒</span><small>苍</small></div></div>
+  <span class="style-tag">Style: 中国传统色·节气色谱</span>
+</section>
+
+<div class="keyboard-hint">← → 翻页 · 空格下一页</div>
+<script>
+class SlidePresentation {
+  constructor() {
+    this.slides = document.querySelectorAll('.slide');
+    this.current = 0;
+    this.setupNav();
+    this.setupKeyboard();
+    this.setupTouch();
+    this.setupWheel();
+    this.observe();
+  }
+  setupNav() {
+    const dots = document.getElementById('navDots');
+    this.slides.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.addEventListener('click', () => this.go(i));
+      dots.appendChild(b);
+    });
+    this.dots = dots.children;
+    this.update();
+  }
+  go(i) {
+    this.current = Math.max(0, Math.min(this.slides.length - 1, i));
+    this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
+    this.update();
+  }
+  update() {
+    Array.from(this.dots).forEach((d, i) => d.classList.toggle('active', i === this.current));
+    document.getElementById('progressBar').style.width = ((this.current + 1) / this.slides.length * 100) + '%';
+  }
+  setupKeyboard() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); this.go(this.current + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); this.go(this.current - 1); }
+      if (e.key === 'Home') this.go(0);
+      if (e.key === 'End') this.go(this.slides.length - 1);
+    });
+  }
+  setupTouch() {
+    let y0 = null;
+    document.addEventListener('touchstart', (e) => { y0 = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      if (y0 === null) return;
+      const dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dy) > 40) this.go(this.current + (dy < 0 ? 1 : -1));
+      y0 = null;
+    }, { passive: true });
+  }
+  setupWheel() {
+    let lock = false;
+    document.addEventListener('wheel', (e) => {
+      if (lock) return;
+      lock = true;
+      setTimeout(() => { lock = false; }, 650);
+      if (Math.abs(e.deltaY) < 20) return;
+      this.go(this.current + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+  observe() {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) {
+          en.target.classList.add('visible');
+          this.current = Array.from(this.slides).indexOf(en.target);
+          this.update();
+        }
+      });
+    }, { threshold: 0.6 });
+    this.slides.forEach((s) => io.observe(s));
+  }
+}
+new SlidePresentation();
+</script>
+</body>
+</html>

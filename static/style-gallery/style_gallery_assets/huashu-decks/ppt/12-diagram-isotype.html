@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7 天启动你的 AI 写作产线 · Diagram-Driven Isotype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============ VIEWPORT BASE (MANDATORY) ============ */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+.slide { width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; }
+:root {
+  --h2-size: clamp(1.2rem, 2.8vw, 2rem);
+  --h3-size: clamp(0.95rem, 2vw, 1.4rem);
+  --body-size: clamp(0.72rem, 1.35vw, 1rem);
+  --small-size: clamp(0.6rem, 0.9vw, 0.8rem);
+  --slide-padding: clamp(1rem, 4vw, 3.5rem);
+  --content-gap: clamp(0.5rem, 2vh, 1.4rem);
+}
+@media (max-height: 600px) {
+  :root { --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem); --content-gap: clamp(0.3rem, 1vw, 0.7rem); --body-size: clamp(0.65rem, 1.1vw, 0.88rem); }
+  .nav-dots, .keyboard-hint { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+  html { scroll-behavior: auto; }
+}
+
+/* ============ PRESET: DIAGRAM-DRIVEN ISOTYPE ============ */
+:root {
+  --bg: #F4F7FB;
+  --navy: #0B2545;
+  --b1: #1B6FD1; --b2: #2E83E0; --b3: #4A98EC;
+  --o: #E8833A; --g: #2BA58A; --p: #7B5CC4;
+  --dim: #4A5F7A;
+  --font: 'IBM Plex Sans', 'Noto Sans SC', sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font); background: var(--bg); color: var(--navy); }
+.slide { background: var(--bg); padding: var(--slide-padding); display: flex; flex-direction: column; }
+h1 { font-size: var(--h2-size); font-weight: 700; letter-spacing: -0.01em; }
+.sub { font-size: var(--body-size); color: var(--dim); margin-top: 0.3em; }
+.sec { font-size: var(--small-size); font-weight: 700; letter-spacing: 0.12em; color: var(--b1); margin-top: var(--content-gap); }
+.stage { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+.flow { display: flex; margin-top: 0.6em; }
+.step { flex: 1; min-height: 4.6em; background: var(--b1); color: #fff; display: flex; flex-direction: column; justify-content: center; padding: 0.5em 0 0.5em 2.2em; clip-path: polygon(0 0, calc(100% - 1.6em) 0, 100% 50%, calc(100% - 1.6em) 100%, 0 100%, 1.6em 50%); margin-right: -0.8em; }
+.step:first-child { clip-path: polygon(0 0, calc(100% - 1.6em) 0, 100% 50%, calc(100% - 1.6em) 100%, 0 100%); padding-left: 1.2em; }
+.step b { font-size: var(--h3-size); font-weight: 700; }
+.step span { font-size: var(--small-size); opacity: 0.9; margin-top: 0.2em; }
+.step.s2 { background: var(--b2); } .step.s3 { background: var(--b3); } .step.s4 { background: var(--navy); }
+.layers { margin-top: 0.6em; display: flex; flex-direction: column; gap: 0.45em; max-width: 52em; }
+.lay { display: flex; min-height: 3.4em; }
+.lay .tag { width: 7.5em; background: var(--navy); color: #fff; font-size: var(--small-size); font-weight: 600; display: flex; align-items: center; padding-left: 1em; flex-shrink: 0; }
+.lay .cells { flex: 1; display: flex; gap: 5px; border: 2px solid var(--navy); padding: 4px; background: #fff; }
+.lay .cell { flex: 1; display: flex; align-items: center; justify-content: center; font-size: var(--small-size); font-weight: 600; color: #fff; padding: 0.2em; text-align: center; }
+.c1 { background: var(--b1); } .c2 { background: var(--o); } .c3 { background: var(--g); } .c4 { background: var(--p); }
+.lay.base .cells { background: #DDE6F2; }
+.lay.base .cell { background: #8FA6C4; color: var(--navy); }
+.lay.base .tag { background: var(--dim); }
+.note { margin-top: var(--content-gap); font-size: var(--body-size); line-height: 1.7; color: #27405F; max-width: 40em; }
+.note b { color: var(--navy); }
+.icons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.7em; margin-top: var(--content-gap); max-width: 34em; }
+.ic { background: #fff; border: 2px solid var(--navy); min-height: 5.4em; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.4em; font-size: var(--small-size); font-weight: 600; padding: 0.4em; }
+.ic svg { width: 1.9em; height: 1.9em; fill: none; stroke: var(--b1); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.legend { margin-top: auto; padding-top: 0.8em; font-size: var(--small-size); color: var(--dim); display: flex; gap: 1.6em; flex-wrap: wrap; }
+.legend i { display: inline-block; width: 12px; height: 12px; margin-right: 6px; vertical-align: -1px; }
+.split { display: grid; grid-template-columns: 1.5fr 1fr; gap: clamp(1rem, 3vw, 2.5rem); align-items: start; }
+@media (max-width: 760px) { .split { grid-template-columns: 1fr; } }
+.toc-flow { display: flex; flex-direction: column; gap: 0.5em; margin-top: 0.6em; max-width: 46em; }
+.toc-flow .step { clip-path: none; margin-right: 0; padding: 0.7em 1.2em; flex-direction: row; align-items: baseline; gap: 1em; min-height: 0; }
+.toc-flow .step b { font-size: var(--body-size); }
+.toc-flow .step .m { margin-left: auto; font-size: var(--small-size); opacity: 0.85; }
+.style-tag { position: absolute; bottom: clamp(0.6rem, 1.6vh, 1rem); right: var(--slide-padding); font-size: var(--small-size); color: #8FA6C4; z-index: 3; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 5px; background: var(--b1); width: 0; z-index: 100; transition: width 0.2s ease; }
+.nav-dots { position: fixed; right: 1rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.6rem; z-index: 100; }
+.nav-dots button { width: 10px; height: 10px; border: 2px solid var(--b1); border-radius: 0; background: transparent; cursor: pointer; padding: 0; }
+.nav-dots button.active { background: var(--b1); }
+.keyboard-hint { position: fixed; bottom: 0.9rem; left: 50%; transform: translateX(-50%); font-size: var(--small-size); color: #8FA6C4; z-index: 100; }
+.reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1); }
+.slide.visible .reveal { opacity: 1; transform: translateY(0); }
+.reveal:nth-child(1) { transition-delay: 0.08s; }
+.reveal:nth-child(2) { transition-delay: 0.18s; }
+.reveal:nth-child(3) { transition-delay: 0.28s; }
+.reveal:nth-child(4) { transition-delay: 0.38s; }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- S1 封面 -->
+<section class="slide">
+  <div class="stage">
+    <h1 class="reveal">7 天启动你的 AI 写作产线</h1>
+    <div class="sub reveal">AI 写作工程学 · 课后行动版 —— 一条从立项到成稿的最小流程</div>
+    <div class="sec reveal">产线旅程 PIPELINE JOURNEY</div>
+    <div class="flow reveal">
+      <div class="step"><b>1 立项</b><span>选题三问 + 素材入库</span></div>
+      <div class="step s2"><b>2 样张</b><span>锚点 + 旗舰模型起草</span></div>
+      <div class="step s4"><b>3 开机</b><span>今晚 30 分钟启动</span></div>
+    </div>
+    <div class="note reveal">不教你背提示词，教你搭一条能写书、也能降维写公众号和播客稿的产线。<b>从今天睡前 30 分钟开始。</b>—— 范冰 XDash</div>
+    <div class="legend reveal"><span><i style="background:#1B6FD1"></i>立项线</span><span><i style="background:#2E83E0"></i>样张线</span><span><i style="background:#0B2545"></i>行动线</span></div>
+  </div>
+  <span class="style-tag">Style: Diagram-Driven Isotype</span>
+</section>
+
+<!-- S2 目录 -->
+<section class="slide">
+  <div class="stage">
+    <h1 class="reveal">这 7 天怎么走</h1>
+    <div class="sub reveal">AGENDA · 四个可交付节点</div>
+    <div class="sec reveal">议程流程 AGENDA FLOW</div>
+    <div class="toc-flow reveal">
+      <div class="step"><b>01 为什么是「7 天」而不是「1 年」</b><span class="m">动力机制</span></div>
+      <div class="step s2"><b>02 第 1 天 · 立项第一性三问</b><span class="m">30 分钟</span></div>
+      <div class="step s3"><b>03 第 3 天 · 跑出你的黄金样张</b><span class="m">2 小时</span></div>
+      <div class="step s4"><b>04 今晚就开始 · 30 分钟开机</b><span class="m">行动</span></div>
+    </div>
+  </div>
+  <span class="style-tag">Style: Diagram-Driven Isotype</span>
+</section>
+
+<!-- S3 为什么 7 天 -->
+<section class="slide">
+  <div class="stage">
+    <h1 class="reveal">为什么是「7 天」而不是「1 年」</h1>
+    <div class="sub reveal">动力机制分层 · 每一层都有可交付物</div>
+    <div class="sec reveal">机制架构 MECHANISM</div>
+    <div class="split reveal">
+      <div class="layers">
+        <div class="lay"><div class="tag">成果层</div><div class="cells"><div class="cell c1">D1 · 1 页合同</div><div class="cell c2">D1 · 案例卡</div><div class="cell c3">D3 · 3000 字样张</div></div></div>
+        <div class="lay"><div class="tag">反馈层</div><div class="cells"><div class="cell c2">每步有产物</div><div class="cell c3">每步可展示</div><div class="cell c4">手感驱动</div></div></div>
+        <div class="lay base"><div class="tag">原则层</div><div class="cells"><div class="cell">不要宏大口号 · 动力外包给最小即时反馈</div></div></div>
+      </div>
+      <div class="note" style="margin-top:0">一门课值不值，看的是学员七天后手里有没有多出一个<b>能给别人看的东西</b>。那个手感，会推着你停不下来地把整本书写完。</div>
+    </div>
+  </div>
+  <span class="style-tag">Style: Diagram-Driven Isotype</span>
+</section>
+
+<!-- S4 第一天 -->
+<section class="slide">
+  <div class="stage">
+    <h1 class="reveal">第 1 天 · 立项第一性三问</h1>
+    <div class="sub reveal">今晚睡前 · 30 分钟 · 四步流水线</div>
+    <div class="sec reveal">流程 FLOW</div>
+    <div class="flow reveal">
+      <div class="step"><b>1 合同</b><span>T2 三问</span></div>
+      <div class="step s2"><b>2 脚手架</b><span>三个文件夹</span></div>
+      <div class="step s3"><b>3 入库</b><span>5 份一手材料</span></div>
+      <div class="step s4"><b>4 拆解</b><span>五段式案例卡</span></div>
+    </div>
+    <div class="sec reveal">要点说明 DETAILS</div>
+    <div class="layers reveal">
+      <div class="lay"><div class="tag">诚实原则</div><div class="cells"><div class="cell c1">填不出三问就不动笔</div><div class="cell c2">raw / anchors / chapters</div></div></div>
+      <div class="lay"><div class="tag">素材标准</div><div class="cells"><div class="cell c3">最痛 + 最得意</div><div class="cell c4">复盘 · 转写 · 访谈</div></div></div>
+      <div class="lay base"><div class="tag">案例卡</div><div class="cells"><div class="cell">起点 → 动作 → 阻力 → 转折 → 结果 + 当事人原话（T3 格式）</div></div></div>
+    </div>
+  </div>
+  <span class="style-tag">Style: Diagram-Driven Isotype</span>
+</section>
+
+<!-- S5 第三天 -->
+<section class="slide">
+  <div class="stage">
+    <h1 class="reveal">第 3 天 · 跑出你的黄金样张</h1>
+    <div class="sub reveal">本周末 · 2 小时 · 四步成稿</div>
+    <div class="sec reveal">能力网格 CAPABILITIES</div>
+    <div class="icons reveal">
+      <div class="ic"><svg viewBox="0 0 40 40"><circle cx="18" cy="18" r="10"/><path d="M26 26l9 9"/></svg>挑最肥沃的 1 章</div>
+      <div class="ic"><svg viewBox="0 0 40 40"><rect x="6" y="5" width="28" height="30" rx="2"/><path d="M12 14h16M12 21h16M12 28h9"/></svg>15 条事实锚点</div>
+      <div class="ic"><svg viewBox="0 0 40 40"><path d="M8 32l4-1L32 11l-3-3L9 28z"/><path d="M26 14l3 3"/></svg>旗舰模型起草</div>
+      <div class="ic"><svg viewBox="0 0 40 40"><path d="M7 21l9 9L33 11"/></svg>IPO 批注法</div>
+      <div class="ic"><svg viewBox="0 0 40 40"><circle cx="12" cy="20" r="5"/><circle cx="29" cy="10" r="5"/><circle cx="29" cy="30" r="5"/><path d="M16 18l9-6M16 22l9 6"/></svg>合成 3000 字</div>
+      <div class="ic"><svg viewBox="0 0 40 40"><path d="M6 33V20M16 33V10M26 33V16M36 33V6"/></svg>确立 Golden Copy</div>
+    </div>
+    <div class="note reveal">先出骨架 → 人写批注 → 再合成 3000 字；逐段精修到<b>出版级手感</b>，这就是全书的语调标杆。</div>
+  </div>
+  <span class="style-tag">Style: Diagram-Driven Isotype</span>
+</section>
+
+<!-- S6 收束 -->
+<section class="slide">
+  <div class="stage">
+    <h1 class="reveal">今晚就开始</h1>
+    <div class="sub reveal">TONIGHT · 30 分钟开机流程</div>
+    <div class="sec reveal">开机流程 BOOT SEQUENCE</div>
+    <div class="flow reveal">
+      <div class="step"><b>三问</b><span>选题诊断</span></div>
+      <div class="step s2"><b>三文件夹</b><span>脚手架</span></div>
+      <div class="step s3"><b>五份材料</b><span>素材入库</span></div>
+      <div class="step s4"><b>一张卡</b><span>产线开机</span></div>
+    </div>
+    <div class="note reveal" style="font-size:var(--h3-size);font-weight:700;color:var(--navy)">起草的快，是用素材的慢换来的。手里有粮，心中不慌——然后，让它推着你，把整本书写完。</div>
+    <div class="legend reveal"><span><i style="background:#1B6FD1"></i>选题</span><span><i style="background:#E8833A"></i>素材</span><span><i style="background:#2BA58A"></i>成稿</span><span><i style="background:#7B5CC4"></i>迭代</span></div>
+  </div>
+  <span class="style-tag">Style: Diagram-Driven Isotype</span>
+</section>
+
+<div class="keyboard-hint">← → 翻页 · 空格下一页</div>
+<script>
+class SlidePresentation {
+  constructor() {
+    this.slides = document.querySelectorAll('.slide');
+    this.current = 0;
+    this.setupNav();
+    this.setupKeyboard();
+    this.setupTouch();
+    this.setupWheel();
+    this.observe();
+  }
+  setupNav() {
+    const dots = document.getElementById('navDots');
+    this.slides.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.addEventListener('click', () => this.go(i));
+      dots.appendChild(b);
+    });
+    this.dots = dots.children;
+    this.update();
+  }
+  go(i) {
+    this.current = Math.max(0, Math.min(this.slides.length - 1, i));
+    this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
+    this.update();
+  }
+  update() {
+    Array.from(this.dots).forEach((d, i) => d.classList.toggle('active', i === this.current));
+    document.getElementById('progressBar').style.width = ((this.current + 1) / this.slides.length * 100) + '%';
+  }
+  setupKeyboard() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); this.go(this.current + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); this.go(this.current - 1); }
+      if (e.key === 'Home') this.go(0);
+      if (e.key === 'End') this.go(this.slides.length - 1);
+    });
+  }
+  setupTouch() {
+    let y0 = null;
+    document.addEventListener('touchstart', (e) => { y0 = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      if (y0 === null) return;
+      const dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dy) > 40) this.go(this.current + (dy < 0 ? 1 : -1));
+      y0 = null;
+    }, { passive: true });
+  }
+  setupWheel() {
+    let lock = false;
+    document.addEventListener('wheel', (e) => {
+      if (lock) return;
+      lock = true;
+      setTimeout(() => { lock = false; }, 650);
+      if (Math.abs(e.deltaY) < 20) return;
+      this.go(this.current + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+  observe() {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) {
+          en.target.classList.add('visible');
+          this.current = Array.from(this.slides).indexOf(en.target);
+          this.update();
+        }
+      });
+    }, { threshold: 0.6 });
+    this.slides.forEach((s) => io.observe(s));
+  }
+}
+new SlidePresentation();
+</script>
+</body>
+</html>

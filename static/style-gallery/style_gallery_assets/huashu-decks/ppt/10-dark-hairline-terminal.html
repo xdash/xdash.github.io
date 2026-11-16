@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7 天启动你的 AI 写作产线 · Dark Hairline Terminal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============ VIEWPORT BASE (MANDATORY) ============ */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+.slide { width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; }
+:root {
+  --h2-size: clamp(1.3rem, 3.2vw, 2.2rem);
+  --h3-size: clamp(1rem, 2.2vw, 1.5rem);
+  --body-size: clamp(0.75rem, 1.4vw, 1.05rem);
+  --small-size: clamp(0.62rem, 0.95vw, 0.82rem);
+  --pad: clamp(1rem, 3.4vw, 3rem);
+}
+@media (max-height: 600px) {
+  :root { --pad: clamp(0.5rem, 2.5vw, 1.5rem); --body-size: clamp(0.68rem, 1.1vw, 0.9rem); }
+  .nav-dots, .keyboard-hint { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+  html { scroll-behavior: auto; }
+}
+
+/* ============ PRESET: DARK HAIRLINE TERMINAL ============ */
+:root {
+  --bg: #0D0D0F;
+  --bg2: #111113;
+  --line: #262629;
+  --ink: #EDEDEF;
+  --dim: #A1A1AA;
+  --mono-dim: #8B8B93;
+  --accent: #7C7CFF;
+  --font-tight: 'Inter Tight', 'Noto Sans SC', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font-tight); background: var(--bg); color: var(--ink); }
+.slide { background: var(--bg); padding: var(--pad); }
+.frame { flex: 1; border: 1px solid var(--line); display: flex; flex-direction: column; min-height: 0; }
+.head { height: 3.2em; display: flex; justify-content: space-between; align-items: center; padding: 0 1.6em; border-bottom: 1px solid var(--line); flex-shrink: 0; }
+.head b { font-family: var(--font-mono); font-weight: 500; font-size: var(--small-size); letter-spacing: 0.04em; }
+.head b::before { content: ""; display: inline-block; width: 8px; height: 8px; background: var(--accent); margin-right: 10px; }
+.mono { font-family: var(--font-mono); font-weight: 400; font-size: var(--small-size); color: var(--mono-dim); letter-spacing: 0.08em; text-transform: uppercase; }
+.stage { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 0 1.8em; min-height: 0; }
+h1 { font-family: var(--font-tight); font-weight: 600; font-size: clamp(1.8rem, 5.5vw, 4rem); line-height: 1.12; letter-spacing: -0.03em; }
+h1 span, h2 span { color: var(--accent); }
+h2 { font-family: var(--font-tight); font-weight: 600; font-size: var(--h2-size); line-height: 1.2; letter-spacing: -0.02em; }
+.lead { font-family: 'Noto Sans SC', sans-serif; font-weight: 400; font-size: var(--body-size); line-height: 1.75; color: var(--dim); max-width: 36em; margin-top: 1em; }
+.lead strong { color: var(--ink); font-weight: 500; }
+.cmd { border: 1px solid var(--line); background: var(--bg2); padding: 1em 1.3em; font-family: var(--font-mono); font-weight: 400; font-size: var(--body-size); line-height: 1.85; color: var(--ink); margin-top: 1.2em; max-width: 40em; }
+.cmd .p { color: var(--accent); }
+.cmd .m { color: #6B6B73; }
+.grid { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); flex-shrink: 0; }
+.cell { padding: 1em 1.6em; border-right: 1px solid var(--line); }
+.cell:last-child { border-right: 0; }
+.cell b { display: block; font-family: var(--font-tight); font-weight: 500; font-size: var(--h3-size); letter-spacing: -0.02em; margin-top: 0.7em; }
+.cell b .a { color: var(--accent); }
+.toc { list-style: none; margin-top: 0.4em; }
+.toc li { display: flex; align-items: baseline; gap: 1.2em; padding: 0.75em 0; border-bottom: 1px solid var(--line); }
+.toc li:first-child { border-top: 1px solid var(--line); }
+.toc .no { font-family: var(--font-mono); color: var(--accent); font-size: var(--small-size); min-width: 2.4em; }
+.toc .tx { font-weight: 600; font-size: var(--h3-size); letter-spacing: -0.01em; }
+.toc .meta { margin-left: auto; }
+.steps { list-style: none; margin-top: 0.8em; }
+.steps li { display: flex; gap: 1.1em; padding: 0.65em 0; border-bottom: 1px solid var(--line); align-items: baseline; }
+.steps .no { font-family: var(--font-mono); color: var(--mono-dim); font-size: var(--small-size); }
+.steps .t { font-weight: 600; font-size: var(--body-size); font-family: 'Noto Sans SC', sans-serif; }
+.steps .d { font-family: 'Noto Sans SC', sans-serif; font-size: var(--small-size); color: var(--dim); margin-top: 0.2em; }
+.style-tag { position: absolute; bottom: calc(var(--pad) * 0.4); right: var(--pad); font-family: var(--font-mono); font-size: var(--small-size); color: #55555c; z-index: 3; letter-spacing: 0.06em; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 2px; background: var(--accent); width: 0; z-index: 100; transition: width 0.2s ease; }
+.nav-dots { position: fixed; right: 1rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.6rem; z-index: 100; }
+.nav-dots button { width: 8px; height: 8px; border: 1px solid #3a3a40; border-radius: 0; background: transparent; cursor: pointer; padding: 0; }
+.nav-dots button.active { background: var(--accent); border-color: var(--accent); }
+.keyboard-hint { position: fixed; bottom: 0.8rem; left: 50%; transform: translateX(-50%); font-family: var(--font-mono); font-size: var(--small-size); color: #3f3f46; z-index: 100; }
+.reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1); }
+.slide.visible .reveal { opacity: 1; transform: translateY(0); }
+.reveal:nth-child(1) { transition-delay: 0.08s; }
+.reveal:nth-child(2) { transition-delay: 0.18s; }
+.reveal:nth-child(3) { transition-delay: 0.28s; }
+.reveal:nth-child(4) { transition-delay: 0.38s; }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- S1 封面 -->
+<section class="slide">
+  <div class="frame">
+    <div class="head"><b>writing-pipeline</b><span class="mono">v7d · 2026 · XDash</span></div>
+    <div class="stage">
+      <h1 class="reveal">7 天启动<br>你的 <span>AI 写作产线</span>。</h1>
+      <p class="lead reveal">不教你背提示词，教你搭一条能写书、也能降维写公众号和播客稿的产线。从今天睡前 30 分钟开始。—— 范冰 XDash</p>
+      <div class="cmd reveal"><span class="m">$</span> <span class="p">pipeline</span> init <span class="m">--tonight</span><br><span class="m">  → ready in 30 min, 0 prompts memorized</span></div>
+    </div>
+    <div class="grid">
+      <div class="cell"><span class="mono">开机成本</span><b>30 min</b></div>
+      <div class="cell"><span class="mono">第一产物</span><b>1 页<span class="a">合同</span></b></div>
+      <div class="cell"><span class="mono">周末产物</span><b>3000 字</b></div>
+      <div class="cell"><span class="mono">提示词背诵</span><b><span class="a">0</span> 条</b></div>
+    </div>
+  </div>
+  <span class="style-tag">Style: Dark Hairline Terminal</span>
+</section>
+
+<!-- S2 目录 -->
+<section class="slide">
+  <div class="frame">
+    <div class="head"><b>agenda</b><span class="mono">02 / 06</span></div>
+    <div class="stage">
+      <h2 class="reveal">这 7 天<span>怎么走</span></h2>
+      <ul class="toc reveal">
+        <li><span class="no">[01]</span><span class="tx">为什么是「7 天」而不是「1 年」</span><span class="meta mono">why.md</span></li>
+        <li><span class="no">[02]</span><span class="tx">第 1 天 · 立项第一性三问</span><span class="meta mono">30 min</span></li>
+        <li><span class="no">[03]</span><span class="tx">第 3 天 · 跑出你的黄金样张</span><span class="meta mono">2 hrs</span></li>
+        <li><span class="no">[04]</span><span class="tx">今晚就开始 · 30 分钟开机</span><span class="meta mono">go.sh</span></li>
+      </ul>
+    </div>
+    <div class="grid">
+      <div class="cell"><span class="mono">机制</span><b>即时反馈</b></div>
+      <div class="cell"><span class="mono">原则</span><b>每步有产物</b></div>
+      <div class="cell"><span class="mono">原则</span><b>每步可展示</b></div>
+      <div class="cell"><span class="mono">状态</span><b><span class="a">ready</span></b></div>
+    </div>
+  </div>
+  <span class="style-tag">Style: Dark Hairline Terminal</span>
+</section>
+
+<!-- S3 为什么 7 天 -->
+<section class="slide">
+  <div class="frame">
+    <div class="head"><b>why-seven-days</b><span class="mono">03 / 06</span></div>
+    <div class="stage">
+      <h2 class="reveal">为什么是「7 天」<br>而不是<span>「1 年」</span>？</h2>
+      <p class="lead reveal">一门课值不值，看的是学员七天后手里有没有多出一个<strong>能给别人看的东西</strong>。不要宏大口号，把动力外包给最小即时反馈：每步都有产物，每步都能拿出手。那个手感，会推着你停不下来地把整本书写完。</p>
+      <div class="cmd reveal"><span class="m">day1 →</span> 选题诊断合同 <span class="m">+</span> 五段式案例卡<br><span class="m">day3 →</span> <span class="p">3000 字黄金样张</span> <span class="m"># 出版级手感</span></div>
+    </div>
+    <div class="grid">
+      <div class="cell"><span class="mono">周期</span><b>7 天</b></div>
+      <div class="cell"><span class="mono">对照</span><b>365 天</b></div>
+      <div class="cell"><span class="mono">反馈延迟</span><b><span class="a">−98%</span></b></div>
+      <div class="cell"><span class="mono">宏大口号</span><b>0 句</b></div>
+    </div>
+  </div>
+  <span class="style-tag">Style: Dark Hairline Terminal</span>
+</section>
+
+<!-- S4 第一天 -->
+<section class="slide">
+  <div class="frame">
+    <div class="head"><b>day-1 · 立项第一性三问</b><span class="mono">今晚睡前 · 30 min</span></div>
+    <div class="stage">
+      <ul class="steps reveal">
+        <li><span class="no">step 1/4</span><div><div class="t">打开 T2《第一性选题诊断合同》</div><div class="d">诚实填完「立项第一性三问」，填不出就不动笔。</div></div></li>
+        <li><span class="no">step 2/4</span><div><div class="t">建三个空文件夹</div><div class="d">raw / anchors / chapters —— 你的工程脚手架。</div></div></li>
+        <li><span class="no">step 3/4</span><div><div class="t">丢入 5 份一手材料</div><div class="d">人生里最痛、最得意的 5 份原始材料：复盘长文、录音转写、深度访谈。</div></div></li>
+        <li><span class="no">step 4/4</span><div><div class="t">拆出第一张五段式案例卡</div><div class="d">起点 → 动作 → 阻力 → 转折 → 结果 + 当事人原话。按 T3 格式。</div></div></li>
+      </ul>
+    </div>
+    <div class="grid">
+      <div class="cell"><span class="mono">输入</span><b>5 份材料</b></div>
+      <div class="cell"><span class="mono">输出</span><b>1 页<span class="a">合同</span></b></div>
+      <div class="cell"><span class="mono">输出</span><b>1 张案例卡</b></div>
+      <div class="cell"><span class="mono">耗时</span><b>30 min</b></div>
+    </div>
+  </div>
+  <span class="style-tag">Style: Dark Hairline Terminal</span>
+</section>
+
+<!-- S5 第三天 -->
+<section class="slide">
+  <div class="frame">
+    <div class="head"><b>day-3 · 黄金样张</b><span class="mono">本周末 · 2 hrs</span></div>
+    <div class="stage">
+      <ul class="steps reveal">
+        <li><span class="no">step 1/4</span><div><div class="t">挑素材最肥沃的那 1 章</div><div class="d">按 T4 填满 15 条去重事实锚点 + 心流三推演。</div></div></li>
+        <li><span class="no">step 2/4</span><div><div class="t">接上你能触达的最强旗舰模型</div><div class="d">如 Gemini 4.0——长上下文、语感好的那种。</div></div></li>
+        <li><span class="no">step 3/4</span><div><div class="t">按 T5 的 IPO 批注法起草</div><div class="d">先出骨架 → 人写批注 → 再合成 3000 字。</div></div></li>
+        <li><span class="no">step 4/4</span><div><div class="t">确立 Golden Copy</div><div class="d">逐段精修到出版级手感，这就是全书的语调标杆。</div></div></li>
+      </ul>
+    </div>
+    <div class="grid">
+      <div class="cell"><span class="mono">锚点</span><b>15 条</b></div>
+      <div class="cell"><span class="mono">成稿</span><b>3000 字</b></div>
+      <div class="cell"><span class="mono">标准</span><b><span class="a">出版级</span></b></div>
+      <div class="cell"><span class="mono">耗时</span><b>2 hrs</b></div>
+    </div>
+  </div>
+  <span class="style-tag">Style: Dark Hairline Terminal</span>
+</section>
+
+<!-- S6 收束 -->
+<section class="slide">
+  <div class="frame">
+    <div class="head"><b>tonight</b><span class="mono">06 / 06 · eof</span></div>
+    <div class="stage">
+      <h1 class="reveal">手里有粮，<br><span>心中不慌。</span></h1>
+      <p class="lead reveal">选题三问、三个文件夹、五份材料、一张案例卡——30 分钟，你的产线就开机了。然后，让它推着你，把整本书写完。</p>
+      <div class="cmd reveal"><span class="m">$</span> <span class="p">echo</span> <span class="m">"起草的快，是用素材的慢换来的。"</span></div>
+    </div>
+    <div class="grid">
+      <div class="cell"><span class="mono">开机</span><b>今晚</b></div>
+      <div class="cell"><span class="mono">成本</span><b>30 min</b></div>
+      <div class="cell"><span class="mono">下一步</span><b>整本书</b></div>
+      <div class="cell"><span class="mono">状态</span><b><span class="a">running</span></b></div>
+    </div>
+  </div>
+  <span class="style-tag">Style: Dark Hairline Terminal</span>
+</section>
+
+<div class="keyboard-hint">← → 翻页 · 空格下一页</div>
+<script>
+class SlidePresentation {
+  constructor() {
+    this.slides = document.querySelectorAll('.slide');
+    this.current = 0;
+    this.setupNav();
+    this.setupKeyboard();
+    this.setupTouch();
+    this.setupWheel();
+    this.observe();
+  }
+  setupNav() {
+    const dots = document.getElementById('navDots');
+    this.slides.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.addEventListener('click', () => this.go(i));
+      dots.appendChild(b);
+    });
+    this.dots = dots.children;
+    this.update();
+  }
+  go(i) {
+    this.current = Math.max(0, Math.min(this.slides.length - 1, i));
+    this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
+    this.update();
+  }
+  update() {
+    Array.from(this.dots).forEach((d, i) => d.classList.toggle('active', i === this.current));
+    document.getElementById('progressBar').style.width = ((this.current + 1) / this.slides.length * 100) + '%';
+  }
+  setupKeyboard() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); this.go(this.current + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); this.go(this.current - 1); }
+      if (e.key === 'Home') this.go(0);
+      if (e.key === 'End') this.go(this.slides.length - 1);
+    });
+  }
+  setupTouch() {
+    let y0 = null;
+    document.addEventListener('touchstart', (e) => { y0 = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      if (y0 === null) return;
+      const dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dy) > 40) this.go(this.current + (dy < 0 ? 1 : -1));
+      y0 = null;
+    }, { passive: true });
+  }
+  setupWheel() {
+    let lock = false;
+    document.addEventListener('wheel', (e) => {
+      if (lock) return;
+      lock = true;
+      setTimeout(() => { lock = false; }, 650);
+      if (Math.abs(e.deltaY) < 20) return;
+      this.go(this.current + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+  observe() {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) {
+          en.target.classList.add('visible');
+          this.current = Array.from(this.slides).indexOf(en.target);
+          this.update();
+        }
+      });
+    }, { threshold: 0.6 });
+    this.slides.forEach((s) => io.observe(s));
+  }
+}
+new SlidePresentation();
+</script>
+</body>
+</html>

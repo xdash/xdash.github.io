@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7 天启动你的 AI 写作产线 · Dense Research Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Inter:wght@400;500;600;700&family=Geist+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+/* ============ VIEWPORT BASE (MANDATORY) ============ */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+.slide { width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; }
+:root {
+  --h2-size: clamp(1.05rem, 2.2vw, 1.6rem);
+  --body-size: clamp(0.7rem, 1.3vw, 0.95rem);
+  --small-size: clamp(0.58rem, 0.85vw, 0.75rem);
+  --pad: clamp(0.8rem, 2.6vw, 2.2rem);
+}
+@media (max-height: 600px) {
+  :root { --pad: clamp(0.5rem, 2vw, 1.2rem); }
+  .nav-dots, .keyboard-hint { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+  html { scroll-behavior: auto; }
+}
+
+/* ============ PRESET: DENSE RESEARCH REPORT ============ */
+:root {
+  --bg: #ffffff;
+  --ink: #111111;
+  --blue: #0066FF;
+  --grey: #C4CAD4;
+  --kbg: #F2F6FF;
+  --dim: #555555;
+  --font: 'Inter', 'Noto Sans SC', sans-serif;
+  --mono: 'Geist Mono', monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font); background: var(--bg); color: var(--ink); }
+.slide { background: var(--bg); padding: var(--pad); display: flex; flex-direction: column; }
+.hd { display: flex; justify-content: space-between; font-size: var(--small-size); color: var(--dim); letter-spacing: 0.08em; font-weight: 600; border-bottom: 2px solid var(--blue); padding-bottom: 0.4em; }
+h1 { font-size: var(--h2-size); font-weight: 900; line-height: 1.3; margin-top: 0.5em; }
+h1 em { font-style: normal; color: var(--blue); }
+.g { flex: 1; min-height: 0; display: grid; gap: 0.7em 1.4em; margin-top: 0.7em; }
+.g2 { grid-template-columns: 1.25fr 1fr 0.8fr; grid-template-rows: 1fr 1fr; }
+.g3 { grid-template-columns: repeat(4, 1fr); grid-template-rows: 1fr; }
+.g4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1.2fr 1fr; }
+@media (max-width: 700px) { .g2, .g3, .g4 { grid-template-columns: 1fr 1fr; grid-template-rows: auto; } }
+.p { border-top: 1px solid var(--ink); padding-top: 0.35em; position: relative; min-height: 0; display: flex; flex-direction: column; }
+.p h4 { margin: 0 0 0.3em; font-size: var(--small-size); font-weight: 700; line-height: 1.35; }
+.p h4 span { font-weight: 400; color: var(--dim); }
+.p.big { grid-row: span 2; }
+.p svg { display: block; width: 100%; flex: 1; min-height: 0; }
+.p svg text { font-family: var(--font); font-size: 11px; fill: #444; }
+.kpi { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6em; flex: 1; }
+.k { background: var(--kbg); padding: 0.8em 0.7em; }
+.k b { display: block; font-family: var(--mono); font-size: clamp(1.1rem, 2.4vw, 1.8rem); font-weight: 600; color: var(--blue); line-height: 1.1; }
+.k span { font-size: var(--small-size); color: #444; line-height: 1.35; display: block; margin-top: 0.2em; }
+.fn { margin-top: 0.6em; font-size: var(--small-size); color: var(--dim); line-height: 1.5; border-top: 1px solid #CCC; padding-top: 0.4em; display: flex; justify-content: space-between; }
+.style-tag { position: absolute; bottom: calc(var(--pad) * 0.3); right: var(--pad); font-size: var(--small-size); color: #BBB; z-index: 3; display: none; }
+.hd .style-tag { position: static; display: inline; color: #999; font-weight: 400; letter-spacing: 0.02em; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: var(--blue); width: 0; z-index: 100; transition: width 0.2s ease; }
+.nav-dots { position: fixed; right: 0.8rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.5rem; z-index: 100; }
+.nav-dots button { width: 8px; height: 8px; border: 1px solid var(--blue); border-radius: 0; background: transparent; cursor: pointer; padding: 0; }
+.nav-dots button.active { background: var(--blue); }
+.keyboard-hint { position: fixed; bottom: 0.7rem; left: 50%; transform: translateX(-50%); font-size: var(--small-size); color: #BBB; z-index: 100; }
+.reveal { opacity: 0; transform: translateY(12px); transition: opacity 0.45s ease, transform 0.45s ease; }
+.slide.visible .reveal { opacity: 1; transform: translateY(0); }
+.reveal:nth-child(1) { transition-delay: 0.06s; }
+.reveal:nth-child(2) { transition-delay: 0.14s; }
+.reveal:nth-child(3) { transition-delay: 0.22s; }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- S1 封面 -->
+<section class="slide">
+  <div class="hd reveal"><span>写作产线行动方案 · 2026 · XDash</span><span><span class="style-tag">Style: Dense Research Report</span>&nbsp;&nbsp;WRITING PIPELINE BRIEF</span></div>
+  <h1 class="reveal">7 天启动你的 AI 写作产线：<em>两个时间盒</em>交付两件可展示产物</h1>
+  <div class="g g2 reveal">
+    <div class="p big"><h4>图 1　7 天产物时间线 <span>（产物数，累计）</span></h4>
+      <svg viewBox="0 0 420 300">
+        <line x1="30" y1="260" x2="410" y2="260" stroke="#111"/>
+        <rect x="60" y="180" width="40" height="80" fill="#0066FF"/><text x="80" y="172" text-anchor="middle" style="font-weight:700;fill:#0050CC">2</text><text x="80" y="278" text-anchor="middle">D1</text>
+        <rect x="150" y="180" width="40" height="80" fill="#C4CAD4"/><text x="170" y="278" text-anchor="middle">D2</text>
+        <rect x="240" y="140" width="40" height="120" fill="#0066FF"/><text x="260" y="132" text-anchor="middle" style="font-weight:700;fill:#0050CC">3</text><text x="260" y="278" text-anchor="middle">D3</text>
+        <rect x="330" y="140" width="40" height="120" fill="#C4CAD4"/><text x="350" y="278" text-anchor="middle">D7</text>
+        <text x="30" y="40" style="fill:#555">D1：合同+案例卡；D3：黄金样张</text>
+      </svg></div>
+    <div class="p"><h4>图 2　开机投入 <span>（分钟，今晚）</span></h4>
+      <svg viewBox="0 0 360 160">
+        <rect x="30" y="30" width="48" height="20" fill="#0066FF"/><text x="86" y="44">填合同 8′</text>
+        <rect x="30" y="62" width="30" height="20" fill="#7FAEFF"/><text x="68" y="76">建目录 5′</text>
+        <rect x="30" y="94" width="60" height="20" fill="#0066FF"/><text x="98" y="108">收材料 10′</text>
+        <rect x="30" y="126" width="42" height="20" fill="#7FAEFF"/><text x="80" y="140">案例卡 7′</text>
+      </svg></div>
+    <div class="p"><h4>核心指标 <span>（本方案）</span></h4><div class="kpi">
+      <div class="k"><b>30min</b><span>今晚开机成本</span></div><div class="k"><b>2 件</b><span>前三天产物</span></div>
+      <div class="k"><b>3000</b><span>样张字数（出版级）</span></div><div class="k"><b>0 条</b><span>需背诵的提示词</span></div></div></div>
+    <div class="p"><h4>图 3　动力来源构成 <span>（%）</span></h4>
+      <svg viewBox="0 0 360 160">
+        <rect x="30" y="40" width="216" height="34" fill="#0066FF"/><text x="138" y="62" text-anchor="middle" style="fill:#fff;font-weight:600">即时反馈 72</text>
+        <rect x="246" y="40" width="84" height="34" fill="#C4CAD4"/><text x="288" y="62" text-anchor="middle">口号 28</text>
+        <text x="30" y="120" style="fill:#555">对照：「1 年」式学习口号占比 100%</text>
+      </svg></div>
+    <div class="p"><h4>适用产出 <span>（降维兼容）</span></h4><div class="kpi" style="grid-template-columns:1fr">
+      <div class="k"><b>书</b><span>主产出</span></div><div class="k"><b>公众号/播客稿</b><span>降维产出</span></div></div></div>
+  </div>
+  <div class="fn"><span>来源：AI 写作工程学课后行动方案；范冰 XDash 主讲。注：时间分配为建议值。</span><span>1</span></div>
+</section>
+
+<!-- S2 目录 -->
+<section class="slide">
+  <div class="hd reveal"><span>议程 · Agenda</span><span><span class="style-tag">Style: Dense Research Report</span>&nbsp;&nbsp;02/06</span></div>
+  <h1 class="reveal">本方案分四节展开，每节对应<em>一个可检验的交付物</em></h1>
+  <div class="g g3 reveal" style="margin-top:1em">
+    <div class="p"><h4>§01 动力机制</h4><div class="kpi" style="grid-template-columns:1fr"><div class="k"><b>WHY</b><span>为什么是「7 天」而不是「1 年」</span></div></div>
+      <svg viewBox="0 0 260 90" style="margin-top:8px;flex:0"><rect x="10" y="30" width="60" height="16" fill="#0066FF"/><rect x="10" y="56" width="230" height="16" fill="#C4CAD4"/><text x="10" y="22">7 天 vs 1 年首次产物</text></svg></div>
+    <div class="p"><h4>§02 第 1 天</h4><div class="kpi" style="grid-template-columns:1fr"><div class="k"><b>30min</b><span>立项第一性三问</span></div></div>
+      <svg viewBox="0 0 260 90" style="margin-top:8px;flex:0"><rect x="10" y="34" width="50" height="40" fill="#0066FF"/><rect x="70" y="34" width="50" height="40" fill="#7FAEFF"/><rect x="130" y="34" width="50" height="40" fill="#0066FF"/><rect x="190" y="34" width="50" height="40" fill="#7FAEFF"/><text x="10" y="22">四步：合同/目录/材料/卡</text></svg></div>
+    <div class="p"><h4>§03 第 3 天</h4><div class="kpi" style="grid-template-columns:1fr"><div class="k"><b>2hrs</b><span>跑出黄金样张</span></div></div>
+      <svg viewBox="0 0 260 90" style="margin-top:8px;flex:0"><path d="M10 70 L70 52 L130 40 L190 24 L250 10" stroke="#0066FF" stroke-width="3" fill="none"/><text x="10" y="86">IPO 批注法成稿曲线</text></svg></div>
+    <div class="p"><h4>§04 今晚</h4><div class="kpi" style="grid-template-columns:1fr"><div class="k"><b>GO</b><span>30 分钟开机</span></div></div>
+      <svg viewBox="0 0 260 90" style="margin-top:8px;flex:0"><circle cx="130" cy="46" r="30" fill="none" stroke="#C4CAD4" stroke-width="8"/><path d="M130 16 A30 30 0 0 1 160 46" stroke="#0066FF" stroke-width="8" fill="none"/><text x="130" y="52" text-anchor="middle" style="font-weight:700">30′</text></svg></div>
+  </div>
+  <div class="fn"><span>结构：机制论证 → 两个时间盒 → 今晚行动。</span><span>2</span></div>
+</section>
+
+<!-- S3 为什么 7 天 -->
+<section class="slide">
+  <div class="hd reveal"><span>动力机制 · Why 7 Days</span><span><span class="style-tag">Style: Dense Research Report</span>&nbsp;&nbsp;03/06</span></div>
+  <h1 class="reveal">反馈延迟从 12 个月压缩到 1 天：课程价值判据是「手里多出<em>能给别人看的东西</em>」</h1>
+  <div class="g g2 reveal">
+    <div class="p big"><h4>图 1　首次可展示产物出现时间 <span>（月，两种学习方案对比）</span></h4>
+      <svg viewBox="0 0 420 300">
+        <line x1="40" y1="250" x2="400" y2="250" stroke="#111"/>
+        <rect x="90" y="236" width="50" height="14" fill="#0066FF"/><text x="115" y="226" text-anchor="middle" style="font-weight:700;fill:#0050CC">0.03</text><text x="115" y="268" text-anchor="middle">7 天方案</text>
+        <rect x="240" y="30" width="50" height="220" fill="#C4CAD4"/><text x="265" y="22" text-anchor="middle">12</text><text x="265" y="268" text-anchor="middle">「1 年」方案</text>
+        <text x="40" y="60" style="fill:#555">−99.7% 反馈延迟</text>
+      </svg></div>
+    <div class="p"><h4>图 2　每日产物检查 <span>（D1–D3）</span></h4>
+      <svg viewBox="0 0 360 160">
+        <circle cx="60" cy="50" r="16" fill="#0066FF"/><text x="90" y="55">D1 合同+案例卡</text>
+        <circle cx="60" cy="100" r="16" fill="#0066FF"/><text x="90" y="105">D3 3000 字样张</text>
+      </svg></div>
+    <div class="p"><h4>核心指标</h4><div class="kpi">
+      <div class="k"><b>1 页</b><span>选题诊断合同</span></div><div class="k"><b>1 张</b><span>五段式案例卡</span></div>
+      <div class="k"><b>3000 字</b><span>黄金样张</span></div><div class="k"><b>∞</b><span>手感带来的续写动力</span></div></div></div>
+    <div class="p"><h4>图 3　机制拆解 <span>（占动力贡献 %）</span></h4>
+      <svg viewBox="0 0 360 160">
+        <rect x="30" y="30" width="150" height="22" fill="#0066FF"/><text x="188" y="45">每步有产物 50</text>
+        <rect x="30" y="64" width="120" height="22" fill="#7FAEFF"/><text x="158" y="79">每步可展示 40</text>
+        <rect x="30" y="98" width="30" height="22" fill="#C4CAD4"/><text x="68" y="113">口号 10</text>
+      </svg></div>
+    <div class="p"><h4>推论</h4><div class="kpi" style="grid-template-columns:1fr"><div class="k"><b>手感 → 全书</b><span>停不下来地把整本书写完</span></div></div></div>
+  </div>
+  <div class="fn"><span>注：「能给别人看的东西」为本方案第一性判据；比例数据为设计权重示意。</span><span>3</span></div>
+</section>
+
+<!-- S4 第一天 -->
+<section class="slide">
+  <div class="hd reveal"><span>第 1 天 · Day 1</span><span><span class="style-tag">Style: Dense Research Report</span>&nbsp;&nbsp;04/06</span></div>
+  <h1 class="reveal">30 分钟拆成四个动作，产出<em>一页合同与一张案例卡</em></h1>
+  <div class="g g4 reveal">
+    <div class="p"><h4>图 1　动作甘特 <span>（分钟）</span></h4>
+      <svg viewBox="0 0 420 190">
+        <rect x="100" y="20" width="112" height="24" fill="#0066FF"/><text x="98" y="36" text-anchor="end">1 填 T2 合同</text><text x="220" y="36">8′ 填不出不动笔</text>
+        <rect x="100" y="60" width="70" height="24" fill="#7FAEFF"/><text x="98" y="76" text-anchor="end">2 建三文件夹</text><text x="178" y="76">5′ raw/anchors/chapters</text>
+        <rect x="100" y="100" width="140" height="24" fill="#0066FF"/><text x="98" y="116" text-anchor="end">3 收 5 份材料</text><text x="248" y="116">10′ 最痛+最得意</text>
+        <rect x="100" y="140" width="98" height="24" fill="#7FAEFF"/><text x="98" y="156" text-anchor="end">4 拆案例卡</text><text x="206" y="156">7′ T3 五段式</text>
+      </svg></div>
+    <div class="p"><h4>图 2　材料构成 <span>（5 份一手材料）</span></h4>
+      <svg viewBox="0 0 420 190">
+        <circle cx="120" cy="95" r="55" fill="#F2F6FF" stroke="#0066FF" stroke-width="3"/>
+        <circle cx="240" cy="95" r="40" fill="#F2F6FF" stroke="#7FAEFF" stroke-width="3"/>
+        <text x="120" y="90" text-anchor="middle" style="font-weight:700">复盘长文</text><text x="120" y="108" text-anchor="middle">×2</text>
+        <text x="240" y="90" text-anchor="middle">录音转写</text><text x="240" y="106" text-anchor="middle">×2</text>
+        <text x="330" y="100">深度访谈 ×1</text>
+      </svg></div>
+    <div class="p"><h4>验收标准</h4><div class="kpi" style="grid-template-columns:1fr 1fr">
+      <div class="k"><b>3 问</b><span>诚实填完</span></div><div class="k"><b>5 段</b><span>案例卡结构</span></div>
+      <div class="k"><b>+原话</b><span>当事人引述</span></div><div class="k"><b>0</b><span>虚构素材</span></div></div></div>
+    <div class="p"><h4>产物清单</h4><div class="kpi" style="grid-template-columns:1fr">
+      <div class="k"><b>1 页合同</b><span>《第一性选题诊断合同》</span></div><div class="k"><b>1 张卡</b><span>起点→动作→阻力→转折→结果</span></div></div></div>
+  </div>
+  <div class="fn"><span>来源：T2 合同模板、T3 案例卡格式；时间为建议分配，合计 30 分钟。</span><span>4</span></div>
+</section>
+
+<!-- S5 第三天 -->
+<section class="slide">
+  <div class="hd reveal"><span>第 3 天 · Day 3</span><span><span class="style-tag">Style: Dense Research Report</span>&nbsp;&nbsp;05/06</span></div>
+  <h1 class="reveal">2 小时按 IPO 批注法成稿 3000 字，精修至<em>出版级语调标杆</em></h1>
+  <div class="g g4 reveal">
+    <div class="p"><h4>图 1　成稿流程 <span>（T5 IPO 批注法）</span></h4>
+      <svg viewBox="0 0 420 190">
+        <rect x="20" y="70" width="90" height="40" fill="#C4CAD4"/><text x="65" y="94" text-anchor="middle">骨架</text>
+        <rect x="130" y="70" width="90" height="40" fill="#7FAEFF"/><text x="175" y="94" text-anchor="middle">人写批注</text>
+        <rect x="240" y="70" width="90" height="40" fill="#0066FF"/><text x="285" y="94" text-anchor="middle" style="fill:#fff">合成 3000 字</text>
+        <rect x="350" y="70" width="60" height="40" fill="#0050CC"/><text x="380" y="94" text-anchor="middle" style="fill:#fff">精修</text>
+        <path d="M110 90 h20 M220 90 h20 M330 90 h20" stroke="#111" stroke-width="2"/>
+        <text x="20" y="40" style="fill:#555">输入：15 条去重事实锚点（T4）+ 旗舰模型</text>
+        <text x="20" y="160" style="fill:#555">输出：Golden Copy = 全书语调标杆</text>
+      </svg></div>
+    <div class="p"><h4>图 2　锚点密度 <span>（条/章）</span></h4>
+      <svg viewBox="0 0 420 190">
+        <rect x="60" y="120" width="40" height="50" fill="#C4CAD4"/><text x="80" y="112" text-anchor="middle">3</text><text x="80" y="186" text-anchor="middle">普通章</text>
+        <rect x="180" y="30" width="40" height="140" fill="#0066FF"/><text x="200" y="22" text-anchor="middle" style="font-weight:700;fill:#0050CC">15</text><text x="200" y="186" text-anchor="middle">最肥沃的 1 章</text>
+        <rect x="300" y="140" width="40" height="30" fill="#C4CAD4"/><text x="320" y="132" text-anchor="middle">2</text><text x="320" y="186" text-anchor="middle">枯竭章</text>
+      </svg></div>
+    <div class="p"><h4>模型选择标准</h4><div class="kpi" style="grid-template-columns:1fr 1fr">
+      <div class="k"><b>长上下文</b><span>15 锚点全量输入</span></div><div class="k"><b>语感好</b><span>如 Gemini 4.0</span></div></div></div>
+    <div class="p"><h4>精修判据</h4><div class="kpi" style="grid-template-columns:1fr">
+      <div class="k"><b>出版级手感</b><span>逐段精修，作为全书语调标杆</span></div></div></div>
+  </div>
+  <div class="fn"><span>来源：T4 锚点模板、T5 IPO 批注法；锚点需去重并附心流三推演。</span><span>5</span></div>
+</section>
+
+<!-- S6 收束 -->
+<section class="slide">
+  <div class="hd reveal"><span>今晚行动 · Tonight</span><span><span class="style-tag">Style: Dense Research Report</span>&nbsp;&nbsp;06/06</span></div>
+  <h1 class="reveal">结论：今晚 30 分钟开机，<em>让手感推着你写完整本书</em></h1>
+  <div class="g g4 reveal">
+    <div class="p"><h4>开机四要素 <span>（全部今晚可完成）</span></h4>
+      <svg viewBox="0 0 420 190">
+        <rect x="30" y="30" width="160" height="50" fill="#0066FF"/><text x="110" y="60" text-anchor="middle" style="fill:#fff;font-weight:600">选题三问</text>
+        <rect x="210" y="30" width="160" height="50" fill="#7FAEFF"/><text x="290" y="60" text-anchor="middle" style="font-weight:600">三个文件夹</text>
+        <rect x="30" y="100" width="160" height="50" fill="#7FAEFF"/><text x="110" y="130" text-anchor="middle" style="font-weight:600">五份材料</text>
+        <rect x="210" y="100" width="160" height="50" fill="#0066FF"/><text x="290" y="130" text-anchor="middle" style="fill:#fff;font-weight:600">一张案例卡</text>
+      </svg></div>
+    <div class="p"><h4>金句</h4><div class="kpi" style="grid-template-columns:1fr">
+      <div class="k"><b style="font-family:'Noto Sans SC';font-size:1.1rem">起草的快，<br>是用素材的慢换来的。</b></div>
+      <div class="k"><b style="font-family:'Noto Sans SC';font-size:1.1rem">手里有粮，<br>心中不慌。</b></div></div></div>
+    <div class="p"><h4>后续路径</h4><div class="kpi" style="grid-template-columns:1fr">
+      <div class="k"><b>D4–D7</b><span>按 Golden Copy 语调推进章节</span></div><div class="k"><b>终点</b><span>整本书</span></div></div></div>
+    <div class="p"><h4>风险与对策</h4><div class="kpi" style="grid-template-columns:1fr">
+      <div class="k"><b>填不出三问</b><span>→ 不动笔，回炉选题</span></div><div class="k"><b>手感中断</b><span>→ 回读样张，重启反馈</span></div></div></div>
+  </div>
+  <div class="fn"><span>AI 写作工程学 · 课后行动版 · 完；范冰 XDash。</span><span>6</span></div>
+</section>
+
+<div class="keyboard-hint">← → 翻页 · 空格下一页</div>
+<script>
+class SlidePresentation {
+  constructor() {
+    this.slides = document.querySelectorAll('.slide');
+    this.current = 0;
+    this.setupNav();
+    this.setupKeyboard();
+    this.setupTouch();
+    this.setupWheel();
+    this.observe();
+  }
+  setupNav() {
+    const dots = document.getElementById('navDots');
+    this.slides.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.addEventListener('click', () => this.go(i));
+      dots.appendChild(b);
+    });
+    this.dots = dots.children;
+    this.update();
+  }
+  go(i) {
+    this.current = Math.max(0, Math.min(this.slides.length - 1, i));
+    this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
+    this.update();
+  }
+  update() {
+    Array.from(this.dots).forEach((d, i) => d.classList.toggle('active', i === this.current));
+    document.getElementById('progressBar').style.width = ((this.current + 1) / this.slides.length * 100) + '%';
+  }
+  setupKeyboard() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); this.go(this.current + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); this.go(this.current - 1); }
+      if (e.key === 'Home') this.go(0);
+      if (e.key === 'End') this.go(this.slides.length - 1);
+    });
+  }
+  setupTouch() {
+    let y0 = null;
+    document.addEventListener('touchstart', (e) => { y0 = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      if (y0 === null) return;
+      const dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dy) > 40) this.go(this.current + (dy < 0 ? 1 : -1));
+      y0 = null;
+    }, { passive: true });
+  }
+  setupWheel() {
+    let lock = false;
+    document.addEventListener('wheel', (e) => {
+      if (lock) return;
+      lock = true;
+      setTimeout(() => { lock = false; }, 650);
+      if (Math.abs(e.deltaY) < 20) return;
+      this.go(this.current + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+  observe() {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) {
+          en.target.classList.add('visible');
+          this.current = Array.from(this.slides).indexOf(en.target);
+          this.update();
+        }
+      });
+    }, { threshold: 0.6 });
+    this.slides.forEach((s) => io.observe(s));
+  }
+}
+new SlidePresentation();
+</script>
+</body>
+</html>

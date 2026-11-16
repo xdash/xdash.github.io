@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7 天启动你的 AI 写作产线 · Diagrammatic Minimalism</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============ VIEWPORT BASE (MANDATORY) ============ */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+.slide { width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; }
+:root {
+  --h2-size: clamp(1.3rem, 3vw, 2.1rem);
+  --body-size: clamp(0.75rem, 1.4vw, 1.05rem);
+  --small-size: clamp(0.62rem, 0.95vw, 0.82rem);
+  --slide-padding: clamp(1.2rem, 5vw, 4rem);
+  --content-gap: clamp(0.5rem, 2vh, 1.4rem);
+}
+@media (max-height: 600px) {
+  :root { --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem); --body-size: clamp(0.68rem, 1.1vw, 0.9rem); }
+  .nav-dots, .keyboard-hint { display: none; }
+}
+@media (max-width: 760px) { .split { grid-template-columns: 1fr !important; } .split svg { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+  html { scroll-behavior: auto; }
+}
+
+/* ============ PRESET: DIAGRAMMATIC MINIMALISM ============ */
+:root {
+  --bg: #FAF9F6;
+  --ink: #111111;
+  --accent: #E4572E;
+  --dim: #6B6B6B;
+  --font: 'Jost', 'Noto Sans SC', sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font); background: var(--bg); color: var(--ink); }
+.slide { background: var(--bg); padding: var(--slide-padding); }
+.t { font-size: var(--small-size); letter-spacing: 0.2em; font-weight: 600; color: var(--dim); text-transform: uppercase; }
+.stage { flex: 1; display: flex; flex-direction: column; justify-content: center; min-height: 0; }
+h1 { font-size: var(--h2-size); font-weight: 900; line-height: 1.3; margin-top: 0.5em; }
+h1 .a { color: var(--accent); }
+.split { display: grid; grid-template-columns: 1fr 1.2fr; gap: clamp(1rem, 4vw, 3rem); align-items: center; flex: 1; min-height: 0; }
+.txt { font-size: var(--body-size); line-height: 1.85; color: #333; margin-top: var(--content-gap); }
+.txt b { color: var(--accent); }
+.cmp { margin-top: var(--content-gap); border-top: 2px solid var(--ink); padding-top: 0.8em; font-size: var(--small-size); line-height: 1.7; color: #333; max-width: 30em; }
+.cmp span { font-weight: 700; color: var(--ink); }
+.dia { width: 100%; max-height: 68vh; }
+.dia text { font-family: var(--font); }
+.toc { list-style: none; margin-top: var(--content-gap); }
+.toc li { display: flex; align-items: center; gap: 1em; padding: 0.6em 0; border-bottom: 1px solid #DDDAD2; }
+.toc .dot { width: 1.1em; height: 1.1em; border-radius: 50%; border: 3px solid var(--ink); flex-shrink: 0; }
+.toc li.hot .dot { background: var(--accent); border-color: var(--accent); }
+.toc .tx { font-weight: 700; font-size: var(--body-size); }
+.toc .en { font-size: var(--small-size); letter-spacing: 0.15em; color: var(--dim); margin-left: auto; text-transform: uppercase; }
+.steps { list-style: none; margin-top: var(--content-gap); counter-reset: s; }
+.steps li { display: flex; gap: 1em; padding: 0.55em 0; align-items: baseline; counter-increment: s; }
+.steps li::before { content: counter(s); font-weight: 700; font-size: var(--h2-size); color: var(--accent); line-height: 1; min-width: 1em; }
+.steps .t2 { font-weight: 700; font-size: var(--body-size); }
+.steps .d { font-size: var(--small-size); color: #333; line-height: 1.6; margin-top: 0.15em; }
+.style-tag { position: absolute; bottom: clamp(0.6rem, 1.6vh, 1rem); right: var(--slide-padding); font-size: var(--small-size); color: #B5B1A6; z-index: 3; letter-spacing: 0.1em; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 4px; background: var(--accent); width: 0; z-index: 100; transition: width 0.2s ease; }
+.nav-dots { position: fixed; right: 1rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.6rem; z-index: 100; }
+.nav-dots button { width: 10px; height: 10px; border: 2px solid var(--ink); border-radius: 50%; background: transparent; cursor: pointer; padding: 0; }
+.nav-dots button.active { background: var(--accent); border-color: var(--accent); }
+.keyboard-hint { position: fixed; bottom: 0.9rem; left: 50%; transform: translateX(-50%); font-size: var(--small-size); color: #B5B1A6; z-index: 100; letter-spacing: 0.1em; }
+.reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1); }
+.slide.visible .reveal { opacity: 1; transform: translateY(0); }
+.reveal:nth-child(1) { transition-delay: 0.08s; }
+.reveal:nth-child(2) { transition-delay: 0.18s; }
+.reveal:nth-child(3) { transition-delay: 0.28s; }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- S1 封面 -->
+<section class="slide">
+  <div class="stage">
+    <span class="t reveal">AI 写作工程学 · 方法论</span>
+    <div class="split">
+      <div>
+        <h1 class="reveal">一条产线，<br>是从<span class="a">素材圆心</span><br>向外长出来的</h1>
+        <p class="txt reveal">多数写作课从最外圈开始：背提示词、套模板。我们倒着来——先有<b>素材</b>，再谈<b>起草工艺</b>，最后才是<b>成稿</b>长什么样。7 天启动你的 AI 写作产线。—— 范冰 XDash</p>
+      </div>
+      <svg class="dia reveal" viewBox="0 0 640 640">
+        <circle cx="320" cy="300" r="280" fill="#fff" stroke="#111" stroke-width="3"/>
+        <circle cx="320" cy="340" r="190" fill="#EDEBE6" stroke="#111" stroke-width="3"/>
+        <circle cx="320" cy="380" r="95" fill="#E4572E" stroke="#111" stroke-width="3"/>
+        <text x="320" y="80" text-anchor="middle" font-size="24" font-weight="700" letter-spacing="3">WHAT · 成稿</text>
+        <text x="320" y="110" text-anchor="middle" font-size="14" fill="#555">书、公众号、播客稿</text>
+        <text x="320" y="238" text-anchor="middle" font-size="24" font-weight="700" letter-spacing="3">HOW · 工艺</text>
+        <text x="320" y="266" text-anchor="middle" font-size="14" fill="#555">合同、锚点、IPO 批注法</text>
+        <text x="320" y="372" text-anchor="middle" font-size="30" font-weight="700" fill="#fff" letter-spacing="3">WHY</text>
+        <text x="320" y="402" text-anchor="middle" font-size="14" fill="#fff">你的一手素材</text>
+        <text x="320" y="560" text-anchor="middle" font-size="15" font-weight="600" letter-spacing="3" fill="#111">由内向外 →</text>
+      </svg>
+    </div>
+  </div>
+  <span class="style-tag">Style: Diagrammatic Minimalism</span>
+</section>
+
+<!-- S2 目录 -->
+<section class="slide">
+  <div class="stage">
+    <span class="t reveal">Agenda</span>
+    <div class="split">
+      <div>
+        <h1 class="reveal">这 7 天<span class="a">怎么走</span></h1>
+        <ul class="toc reveal">
+          <li><span class="dot"></span><span class="tx">为什么是「7 天」而不是「1 年」</span><span class="en">Why</span></li>
+          <li><span class="dot"></span><span class="tx">第 1 天 · 立项第一性三问</span><span class="en">30 min</span></li>
+          <li><span class="dot"></span><span class="tx">第 3 天 · 跑出你的黄金样张</span><span class="en">2 hrs</span></li>
+          <li class="hot"><span class="dot"></span><span class="tx">今晚就开始 · 30 分钟开机</span><span class="en">Go</span></li>
+        </ul>
+      </div>
+      <svg class="dia reveal" viewBox="0 0 640 640">
+        <path d="M320 40 L600 560 L40 560 Z" fill="#fff" stroke="#111" stroke-width="3"/>
+        <path d="M320 180 L510 520 L130 520 Z" fill="#EDEBE6" stroke="#111" stroke-width="3"/>
+        <path d="M320 320 L425 520 L215 520 Z" fill="#E4572E" stroke="#111" stroke-width="3"/>
+        <text x="320" y="150" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="2">成稿展示</text>
+        <text x="320" y="300" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="2">每日产物</text>
+        <text x="320" y="455" text-anchor="middle" font-size="22" font-weight="700" fill="#fff" letter-spacing="2">今晚开机</text>
+      </svg>
+    </div>
+  </div>
+  <span class="style-tag">Style: Diagrammatic Minimalism</span>
+</section>
+
+<!-- S3 为什么 7 天 -->
+<section class="slide">
+  <div class="stage">
+    <span class="t reveal">Why 7 Days</span>
+    <div class="split">
+      <div>
+        <h1 class="reveal">为什么是「7 天」<br>而不是<span class="a">「1 年」</span>？</h1>
+        <p class="txt reveal">一门课值不值，看的是学员七天后手里有没有多出一个<b>能给别人看的东西</b>。不要宏大口号，把动力外包给最小即时反馈：每步都有产物，每步都能拿出手。</p>
+        <div class="cmp reveal"><span>产物对照</span><br>第一天：一页纸《第一性选题诊断合同》+ 第一张五段式案例卡。第三天：一篇 3000 字、带出版质感的黄金样张。那个手感，会推着你把整本书写完。</div>
+      </div>
+      <svg class="dia reveal" viewBox="0 0 640 640">
+        <circle cx="180" cy="320" r="120" fill="#E4572E" stroke="#111" stroke-width="3"/>
+        <circle cx="460" cy="320" r="230" fill="none" stroke="#111" stroke-width="3" stroke-dasharray="4 8"/>
+        <text x="180" y="312" text-anchor="middle" font-size="30" font-weight="700" fill="#fff">7 天</text>
+        <text x="180" y="344" text-anchor="middle" font-size="14" fill="#fff">手里有东西</text>
+        <text x="460" y="312" text-anchor="middle" font-size="30" font-weight="700" fill="#999">1 年</text>
+        <text x="460" y="344" text-anchor="middle" font-size="14" fill="#999">只剩口号</text>
+        <defs><marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#111"/></marker></defs>
+        <path d="M320 560 L 320 600" stroke="#111" stroke-width="3" marker-end="url(#arr)" opacity="0"/>
+        <text x="320" y="600" text-anchor="middle" font-size="15" font-weight="600" letter-spacing="2" fill="#111">反馈越快，动力越足 ↓</text>
+      </svg>
+    </div>
+  </div>
+  <span class="style-tag">Style: Diagrammatic Minimalism</span>
+</section>
+
+<!-- S4 第一天 -->
+<section class="slide">
+  <div class="stage">
+    <span class="t reveal">Day 1 · 今晚睡前 · 30 分钟</span>
+    <div class="split">
+      <div>
+        <h1 class="reveal">立项<span class="a">第一性三问</span></h1>
+        <ol class="steps reveal">
+          <li><div><div class="t2">打开 T2《第一性选题诊断合同》</div><div class="d">诚实填完三问，填不出就不动笔。</div></div></li>
+          <li><div><div class="t2">建三个空文件夹</div><div class="d">raw / anchors / chapters —— 工程脚手架。</div></div></li>
+          <li><div><div class="t2">丢入 5 份一手材料</div><div class="d">最痛、最得意的：复盘长文、录音转写、深度访谈。</div></div></li>
+          <li><div><div class="t2">拆出第一张五段式案例卡</div><div class="d">起点 → 动作 → 阻力 → 转折 → 结果 + 原话。</div></div></li>
+        </ol>
+      </div>
+      <svg class="dia reveal" viewBox="0 0 640 640">
+        <rect x="60" y="60" width="520" height="520" fill="#fff" stroke="#111" stroke-width="3"/>
+        <rect x="150" y="150" width="340" height="340" fill="#EDEBE6" stroke="#111" stroke-width="3"/>
+        <rect x="240" y="240" width="160" height="160" fill="#E4572E" stroke="#111" stroke-width="3"/>
+        <text x="320" y="120" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="2">CHAPTERS</text>
+        <text x="320" y="210" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="2">ANCHORS</text>
+        <text x="320" y="330" text-anchor="middle" font-size="22" font-weight="700" fill="#fff" letter-spacing="2">RAW</text>
+      </svg>
+    </div>
+  </div>
+  <span class="style-tag">Style: Diagrammatic Minimalism</span>
+</section>
+
+<!-- S5 第三天 -->
+<section class="slide">
+  <div class="stage">
+    <span class="t reveal">Day 3 · 本周末 · 2 小时</span>
+    <div class="split">
+      <div>
+        <h1 class="reveal">跑出你的<span class="a">黄金样张</span></h1>
+        <ol class="steps reveal">
+          <li><div><div class="t2">挑素材最肥沃的那 1 章</div><div class="d">按 T4 填满 15 条去重事实锚点 + 心流三推演。</div></div></li>
+          <li><div><div class="t2">接上你能触达的最强旗舰模型</div><div class="d">如 Gemini 4.0——长上下文、语感好的那种。</div></div></li>
+          <li><div><div class="t2">按 T5 的 IPO 批注法起草</div><div class="d">先出骨架 → 人写批注 → 再合成 3000 字。</div></div></li>
+          <li><div><div class="t2">确立 Golden Copy</div><div class="d">逐段精修到出版级手感，全书的语调标杆。</div></div></li>
+        </ol>
+      </div>
+      <svg class="dia reveal" viewBox="0 0 640 640">
+        <path d="M80 560 L 560 560 L 560 460 L 80 460 Z" fill="#EDEBE6" stroke="#111" stroke-width="3"/>
+        <path d="M160 460 L 560 460 L 560 340 L 160 340 Z" fill="#fff" stroke="#111" stroke-width="3"/>
+        <path d="M240 340 L 560 340 L 560 200 L 240 200 Z" fill="#EDEBE6" stroke="#111" stroke-width="3"/>
+        <path d="M340 200 L 560 200 L 560 60 L 340 60 Z" fill="#E4572E" stroke="#111" stroke-width="3"/>
+        <text x="300" y="520" text-anchor="middle" font-size="20" font-weight="700">骨架</text>
+        <text x="380" y="410" text-anchor="middle" font-size="20" font-weight="700">批注</text>
+        <text x="430" y="280" text-anchor="middle" font-size="20" font-weight="700">合成 3000 字</text>
+        <text x="450" y="140" text-anchor="middle" font-size="20" font-weight="700" fill="#fff">GOLDEN COPY</text>
+        <text x="320" y="610" text-anchor="middle" font-size="15" font-weight="600" letter-spacing="2" fill="#111">IPO 批注法，逐级而上 →</text>
+      </svg>
+    </div>
+  </div>
+  <span class="style-tag">Style: Diagrammatic Minimalism</span>
+</section>
+
+<!-- S6 收束 -->
+<section class="slide">
+  <div class="stage">
+    <span class="t reveal">Tonight</span>
+    <div class="split">
+      <div>
+        <h1 class="reveal">手里有粮，<br><span class="a">心中不慌。</span></h1>
+        <p class="txt reveal">选题三问、三个文件夹、五份材料、一张案例卡——30 分钟，你的产线就开机了。</p>
+        <div class="cmp reveal"><span>金句</span><br>起草的快，是用素材的慢换来的。然后，让它推着你，把整本书写完。</div>
+      </div>
+      <svg class="dia reveal" viewBox="0 0 640 640">
+        <circle cx="320" cy="320" r="250" fill="none" stroke="#111" stroke-width="3"/>
+        <circle cx="320" cy="320" r="250" fill="none" stroke="#E4572E" stroke-width="10" stroke-dasharray="392 1178" transform="rotate(-90 320 320)"/>
+        <circle cx="320" cy="320" r="60" fill="#E4572E" stroke="#111" stroke-width="3"/>
+        <text x="320" y="312" text-anchor="middle" font-size="26" font-weight="700" fill="#fff">今晚</text>
+        <text x="320" y="342" text-anchor="middle" font-size="14" fill="#fff">30 min</text>
+        <text x="320" y="70" text-anchor="middle" font-size="18" font-weight="700" letter-spacing="2">开机，就是第一圈</text>
+      </svg>
+    </div>
+  </div>
+  <span class="style-tag">Style: Diagrammatic Minimalism</span>
+</section>
+
+<div class="keyboard-hint">← → 翻页 · 空格下一页</div>
+<script>
+class SlidePresentation {
+  constructor() {
+    this.slides = document.querySelectorAll('.slide');
+    this.current = 0;
+    this.setupNav();
+    this.setupKeyboard();
+    this.setupTouch();
+    this.setupWheel();
+    this.observe();
+  }
+  setupNav() {
+    const dots = document.getElementById('navDots');
+    this.slides.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.addEventListener('click', () => this.go(i));
+      dots.appendChild(b);
+    });
+    this.dots = dots.children;
+    this.update();
+  }
+  go(i) {
+    this.current = Math.max(0, Math.min(this.slides.length - 1, i));
+    this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
+    this.update();
+  }
+  update() {
+    Array.from(this.dots).forEach((d, i) => d.classList.toggle('active', i === this.current));
+    document.getElementById('progressBar').style.width = ((this.current + 1) / this.slides.length * 100) + '%';
+  }
+  setupKeyboard() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); this.go(this.current + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); this.go(this.current - 1); }
+      if (e.key === 'Home') this.go(0);
+      if (e.key === 'End') this.go(this.slides.length - 1);
+    });
+  }
+  setupTouch() {
+    let y0 = null;
+    document.addEventListener('touchstart', (e) => { y0 = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      if (y0 === null) return;
+      const dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dy) > 40) this.go(this.current + (dy < 0 ? 1 : -1));
+      y0 = null;
+    }, { passive: true });
+  }
+  setupWheel() {
+    let lock = false;
+    document.addEventListener('wheel', (e) => {
+      if (lock) return;
+      lock = true;
+      setTimeout(() => { lock = false; }, 650);
+      if (Math.abs(e.deltaY) < 20) return;
+      this.go(this.current + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+  observe() {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) {
+          en.target.classList.add('visible');
+          this.current = Array.from(this.slides).indexOf(en.target);
+          this.update();
+        }
+      });
+    }, { threshold: 0.6 });
+    this.slides.forEach((s) => io.observe(s));
+  }
+}
+new SlidePresentation();
+</script>
+</body>
+</html>

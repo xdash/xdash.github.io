@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7 天启动你的 AI 写作产线 · Y2K Inflated Wrapped</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Noto+Sans+SC:wght@500;900&display=swap" rel="stylesheet">
+<style>
+/* ============ VIEWPORT BASE (MANDATORY) ============ */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+.slide { width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; }
+:root {
+  --h2-size: clamp(1.3rem, 3.4vw, 2.4rem);
+  --h3-size: clamp(1rem, 2.4vw, 1.6rem);
+  --body-size: clamp(0.78rem, 1.5vw, 1.1rem);
+  --small-size: clamp(0.65rem, 1vw, 0.875rem);
+  --slide-padding: clamp(1rem, 4.5vw, 3.8rem);
+  --content-gap: clamp(0.5rem, 2vh, 1.4rem);
+}
+@media (max-height: 600px) {
+  :root { --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem); --body-size: clamp(0.7rem, 1.2vw, 0.95rem); }
+  .nav-dots, .keyboard-hint, .deco { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+  html { scroll-behavior: auto; }
+}
+
+/* ============ PRESET: Y2K INFLATED WRAPPED ============ */
+:root {
+  --magenta: #FF2E93;
+  --cyan: #00D9E8;
+  --orange: #FF8A00;
+  --yellow: #FFE600;
+  --deep: #2B1BFF;
+  --font-fat: 'Archivo Black', 'Noto Sans SC', sans-serif;
+  --font-zh: 'Noto Sans SC', sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font-zh); color: #fff; }
+.slide { background: var(--magenta); }
+.slide.v2 { background: var(--cyan); }
+.slide.v3 { background: var(--deep); }
+.wedge { position: absolute; right: 0; top: 0; width: 34%; height: 100%; background: var(--cyan); clip-path: polygon(34% 0, 100% 0, 100% 100%, 0 100%); }
+.slide.v2 .wedge { background: var(--magenta); }
+.slide.v3 .wedge { background: var(--orange); }
+.band { position: absolute; left: 0; right: 0; bottom: 0; height: clamp(3.2rem, 12vh, 6rem); background: var(--orange); display: flex; align-items: center; justify-content: space-between; padding: 0 var(--slide-padding); }
+.slide.v2 .band { background: var(--magenta); }
+.slide.v3 .band { background: var(--yellow); }
+.band p, .band b { font-family: var(--font-zh); font-weight: 900; color: #000; font-size: var(--body-size); }
+.band b { font-family: var(--font-fat); letter-spacing: 0.02em; }
+.kick { display: inline-block; font-weight: 900; font-size: var(--body-size); background: #000; color: #fff; padding: 0.3em 0.9em; border-radius: 30px; transform: rotate(-3deg); width: fit-content; }
+.stage { position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 0 var(--slide-padding); margin-bottom: clamp(3.2rem, 12vh, 6rem); min-height: 0; }
+.num { font-family: var(--font-fat); font-weight: 400; font-size: clamp(5rem, 24vh, 14rem); line-height: 1; letter-spacing: -0.05em; color: var(--yellow);
+  text-shadow: 2px 2px 0 var(--orange), 4px 4px 0 var(--orange), 6px 6px 0 var(--orange), 8px 8px 0 var(--orange), 10px 10px 0 #E0600A, 12px 12px 0 #E0600A, 14px 14px 0 #B03C00, 16px 16px 0 #B03C00, 18px 18px 0 #7A2400, 20px 20px 0 #7A2400, 24px 28px 26px rgba(0,0,0,0.35);
+  transform: perspective(900px) rotateX(7deg) rotateZ(-4deg); transform-origin: left center; }
+.slide.v2 .num { color: var(--yellow); text-shadow: 2px 2px 0 var(--deep), 4px 4px 0 var(--deep), 6px 6px 0 var(--deep), 8px 8px 0 var(--deep), 10px 10px 0 #1E14C4, 12px 12px 0 #1E14C4, 14px 14px 0 #140C8C, 16px 16px 0 #140C8C, 18px 18px 0 #0B0660, 20px 20px 0 #0B0660, 24px 28px 26px rgba(0,0,0,0.35); }
+.slide.v3 .num { color: var(--cyan); }
+.cap { font-family: var(--font-zh); font-weight: 900; font-size: clamp(1.3rem, 3.6vw, 2.6rem); line-height: 1.2; margin-top: var(--content-gap); }
+.cap small { display: block; font-weight: 500; font-size: var(--body-size); margin-top: 0.35em; }
+.body { font-weight: 500; font-size: var(--body-size); line-height: 1.7; max-width: 34em; margin-top: var(--content-gap); }
+.body strong { font-weight: 900; background: #000; padding: 0 0.25em; }
+.toc { list-style: none; margin-top: var(--content-gap); display: flex; flex-direction: column; gap: 0.5em; max-width: 40em; }
+.toc li { display: flex; align-items: center; gap: 0.8em; background: rgba(0,0,0,0.85); border-radius: 999px; padding: 0.5em 1.2em; transform: rotate(-1deg); }
+.toc li:nth-child(even) { transform: rotate(1deg); }
+.toc .no { font-family: var(--font-fat); color: var(--yellow); font-size: var(--h3-size); }
+.toc .tx { font-weight: 900; font-size: var(--body-size); }
+.toc .meta { margin-left: auto; font-weight: 500; font-size: var(--small-size); opacity: 0.8; }
+.steps { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(0.6rem, 1.6vw, 1rem); margin-top: var(--content-gap); max-width: 46em; }
+.step { background: #000; border-radius: 20px; padding: 0.8em 1.1em; }
+.step:nth-child(1) { transform: rotate(-1.2deg); } .step:nth-child(2) { transform: rotate(0.8deg); }
+.step:nth-child(3) { transform: rotate(0.9deg); } .step:nth-child(4) { transform: rotate(-0.8deg); }
+.step .no { font-family: var(--font-fat); color: var(--orange); font-size: var(--h3-size); }
+.step .t { font-weight: 900; font-size: var(--body-size); margin-top: 0.15em; }
+.step .d { font-weight: 500; font-size: var(--small-size); opacity: 0.85; margin-top: 0.2em; line-height: 1.55; }
+@media (max-width: 640px) { .steps { grid-template-columns: 1fr; } }
+.photo { position: absolute; right: 6%; top: 12%; width: clamp(7rem, 16vw, 13rem); height: clamp(9rem, 21vw, 17rem); border-radius: 999px 999px 24px 24px; background: linear-gradient(160deg, var(--magenta), var(--deep)); overflow: hidden; z-index: 1; }
+.photo i { position: absolute; inset: 0; background: repeating-linear-gradient(45deg, rgba(255,255,255,0.14) 0 2px, transparent 2px 14px); }
+.photo span { position: absolute; left: 0; right: 0; bottom: 12px; text-align: center; font-weight: 500; font-size: var(--small-size); letter-spacing: 0.1em; }
+.style-tag { position: absolute; bottom: calc(clamp(3.2rem, 12vh, 6rem) + 0.5rem); right: var(--slide-padding); font-size: var(--small-size); color: rgba(255,255,255,0.75); z-index: 3; font-weight: 500; letter-spacing: 0.06em; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 6px; background: var(--yellow); width: 0; z-index: 100; transition: width 0.2s ease; }
+.nav-dots { position: fixed; right: 1rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.6rem; z-index: 100; }
+.nav-dots button { width: 11px; height: 11px; border: 2.5px solid #fff; border-radius: 50%; background: transparent; cursor: pointer; padding: 0; }
+.nav-dots button.active { background: var(--yellow); border-color: var(--yellow); }
+.keyboard-hint { position: fixed; bottom: 0.4rem; left: 50%; transform: translateX(-50%); font-size: var(--small-size); color: rgba(0,0,0,0.65); z-index: 101; font-weight: 900; }
+.reveal { opacity: 0; transform: translateY(24px) scale(0.98); transition: opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1); }
+.slide.visible .reveal { opacity: 1; transform: translateY(0) scale(1); }
+.slide.visible .num.reveal { transform: perspective(900px) rotateX(7deg) rotateZ(-4deg); }
+.reveal:nth-child(1) { transition-delay: 0.08s; }
+.reveal:nth-child(2) { transition-delay: 0.2s; }
+.reveal:nth-child(3) { transition-delay: 0.32s; }
+.reveal:nth-child(4) { transition-delay: 0.44s; }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- S1 封面 -->
+<section class="slide">
+  <div class="wedge deco"></div>
+  <div class="photo deco"><i></i><span>写作者 · 就是你</span></div>
+  <div class="stage">
+    <span class="kick reveal">你的 2026 写作年报 · 提前版</span>
+    <div class="num reveal" style="margin-top:0.2em">7 天</div>
+    <div class="cap reveal">启动你的 AI 写作产线。<small>能写书，也能降维写公众号和播客稿。—— 范冰 XDash</small></div>
+  </div>
+  <div class="band"><p>从今晚睡前 30 分钟开始</p><b>#写作产线</b></div>
+  <span class="style-tag">Style: Y2K Inflated Wrapped</span>
+</section>
+
+<!-- S2 目录 -->
+<section class="slide v2">
+  <div class="wedge deco"></div>
+  <div class="stage">
+    <span class="kick reveal">Agenda</span>
+    <div class="cap reveal" style="color:#000">这 7 天怎么走</div>
+    <ul class="toc reveal">
+      <li><span class="no">01</span><span class="tx">为什么是「7 天」而不是「1 年」</span><span class="meta">WHY</span></li>
+      <li><span class="no">02</span><span class="tx">第 1 天 · 立项第一性三问</span><span class="meta">30 MIN</span></li>
+      <li><span class="no">03</span><span class="tx">第 3 天 · 跑出你的黄金样张</span><span class="meta">2 HRS</span></li>
+      <li><span class="no">04</span><span class="tx">今晚就开始 · 30 分钟开机</span><span class="meta">GO</span></li>
+    </ul>
+  </div>
+  <div class="band"><p>每步都有产物，每步都能拿出手</p><b>02/06</b></div>
+  <span class="style-tag">Style: Y2K Inflated Wrapped</span>
+</section>
+
+<!-- S3 为什么 7 天 -->
+<section class="slide v3">
+  <div class="wedge deco"></div>
+  <div class="stage">
+    <div class="num reveal">7/52</div>
+    <div class="cap reveal">为什么是「7 天」而不是「1 年」。<small>一门课值不值，看的是学员七天后手里有没有多出一个能给别人看的东西。</small></div>
+    <p class="body reveal">不要宏大口号，把动力外包给最小即时反馈：<strong>每步都有产物</strong>。第一天一页纸合同 + 案例卡，第三天 3000 字黄金样张。那个手感，会推着你把整本书写完。</p>
+  </div>
+  <div class="band"><p>即时反馈 &gt; 宏大口号</p><b>03/06</b></div>
+  <span class="style-tag">Style: Y2K Inflated Wrapped</span>
+</section>
+
+<!-- S4 第一天 -->
+<section class="slide">
+  <div class="wedge deco"></div>
+  <div class="stage">
+    <span class="kick reveal">Day 1 · 今晚睡前 · 30 分钟</span>
+    <div class="cap reveal" style="margin-top:0.4em">立项第一性三问。</div>
+    <div class="steps reveal">
+      <div class="step"><div class="no">01</div><div class="t">打开 T2 选题诊断合同</div><div class="d">诚实填完三问，填不出就不动笔。</div></div>
+      <div class="step"><div class="no">02</div><div class="t">建三个空文件夹</div><div class="d">raw / anchors / chapters —— 工程脚手架。</div></div>
+      <div class="step"><div class="no">03</div><div class="t">丢入 5 份一手材料</div><div class="d">最痛、最得意的：复盘、转写、访谈。</div></div>
+      <div class="step"><div class="no">04</div><div class="t">拆第一张五段式案例卡</div><div class="d">起点 → 动作 → 阻力 → 转折 → 结果 + 原话。</div></div>
+    </div>
+  </div>
+  <div class="band"><p>今晚睡前做完</p><b>04/06</b></div>
+  <span class="style-tag">Style: Y2K Inflated Wrapped</span>
+</section>
+
+<!-- S5 第三天 -->
+<section class="slide v2">
+  <div class="wedge deco"></div>
+  <div class="stage">
+    <span class="kick reveal">Day 3 · 本周末 · 2 小时</span>
+    <div class="num reveal" style="font-size:clamp(4rem,17vh,10rem)">3000</div>
+    <div class="cap reveal" style="color:#000">字黄金样张。<small>出版级手感，全书的语调标杆。</small></div>
+    <div class="steps reveal">
+      <div class="step"><div class="no">01</div><div class="t">挑最肥沃的那 1 章</div><div class="d">T4：15 条去重事实锚点。</div></div>
+      <div class="step"><div class="no">02</div><div class="t">接最强旗舰模型</div><div class="d">长上下文、语感好的那种。</div></div>
+      <div class="step"><div class="no">03</div><div class="t">T5 IPO 批注法起草</div><div class="d">骨架 → 批注 → 合成。</div></div>
+      <div class="step"><div class="no">04</div><div class="t">确立 Golden Copy</div><div class="d">逐段精修到出版级。</div></div>
+    </div>
+  </div>
+  <div class="band"><p>本周末 2 小时</p><b>05/06</b></div>
+  <span class="style-tag">Style: Y2K Inflated Wrapped</span>
+</section>
+
+<!-- S6 收束 -->
+<section class="slide v3">
+  <div class="wedge deco"></div>
+  <div class="stage">
+    <div class="num reveal" style="font-size:clamp(4rem,17vh,10rem)">GO!</div>
+    <div class="cap reveal">今晚就开始。<small>选题三问、三个文件夹、五份材料、一张案例卡——30 分钟，产线开机。</small></div>
+    <p class="body reveal"><strong>起草的快，是用素材的慢换来的。</strong>手里有粮，心中不慌。然后，让它推着你，把整本书写完。</p>
+  </div>
+  <div class="band"><p>手里有粮，心中不慌</p><b>#今晚开机</b></div>
+  <span class="style-tag">Style: Y2K Inflated Wrapped</span>
+</section>
+
+<div class="keyboard-hint">← → 翻页 · 空格下一页</div>
+<script>
+class SlidePresentation {
+  constructor() {
+    this.slides = document.querySelectorAll('.slide');
+    this.current = 0;
+    this.setupNav();
+    this.setupKeyboard();
+    this.setupTouch();
+    this.setupWheel();
+    this.observe();
+  }
+  setupNav() {
+    const dots = document.getElementById('navDots');
+    this.slides.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.addEventListener('click', () => this.go(i));
+      dots.appendChild(b);
+    });
+    this.dots = dots.children;
+    this.update();
+  }
+  go(i) {
+    this.current = Math.max(0, Math.min(this.slides.length - 1, i));
+    this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
+    this.update();
+  }
+  update() {
+    Array.from(this.dots).forEach((d, i) => d.classList.toggle('active', i === this.current));
+    document.getElementById('progressBar').style.width = ((this.current + 1) / this.slides.length * 100) + '%';
+  }
+  setupKeyboard() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); this.go(this.current + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); this.go(this.current - 1); }
+      if (e.key === 'Home') this.go(0);
+      if (e.key === 'End') this.go(this.slides.length - 1);
+    });
+  }
+  setupTouch() {
+    let y0 = null;
+    document.addEventListener('touchstart', (e) => { y0 = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      if (y0 === null) return;
+      const dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dy) > 40) this.go(this.current + (dy < 0 ? 1 : -1));
+      y0 = null;
+    }, { passive: true });
+  }
+  setupWheel() {
+    let lock = false;
+    document.addEventListener('wheel', (e) => {
+      if (lock) return;
+      lock = true;
+      setTimeout(() => { lock = false; }, 650);
+      if (Math.abs(e.deltaY) < 20) return;
+      this.go(this.current + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+  observe() {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) {
+          en.target.classList.add('visible');
+          this.current = Array.from(this.slides).indexOf(en.target);
+          this.update();
+        }
+      });
+    }, { threshold: 0.6 });
+    this.slides.forEach((s) => io.observe(s));
+  }
+}
+new SlidePresentation();
+</script>
+</body>
+</html>

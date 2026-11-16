@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7 天启动你的 AI 写作产线 · Irreverent Pop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;800;900&family=Space+Grotesk:wght@500;700&family=Noto+Sans+SC:wght@500;900&display=swap" rel="stylesheet">
+<style>
+/* ============ VIEWPORT BASE (MANDATORY) ============ */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+.slide { width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; }
+:root {
+  --h2-size: clamp(1.3rem, 3.4vw, 2.4rem);
+  --h3-size: clamp(1rem, 2.4vw, 1.6rem);
+  --body-size: clamp(0.78rem, 1.5vw, 1.1rem);
+  --small-size: clamp(0.65rem, 1vw, 0.875rem);
+  --slide-padding: clamp(1rem, 4vw, 3.5rem);
+  --content-gap: clamp(0.6rem, 2.4vh, 1.6rem);
+}
+@media (max-height: 600px) {
+  :root { --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem); --content-gap: clamp(0.3rem, 1vw, 0.75rem); --body-size: clamp(0.7rem, 1.2vw, 0.95rem); }
+  .nav-dots, .keyboard-hint, .deco { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+  html { scroll-behavior: auto; }
+}
+
+/* ============ PRESET: IRREVERENT POP ============ */
+:root {
+  --orange: #FF4500;
+  --cream: #FFF6D8;
+  --ink: #000000;
+  --yellow: #FFE01B;
+  --lime: #39FF14;
+  --font-sg: 'Space Grotesk', 'Noto Sans SC', sans-serif;
+  --font-zh: 'Noto Sans SC', sans-serif;
+  --font-arch: 'Archivo', 'Noto Sans SC', sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font-sg); background: var(--orange); color: var(--ink); }
+.slide { background: var(--orange); align-items: center; justify-content: center; padding: var(--slide-padding); }
+.win { background: var(--cream); border: 4px solid var(--ink); box-shadow: 8px 8px 0 var(--ink); max-width: 46em; }
+.win.white { background: #fff; }
+.bar { background: var(--ink); color: var(--cream); font-family: var(--font-sg); font-weight: 700; font-size: var(--small-size); padding: 0.35em 0.8em; display: flex; justify-content: space-between; letter-spacing: 0.04em; }
+.win .bd { padding: clamp(0.8rem, 2.4vw, 1.6rem) clamp(1rem, 2.8vw, 1.8rem); }
+h1 { font-family: var(--font-zh); font-weight: 900; font-size: clamp(2rem, 6.5vw, 4.4rem); line-height: 1.05; letter-spacing: -0.03em; }
+h1 s { text-decoration-thickness: 0.14em; text-decoration-color: var(--orange); }
+h2 { font-family: var(--font-zh); font-weight: 900; font-size: var(--h2-size); line-height: 1.15; }
+.win p { font-family: var(--font-zh); font-weight: 500; font-size: var(--body-size); line-height: 1.6; margin-top: 0.6em; }
+.win p em { font-style: normal; background: var(--yellow); padding: 0 0.2em; font-weight: 900; }
+.rot-l { transform: rotate(-2deg); }
+.rot-r { transform: rotate(1.6deg); }
+.sticker { position: absolute; background: var(--yellow); border: 4px solid var(--ink); border-radius: 50%; width: clamp(6rem, 12vw, 9rem); height: clamp(6rem, 12vw, 9rem); display: flex; align-items: center; justify-content: center; text-align: center; font-family: var(--font-zh); font-weight: 900; font-size: var(--small-size); line-height: 1.25; transform: rotate(12deg); box-shadow: 6px 6px 0 var(--ink); z-index: 3; }
+.big { font-family: var(--font-arch); font-weight: 900; font-size: clamp(3.4rem, 13vw, 8.5rem); line-height: 0.9; letter-spacing: -0.05em; color: var(--cream); -webkit-text-stroke: 4px var(--ink); paint-order: stroke fill; text-shadow: 7px 7px 0 var(--ink); }
+.big small { display: block; font-family: var(--font-zh); font-weight: 900; font-size: clamp(0.9rem, 2vw, 1.3rem); letter-spacing: 0; -webkit-text-stroke: 0; text-shadow: none; color: var(--ink); margin-top: 0.5em; }
+.toc { list-style: none; }
+.toc li { display: flex; gap: 0.8em; align-items: baseline; padding: 0.5em 0; border-bottom: 3px solid var(--ink); }
+.toc li:last-child { border-bottom: 0; }
+.toc .no { font-family: var(--font-arch); font-weight: 900; font-size: var(--h3-size); color: var(--orange); -webkit-text-stroke: 1px var(--ink); }
+.toc .tx { font-family: var(--font-zh); font-weight: 900; font-size: var(--body-size); }
+.toc .meta { margin-left: auto; font-family: var(--font-sg); font-weight: 700; font-size: var(--small-size); background: var(--ink); color: var(--lime); padding: 0.15em 0.5em; letter-spacing: 0.1em; }
+.steps { list-style: none; }
+.steps li { display: flex; gap: 0.8em; padding: 0.45em 0; align-items: baseline; }
+.steps .no { font-family: var(--font-arch); font-weight: 900; color: var(--orange); font-size: var(--h3-size); min-width: 1.4em; }
+.steps .t { font-family: var(--font-zh); font-weight: 900; font-size: var(--body-size); }
+.steps .d { font-family: var(--font-zh); font-weight: 500; font-size: var(--small-size); margin-top: 0.15em; }
+.cnt { position: absolute; right: var(--slide-padding); bottom: clamp(0.8rem, 2vh, 1.4rem); background: var(--ink); color: var(--lime); font-family: var(--font-sg); font-weight: 700; font-size: var(--small-size); padding: 0.4em 0.8em; letter-spacing: 0.14em; transform: rotate(-2deg); }
+.row-flex { display: flex; gap: clamp(1rem, 3vw, 2.5rem); align-items: center; flex-wrap: wrap; justify-content: center; }
+.style-tag { position: absolute; bottom: clamp(0.8rem, 2vh, 1.4rem); left: var(--slide-padding); font-family: var(--font-sg); font-size: var(--small-size); color: rgba(0,0,0,0.6); z-index: 3; font-weight: 700; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 6px; background: var(--ink); width: 0; z-index: 100; transition: width 0.2s ease; }
+.nav-dots { position: fixed; right: 1rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.6rem; z-index: 100; }
+.nav-dots button { width: 11px; height: 11px; border: 2.5px solid var(--ink); border-radius: 0; background: var(--cream); cursor: pointer; padding: 0; }
+.nav-dots button.active { background: var(--ink); }
+.keyboard-hint { position: fixed; bottom: 1rem; left: 50%; transform: translateX(-50%); font-family: var(--font-sg); font-size: var(--small-size); color: rgba(0,0,0,0.55); z-index: 100; font-weight: 700; }
+.reveal { opacity: 0; transform: translateY(20px) rotate(-1deg); transition: opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1); }
+.slide.visible .reveal { opacity: 1; transform: translateY(0); }
+.slide.visible .reveal.rot-l { transform: rotate(-2deg); }
+.slide.visible .reveal.rot-r { transform: rotate(1.6deg); }
+.reveal:nth-child(1) { transition-delay: 0.08s; }
+.reveal:nth-child(2) { transition-delay: 0.2s; }
+.reveal:nth-child(3) { transition-delay: 0.32s; }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- S1 封面 -->
+<section class="slide">
+  <div class="win rot-l reveal">
+    <div class="bar"><span>writing_pipeline.exe</span><span>_ □ ×</span></div>
+    <div class="bd">
+      <h1>7 天启动<br>你的 AI <s>写作</s>产线。</h1>
+      <p>不教你背提示词。教你搭一条能写书、也能降维写公众号和播客稿的产线。<em>从今天睡前 30 分钟开始。</em></p>
+      <p style="font-weight:900">—— 范冰 XDash · AI 写作工程学课后行动版</p>
+    </div>
+  </div>
+  <div class="sticker deco" style="right:14%;top:12%">拒绝<br>宏大<br>口号</div>
+  <div class="cnt">VISITOR 000001</div>
+  <span class="style-tag">Style: Irreverent Pop</span>
+</section>
+
+<!-- S2 目录 -->
+<section class="slide">
+  <div class="win rot-r reveal" style="width:min(46em,92%)">
+    <div class="bar"><span>agenda.txt</span><span>×</span></div>
+    <div class="bd">
+      <h2>这 7 天怎么走</h2>
+      <ul class="toc" style="margin-top:0.6em">
+        <li><span class="no">01</span><span class="tx">为什么是「7 天」而不是「1 年」</span><span class="meta">WHY</span></li>
+        <li><span class="no">02</span><span class="tx">第 1 天 · 立项第一性三问</span><span class="meta">30MIN</span></li>
+        <li><span class="no">03</span><span class="tx">第 3 天 · 跑出你的黄金样张</span><span class="meta">2HRS</span></li>
+        <li><span class="no">04</span><span class="tx">今晚就开始 · 30 分钟开机</span><span class="meta">GO!</span></li>
+      </ul>
+    </div>
+  </div>
+  <div class="cnt">02 / 06</div>
+  <span class="style-tag">Style: Irreverent Pop</span>
+</section>
+
+<!-- S3 为什么 7 天 -->
+<section class="slide">
+  <div class="row-flex">
+    <div class="big reveal rot-l" style="transform:rotate(-2deg)">7 天<small>不是「1 年」</small></div>
+    <div class="win white rot-r reveal" style="max-width:24em">
+      <div class="bar"><span>facts.txt</span><span>×</span></div>
+      <div class="bd">
+        <p>一门课值不值，看七天后手里有没有多出一个<em>能给别人看的东西</em>。</p>
+        <p>第一天：一页纸《选题诊断合同》+ 第一张案例卡。第三天：<em>3000 字黄金样张</em>。每步都有产物，每步都能拿出手。</p>
+      </div>
+    </div>
+  </div>
+  <div class="sticker deco" style="left:10%;bottom:14%;transform:rotate(-10deg)">手感<br>会上瘾</div>
+  <div class="cnt">03 / 06</div>
+  <span class="style-tag">Style: Irreverent Pop</span>
+</section>
+
+<!-- S4 第一天 -->
+<section class="slide">
+  <div class="win rot-l reveal" style="width:min(46em,92%)">
+    <div class="bar"><span>day1_tonight.bat</span><span>_ □ ×</span></div>
+    <div class="bd">
+      <h2>立项第一性三问 <span style="font-size:0.55em;background:#000;color:#FFE01B;padding:0.1em 0.5em;vertical-align:middle">睡前 30 分钟</span></h2>
+      <ul class="steps" style="margin-top:0.5em">
+        <li><span class="no">1</span><div><div class="t">打开 T2《第一性选题诊断合同》</div><div class="d">诚实填完三问，填不出就不动笔。</div></div></li>
+        <li><span class="no">2</span><div><div class="t">建三个空文件夹</div><div class="d">raw / anchors / chapters —— 工程脚手架。</div></div></li>
+        <li><span class="no">3</span><div><div class="t">丢入 5 份一手材料</div><div class="d">最痛、最得意的：复盘长文、录音转写、深度访谈。</div></div></li>
+        <li><span class="no">4</span><div><div class="t">拆出第一张五段式案例卡</div><div class="d">起点 → 动作 → 阻力 → 转折 → 结果 + 原话。</div></div></li>
+      </ul>
+    </div>
+  </div>
+  <div class="cnt">04 / 06</div>
+  <span class="style-tag">Style: Irreverent Pop</span>
+</section>
+
+<!-- S5 第三天 -->
+<section class="slide">
+  <div class="win rot-r reveal" style="width:min(46em,92%)">
+    <div class="bar"><span>day3_golden_copy.bat</span><span>_ □ ×</span></div>
+    <div class="bd">
+      <h2>跑出你的黄金样张 <span style="font-size:0.55em;background:#000;color:#FFE01B;padding:0.1em 0.5em;vertical-align:middle">周末 2 小时</span></h2>
+      <ul class="steps" style="margin-top:0.5em">
+        <li><span class="no">1</span><div><div class="t">挑素材最肥沃的那 1 章</div><div class="d">按 T4 填满 15 条去重事实锚点 + 心流三推演。</div></div></li>
+        <li><span class="no">2</span><div><div class="t">接上你能触达的最强旗舰模型</div><div class="d">如 Gemini 4.0——长上下文、语感好的那种。</div></div></li>
+        <li><span class="no">3</span><div><div class="t">按 T5 的 IPO 批注法起草</div><div class="d">骨架 → 人写批注 → 合成 3000 字。</div></div></li>
+        <li><span class="no">4</span><div><div class="t">确立 Golden Copy</div><div class="d">逐段精修到出版级手感，全书的语调标杆。</div></div></li>
+      </ul>
+    </div>
+  </div>
+  <div class="cnt">05 / 06</div>
+  <span class="style-tag">Style: Irreverent Pop</span>
+</section>
+
+<!-- S6 收束 -->
+<section class="slide">
+  <div class="big reveal rot-l" style="transform:rotate(-2deg)">今晚就开<small>手里有粮，心中不慌</small></div>
+  <div class="win white rot-r reveal" style="max-width:30em;margin-top:1.4em">
+    <div class="bar"><span>final.txt</span><span>×</span></div>
+    <div class="bd"><p style="margin-top:0">选题三问、三个文件夹、五份材料、一张案例卡——30 分钟开机。<em>起草的快，是用素材的慢换来的。</em>然后，让它推着你，把整本书写完。</p></div>
+  </div>
+  <div class="cnt">06 / 06 · EOF</div>
+  <span class="style-tag">Style: Irreverent Pop</span>
+</section>
+
+<div class="keyboard-hint">← → 翻页 · 空格下一页</div>
+<script>
+class SlidePresentation {
+  constructor() {
+    this.slides = document.querySelectorAll('.slide');
+    this.current = 0;
+    this.setupNav();
+    this.setupKeyboard();
+    this.setupTouch();
+    this.setupWheel();
+    this.observe();
+  }
+  setupNav() {
+    const dots = document.getElementById('navDots');
+    this.slides.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.addEventListener('click', () => this.go(i));
+      dots.appendChild(b);
+    });
+    this.dots = dots.children;
+    this.update();
+  }
+  go(i) {
+    this.current = Math.max(0, Math.min(this.slides.length - 1, i));
+    this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
+    this.update();
+  }
+  update() {
+    Array.from(this.dots).forEach((d, i) => d.classList.toggle('active', i === this.current));
+    document.getElementById('progressBar').style.width = ((this.current + 1) / this.slides.length * 100) + '%';
+  }
+  setupKeyboard() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); this.go(this.current + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); this.go(this.current - 1); }
+      if (e.key === 'Home') this.go(0);
+      if (e.key === 'End') this.go(this.slides.length - 1);
+    });
+  }
+  setupTouch() {
+    let y0 = null;
+    document.addEventListener('touchstart', (e) => { y0 = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      if (y0 === null) return;
+      const dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dy) > 40) this.go(this.current + (dy < 0 ? 1 : -1));
+      y0 = null;
+    }, { passive: true });
+  }
+  setupWheel() {
+    let lock = false;
+    document.addEventListener('wheel', (e) => {
+      if (lock) return;
+      lock = true;
+      setTimeout(() => { lock = false; }, 650);
+      if (Math.abs(e.deltaY) < 20) return;
+      this.go(this.current + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+  observe() {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) {
+          en.target.classList.add('visible');
+          this.current = Array.from(this.slides).indexOf(en.target);
+          this.update();
+        }
+      });
+    }, { threshold: 0.6 });
+    this.slides.forEach((s) => io.observe(s));
+  }
+}
+new SlidePresentation();
+</script>
+</body>
+</html>

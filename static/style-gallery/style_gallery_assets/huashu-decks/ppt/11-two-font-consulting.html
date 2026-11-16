@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7 天启动你的 AI 写作产线 · Two-Font Consulting</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700;900&family=Noto+Sans+SC:wght@400;500;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============ VIEWPORT BASE (MANDATORY) ============ */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+.slide { width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; }
+:root {
+  --h2-size: clamp(1.2rem, 2.8vw, 1.9rem);
+  --h3-size: clamp(1rem, 2vw, 1.4rem);
+  --body-size: clamp(0.75rem, 1.4vw, 1.05rem);
+  --small-size: clamp(0.62rem, 0.95vw, 0.82rem);
+  --slide-padding: clamp(1.2rem, 5vw, 4rem);
+  --content-gap: clamp(0.6rem, 2.4vh, 1.6rem);
+}
+@media (max-height: 600px) {
+  :root { --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem); --content-gap: clamp(0.3rem, 1vw, 0.7rem); --body-size: clamp(0.68rem, 1.1vw, 0.9rem); }
+  .nav-dots, .keyboard-hint, .pat { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+  html { scroll-behavior: auto; }
+}
+
+/* ============ PRESET: TWO-FONT CONSULTING ============ */
+:root {
+  --bg: #EFEBE4;
+  --navy: #051C2C;
+  --green: #00805A;
+  --green-l: #5FD3A6;
+  --ink2: #27394A;
+  --line: #C9C2B6;
+  --font-serif: 'Fraunces', 'Noto Serif SC', serif;
+  --font-sans: 'Inter', 'Noto Sans SC', sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font-sans); background: var(--bg); color: var(--navy); }
+.slide { background: var(--bg); padding: var(--slide-padding); padding-bottom: calc(var(--slide-padding) * 0.8); display: flex; flex-direction: column; }
+.pat { position: absolute; right: 0; top: 0; width: min(36vw, 26rem); height: min(24vh, 15rem); opacity: 0.9; pointer-events: none; }
+.kick { font-size: var(--small-size); letter-spacing: 0.14em; color: var(--green); font-weight: 600; text-transform: uppercase; }
+h1 { font-family: var(--font-serif); font-weight: 700; font-size: clamp(1.6rem, 4.2vw, 2.9rem); line-height: 1.3; letter-spacing: -0.005em; margin-top: 0.4em; max-width: 22em; }
+h1 em, h2 em { font-style: normal; color: var(--green); }
+h2 { font-family: var(--font-serif); font-weight: 700; font-size: clamp(1.4rem, 3.4vw, 2.3rem); line-height: 1.3; margin-top: 0.4em; max-width: 24em; }
+.rule { width: 3.5rem; height: 3px; background: var(--navy); margin: var(--content-gap) 0; }
+.stage { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+.cols { display: grid; grid-template-columns: 1fr 1.2fr; gap: clamp(1rem, 3.5vw, 3rem); align-items: start; }
+@media (max-width: 760px) { .cols { grid-template-columns: 1fr; } }
+.body { font-size: var(--body-size); line-height: 1.8; color: var(--ink2); }
+.body p + p { margin-top: 0.8em; }
+.body b { color: var(--navy); font-weight: 700; }
+.cards { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+.card { background: #fff; padding: 1.1em 1.1em 1em; border-top: 3px solid var(--navy); }
+.card.hl { background: var(--navy); color: #fff; border-top-color: var(--green); }
+.card .num { font-family: var(--font-serif); font-weight: 700; font-size: clamp(1.6rem, 3.4vw, 2.6rem); line-height: 1; letter-spacing: -0.02em; }
+.card .num small { font-size: 0.45em; margin-left: 0.1em; }
+.card.hl .num { color: var(--green-l); }
+.card .lab { margin-top: 0.5em; font-size: var(--small-size); line-height: 1.55; color: #3C4C5B; }
+.card.hl .lab { color: #D4DEE6; }
+.toc { list-style: none; margin-top: 0.4em; }
+.toc li { display: flex; align-items: baseline; gap: 1.1em; padding: 0.7em 0; border-bottom: 1px solid var(--line); }
+.toc li:first-child { border-top: 2px solid var(--navy); }
+.toc .no { font-family: var(--font-serif); font-weight: 700; font-size: var(--h3-size); color: var(--green); min-width: 1.8em; }
+.toc .tx { font-weight: 600; font-size: var(--body-size); }
+.toc .meta { margin-left: auto; font-size: var(--small-size); color: #5A6875; }
+.steps { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; margin-top: 0.2em; }
+.step { background: #fff; border-top: 3px solid var(--navy); padding: 1em 1.1em; }
+.step .no { font-size: var(--small-size); font-weight: 600; letter-spacing: 0.1em; color: #5A6875; }
+.step h3 { font-family: var(--font-serif); font-weight: 700; font-size: var(--h3-size); margin-top: 0.3em; line-height: 1.4; }
+.step p { font-size: var(--small-size); color: var(--ink2); line-height: 1.6; margin-top: 0.4em; }
+.step.hl { background: var(--navy); border-top-color: var(--green); }
+.step.hl .no { color: var(--green-l); }
+.step.hl h3 { color: #fff; }
+.step.hl p { color: #D4DEE6; }
+@media (max-width: 640px) { .steps { grid-template-columns: 1fr; } .cards { grid-template-columns: 1fr; } }
+.quote { font-family: var(--font-serif); font-weight: 700; font-size: clamp(1.4rem, 3.6vw, 2.5rem); line-height: 1.4; max-width: 24em; }
+.quote em { font-style: normal; color: var(--green); }
+.foot { margin-top: auto; display: flex; justify-content: space-between; font-size: var(--small-size); color: #5A6875; border-top: 1px solid var(--line); padding-top: 0.7em; }
+.style-tag { position: absolute; top: clamp(0.8rem, 2vh, 1.2rem); right: var(--slide-padding); font-size: var(--small-size); color: #8A8276; z-index: 3; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 4px; background: var(--green); width: 0; z-index: 100; transition: width 0.2s ease; }
+.nav-dots { position: fixed; right: 1rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.6rem; z-index: 100; }
+.nav-dots button { width: 9px; height: 9px; border: 1.5px solid var(--navy); border-radius: 50%; background: transparent; cursor: pointer; padding: 0; }
+.nav-dots button.active { background: var(--green); border-color: var(--green); }
+.keyboard-hint { position: fixed; bottom: 0.8rem; left: 50%; transform: translateX(-50%); font-size: var(--small-size); color: #9A9284; z-index: 100; }
+.reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1); }
+.slide.visible .reveal { opacity: 1; transform: translateY(0); }
+.reveal:nth-child(1) { transition-delay: 0.08s; }
+.reveal:nth-child(2) { transition-delay: 0.18s; }
+.reveal:nth-child(3) { transition-delay: 0.28s; }
+.reveal:nth-child(4) { transition-delay: 0.38s; }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots"></nav>
+<svg width="0" height="0" style="position:absolute"><defs>
+<pattern id="hatch" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(-32)"><line x1="0" y1="0" x2="0" y2="14" stroke="#051C2C" stroke-width="1"/></pattern>
+<linearGradient id="hatchfade" x1="0" x2="1"><stop offset="0" stop-color="#EFEBE4" stop-opacity="1"/><stop offset="1" stop-color="#EFEBE4" stop-opacity="0"/></linearGradient>
+</defs></svg>
+
+<!-- S1 封面 -->
+<section class="slide">
+  <svg class="pat" viewBox="0 0 420 250" preserveAspectRatio="none"><rect width="420" height="250" fill="url(#hatch)" opacity=".5"/><rect width="420" height="250" fill="url(#hatchfade)"/></svg>
+  <div class="stage">
+    <span class="kick reveal">AI 写作工程学 · 课后行动版</span>
+    <h1 class="reveal">用 7 天而不是 1 年，<em>启动</em>你的 AI 写作产线</h1>
+    <div class="rule reveal"></div>
+    <div class="body reveal" style="max-width:34em">
+      <p>不教你背提示词，教你搭一条能写书、也能降维写公众号和播客稿的产线。从今天睡前 30 分钟开始。</p>
+      <p><b>范冰 XDash</b></p>
+    </div>
+  </div>
+  <div class="foot"><span>AI 写作工程学 · 课后行动版</span><span>01</span></div>
+  <span class="style-tag">Style: Two-Font Consulting</span>
+</section>
+
+<!-- S2 目录 -->
+<section class="slide">
+  <div class="stage">
+    <span class="kick reveal">Agenda</span>
+    <h2 class="reveal">这份行动方案把 7 天拆成<em>四个可交付节点</em></h2>
+    <div class="rule reveal"></div>
+    <ul class="toc reveal" style="max-width:44em">
+      <li><span class="no">01</span><span class="tx">为什么是「7 天」而不是「1 年」</span><span class="meta">动力机制</span></li>
+      <li><span class="no">02</span><span class="tx">第 1 天 · 立项第一性三问</span><span class="meta">30 分钟</span></li>
+      <li><span class="no">03</span><span class="tx">第 3 天 · 跑出你的黄金样张</span><span class="meta">2 小时</span></li>
+      <li><span class="no">04</span><span class="tx">今晚就开始 · 30 分钟开机</span><span class="meta">行动</span></li>
+    </ul>
+  </div>
+  <div class="foot"><span>Agenda</span><span>02</span></div>
+  <span class="style-tag">Style: Two-Font Consulting</span>
+</section>
+
+<!-- S3 为什么 7 天 -->
+<section class="slide">
+  <svg class="pat" viewBox="0 0 420 250" preserveAspectRatio="none"><rect width="420" height="250" fill="url(#hatch)" opacity=".5"/><rect width="420" height="250" fill="url(#hatchfade)"/></svg>
+  <div class="stage">
+    <span class="kick reveal">Why 7 Days</span>
+    <h2 class="reveal">课程价值的判据只有一个：七天后学员手里多出<em>能给别人看的东西</em></h2>
+    <div class="rule reveal"></div>
+    <div class="cols reveal">
+      <div class="body">
+        <p>不要宏大口号，把动力外包给最小即时反馈：每步都有产物，每步都能拿出手。</p>
+        <p>那个手感，会推着你<b>停不下来地把整本书写完</b>。</p>
+      </div>
+      <div class="cards">
+        <div class="card hl"><div class="num">1<small>页</small></div><div class="lab">第一天产物：《第一性选题诊断合同》+ 第一张五段式案例卡</div></div>
+        <div class="card"><div class="num">3000<small>字</small></div><div class="lab">第三天产物：带出版质感的黄金样张</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>动力机制：最小即时反馈，而非宏大口号</span><span>03</span></div>
+  <span class="style-tag">Style: Two-Font Consulting</span>
+</section>
+
+<!-- S4 第一天 -->
+<section class="slide">
+  <div class="stage">
+    <span class="kick reveal">Day 1 · 今晚睡前 · 30 分钟</span>
+    <h2 class="reveal">立项第一性三问：四步把<em>选题与素材</em>一次备齐</h2>
+    <div class="rule reveal"></div>
+    <div class="steps reveal">
+      <div class="step"><div class="no">STEP 01</div><h3>打开 T2《第一性选题诊断合同》</h3><p>诚实填完「立项第一性三问」，填不出就不动笔。</p></div>
+      <div class="step"><div class="no">STEP 02</div><h3>建三个空文件夹</h3><p>raw / anchors / chapters —— 你的工程脚手架。</p></div>
+      <div class="step"><div class="no">STEP 03</div><h3>丢入 5 份一手材料</h3><p>人生里最痛、最得意的 5 份原始材料：复盘长文、录音转写、深度访谈。</p></div>
+      <div class="step hl"><div class="no">STEP 04</div><h3>拆出第一张五段式案例卡</h3><p>起点 → 动作 → 阻力 → 转折 → 结果 + 当事人原话。按 T3 格式。</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>产物：1 页合同 + 1 张案例卡</span><span>04</span></div>
+  <span class="style-tag">Style: Two-Font Consulting</span>
+</section>
+
+<!-- S5 第三天 -->
+<section class="slide">
+  <svg class="pat" viewBox="0 0 420 250" preserveAspectRatio="none"><rect width="420" height="250" fill="url(#hatch)" opacity=".5"/><rect width="420" height="250" fill="url(#hatchfade)"/></svg>
+  <div class="stage">
+    <span class="kick reveal">Day 3 · 本周末 · 2 小时</span>
+    <h2 class="reveal">黄金样张：用 2 小时确立全书的<em>语调标杆</em></h2>
+    <div class="rule reveal"></div>
+    <div class="steps reveal">
+      <div class="step"><div class="no">STEP 01</div><h3>挑素材最肥沃的那 1 章</h3><p>按 T4 填满 15 条去重事实锚点 + 心流三推演。</p></div>
+      <div class="step"><div class="no">STEP 02</div><h3>接上你能触达的最强旗舰模型</h3><p>如 Gemini 4.0——长上下文、语感好的那种。</p></div>
+      <div class="step"><div class="no">STEP 03</div><h3>按 T5 的 IPO 批注法起草</h3><p>先出骨架 → 人写批注 → 再合成 3000 字。</p></div>
+      <div class="step hl"><div class="no">STEP 04</div><h3>确立 Golden Copy</h3><p>逐段精修到出版级手感，这就是全书的语调标杆。</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>产物：3000 字出版级黄金样张</span><span>05</span></div>
+  <span class="style-tag">Style: Two-Font Consulting</span>
+</section>
+
+<!-- S6 收束 -->
+<section class="slide">
+  <div class="stage" style="justify-content:center">
+    <span class="kick reveal">Tonight</span>
+    <p class="quote reveal" style="margin-top:0.5em">「起草的快，是用<em>素材的慢</em>换来的。」</p>
+    <div class="rule reveal"></div>
+    <div class="body reveal" style="max-width:36em">
+      <p>选题三问、三个文件夹、五份材料、一张案例卡——30 分钟，你的产线就开机了。</p>
+      <p><b>手里有粮，心中不慌。</b>然后，让它推着你，把整本书写完。</p>
+    </div>
+  </div>
+  <div class="foot"><span>AI 写作工程学 · 课后行动版 · 完</span><span>06</span></div>
+  <span class="style-tag">Style: Two-Font Consulting</span>
+</section>
+
+<div class="keyboard-hint">← → 翻页 · 空格下一页</div>
+<script>
+class SlidePresentation {
+  constructor() {
+    this.slides = document.querySelectorAll('.slide');
+    this.current = 0;
+    this.setupNav();
+    this.setupKeyboard();
+    this.setupTouch();
+    this.setupWheel();
+    this.observe();
+  }
+  setupNav() {
+    const dots = document.getElementById('navDots');
+    this.slides.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.addEventListener('click', () => this.go(i));
+      dots.appendChild(b);
+    });
+    this.dots = dots.children;
+    this.update();
+  }
+  go(i) {
+    this.current = Math.max(0, Math.min(this.slides.length - 1, i));
+    this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
+    this.update();
+  }
+  update() {
+    Array.from(this.dots).forEach((d, i) => d.classList.toggle('active', i === this.current));
+    document.getElementById('progressBar').style.width = ((this.current + 1) / this.slides.length * 100) + '%';
+  }
+  setupKeyboard() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); this.go(this.current + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); this.go(this.current - 1); }
+      if (e.key === 'Home') this.go(0);
+      if (e.key === 'End') this.go(this.slides.length - 1);
+    });
+  }
+  setupTouch() {
+    let y0 = null;
+    document.addEventListener('touchstart', (e) => { y0 = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      if (y0 === null) return;
+      const dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dy) > 40) this.go(this.current + (dy < 0 ? 1 : -1));
+      y0 = null;
+    }, { passive: true });
+  }
+  setupWheel() {
+    let lock = false;
+    document.addEventListener('wheel', (e) => {
+      if (lock) return;
+      lock = true;
+      setTimeout(() => { lock = false; }, 650);
+      if (Math.abs(e.deltaY) < 20) return;
+      this.go(this.current + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+  observe() {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) {
+          en.target.classList.add('visible');
+          this.current = Array.from(this.slides).indexOf(en.target);
+          this.update();
+        }
+      });
+    }, { threshold: 0.6 });
+    this.slides.forEach((s) => io.observe(s));
+  }
+}
+new SlidePresentation();
+</script>
+</body>
+</html>

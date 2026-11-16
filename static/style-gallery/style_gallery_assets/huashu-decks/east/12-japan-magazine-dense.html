@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7 天启动你的 AI 写作产线 · 日式生活杂志密排</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Long+Cang&family=Archivo+Narrow:wght@700&family=Noto+Serif+SC:wght@900&display=swap" rel="stylesheet">
+<style>
+/* ============ VIEWPORT BASE (MANDATORY) ============ */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+.slide { width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; }
+:root {
+  --title-size: clamp(1.5rem, 5vw, 4rem);
+  --h2-size: clamp(1.25rem, 3.5vw, 2.5rem);
+  --h3-size: clamp(1rem, 2.5vw, 1.75rem);
+  --body-size: clamp(0.75rem, 1.5vw, 1.125rem);
+  --small-size: clamp(0.65rem, 1vw, 0.875rem);
+  --slide-padding: clamp(1rem, 4vw, 4rem);
+  --content-gap: clamp(0.5rem, 2vw, 2rem);
+}
+@media (max-height: 700px) {
+  :root { --slide-padding: clamp(0.75rem, 3vw, 2rem); --content-gap: clamp(0.4rem, 1.5vw, 1rem); --title-size: clamp(1.25rem, 4.5vw, 2.5rem); --h2-size: clamp(1rem, 3vw, 1.75rem); }
+}
+@media (max-height: 600px) {
+  :root { --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem); --content-gap: clamp(0.3rem, 1vw, 0.75rem); --title-size: clamp(1.1rem, 4vw, 2rem); --body-size: clamp(0.7rem, 1.2vw, 0.95rem); }
+  .nav-dots, .keyboard-hint, .decorative { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+  html { scroll-behavior: auto; }
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 4px; background: var(--orange); width: 0; z-index: 100; transition: width 0.2s ease; }
+.nav-dots { position: fixed; right: 1rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.6rem; z-index: 100; }
+.nav-dots button { width: 9px; height: 9px; border: 1.5px solid var(--ink); border-radius: 50%; background: transparent; cursor: pointer; padding: 0; }
+.nav-dots button.active { background: var(--ink); }
+.keyboard-hint { position: fixed; bottom: 0.8rem; left: 50%; transform: translateX(-50%); font-size: var(--small-size); color: rgba(17,17,17,0.4); z-index: 100; }
+.reveal { opacity: 0; translate: 0 22px; transition: opacity 0.5s cubic-bezier(0.16,1,0.3,1), translate 0.5s cubic-bezier(0.16,1,0.3,1); }
+.slide.visible .reveal { opacity: 1; translate: 0 0; }
+.reveal:nth-child(1) { transition-delay: 0.1s; }
+.reveal:nth-child(2) { transition-delay: 0.2s; }
+.reveal:nth-child(3) { transition-delay: 0.3s; }
+.reveal:nth-child(4) { transition-delay: 0.4s; }
+.reveal:nth-child(5) { transition-delay: 0.5s; }
+
+/* ============ PRESET: 日式生活杂志密排 ============ */
+:root {
+  --ink: #111;
+  --yellow: #FFE600;
+  --orange: #FF5C00;
+  --blue: #1A4FD6;
+  --red: #E4261B;
+}
+body { font-family: 'Noto Sans SC', sans-serif; background: #fff; color: var(--ink); }
+.run { position: absolute; top: 3%; font: 700 11px 'Archivo Narrow', 'Noto Sans SC'; letter-spacing: .2em; }
+.pn { position: absolute; bottom: 4.5%; font: 700 12px 'Archivo Narrow'; letter-spacing: .2em; }
+.ttl { font: 900 var(--title-size)/1.15 'Noto Serif SC', serif; letter-spacing: -.02em; }
+.ttl em { font-style: normal; background: linear-gradient(transparent 58%, var(--yellow) 58%); }
+.hw { position: absolute; font: 400 clamp(0.9rem,2vh,1.3rem)/1.15 'Long Cang', cursive; color: var(--red); transform: rotate(-3deg); }
+.hw.b { color: var(--blue); }
+.style-tag { position: absolute; bottom: 0.7rem; right: 1rem; font: 500 12px 'Noto Sans SC', sans-serif; color: rgba(17,17,17,0.4); z-index: 5; }
+/* S1 封面 */
+.s1 .ttl { position: absolute; left: 6%; top: 9%; }
+.s1 .lede { position: absolute; left: 6%; top: 32%; width: 40%; font-weight: 500; font-size: var(--body-size); line-height: 1.75; }
+.s1 .map { position: absolute; right: 6%; top: 12%; width: 42%; height: 66%; border: 2px solid var(--ink); background: #F7F7F2; }
+.s1 .no { position: absolute; width: 24px; height: 24px; border-radius: 50%; background: var(--ink); color: #fff; font: 700 13px/24px 'Noto Sans SC'; text-align: center; }
+.s1 .cap { position: absolute; left: 6%; bottom: 7%; width: 40%; display: flex; justify-content: space-between; font-weight: 500; font-size: 12px; letter-spacing: .06em; color: #333; border-top: 2px solid var(--ink); padding-top: 7px; }
+/* S2 目录：2×2 数据格 */
+.s2 .rt { position: absolute; left: 6%; top: 8%; font: 900 var(--h2-size)/1.2 'Noto Sans SC'; letter-spacing: -.01em; }
+.s2 .rt small { display: block; font-weight: 500; font-size: 13px; letter-spacing: .1em; color: #444; margin-top: 4px; }
+.s2 .grid { position: absolute; left: 6%; right: 6%; top: 26%; display: grid; grid-template-columns: 1fr 1fr; border-top: 2px solid var(--ink); border-left: 1px solid var(--ink); }
+.s2 .c { box-sizing: border-box; border-right: 1px solid var(--ink); border-bottom: 1px solid var(--ink); padding: 1em 1.2em; position: relative; min-height: 22vh; }
+.s2 .c b { display: block; font: 900 var(--h3-size)/1.2 'Noto Serif SC', serif; margin-top: 0.5em; }
+.s2 .c span { display: block; font-weight: 700; font-size: var(--small-size); margin-top: 0.5em; color: #333; }
+.s2 .c u { position: absolute; right: 8px; top: 7px; text-decoration: none; font: 700 12px 'Archivo Narrow'; background: var(--ink); color: #fff; padding: 1px 6px; }
+.s2 .c.y { background: var(--yellow); }
+.s2 .c.k { background: var(--ink); color: #fff; }
+.s2 .c.k u { background: var(--yellow); color: var(--ink); }
+.s2 .c.k span { color: #ddd; }
+/* S3 为什么：数据页 */
+.s3 .rt { position: absolute; left: 6%; top: 8%; font: 900 var(--h2-size)/1.2 'Noto Sans SC'; }
+.s3 .rt em { font-style: normal; background: linear-gradient(transparent 58%, var(--yellow) 58%); }
+.s3 .lede { position: absolute; left: 6%; top: 22%; width: 74%; font-weight: 500; font-size: var(--body-size); line-height: 1.75; }
+.s3 .grid { position: absolute; left: 6%; right: 6%; top: 40%; display: grid; grid-template-columns: repeat(4,1fr); border-top: 2px solid var(--ink); border-left: 1px solid var(--ink); }
+.s3 .c { box-sizing: border-box; border-right: 1px solid var(--ink); border-bottom: 1px solid var(--ink); padding: 0.7em 0.9em; position: relative; }
+.s3 .c b { display: block; font: 900 var(--h3-size)/1 'Archivo Narrow', 'Noto Sans SC'; letter-spacing: -.01em; }
+.s3 .c span { display: block; font-weight: 700; font-size: 12px; margin-top: 0.4em; }
+.s3 .c.y { background: var(--yellow); }
+.s3 .c.k { background: var(--ink); color: #fff; }
+.s3 .rank { position: absolute; left: 6%; right: 6%; bottom: 9%; font-weight: 500; font-size: var(--small-size); line-height: 1.7; }
+.s3 .rank b { font-weight: 900; }
+.s3 .hw1 { position: absolute; right: 4%; top: 24%; }
+/* S4/S5 步骤 + 手写注解 */
+.s4 .rt, .s5 .rt { position: absolute; left: 6%; top: 8%; font: 900 var(--h2-size)/1.2 'Noto Sans SC'; }
+.s4 .rt small, .s5 .rt small { display: block; font: 700 12px 'Archivo Narrow', 'Noto Sans SC'; letter-spacing: .2em; color: #444; margin-top: 4px; }
+.steps { position: absolute; left: 6%; right: 30%; top: 26%; }
+.step { display: flex; gap: 1em; align-items: flex-start; padding: 0.6em 0; border-bottom: 2px solid var(--ink); }
+.step .no { width: 26px; height: 26px; border-radius: 50%; background: var(--ink); color: #fff; font: 700 14px/26px 'Noto Sans SC'; text-align: center; flex-shrink: 0; }
+.step h3 { font-weight: 900; font-size: var(--body-size); }
+.step h3 em { font-style: normal; background: linear-gradient(transparent 58%, var(--yellow) 58%); }
+.step p { font-weight: 500; font-size: var(--small-size); line-height: 1.7; margin-top: 0.2em; color: #333; }
+.s4 .notes, .s5 .notes { position: absolute; right: 6%; top: 26%; width: 20%; display: flex; flex-direction: column; gap: 1.4em; }
+.s4 .notes .hw, .s5 .notes .hw { position: relative; }
+.s4 .notes .hw, .s5 .notes .hw { transform: rotate(-3deg); }
+.s4 .notes .hw:nth-child(2), .s5 .notes .hw:nth-child(2) { transform: rotate(2deg); }
+/* S6 收束 */
+.s6 .ttl { position: absolute; left: 6%; top: 12%; }
+.s6 .lede { position: absolute; left: 6%; top: 34%; width: 46%; font-weight: 500; font-size: var(--body-size); line-height: 1.8; }
+.s6 .motto { position: absolute; left: 6%; top: 58%; display: inline-block; background: var(--ink); color: #fff; font-weight: 900; font-size: var(--body-size); padding: 0.6em 1.2em; }
+.s6 .motto em { font-style: normal; color: var(--yellow); }
+.s6 .hw2 { position: absolute; right: 10%; top: 30%; width: 22%; font-size: clamp(1.1rem,2.6vh,1.6rem); }
+.s6 .hw3 { position: absolute; right: 14%; top: 52%; width: 20%; }
+.s6 .circle { position: absolute; right: 8%; top: 18%; width: 24vh; height: 24vh; border: 3px solid var(--red); border-radius: 50%; transform: rotate(-4deg); }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- S1 封面 -->
+<section class="slide s1">
+  <div class="run" style="left:6%">AI WRITING WEEKLY / 2026</div><div class="run" style="right:6%">年报 · 写作</div>
+  <div class="ttl reveal">7 天启动<br>你的 <em>AI 写作产线</em></div>
+  <div class="lede reveal">不教你背提示词，教你搭一条能写书、也能降维写公众号和播客稿的产线。从今天睡前 30 分钟开始。——范冰 XDash</div>
+  <div class="map decorative">
+    <svg width="100%" height="100%" viewBox="0 0 440 400">
+      <g stroke="#CFCFC4" stroke-width="2"><line x1="0" y1="80" x2="440" y2="80"/><line x1="0" y1="170" x2="440" y2="170"/><line x1="0" y1="260" x2="440" y2="260"/><line x1="110" y1="0" x2="110" y2="400"/><line x1="230" y1="0" x2="230" y2="400"/><line x1="340" y1="0" x2="340" y2="400"/></g>
+      <rect x="120" y="90" width="100" height="70" fill="#D9ECD2"/><rect x="250" y="270" width="100" height="60" fill="#CFE3F4"/>
+      <path d="M40 340 L40 260 L110 260 L110 170 L230 170 L230 80 L400 80" fill="none" stroke="#FF5C00" stroke-width="8" stroke-linejoin="round"/>
+      <path d="M230 170 L340 170 L340 260" fill="none" stroke="#1A4FD6" stroke-width="4" stroke-dasharray="2 8" stroke-linecap="round"/>
+    </svg>
+    <div class="no" style="left:8%;top:80%">1</div><div class="no" style="left:24%;top:40%">2</div><div class="no" style="left:51%;top:17%">3</div><div class="no" style="left:88%;top:17%">4</div>
+    <div class="hw" style="left:6%;top:60%">起点 · 今晚<br>30 分钟！</div>
+    <div class="hw b" style="left:56%;top:30%">第 3 天<br>出样张◎</div>
+  </div>
+  <div class="cap"><span>① 立项三问　② 素材入库　③ 黄金样张　④ 今晚开机</span><span>全程 7 天</span></div>
+  <div class="pn" style="left:6%">001</div>
+  <span class="style-tag">Style: 日式生活杂志密排</span>
+</section>
+
+<!-- S2 目录 -->
+<section class="slide s2">
+  <div class="run" style="left:6%">CONTENTS / 目录</div><div class="run" style="right:6%">年报 · 写作</div>
+  <div class="rt reveal">这 7 天怎么走<small>AI 写作工程学 · 课后行动版 · 共 6 页</small></div>
+  <div class="grid">
+    <div class="c y reveal"><u>01</u><b>为什么是「7 天」而不是「1 年」</b><span>最小即时反馈 · 第 3 页</span></div>
+    <div class="c reveal"><u>02</u><b>第 1 天 · 立项第一性三问</b><span>今晚睡前 · 30 分钟</span></div>
+    <div class="c k reveal"><u>03</u><b>第 3 天 · 跑出你的黄金样张</b><span>本周末 · 2 小时</span></div>
+    <div class="c reveal"><u>04</u><b>今晚就开始 · 30 分钟开机</b><span>卷尾 · 收束</span></div>
+  </div>
+  <div class="pn" style="right:6%">002</div>
+  <span class="style-tag">Style: 日式生活杂志密排</span>
+</section>
+
+<!-- S3 为什么 7 天 · 数据页 -->
+<section class="slide s3">
+  <div class="run" style="left:6%">DATA / 数据</div><div class="run" style="right:6%">年报 · 写作</div>
+  <div class="rt reveal">为什么是<em>「7 天」</em>？</div>
+  <div class="lede reveal">一门课值不值，看的是学员七天后手里有没有多出一个<strong>能给别人看的东西</strong>。把动力外包给最小即时反馈：每步都有产物，每步都能拿出手。</div>
+  <div class="hw hw1 decorative">手感会推着你<br>写完整本书！</div>
+  <div class="grid reveal">
+    <div class="c y"><b>7 天</b><span>反馈周期</span></div>
+    <div class="c"><b>30 min</b><span>第 1 天开机</span></div>
+    <div class="c k"><b>3000 字</b><span>第 3 天黄金样张</span></div>
+    <div class="c"><b>2 件</b><span>能拿出手的产物</span></div>
+  </div>
+  <div class="rank reveal"><b>读图提示</b>　第一天的产物是一页纸的《第一性选题诊断合同》+ 第一张五段式案例卡；第三天的产物是一篇 3000 字、带出版质感的黄金样张。每步都有产物，每步都能拿出手。</div>
+  <div class="pn" style="left:6%">003</div>
+  <span class="style-tag">Style: 日式生活杂志密排</span>
+</section>
+
+<!-- S4 第一天 -->
+<section class="slide s4">
+  <div class="run" style="left:6%">DAY 1 / 第一天</div><div class="run" style="right:6%">年报 · 写作</div>
+  <div class="rt reveal">第 1 天 · <em style="font-style:normal;background:linear-gradient(transparent 58%,#FFE600 58%)">立项第一性三问</em><small>今晚睡前 · 30 分钟</small></div>
+  <div class="steps">
+    <div class="step reveal"><span class="no">1</span><div><h3>打开 T2《第一性选题诊断合同》</h3><p>诚实填完「立项第一性三问」，填不出就不动笔。</p></div></div>
+    <div class="step reveal"><span class="no">2</span><div><h3>建三个空文件夹</h3><p>raw / anchors / chapters —— 你的工程脚手架。</p></div></div>
+    <div class="step reveal"><span class="no">3</span><div><h3><em>丢入 5 份一手材料</em></h3><p>人生里最痛、最得意的 5 份原始材料：复盘长文、录音转写、深度访谈。</p></div></div>
+    <div class="step reveal"><span class="no">4</span><div><h3>拆出第一张五段式案例卡</h3><p>起点 → 动作 → 阻力 → 转折 → 结果 + 当事人原话。按 T3 格式。</p></div></div>
+  </div>
+  <div class="notes decorative">
+    <div class="hw">填不出三问<br>就别动笔！</div>
+    <div class="hw b">脚手架先搭好，<br>后面省力◎</div>
+    <div class="hw">材料要一手的</div>
+  </div>
+  <div class="pn" style="right:6%">004</div>
+  <span class="style-tag">Style: 日式生活杂志密排</span>
+</section>
+
+<!-- S5 第三天 -->
+<section class="slide s5">
+  <div class="run" style="left:6%">DAY 3 / 第三天</div><div class="run" style="right:6%">年报 · 写作</div>
+  <div class="rt reveal">第 3 天 · <em style="font-style:normal;background:linear-gradient(transparent 58%,#FFE600 58%)">跑出你的黄金样张</em><small>本周末 · 2 小时</small></div>
+  <div class="steps">
+    <div class="step reveal"><span class="no">1</span><div><h3>挑素材最肥沃的那 1 章</h3><p>按 T4 填满 15 条去重事实锚点 + 心流三推演。</p></div></div>
+    <div class="step reveal"><span class="no">2</span><div><h3><em>接上你能触达的最强旗舰模型</em></h3><p>如 Gemini 4.0——长上下文、语感好的那种。</p></div></div>
+    <div class="step reveal"><span class="no">3</span><div><h3>按 T5 的 IPO 批注法起草</h3><p>先出骨架 → 人写批注 → 再合成 3000 字。</p></div></div>
+    <div class="step reveal"><span class="no">4</span><div><h3>确立 Golden Copy</h3><p>逐段精修到出版级手感，这就是全书的语调标杆。</p></div></div>
+  </div>
+  <div class="notes decorative">
+    <div class="hw b">最肥的一章<br>先拿来试！</div>
+    <div class="hw">IPO：骨架→<br>批注→合成</div>
+    <div class="hw b">Golden Copy<br>= 语调标杆◎</div>
+  </div>
+  <div class="pn" style="left:6%">005</div>
+  <span class="style-tag">Style: 日式生活杂志密排</span>
+</section>
+
+<!-- S6 收束 -->
+<section class="slide s6">
+  <div class="run" style="left:6%">TONIGHT / 今晚</div><div class="run" style="right:6%">年报 · 写作</div>
+  <div class="circle decorative"></div>
+  <div class="ttl reveal">今晚<br><em>就开始</em></div>
+  <div class="lede reveal">选题三问、三个文件夹、五份材料、一张案例卡——30 分钟，你的产线就开机了。然后，让它推着你，把整本书写完。</div>
+  <div class="motto reveal">起草的快，是用素材的慢换来的。<em>手里有粮，心中不慌。</em></div>
+  <div class="hw hw2 decorative">今晚睡前 30 分钟，<br>先开机再说！</div>
+  <div class="hw b hw3 decorative">——范冰 XDash</div>
+  <div class="pn" style="right:6%">006</div>
+  <span class="style-tag">Style: 日式生活杂志密排</span>
+</section>
+
+<div class="keyboard-hint">← → 翻页 · 空格下一页</div>
+<script>
+class SlidePresentation {
+  constructor() {
+    this.slides = document.querySelectorAll('.slide');
+    this.current = 0;
+    this.setupNav();
+    this.setupKeyboard();
+    this.setupTouch();
+    this.setupWheel();
+    this.observe();
+  }
+  setupNav() {
+    const dots = document.getElementById('navDots');
+    this.slides.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.addEventListener('click', () => this.go(i));
+      dots.appendChild(b);
+    });
+    this.dots = dots.children;
+    this.update();
+  }
+  go(i) {
+    this.current = Math.max(0, Math.min(this.slides.length - 1, i));
+    this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
+    this.update();
+  }
+  update() {
+    Array.from(this.dots).forEach((d, i) => d.classList.toggle('active', i === this.current));
+    document.getElementById('progressBar').style.width = ((this.current + 1) / this.slides.length * 100) + '%';
+  }
+  setupKeyboard() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); this.go(this.current + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); this.go(this.current - 1); }
+      if (e.key === 'Home') this.go(0);
+      if (e.key === 'End') this.go(this.slides.length - 1);
+    });
+  }
+  setupTouch() {
+    let y0 = null;
+    document.addEventListener('touchstart', (e) => { y0 = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      if (y0 === null) return;
+      const dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dy) > 40) this.go(this.current + (dy < 0 ? 1 : -1));
+      y0 = null;
+    }, { passive: true });
+  }
+  setupWheel() {
+    let lock = false;
+    document.addEventListener('wheel', (e) => {
+      if (lock) return;
+      lock = true;
+      setTimeout(() => { lock = false; }, 650);
+      if (Math.abs(e.deltaY) < 20) return;
+      this.go(this.current + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+  observe() {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) {
+          en.target.classList.add('visible');
+          this.current = Array.from(this.slides).indexOf(en.target);
+          this.update();
+        }
+      });
+    }, { threshold: 0.6 });
+    this.slides.forEach((s) => io.observe(s));
+  }
+}
+new SlidePresentation();
+</script>
+</body>
+</html>

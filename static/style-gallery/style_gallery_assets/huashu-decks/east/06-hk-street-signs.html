@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7 天启动你的 AI 写作产线 · 香港街招与招牌</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500;900&family=Noto+Serif+TC:wght@900&family=Archivo+Black&display=swap" rel="stylesheet">
+<style>
+/* ============ VIEWPORT BASE (MANDATORY) ============ */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+.slide { width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; }
+:root {
+  --title-size: clamp(1.5rem, 5vw, 4rem);
+  --h2-size: clamp(1.25rem, 3.5vw, 2.5rem);
+  --h3-size: clamp(1rem, 2.5vw, 1.75rem);
+  --body-size: clamp(0.75rem, 1.5vw, 1.125rem);
+  --small-size: clamp(0.65rem, 1vw, 0.875rem);
+  --slide-padding: clamp(1rem, 4vw, 4rem);
+  --content-gap: clamp(0.5rem, 2vw, 2rem);
+}
+@media (max-height: 700px) {
+  :root { --slide-padding: clamp(0.75rem, 3vw, 2rem); --content-gap: clamp(0.4rem, 1.5vw, 1rem); --title-size: clamp(1.25rem, 4.5vw, 2.5rem); --h2-size: clamp(1rem, 3vw, 1.75rem); }
+}
+@media (max-height: 600px) {
+  :root { --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem); --content-gap: clamp(0.3rem, 1vw, 0.75rem); --title-size: clamp(1.1rem, 4vw, 2rem); --body-size: clamp(0.7rem, 1.2vw, 0.95rem); }
+  .nav-dots, .keyboard-hint, .decorative { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+  html { scroll-behavior: auto; }
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 4px; background: #D5201A; width: 0; z-index: 100; transition: width 0.2s ease; }
+.nav-dots { position: fixed; right: 1rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.6rem; z-index: 100; }
+.nav-dots button { width: 9px; height: 9px; border: 2px solid #FFF1C9; border-radius: 0; background: transparent; cursor: pointer; padding: 0; }
+.nav-dots button.active { background: #F7C600; border-color: #F7C600; }
+.keyboard-hint { position: fixed; bottom: 0.8rem; left: 50%; transform: translateX(-50%); font-size: var(--small-size); color: rgba(255,241,201,0.4); z-index: 100; font-family: 'Noto Sans TC', sans-serif; }
+.reveal { opacity: 0; translate: 0 22px; transition: opacity 0.5s cubic-bezier(0.16,1,0.3,1), translate 0.5s cubic-bezier(0.16,1,0.3,1); }
+.slide.visible .reveal { opacity: 1; translate: 0 0; }
+.reveal:nth-child(1) { transition-delay: 0.1s; }
+.reveal:nth-child(2) { transition-delay: 0.2s; }
+.reveal:nth-child(3) { transition-delay: 0.3s; }
+.reveal:nth-child(4) { transition-delay: 0.4s; }
+.reveal:nth-child(5) { transition-delay: 0.5s; }
+
+/* ============ PRESET: 香港街招与招牌 ============ */
+:root {
+  --night: #0C0D16;
+  --red: #D5201A;
+  --yellow: #F7C600;
+  --blue: #133B96;
+  --green: #0E8A55;
+  --cream: #FFF1C9;
+  --dark: #1B1405;
+}
+body { font-family: 'Noto Sans TC', sans-serif; background: var(--night); }
+.wall { position: absolute; inset: 0; background:
+  repeating-linear-gradient(90deg, rgba(255,255,255,.035) 0 2px, transparent 2px 120px),
+  repeating-linear-gradient(0deg, rgba(255,255,255,.035) 0 2px, transparent 2px 100px),
+  linear-gradient(180deg, #171826, #0C0D16); }
+.wire { position: absolute; height: 2px; background: #050509; transform-origin: left; }
+.sign { position: absolute; box-sizing: border-box; display: flex; align-items: center; justify-content: center; }
+.v { writing-mode: vertical-rl; text-orientation: upright; }
+.cap { position: absolute; left: 6%; bottom: 4%; font-weight: 500; font-size: 13px; letter-spacing: .2em; color: #9993AD; }
+.style-tag { position: absolute; bottom: 0.7rem; right: 1rem; font: 500 12px 'Noto Sans TC', sans-serif; color: rgba(255,241,201,0.4); z-index: 5; }
+/* S1 封面 */
+.s1 .sA { left: 7%; top: -2%; width: clamp(8rem,15vw,13rem); height: 78%; background: var(--red); border: 8px solid var(--cream); box-shadow: 0 0 0 4px var(--red), 0 0 40px rgba(255,60,40,.55); }
+.s1 .sA b { font: 900 clamp(4rem,11vh,7.5rem)/1.05 'Noto Sans TC'; color: #FFF6DA; text-shadow: 5px 5px 0 #6D0F0B; }
+.s1 .sB { left: 24%; top: 12%; width: clamp(4.4rem,8vw,7rem); height: 46%; background: var(--yellow); border: 6px solid var(--dark); box-shadow: 0 0 30px rgba(255,210,0,.4); }
+.s1 .sB b { font: 900 clamp(1.6rem,4vh,2.6rem)/1.15 'Noto Sans TC'; color: var(--dark); }
+.s1 .sC { left: 40%; top: 12%; width: 52%; height: 24%; background: var(--blue); border: 7px solid var(--cream); box-shadow: 0 0 36px rgba(60,120,255,.5); flex-direction: column; gap: 4px; }
+.s1 .sC b { font: 900 clamp(1.6rem,4.6vh,3.2rem)/1.1 'Noto Serif TC'; color: #FFE45C; text-shadow: 4px 4px 0 #071A4A; letter-spacing: .04em; text-align: center; }
+.s1 .sC i { font: 400 clamp(10px,1.4vh,15px) 'Archivo Black'; font-style: normal; color: var(--cream); letter-spacing: .3em; }
+.s1 .sE { left: 40%; top: 42%; width: 34%; height: 11%; background: #120808; border: 4px solid var(--red); }
+.s1 .sE b { font: 900 clamp(0.9rem,2.2vh,1.4rem)/1 'Noto Sans TC'; color: #FF3B2E; letter-spacing: .12em; text-shadow: 0 0 14px rgba(255,59,46,.9); white-space: nowrap; }
+.s1 .sF { left: 40%; top: 58%; width: 52%; background: var(--cream); border: 4px solid var(--dark); padding: 0.8em 1.2em; justify-content: flex-start; }
+.s1 .sF p { font-weight: 500; font-size: var(--small-size); line-height: 1.8; color: var(--dark); }
+/* S2 黑板目录 */
+.s2 .sHead { left: 8%; top: 8%; background: var(--green); border: 5px solid #E8FFE9; box-shadow: 0 0 28px rgba(40,240,140,.4); padding: 0.5em 1.4em; }
+.s2 .sHead b { font: 900 var(--h3-size)/1 'Noto Sans TC'; color: #F4FFF2; letter-spacing: .1em; text-shadow: 3px 3px 0 #05492B; white-space: nowrap; }
+.s2 .board { left: 8%; right: 8%; top: 24%; bottom: 12%; background: #201C28; border: 6px solid #3B3447; flex-direction: column; align-items: stretch; justify-content: flex-start; padding: 1.2em 1.6em; gap: 0.4em; }
+.s2 .board .tag { font-weight: 500; font-size: 13px; color: #8E88A0; letter-spacing: .2em; margin-bottom: 0.4em; }
+.s2 .row { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px dashed rgba(255,241,201,.35); padding: 0.55em 0; gap: 1em; }
+.s2 .row b { font-weight: 900; font-size: var(--body-size); color: var(--cream); }
+.s2 .row span { font-weight: 900; font-size: var(--body-size); color: var(--yellow); white-space: nowrap; }
+/* S3 为什么 */
+.s3 .sQ { left: 8%; top: 10%; width: 54%; background: var(--cream); border: 6px solid var(--dark); padding: 1.4em 1.6em; flex-direction: column; align-items: flex-start; box-shadow: 0 0 34px rgba(255,241,201,.25); }
+.s3 .sQ h2 { font: 900 var(--h2-size)/1.25 'Noto Serif TC'; color: var(--dark); }
+.s3 .sQ h2 em { font-style: normal; color: var(--red); }
+.s3 .sQ p { margin-top: 0.7em; font-size: var(--small-size); line-height: 1.9; color: #333; font-weight: 500; }
+.s3 .sD1 { left: 8%; top: 62%; width: 40%; background: var(--blue); border: 5px solid var(--cream); box-shadow: 0 0 30px rgba(60,120,255,.45); padding: 0.9em 1.2em; flex-direction: column; align-items: flex-start; }
+.s3 .sD2 { left: 52%; top: 70%; width: 40%; background: var(--red); border: 5px solid var(--cream); box-shadow: 0 0 30px rgba(255,60,40,.5); padding: 0.9em 1.2em; flex-direction: column; align-items: flex-start; }
+.s3 .mini .t { font-weight: 900; font-size: var(--small-size); color: var(--yellow); letter-spacing: .15em; }
+.s3 .mini p { font-weight: 500; font-size: var(--small-size); line-height: 1.7; color: #FFF6DA; margin-top: 0.3em; }
+.s3 .sV { right: 6%; top: 8%; width: clamp(4rem,7vw,6rem); height: 52%; background: var(--yellow); border: 6px solid var(--dark); box-shadow: 0 0 30px rgba(255,210,0,.4); }
+.s3 .sV b { font: 900 clamp(1.4rem,3.4vh,2.2rem)/1.2 'Noto Sans TC'; color: var(--dark); }
+/* S4/S5 步骤招 */
+.s45head { left: 8%; top: 7%; background: var(--blue); border: 6px solid var(--cream); box-shadow: 0 0 30px rgba(60,120,255,.45); padding: 0.5em 1.2em; flex-direction: column; }
+.s45head b { font: 900 var(--h3-size)/1.15 'Noto Serif TC'; color: #FFE45C; text-shadow: 3px 3px 0 #071A4A; white-space: nowrap; }
+.s45head i { font: 400 12px 'Archivo Black'; font-style: normal; color: var(--cream); letter-spacing: .3em; }
+.stack { position: absolute; left: 8%; right: 8%; top: 26%; display: flex; flex-direction: column; gap: 0.55em; }
+.stp { display: flex; align-items: center; gap: 1em; padding: 0.6em 1.1em; border: 4px solid var(--cream); }
+.stp .no { font: 900 var(--h3-size)/1 'Archivo Black'; flex-shrink: 0; }
+.stp h3 { font-weight: 900; font-size: var(--body-size); }
+.stp p { font-weight: 500; font-size: var(--small-size); line-height: 1.6; margin-top: 0.15em; }
+.stp.c1 { background: var(--red); color: #FFF6DA; box-shadow: 0 0 24px rgba(255,60,40,.45); }
+.stp.c1 p { color: #FFE3DB; }
+.stp.c2 { background: var(--yellow); border-color: var(--dark); color: var(--dark); box-shadow: 0 0 24px rgba(255,210,0,.35); }
+.stp.c2 p { color: #4A3A10; }
+.stp.c3 { background: var(--green); color: #F4FFF2; box-shadow: 0 0 24px rgba(40,240,140,.35); }
+.stp.c3 p { color: #D6F5DF; }
+.stp.c4 { background: var(--cream); border-color: var(--dark); color: var(--dark); }
+.stp.c4 p { color: #4A3A10; }
+.stp.c4 .no { color: var(--red); }
+/* S6 收束 */
+.s6 .sBig { left: 50%; top: 46%; transform: translate(-50%,-50%); width: min(46rem, 84%); background: var(--yellow); border: 8px solid var(--dark); box-shadow: 0 0 50px rgba(255,210,0,.45); flex-direction: column; padding: 2em 2.4em; }
+.s6 .sBig h2 { font: 900 clamp(2rem,6vh,3.6rem)/1.2 'Noto Serif TC'; color: var(--dark); }
+.s6 .sBig h2 em { font-style: normal; color: var(--red); }
+.s6 .sBig p { font-weight: 500; font-size: var(--body-size); line-height: 1.9; color: #33300F; margin-top: 0.8em; }
+.s6 .sBig .motto { margin-top: 1em; align-self: flex-start; background: var(--dark); color: var(--yellow); font-weight: 900; font-size: var(--body-size); padding: 0.5em 1.1em; letter-spacing: .08em; }
+.s6 .sLed { left: 50%; top: 82%; transform: translateX(-50%); background: #120808; border: 4px solid var(--red); padding: 0.5em 1.4em; }
+.s6 .sLed b { font: 900 var(--small-size)/1 'Noto Sans TC'; color: #FF3B2E; letter-spacing: .2em; text-shadow: 0 0 14px rgba(255,59,46,.9); white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- S1 封面 -->
+<section class="slide s1">
+  <div class="wall"></div>
+  <div class="wire decorative" style="left:0;top:6%;width:40%;transform:rotate(1.2deg)"></div>
+  <div class="wire decorative" style="left:34%;top:9%;width:66%;transform:rotate(-.6deg)"></div>
+  <div class="sign sA v reveal"><b>七天寫作</b></div>
+  <div class="sign sB v reveal"><b>產線開機</b></div>
+  <div class="sign sC reveal"><b>7 天啟動你的 AI 寫作產線</b><i>AI WRITING PIPELINE</i></div>
+  <div class="sign sE reveal"><b>今晚睡前 30 分鐘開機</b></div>
+  <div class="sign sF reveal"><p>不教你背提示词，教你搭一条能写书、也能降维写公众号和播客稿的产线。<br><b>范冰 XDash · AI 写作工程学 · 课后行动版</b></p></div>
+  <div class="cap">寫作巷　打字街　產線大廈</div>
+  <span class="style-tag">Style: 香港街招与招牌</span>
+</section>
+
+<!-- S2 目录 · 门口黑板 -->
+<section class="slide s2">
+  <div class="wall"></div>
+  <div class="wire decorative" style="left:0;top:16%;width:100%;transform:rotate(.4deg)"></div>
+  <div class="sign sHead reveal"><b>本 店 目 錄</b></div>
+  <div class="sign board reveal">
+    <div class="tag">門口黑板 · 七日功課</div>
+    <div class="row"><b>为什么是「7 天」而不是「1 年」</b><span>第 3 頁</span></div>
+    <div class="row"><b>第 1 天 · 立项第一性三问</b><span>30 分鐘</span></div>
+    <div class="row"><b>第 3 天 · 跑出你的黄金样张</b><span>2 小時</span></div>
+    <div class="row"><b>今晚就开始 · 30 分钟开机</b><span>即日</span></div>
+  </div>
+  <div class="cap">寫作巷　打字街　產線大廈</div>
+  <span class="style-tag">Style: 香港街招与招牌</span>
+</section>
+
+<!-- S3 为什么 7 天 -->
+<section class="slide s3">
+  <div class="wall"></div>
+  <div class="wire decorative" style="left:0;top:5%;width:100%;transform:rotate(-.8deg)"></div>
+  <div class="sign sQ reveal">
+    <h2>为什么是「7 天」<br>而不是<em>「1 年」</em>？</h2>
+    <p>一门课值不值，看的是学员七天后手里有没有多出一个能给别人看的东西。把动力外包给最小即时反馈：每步都有产物，每步都能拿出手。那个手感，会推着你停不下来地把整本书写完。</p>
+  </div>
+  <div class="sign sD1 mini reveal"><span class="t">第一天產物</span><p>一页纸的《第一性选题诊断合同》+ 第一张五段式案例卡</p></div>
+  <div class="sign sD2 mini reveal"><span class="t">第三天產物</span><p>一篇 3000 字、带出版质感的黄金样张</p></div>
+  <div class="sign sV v reveal"><b>七日見貨</b></div>
+  <div class="cap">寫作巷　打字街　產線大廈</div>
+  <span class="style-tag">Style: 香港街招与招牌</span>
+</section>
+
+<!-- S4 第一天 -->
+<section class="slide s4">
+  <div class="wall"></div>
+  <div class="wire decorative" style="left:0;top:20%;width:100%;transform:rotate(.5deg)"></div>
+  <div class="sign s45head reveal"><b>第 1 天 · 立项第一性三问</b><i>DAY 1 · 30 MIN</i></div>
+  <div class="stack">
+    <div class="stp c1 reveal"><span class="no">1</span><div><h3>打开 T2《第一性选题诊断合同》</h3><p>诚实填完「立项第一性三问」，填不出就不动笔。</p></div></div>
+    <div class="stp c2 reveal"><span class="no">2</span><div><h3>建三个空文件夹</h3><p>raw / anchors / chapters —— 你的工程脚手架。</p></div></div>
+    <div class="stp c3 reveal"><span class="no">3</span><div><h3>丢入 5 份一手材料</h3><p>人生里最痛、最得意的 5 份原始材料：复盘长文、录音转写、深度访谈。</p></div></div>
+    <div class="stp c4 reveal"><span class="no">4</span><div><h3>拆出第一张五段式案例卡</h3><p>起点 → 动作 → 阻力 → 转折 → 结果 + 当事人原话。按 T3 格式。</p></div></div>
+  </div>
+  <div class="cap">寫作巷　打字街　產線大廈</div>
+  <span class="style-tag">Style: 香港街招与招牌</span>
+</section>
+
+<!-- S5 第三天 -->
+<section class="slide s5">
+  <div class="wall"></div>
+  <div class="wire decorative" style="left:0;top:20%;width:100%;transform:rotate(-.5deg)"></div>
+  <div class="sign s45head reveal"><b>第 3 天 · 跑出你的黄金样张</b><i>DAY 3 · 2 HOURS</i></div>
+  <div class="stack">
+    <div class="stp c2 reveal"><span class="no">1</span><div><h3>挑素材最肥沃的那 1 章</h3><p>按 T4 填满 15 条去重事实锚点 + 心流三推演。</p></div></div>
+    <div class="stp c1 reveal"><span class="no">2</span><div><h3>接上你能触达的最强旗舰模型</h3><p>如 Gemini 4.0——长上下文、语感好的那种。</p></div></div>
+    <div class="stp c4 reveal"><span class="no">3</span><div><h3>按 T5 的 IPO 批注法起草</h3><p>先出骨架 → 人写批注 → 再合成 3000 字。</p></div></div>
+    <div class="stp c3 reveal"><span class="no">4</span><div><h3>确立 Golden Copy</h3><p>逐段精修到出版级手感，这就是全书的语调标杆。</p></div></div>
+  </div>
+  <div class="cap">寫作巷　打字街　產線大廈</div>
+  <span class="style-tag">Style: 香港街招与招牌</span>
+</section>
+
+<!-- S6 收束 -->
+<section class="slide s6">
+  <div class="wall"></div>
+  <div class="wire decorative" style="left:0;top:10%;width:100%;transform:rotate(.7deg)"></div>
+  <div class="sign sBig reveal">
+    <h2>今晚<em>就開始</em></h2>
+    <p>选题三问、三个文件夹、五份材料、一张案例卡——30 分钟，你的产线就开机了。然后，让它推着你，把整本书写完。</p>
+    <div class="motto">起草的快，是用素材的慢换来的。手里有粮，心中不慌。</div>
+  </div>
+  <div class="sign sLed reveal"><b>營業至深夜 · 寫完先好走</b></div>
+  <div class="cap">寫作巷　打字街　產線大廈</div>
+  <span class="style-tag">Style: 香港街招与招牌</span>
+</section>
+
+<div class="keyboard-hint">← → 翻页 · 空格下一页</div>
+<script>
+class SlidePresentation {
+  constructor() {
+    this.slides = document.querySelectorAll('.slide');
+    this.current = 0;
+    this.setupNav();
+    this.setupKeyboard();
+    this.setupTouch();
+    this.setupWheel();
+    this.observe();
+  }
+  setupNav() {
+    const dots = document.getElementById('navDots');
+    this.slides.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.addEventListener('click', () => this.go(i));
+      dots.appendChild(b);
+    });
+    this.dots = dots.children;
+    this.update();
+  }
+  go(i) {
+    this.current = Math.max(0, Math.min(this.slides.length - 1, i));
+    this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
+    this.update();
+  }
+  update() {
+    Array.from(this.dots).forEach((d, i) => d.classList.toggle('active', i === this.current));
+    document.getElementById('progressBar').style.width = ((this.current + 1) / this.slides.length * 100) + '%';
+  }
+  setupKeyboard() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); this.go(this.current + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); this.go(this.current - 1); }
+      if (e.key === 'Home') this.go(0);
+      if (e.key === 'End') this.go(this.slides.length - 1);
+    });
+  }
+  setupTouch() {
+    let y0 = null;
+    document.addEventListener('touchstart', (e) => { y0 = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      if (y0 === null) return;
+      const dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dy) > 40) this.go(this.current + (dy < 0 ? 1 : -1));
+      y0 = null;
+    }, { passive: true });
+  }
+  setupWheel() {
+    let lock = false;
+    document.addEventListener('wheel', (e) => {
+      if (lock) return;
+      lock = true;
+      setTimeout(() => { lock = false; }, 650);
+      if (Math.abs(e.deltaY) < 20) return;
+      this.go(this.current + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+  observe() {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) {
+          en.target.classList.add('visible');
+          this.current = Array.from(this.slides).indexOf(en.target);
+          this.update();
+        }
+      });
+    }, { threshold: 0.6 });
+    this.slides.forEach((s) => io.observe(s));
+  }
+}
+new SlidePresentation();
+</script>
+</body>
+</html>

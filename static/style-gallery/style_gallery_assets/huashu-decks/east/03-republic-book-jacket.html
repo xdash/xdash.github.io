@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7 天启动你的 AI 写作产线 · 民国书衣</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont/style.css">
+<style>
+/* ============ VIEWPORT BASE (MANDATORY) ============ */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+.slide { width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; }
+:root {
+  --title-size: clamp(1.5rem, 5vw, 4rem);
+  --h2-size: clamp(1.25rem, 3.5vw, 2.5rem);
+  --h3-size: clamp(1rem, 2.5vw, 1.75rem);
+  --body-size: clamp(0.75rem, 1.5vw, 1.125rem);
+  --small-size: clamp(0.65rem, 1vw, 0.875rem);
+  --slide-padding: clamp(1rem, 4vw, 4rem);
+  --content-gap: clamp(0.5rem, 2vw, 2rem);
+}
+@media (max-height: 700px) {
+  :root { --slide-padding: clamp(0.75rem, 3vw, 2rem); --content-gap: clamp(0.4rem, 1.5vw, 1rem); --title-size: clamp(1.25rem, 4.5vw, 2.5rem); --h2-size: clamp(1rem, 3vw, 1.75rem); }
+}
+@media (max-height: 600px) {
+  :root { --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem); --content-gap: clamp(0.3rem, 1vw, 0.75rem); --title-size: clamp(1.1rem, 4vw, 2rem); --body-size: clamp(0.7rem, 1.2vw, 0.95rem); }
+  .nav-dots, .keyboard-hint, .decorative { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+  html { scroll-behavior: auto; }
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 4px; background: var(--red); width: 0; z-index: 100; transition: width 0.2s ease; }
+.nav-dots { position: fixed; right: 1rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.6rem; z-index: 100; }
+.nav-dots button { width: 9px; height: 9px; border: 1.5px solid var(--ink); border-radius: 50%; background: transparent; cursor: pointer; padding: 0; }
+.nav-dots button.active { background: var(--red); border-color: var(--red); }
+.keyboard-hint { position: fixed; bottom: 0.8rem; left: 50%; transform: translateX(-50%); font-size: var(--small-size); color: rgba(30,27,23,0.45); z-index: 100; }
+.reveal { opacity: 0; translate: 0 22px; transition: opacity 0.5s cubic-bezier(0.16,1,0.3,1), translate 0.5s cubic-bezier(0.16,1,0.3,1); }
+.slide.visible .reveal { opacity: 1; translate: 0 0; }
+.reveal:nth-child(1) { transition-delay: 0.1s; }
+.reveal:nth-child(2) { transition-delay: 0.2s; }
+.reveal:nth-child(3) { transition-delay: 0.3s; }
+.reveal:nth-child(4) { transition-delay: 0.4s; }
+.reveal:nth-child(5) { transition-delay: 0.5s; }
+
+/* ============ PRESET: 民国书衣 ============ */
+:root {
+  --desk: #BDB6A6;
+  --paper: #CFC3A0;
+  --cream: #EFE8D3;
+  --ink: #1E1B17;
+  --red: #B02A1C;
+  --gray: #4B4338;
+}
+body { font-family: 'Noto Serif SC', serif; background: var(--desk); color: var(--ink); }
+.slide { align-items: center; justify-content: center; }
+.sheet { position: relative; width: min(1100px, 94vw); height: min(670px, 90vh); background: var(--paper); box-shadow: 0 12px 26px -12px rgba(30,20,10,.5); overflow: hidden; }
+.frame { position: absolute; inset: 1.6rem; border: 2px solid var(--ink); pointer-events: none; }
+.frame::after { content: ''; position: absolute; inset: 5px; border: 1px solid var(--ink); }
+.mark { width: 18px; height: 18px; background: var(--red); }
+.style-tag { position: absolute; bottom: 0.7rem; right: 1rem; font: 400 12px 'Noto Serif SC', serif; color: rgba(30,27,23,0.5); z-index: 5; }
+.kicker { font-size: 13px; letter-spacing: .3em; color: var(--gray); }
+/* S1 封面 */
+.s1 .label { position: absolute; left: 16%; top: 12%; width: clamp(4rem,7vw,5.6rem); height: 56%; background: var(--cream); border: 1px solid var(--ink); display: flex; justify-content: center; }
+.s1 .label b { writing-mode: vertical-rl; font: 400 clamp(2.6rem,6.5vh,4.4rem)/1 'LXGW WenKai','Ma Shan Zheng',serif; letter-spacing: .14em; margin-top: 0.5em; color: var(--ink); }
+.s1 .who { position: absolute; left: 33%; top: 14%; writing-mode: vertical-rl; font-size: var(--body-size); letter-spacing: .3em; }
+.s1 .sub { position: absolute; left: 39%; top: 14%; writing-mode: vertical-rl; font-size: var(--small-size); letter-spacing: .22em; color: var(--gray); }
+.s1 .blurb { position: absolute; right: 12%; top: 16%; width: 34%; font-size: var(--body-size); line-height: 2.1; letter-spacing: .06em; }
+.s1 .art { position: absolute; left: 8%; bottom: 8%; width: 44%; }
+.s1 .imprint { position: absolute; right: 12%; bottom: 9%; font-size: 13px; letter-spacing: .2em; color: var(--gray); }
+/* S2 目录 */
+.s2 .inner { position: absolute; inset: 12% 14%; }
+.s2 h2 { font: 400 var(--h2-size)/1.4 'LXGW WenKai','Ma Shan Zheng',serif; letter-spacing: .2em; margin-bottom: 1em; }
+.s2 h2 span { border-bottom: 3px solid var(--red); padding-bottom: 0.1em; }
+.s2 .toc { list-style: none; }
+.s2 .toc li { display: flex; align-items: baseline; gap: 1em; padding: 0.8em 0; border-bottom: 1px solid rgba(30,27,23,.35); }
+.s2 .toc .no { width: 1.8em; height: 1.8em; flex-shrink: 0; border: 1.5px solid var(--ink); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: var(--small-size); align-self: center; }
+.s2 .toc .tx { flex: 1; font-size: var(--body-size); letter-spacing: .08em; }
+.s2 .toc .pg { font-size: var(--small-size); color: var(--gray); letter-spacing: .2em; }
+/* S3 内页 */
+.s3 .head { position: absolute; left: 10%; top: 9%; right: 10%; display: flex; justify-content: space-between; font-size: 13px; letter-spacing: .24em; color: var(--gray); border-bottom: 1px solid var(--ink); padding-bottom: 0.6em; }
+.s3 .body { position: absolute; left: 10%; top: 20%; width: 52%; font-size: var(--body-size); line-height: 2.1; text-align: justify; }
+.s3 .q { margin: 0.9em 0; font-weight: 600; font-size: var(--h3-size); }
+.s3 .q b { color: var(--red); font-weight: 600; }
+.s3 .side { position: absolute; right: 10%; top: 20%; width: 26%; }
+.s3 .side .cell { border: 1.5px solid var(--ink); padding: 1em 1.1em; margin-bottom: 1em; background: var(--cream); }
+.s3 .side .tag { display: block; font-size: 12px; letter-spacing: .24em; color: var(--red); margin-bottom: 0.4em; }
+.s3 .side p { font-size: var(--small-size); line-height: 1.9; }
+/* S4/S5 步骤 */
+.s4 .vlabel, .s5 .vlabel { position: absolute; left: 9%; top: 12%; width: clamp(3.2rem,5vw,4.4rem); height: 62%; background: var(--cream); border: 1px solid var(--ink); display: flex; justify-content: center; }
+.s4 .vlabel b, .s5 .vlabel b { writing-mode: vertical-rl; font: 400 clamp(1.5rem,3.6vh,2.4rem)/1 'LXGW WenKai','Ma Shan Zheng',serif; letter-spacing: .2em; margin-top: 0.7em; }
+.s4 .meta, .s5 .meta { position: absolute; left: 22%; top: 12%; font-size: 13px; letter-spacing: .24em; color: var(--gray); }
+.s4 .meta em, .s5 .meta em { font-style: normal; color: var(--red); }
+.steps { position: absolute; left: 22%; right: 10%; top: 20%; }
+.step { display: flex; gap: 1.1em; align-items: flex-start; padding: 0.65em 0; border-bottom: 1px solid rgba(30,27,23,.3); }
+.step .no { width: 1.9em; height: 1.9em; flex-shrink: 0; border: 1.5px solid var(--ink); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: var(--small-size); }
+.step h3 { font-size: var(--body-size); font-weight: 600; letter-spacing: .05em; }
+.step p { font-size: var(--small-size); color: var(--gray); line-height: 1.8; margin-top: 0.25em; }
+/* S6 封底 */
+.s6 .art2 { position: absolute; left: 0; right: 0; bottom: 0; }
+.s6 .box { position: absolute; left: 50%; top: 42%; transform: translate(-50%,-50%); width: min(32rem, 72%); background: var(--cream); border: 2px solid var(--ink); outline: 1px solid var(--ink); outline-offset: 5px; padding: 2em 2.2em; }
+.s6 .box .k { font-size: 12px; letter-spacing: .3em; color: var(--red); }
+.s6 .box h2 { font: 400 var(--h3-size)/1.6 'LXGW WenKai','Ma Shan Zheng',serif; letter-spacing: .12em; margin: 0.6em 0; }
+.s6 .box p { font-size: var(--body-size); line-height: 2; }
+.s6 .box .motto { font-weight: 600; margin-top: 0.7em; }
+.s6 .mark { position: absolute; right: 10%; top: 10%; }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- S1 封面 -->
+<section class="slide s1">
+  <div class="sheet">
+    <div class="frame decorative"></div>
+    <div class="label reveal"><b>七天</b></div>
+    <div class="who reveal">范冰 XDash　著</div>
+    <div class="sub reveal">AI 写作工程学 · 课后行动版</div>
+    <div class="blurb reveal">不教你背提示词，教你搭一条能写书、也能降维写公众号和播客稿的产线。从今天睡前 30 分钟开始。</div>
+    <svg class="art decorative" viewBox="0 0 500 220" preserveAspectRatio="none">
+      <circle cx="380" cy="70" r="42" fill="#B02A1C"/>
+      <polygon points="0,220 0,130 70,80 140,150 210,60 300,170 380,105 500,180 500,220" fill="#1E1B17"/>
+      <polygon points="0,220 0,175 90,130 180,190 260,135 340,200 430,150 500,190 500,220" fill="#CFC3A0"/>
+      <g stroke="#1E1B17" stroke-width="2"><line x1="0" y1="196" x2="500" y2="196"/><line x1="0" y1="206" x2="500" y2="206"/><line x1="0" y1="216" x2="500" y2="216"/></g>
+      <polygon points="210,60 233,92 187,92" fill="#EFE8D3"/>
+    </svg>
+    <div class="imprint">二〇二六年十一月 · 内部讲义</div>
+  </div>
+  <span class="style-tag">Style: 民国书衣</span>
+</section>
+
+<!-- S2 目录 -->
+<section class="slide s2">
+  <div class="sheet">
+    <div class="frame decorative"></div>
+    <div class="inner">
+      <h2 class="reveal"><span>目　录</span></h2>
+      <ul class="toc">
+        <li class="reveal"><span class="no">一</span><span class="tx">为什么是「7 天」而不是「1 年」</span><span class="pg">第三叶</span></li>
+        <li class="reveal"><span class="no">二</span><span class="tx">第 1 天 · 立项第一性三问（30 分钟）</span><span class="pg">第四叶</span></li>
+        <li class="reveal"><span class="no">三</span><span class="tx">第 3 天 · 跑出你的黄金样张（2 小时）</span><span class="pg">第五叶</span></li>
+        <li class="reveal"><span class="no">四</span><span class="tx">今晚就开始 · 30 分钟开机</span><span class="pg">第六叶</span></li>
+      </ul>
+    </div>
+  </div>
+  <span class="style-tag">Style: 民国书衣</span>
+</section>
+
+<!-- S3 为什么 7 天 -->
+<section class="slide s3">
+  <div class="sheet">
+    <div class="frame decorative"></div>
+    <div class="head"><span>第一章</span><span>为什么是 7 天</span></div>
+    <div class="body">
+      <p class="reveal">一门课值不值，看的是学员七天后手里有没有多出一个能给别人看的东西。不要宏大口号，把动力外包给最小即时反馈：每步都有产物，每步都能拿出手。</p>
+      <p class="q reveal"><b>「</b>那个手感，会推着你停不下来地把整本书写完。<b>」</b></p>
+    </div>
+    <div class="side">
+      <div class="cell reveal"><span class="tag">第一天产物</span><p>一页纸的《第一性选题诊断合同》+ 第一张五段式案例卡</p></div>
+      <div class="cell reveal"><span class="tag">第三天产物</span><p>一篇 3000 字、带出版质感的黄金样张</p></div>
+    </div>
+  </div>
+  <span class="style-tag">Style: 民国书衣</span>
+</section>
+
+<!-- S4 第一天 -->
+<section class="slide s4">
+  <div class="sheet">
+    <div class="frame decorative"></div>
+    <div class="vlabel reveal"><b>第一日</b></div>
+    <div class="meta">第二章 · <em>立项第一性三问</em> · 今晚睡前 30 分钟</div>
+    <div class="steps">
+      <div class="step reveal"><span class="no">1</span><div><h3>打开 T2《第一性选题诊断合同》</h3><p>诚实填完「立项第一性三问」，填不出就不动笔。</p></div></div>
+      <div class="step reveal"><span class="no">2</span><div><h3>建三个空文件夹</h3><p>raw / anchors / chapters —— 你的工程脚手架。</p></div></div>
+      <div class="step reveal"><span class="no">3</span><div><h3>丢入 5 份一手材料</h3><p>人生里最痛、最得意的 5 份原始材料：复盘长文、录音转写、深度访谈。</p></div></div>
+      <div class="step reveal"><span class="no">4</span><div><h3>拆出第一张五段式案例卡</h3><p>起点 → 动作 → 阻力 → 转折 → 结果 + 当事人原话。按 T3 格式。</p></div></div>
+    </div>
+  </div>
+  <span class="style-tag">Style: 民国书衣</span>
+</section>
+
+<!-- S5 第三天 -->
+<section class="slide s5">
+  <div class="sheet">
+    <div class="frame decorative"></div>
+    <div class="vlabel reveal"><b>第三日</b></div>
+    <div class="meta">第三章 · <em>跑出你的黄金样张</em> · 本周末 2 小时</div>
+    <div class="steps">
+      <div class="step reveal"><span class="no">1</span><div><h3>挑素材最肥沃的那 1 章</h3><p>按 T4 填满 15 条去重事实锚点 + 心流三推演。</p></div></div>
+      <div class="step reveal"><span class="no">2</span><div><h3>接上你能触达的最强旗舰模型</h3><p>如 Gemini 4.0——长上下文、语感好的那种。</p></div></div>
+      <div class="step reveal"><span class="no">3</span><div><h3>按 T5 的 IPO 批注法起草</h3><p>先出骨架 → 人写批注 → 再合成 3000 字。</p></div></div>
+      <div class="step reveal"><span class="no">4</span><div><h3>确立 Golden Copy</h3><p>逐段精修到出版级手感，这就是全书的语调标杆。</p></div></div>
+    </div>
+  </div>
+  <span class="style-tag">Style: 民国书衣</span>
+</section>
+
+<!-- S6 封底 -->
+<section class="slide s6">
+  <div class="sheet">
+    <div class="frame decorative"></div>
+    <div class="mark decorative"></div>
+    <div class="box reveal">
+      <span class="k">卷尾 · 今晚就开始</span>
+      <h2>今晚就开始</h2>
+      <p>选题三问、三个文件夹、五份材料、一张案例卡——30 分钟，你的产线就开机了。然后，让它推着你，把整本书写完。</p>
+      <p class="motto">起草的快，是用素材的慢换来的。手里有粮，心中不慌。</p>
+    </div>
+    <svg class="art2 decorative" viewBox="0 0 1200 120" preserveAspectRatio="none" style="height:16%">
+      <polygon points="0,120 0,70 120,20 260,90 400,10 560,95 720,40 900,100 1050,55 1200,90 1200,120" fill="#1E1B17"/>
+      <g stroke="#CFC3A0" stroke-width="2"><line x1="0" y1="104" x2="1200" y2="104"/><line x1="0" y1="114" x2="1200" y2="114"/></g>
+    </svg>
+  </div>
+  <span class="style-tag">Style: 民国书衣</span>
+</section>
+
+<div class="keyboard-hint">← → 翻页 · 空格下一页</div>
+<script>
+class SlidePresentation {
+  constructor() {
+    this.slides = document.querySelectorAll('.slide');
+    this.current = 0;
+    this.setupNav();
+    this.setupKeyboard();
+    this.setupTouch();
+    this.setupWheel();
+    this.observe();
+  }
+  setupNav() {
+    const dots = document.getElementById('navDots');
+    this.slides.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.addEventListener('click', () => this.go(i));
+      dots.appendChild(b);
+    });
+    this.dots = dots.children;
+    this.update();
+  }
+  go(i) {
+    this.current = Math.max(0, Math.min(this.slides.length - 1, i));
+    this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
+    this.update();
+  }
+  update() {
+    Array.from(this.dots).forEach((d, i) => d.classList.toggle('active', i === this.current));
+    document.getElementById('progressBar').style.width = ((this.current + 1) / this.slides.length * 100) + '%';
+  }
+  setupKeyboard() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); this.go(this.current + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); this.go(this.current - 1); }
+      if (e.key === 'Home') this.go(0);
+      if (e.key === 'End') this.go(this.slides.length - 1);
+    });
+  }
+  setupTouch() {
+    let y0 = null;
+    document.addEventListener('touchstart', (e) => { y0 = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      if (y0 === null) return;
+      const dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dy) > 40) this.go(this.current + (dy < 0 ? 1 : -1));
+      y0 = null;
+    }, { passive: true });
+  }
+  setupWheel() {
+    let lock = false;
+    document.addEventListener('wheel', (e) => {
+      if (lock) return;
+      lock = true;
+      setTimeout(() => { lock = false; }, 650);
+      if (Math.abs(e.deltaY) < 20) return;
+      this.go(this.current + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+  observe() {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) {
+          en.target.classList.add('visible');
+          this.current = Array.from(this.slides).indexOf(en.target);
+          this.update();
+        }
+      });
+    }, { threshold: 0.6 });
+    this.slides.forEach((s) => io.observe(s));
+  }
+}
+new SlidePresentation();
+</script>
+</body>
+</html>
