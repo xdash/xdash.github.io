@@ -126,37 +126,6 @@
   .overview-evidence a { color: #2b6cb0; }
   .overview-caveat, .overview-muted { color: #8a857a; font-size: 12px; }
   .overview-warnings { color: #a05a10; }
-  .qstrip {
-    display: none; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-top: 10px;
-    padding: 8px 10px; background: #fbfaf7;
-    border: 1px solid #e3e0d8; border-radius: 10px;
-  }
-  .qstrip.on { display: flex; }
-  .qstrip .q { display: flex; align-items: baseline; gap: 6px; font-size: 13px; }
-  .qstrip .q-name { color: #8a857a; font-size: 11px; }
-  .qstrip .q b { font-weight: 600; font-variant-numeric: tabular-nums; }
-  .qstrip .q i { font-style: normal; font-size: 11px; }
-  .qstrip .q-time { margin-left: auto; font-size: 10px; color: #b0ab9e; }
-  .up { color: #c0392b; }
-  .down { color: #2f7a3e; }
-  .pos-sum .sum-row {
-    display: flex; justify-content: space-between; align-items: baseline;
-    font-size: 13px; padding: 3px 0;
-  }
-  .pos-sum .sum-row span { color: #8a857a; }
-  .pos-sum .sum-row b { font-size: 15px; font-variant-numeric: tabular-nums; }
-  .pos-sum .sum-note { font-size: 11px; color: #b0ab9e; margin-top: 8px; }
-  .pos-head { display: flex; align-items: baseline; gap: 8px; }
-  .pos-head .pname { font-size: 15px; font-weight: 600; }
-  .pos-head .ppair { font-size: 11px; color: #a8a396; }
-  .pos-head .pprice {
-    margin-left: auto; font-size: 17px; font-weight: 600;
-    font-variant-numeric: tabular-nums;
-  }
-  .pos-sub { font-size: 11px; color: #a8a396; margin: 4px 0 10px; }
-  .pos-chg { display: flex; align-items: baseline; gap: 8px; margin: 10px 0 4px; }
-  .pos-chg .clabel { font-size: 11px; color: #a8a396; }
-  .pos-chg b { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
   .usage-value { font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; }
   .usage-meta { font-size: 11px; color: #8a857a; margin-top: 5px; }
   .usage-row {
@@ -184,10 +153,6 @@
     .card { padding: 12px 14px; }
     .tabs { gap: 6px; }
     .tabs button { padding: 5px 12px; font-size: 12px; }
-    .qstrip { gap: 6px 10px; padding: 7px 9px; }
-    .qstrip .q { font-size: 12px; gap: 4px; }
-    .qstrip .q b { font-size: 12px; }
-    .qstrip .q-time { font-size: 9px; }
     .fab-nav { right: 5px; gap: 8px; }
     .fab-nav button { width: 32px; height: 32px; font-size: 14px; opacity: .3; }
     .overview-grid { grid-template-columns: minmax(0, 1fr); }
@@ -202,10 +167,8 @@
     <button id="tab-feed" class="active">信息流</button>
     <button id="tab-sh">上海 · 101 场</button>
     <button id="tab-xrank">X 涨粉</button>
-    <button id="tab-pos">行情</button>
     <button id="tab-usage">用量</button>
   </div>
-  <div class="qstrip" id="qstrip"><div class="q"><span class="q-name">上证指数</span><b>3,602.57</b><i class="down">-0.87%</i></div><div class="q"><span class="q-name">BTCUSD</span><b>64,458.50</b><i class="down">-1.45%</i></div><span class="q-time">22:19 更新</span></div>
   <div class="daynav" id="daynav">
     <button id="prev" title="更早一天">‹</button>
     <div class="cur"><span id="cur-date"></span><span class="n" id="cur-count"></span></div>
@@ -222,9 +185,6 @@
 
 </div>
 <div id="view-xrank" class="view hidden">
-
-</div>
-<div id="view-pos" class="view hidden">
 
 </div>
 <div id="view-usage" class="view hidden">
@@ -259,7 +219,6 @@ async function renderMarkdown(root){
 const viewFeed = document.getElementById('view-feed');
 const viewSh = document.getElementById('view-sh');
 const viewXrank = document.getElementById('view-xrank');
-const viewPos = document.getElementById('view-pos');
 const viewUsage = document.getElementById('view-usage');
 const loadmore = document.getElementById('loadmore');
 const dayIndex = JSON.parse(viewFeed.dataset.days);
@@ -268,8 +227,8 @@ const dayCounts = Object.fromEntries(dayIndex.map(item=>[item.day, item.count]))
 const sections = {};
 const dayRequests = {};
 const tabRequests = {};
-const tabViews = { sh: viewSh, xrank: viewXrank, pos: viewPos, usage: viewUsage };
-const tabPaths = { sh: 'shanghai.html', xrank: 'xrank.html', pos: 'portfolio.html', usage: 'usage.html' };
+const tabViews = { sh: viewSh, xrank: viewXrank, usage: viewUsage };
+const tabPaths = { sh: 'shanghai.html', xrank: 'xrank.html', usage: 'usage.html' };
 viewFeed.querySelectorAll('.day[data-day]').forEach(el=>{ sections[el.dataset.day] = el; });
 
 async function loadDay(day){
@@ -406,18 +365,16 @@ async function loadTab(name){
     else if (dx > 0 && idx < days.length - 1) { idx++; show(true); }  // 右滑 → 上一天
   }, { passive: true });
 
-  /* tab 切换：信息流 / 上海 / X 涨粉 / 行情 / 用量；加载成功后再显示视图 */
+  /* tab 切换：信息流 / 上海 / X 涨粉 / 用量；加载成功后再显示视图 */
   const tabFeed = document.getElementById('tab-feed');
   const tabSh = document.getElementById('tab-sh');
   const tabXrank = document.getElementById('tab-xrank');
-  const tabPos = document.getElementById('tab-pos');
   const tabUsage = document.getElementById('tab-usage');
   const daynav = document.getElementById('daynav');
-  const qstrip = document.getElementById('qstrip');
   const TABS = { feed: [tabFeed, viewFeed], sh: [tabSh, viewSh],
-                 xrank: [tabXrank, viewXrank], pos: [tabPos, viewPos],
+                 xrank: [tabXrank, viewXrank],
                  usage: [tabUsage, viewUsage] };
-  const HASH = { feed: '#', sh: '#shanghai', xrank: '#xrank', pos: '#portfolio', usage: '#usage' };
+  const HASH = { feed: '#', sh: '#shanghai', xrank: '#xrank', usage: '#usage' };
   async function activate(name, scroll) {
     const operation = ++navigationOperation;
     if (!TABS[name]) name = 'feed';
@@ -432,7 +389,6 @@ async function loadTab(name){
         pair[1].classList.toggle('hidden', n !== name);
       }
       daynav.style.display = name === 'feed' ? '' : 'none';
-      qstrip.classList.toggle('on', name === 'pos');
       if (name === 'feed') {
         const d = days[idx];
         curDate.textContent = (d === today ? '今天 ' : '') + d;
@@ -456,7 +412,6 @@ async function loadTab(name){
   tabFeed.addEventListener('click', ()=>activate('feed'));
   tabSh.addEventListener('click', ()=>activate('sh'));
   tabXrank.addEventListener('click', ()=>activate('xrank'));
-  tabPos.addEventListener('click', ()=>activate('pos'));
   tabUsage.addEventListener('click', ()=>activate('usage'));
 
   /* 上一条/下一条浮动按钮：在当前可见视图的卡片间跳转，边界隐藏（占位隐藏保持位置固定） */
@@ -464,7 +419,7 @@ async function loadTab(name){
   const fabNext = document.getElementById('fab-next');
   let fabLastY = -1, fabLastIdx = 0;  // 上次跳转前的滚动位置与目标索引：边界卡顿时沿索引继续走
   function fabCards() {
-    const view = [viewFeed, viewSh, viewXrank, viewPos, viewUsage].find(v => !v.classList.contains('hidden'));
+    const view = [viewFeed, viewSh, viewXrank, viewUsage].find(v => !v.classList.contains('hidden'));
     return view ? [...view.querySelectorAll('.card')].filter(c => c.offsetHeight > 0) : [];
   }
   function fabCur(cards) {
@@ -508,12 +463,11 @@ async function loadTab(name){
     if (location.hash === '#usage') await activate('usage');
     else if (location.hash === '#shanghai') await activate('sh');
     else if (location.hash === '#xrank') await activate('xrank');
-    else if (location.hash === '#portfolio') await activate('pos');
   }
   fabUpdate();
 
   async function prefetchTabs() {
-    for (const name of ['sh', 'xrank', 'pos', 'usage']) {
+    for (const name of ['sh', 'xrank', 'usage']) {
       try { await loadTab(name); } catch (error) {}
     }
   }
