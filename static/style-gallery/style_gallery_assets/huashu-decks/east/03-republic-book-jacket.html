@@ -243,8 +243,8 @@ class SlidePresentation {
   }
   go(i) {
     this.current = Math.max(0, Math.min(this.slides.length - 1, i));
-    this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
     this.update();
+    this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
   }
   update() {
     Array.from(this.dots).forEach((d, i) => d.classList.toggle('active', i === this.current));
@@ -264,7 +264,7 @@ class SlidePresentation {
     document.addEventListener('touchend', (e) => {
       if (y0 === null) return;
       const dy = e.changedTouches[0].clientY - y0;
-      if (Math.abs(dy) > 40) this.go(this.current + (dy < 0 ? 1 : -1));
+      if (Math.abs(dy) > 40) this.go(this.current + (dy > 0 ? 1 : -1));
       y0 = null;
     }, { passive: true });
   }

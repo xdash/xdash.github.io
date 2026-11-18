@@ -300,13 +300,16 @@ class SlidePresentation {
   observe() {
     const io = new IntersectionObserver((entries) => {
       entries.forEach((en) => {
-        if (en.isIntersecting) {
-          en.target.classList.add('visible');
-          this.current = Array.from(this.slides).indexOf(en.target);
-          this.update();
-        }
+        if (en.isIntersecting) en.target.classList.add('visible');
       });
-    }, { threshold: 0.6 });
+      const best = entries
+        .filter((en) => en.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (best) {
+        this.current = Array.from(this.slides).indexOf(best.target);
+        this.update();
+      }
+    }, { threshold: [0, 0.25, 0.6] });
     this.slides.forEach((s) => io.observe(s));
   }
 }

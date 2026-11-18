@@ -262,6 +262,9 @@ class SlidePresentation {
   }
   go(i) {
     this.current = Math.max(0, Math.min(this.slides.length - 1, i));
+    this.isProgrammaticScrolling = true;
+    clearTimeout(this._scrollEndTimer);
+    this._scrollEndTimer = setTimeout(() => { this.isProgrammaticScrolling = false; }, 800);
     this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
     this.update();
   }
@@ -290,10 +293,10 @@ class SlidePresentation {
   setupWheel() {
     let lock = false;
     document.addEventListener('wheel', (e) => {
+      if (Math.abs(e.deltaY) < 20) return;
       if (lock) return;
       lock = true;
       setTimeout(() => { lock = false; }, 650);
-      if (Math.abs(e.deltaY) < 20) return;
       this.go(this.current + (e.deltaY > 0 ? 1 : -1));
     }, { passive: true });
   }
@@ -302,8 +305,10 @@ class SlidePresentation {
       entries.forEach((en) => {
         if (en.isIntersecting) {
           en.target.classList.add('visible');
-          this.current = Array.from(this.slides).indexOf(en.target);
-          this.update();
+          if (!this.isProgrammaticScrolling) {
+            this.current = Array.from(this.slides).indexOf(en.target);
+            this.update();
+          }
         }
       });
     }, { threshold: 0.6 });

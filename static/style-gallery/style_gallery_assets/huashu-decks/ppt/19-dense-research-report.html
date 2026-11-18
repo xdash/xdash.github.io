@@ -293,13 +293,16 @@ class SlidePresentation {
     }, { passive: true });
   }
   setupWheel() {
-    let lock = false;
+    let acc = 0;
+    let last = 0;
     document.addEventListener('wheel', (e) => {
-      if (lock) return;
-      lock = true;
-      setTimeout(() => { lock = false; }, 650);
-      if (Math.abs(e.deltaY) < 20) return;
-      this.go(this.current + (e.deltaY > 0 ? 1 : -1));
+      const now = Date.now();
+      if (now - last > 300) acc = 0;
+      last = now;
+      acc += e.deltaY;
+      if (Math.abs(acc) < 80) return;
+      this.go(this.current + (acc > 0 ? 1 : -1));
+      acc = 0;
     }, { passive: true });
   }
   observe() {

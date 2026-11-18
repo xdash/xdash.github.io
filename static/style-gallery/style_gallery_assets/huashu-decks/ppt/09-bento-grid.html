@@ -210,12 +210,12 @@ class SlidePresentation {
     }, { passive: true });
   }
   setupWheel() {
-    let lock = false;
+    let last = 0;
     document.addEventListener('wheel', (e) => {
-      if (lock) return;
-      lock = true;
-      setTimeout(() => { lock = false; }, 650);
       if (Math.abs(e.deltaY) < 20) return;
+      const now = Date.now();
+      if (now - last < 650) return;
+      last = now;
       this.go(this.current + (e.deltaY > 0 ? 1 : -1));
     }, { passive: true });
   }
