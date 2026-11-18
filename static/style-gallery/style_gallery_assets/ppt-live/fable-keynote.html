@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7 天启动你的 AI 写作产线 · Fable Keynote</title>
+<style>
+/* ============ VIEWPORT BASE (MANDATORY) ============ */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+.slide { width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; }
+:root {
+  --title-size: clamp(1.6rem, 4.6vw, 3.6rem);
+  --body-size: clamp(0.8rem, 1.5vw, 1.1rem);
+  --sub-size: clamp(0.7rem, 1.2vw, 0.95rem);
+  --slide-padding: clamp(1.2rem, 4.5vw, 4.5rem);
+}
+@media (max-height: 600px) {
+  :root { --slide-padding: clamp(0.6rem, 2.5vw, 1.5rem); --title-size: clamp(1.2rem, 4vw, 2rem); --body-size: clamp(0.7rem, 1.2vw, 0.9rem); }
+  .keyboard-hint { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+/* ============ STYLE: FABLE KEYNOTE ============ */
+/* dark-tech × editorial · storybook scene as co-carrier */
+:root {
+  --canvas: #0E1116;
+  --ink: #F2F4F6;
+  --accent: #E8A33D;
+  --muted: #8A9199;
+  --paper: #F3E8CF;
+  --font-title: 'Avenir Next', 'Futura', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+  --font-body: 'Avenir Next', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font-body); background: var(--canvas); color: var(--ink); }
+.slide { background: var(--canvas); padding: var(--slide-padding); padding-bottom: calc(var(--slide-padding) + 2.2rem); }
+
+/* title: bold geometric sans, top-left, short amber underline bar */
+.title { font-family: var(--font-title); font-weight: 700; font-size: var(--title-size); line-height: 1.18; letter-spacing: 0.01em; }
+.title::after { content: ''; display: block; width: 3.2em; height: 4px; background: var(--accent); margin-top: 0.45em; }
+
+/* two-zone: text left, framed storybook scene right */
+.zones { flex: 1; display: flex; align-items: center; gap: clamp(1.5rem, 4vw, 4rem); min-height: 0; }
+.zones .text { flex: 1 1 52%; min-width: 0; }
+.zones .scene { flex: 1 1 42%; max-width: 46%; display: flex; align-items: center; }
+.scene-frame { width: 100%; background: var(--paper); border-radius: 2px; padding: 2.5%; box-shadow: 0 0 0 1px rgba(232,163,61,0.0); }
+.scene-frame svg { display: block; width: 100%; height: auto; }
+@media (max-width: 760px) {
+  .zones { flex-direction: column; justify-content: center; gap: 1rem; }
+  .zones .scene { max-width: 88%; }
+}
+
+/* bullets: amber diamond markers; dash sub-bullets muted */
+.beats { list-style: none; display: flex; flex-direction: column; gap: 0.9em; font-size: var(--body-size); line-height: 1.55; }
+.beats > li { padding-left: 1.5em; position: relative; }
+.beats > li::before { content: '◆'; position: absolute; left: 0; top: 0.08em; color: var(--accent); font-size: 0.72em; }
+.beats > li.sub { color: var(--muted); font-size: var(--sub-size); padding-left: 2.6em; }
+.beats > li.sub::before { content: '–'; color: var(--muted); font-size: 1em; top: 0; left: 1.6em; }
+.beats b { font-weight: 700; }
+
+/* opening / closing: dominant statement over calm field */
+.center { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 1.6em; }
+.statement { font-family: var(--font-title); font-weight: 700; font-size: clamp(1.8rem, 5.2vw, 4.2rem); line-height: 1.22; max-width: 16em; }
+.statement .n { color: var(--accent); }
+.lede { color: var(--muted); font-size: var(--body-size); line-height: 1.7; max-width: 34em; }
+.speaker { color: var(--muted); font-size: var(--sub-size); letter-spacing: 0.14em; }
+
+/* footer: hairline amber rule, quiet caption left, page number right */
+.footer { position: absolute; left: var(--slide-padding); right: var(--slide-padding); bottom: calc(var(--slide-padding) * 0.55); border-top: 1px solid var(--accent); padding-top: 0.55em; display: flex; justify-content: space-between; font-size: clamp(0.6rem, 0.95vw, 0.8rem); color: var(--muted); letter-spacing: 0.12em; }
+
+.keyboard-hint { position: fixed; right: 1rem; bottom: 0.6rem; color: var(--muted); font-size: 0.65rem; letter-spacing: 0.1em; opacity: 0.6; z-index: 10; }
+</style>
+</head>
+<body>
+
+<!-- 01 · Opening result -->
+<section class="slide">
+  <div class="center">
+    <div class="statement">7 天，手里多出<span class="n">一个能给别人看的东西</span>。</div>
+    <p class="lede">不教你背提示词，教你搭一条能写书、也能降维写公众号和播客稿的产线。第 1 天 30 分钟，第 3 天 2 小时——第 3 天晚上，你会拿着一篇 3000 字的黄金样张。</p>
+    <div class="speaker">范冰 XDASH · AI 写作工程学</div>
+  </div>
+  <div class="footer"><span>7 天启动你的 AI 写作产线 · 范冰 XDash</span><span>01 / 06</span></div>
+</section>
+
+<!-- 02 · Framing list -->
+<section class="slide">
+  <h1 class="title">这 7 天怎么走？</h1>
+  <div class="zones">
+    <div class="text">
+      <ul class="beats">
+        <li><b>第 0 问：</b>为什么是 7 天，不是 1 年</li>
+        <li><b>第 1 天：</b>立项第一性三问（30 分钟）</li>
+        <li><b>第 3 天：</b>跑出你的黄金样张（2 小时）</li>
+        <li><b>今晚：</b>30 分钟，产线开机</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer"><span>7 天启动你的 AI 写作产线 · 范冰 XDash</span><span>02 / 06</span></div>
+</section>
+
+<!-- 03 · Problem deep-dive -->
+<section class="slide">
+  <h1 class="title">为什么是 7 天，不是 1 年？</h1>
+  <div class="zones">
+    <div class="text">
+      <ul class="beats">
+        <li><b>判断标准：</b>一门课值不值，看 7 天后你有没有多出一个能给别人看的东西</li>
+        <li><b>动力外包：</b>把坚持外包给最小即时反馈，不靠意志力</li>
+        <li class="sub">每步都有产物，每步都能拿出手</li>
+        <li><b>第 1 天产物：</b>一页《选题诊断合同》+ 第一张案例卡</li>
+        <li><b>第 3 天产物：</b>3000 字、出版质感的黄金样张</li>
+      </ul>
+    </div>
+    <div class="scene">
+      <div class="scene-frame">
+        <!-- 骑手带着发光的样张卷轴掠过，蜗牛拉着「1 年计划」的货车 -->
+        <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="ink"><feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3"/></filter>
+          </defs>
+          <g filter="url(#ink)" stroke="#3A2E22" stroke-width="3" stroke-linecap="round" fill="none">
+            <path d="M20 258 Q 200 248 380 256" stroke-width="2"/>
+            <!-- snail cart -->
+            <g>
+              <path d="M48 236 q -4 -14 8 -18 q 14 -4 16 10 q 1 10 -8 12 l -16 -4" fill="#C9B88F"/>
+              <path d="M58 218 q -2 -10 4 -14 M64 219 q 0 -10 6 -13" stroke-width="2.5"/>
+              <circle cx="60" cy="202" r="2.4" fill="#3A2E22"/><circle cx="72" cy="204" r="2.4" fill="#3A2E22"/>
+              <rect x="86" y="212" width="58" height="30" rx="4" fill="#B9A272"/>
+              <circle cx="98" cy="248" r="8" fill="#8A6F45"/><circle cx="132" cy="248" r="8" fill="#8A6F45"/>
+              <path d="M64 232 l 20 -8" stroke-width="2.5"/>
+              <text x="115" y="232" font-size="11" fill="#3A2E22" stroke="none" text-anchor="middle" font-family="PingFang SC">1 年计划</text>
+            </g>
+            <!-- horse -->
+            <g>
+              <path d="M210 208 q 6 -26 34 -28 q 34 -3 44 12 q 8 12 2 22 l -12 2 q -4 -10 -14 -12 l -6 22 -8 0 2 -20 q -14 2 -24 -2 l -4 22 -8 0 2 -24 q -8 -2 -8 6" fill="#B9A272"/>
+              <path d="M284 186 q 14 -8 22 2 q 6 8 0 16 l -10 4 q -8 -2 -10 -10" fill="#B9A272"/>
+              <circle cx="300" cy="192" r="2.6" fill="#3A2E22"/>
+              <path d="M286 182 q 4 -12 12 -12 M292 184 q 8 -10 16 -8" stroke-width="2.5"/>
+              <path d="M206 210 q -10 4 -12 14" stroke-width="2.5"/>
+            </g>
+            <!-- rider with glowing scroll -->
+            <g>
+              <circle cx="250" cy="150" r="11" fill="#E8C9A0"/>
+              <path d="M238 148 q 12 -14 24 0 l 0 -6 q -12 -10 -24 0 z" fill="#8FA6B8"/>
+              <path d="M250 162 q -10 14 -6 30 l 14 0 q 6 -16 0 -30" fill="#8FA6B8"/>
+              <path d="M256 168 q 16 -4 26 -14" stroke-width="3"/>
+              <rect x="282" y="140" width="34" height="16" rx="7" fill="#E8A33D"/>
+              <path d="M282 148 l -8 0 M316 148 l 8 0" stroke-width="2.5"/>
+              <circle cx="299" cy="148" r="15" fill="none" stroke="#E8A33D" stroke-width="1.6" stroke-dasharray="3 5"/>
+            </g>
+            <!-- dust -->
+            <path d="M186 236 q -8 -2 -14 2 M176 244 q -10 -2 -16 2" stroke-width="2" stroke="#8A6F45"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span>7 天启动你的 AI 写作产线 · 范冰 XDash</span><span>03 / 06</span></div>
+</section>
+
+<!-- 04 · Problem deep-dive -->
+<section class="slide">
+  <h1 class="title">第 1 天：立项第一性三问</h1>
+  <div class="zones">
+    <div class="text">
+      <ul class="beats">
+        <li><b>合同先行：</b>填不出立项三问，就不动笔</li>
+        <li class="sub">三问写进《第一性选题诊断合同》，一页纸</li>
+        <li><b>脚手架：</b>建三个空文件夹 raw / anchors / chapters</li>
+        <li><b>素材：</b>丢入 5 份一手材料——最痛、最得意的原始记录</li>
+        <li><b>案例卡：</b>起点 → 动作 → 阻力 → 转折 → 结果，附当事人原话</li>
+      </ul>
+    </div>
+    <div class="scene">
+      <div class="scene-frame">
+        <!-- 兔子文书员在台灯下给《立项合同》盖章 -->
+        <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+          <g filter="url(#ink)" stroke="#3A2E22" stroke-width="3" stroke-linecap="round" fill="none">
+            <path d="M20 262 Q 200 252 380 260" stroke-width="2"/>
+            <!-- desk -->
+            <rect x="60" y="190" width="280" height="12" rx="4" fill="#B9A272"/>
+            <path d="M84 202 l -6 58 M316 202 l 6 58" stroke-width="4"/>
+            <!-- paper stack -->
+            <rect x="92" y="166" width="90" height="24" rx="3" fill="#F8F1DE"/>
+            <rect x="98" y="158" width="84" height="10" rx="3" fill="#F8F1DE"/>
+            <text x="140" y="182" font-size="11" fill="#3A2E22" stroke="none" text-anchor="middle" font-family="PingFang SC">立项合同</text>
+            <!-- lamp -->
+            <path d="M310 190 l 0 -58 q 0 -10 -12 -10 l -18 0" stroke-width="4"/>
+            <path d="M268 122 l 24 0 l -6 -18 l -12 0 z" fill="#E8A33D"/>
+            <circle cx="280" cy="132" r="5" fill="#F3D9A0"/>
+            <!-- rabbit clerk -->
+            <g>
+              <path d="M196 186 q -4 -34 22 -38 q 26 -4 28 30 l 0 8 z" fill="#C9B88F"/>
+              <circle cx="222" cy="138" r="17" fill="#C9B88F"/>
+              <path d="M212 126 q -8 -30 2 -34 q 8 -2 8 28 M232 124 q 2 -32 12 -32 q 8 2 -4 32" fill="#C9B88F" stroke-width="2.5"/>
+              <circle cx="216" cy="138" r="2.4" fill="#3A2E22"/><circle cx="229" cy="138" r="2.4" fill="#3A2E22"/>
+              <path d="M220 146 q 3 3 6 0" stroke-width="2"/>
+              <!-- stamp arm -->
+              <path d="M204 168 q -14 6 -18 18" stroke-width="3"/>
+              <rect x="176" y="184" width="16" height="12" rx="3" fill="#C97B4A"/>
+              <path d="M196 172 q 22 2 30 12" stroke-width="3"/>
+            </g>
+            <!-- stamped seal -->
+            <circle cx="150" cy="176" r="10" fill="none" stroke="#C97B4A" stroke-width="2.4"/>
+            <path d="M144 176 l 4 4 l 8 -8" stroke="#C97B4A" stroke-width="2.4"/>
+            <!-- quill + ink -->
+            <path d="M252 178 q 14 -22 26 -26 q -4 16 -18 28" fill="#8FA6B8" stroke-width="2.5"/>
+            <rect x="246" y="182" width="12" height="9" rx="3" fill="#3A2E22"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span>7 天启动你的 AI 写作产线 · 范冰 XDash</span><span>04 / 06</span></div>
+</section>
+
+<!-- 05 · Ledger / deep-dive -->
+<section class="slide">
+  <h1 class="title">第 3 天：跑出黄金样张</h1>
+  <div class="zones">
+    <div class="text">
+      <ul class="beats">
+        <li><b>选章：</b>挑素材最肥沃的那 1 章，填满 15 条去重事实锚点</li>
+        <li><b>模型：</b>接上你能触达的最强旗舰模型</li>
+        <li class="sub">长上下文、语感好的那种</li>
+        <li><b>起草：</b>先出骨架 → 人写批注 → 再合成 3000 字</li>
+        <li><b>定稿：</b>逐段精修到出版级手感，立为 Golden Copy</li>
+        <li class="sub">它就是全书的语调标杆</li>
+      </ul>
+    </div>
+    <div class="scene">
+      <div class="scene-frame">
+        <!-- 巫师在稿纸炉上炼出一张发光的 golden copy -->
+        <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+          <g filter="url(#ink)" stroke="#3A2E22" stroke-width="3" stroke-linecap="round" fill="none">
+            <path d="M20 262 Q 200 252 380 260" stroke-width="2"/>
+            <!-- desk -->
+            <rect x="70" y="196" width="260" height="12" rx="4" fill="#B9A272"/>
+            <path d="M92 208 l -6 52 M308 208 l 6 52" stroke-width="4"/>
+            <!-- glowing golden page -->
+            <rect x="168" y="96" width="64" height="82" rx="4" fill="#E8A33D"/>
+            <path d="M178 112 l 44 0 M178 126 l 44 0 M178 140 l 32 0 M178 154 l 38 0" stroke="#F8F1DE" stroke-width="3"/>
+            <circle cx="200" cy="136" r="56" fill="none" stroke="#E8A33D" stroke-width="1.6" stroke-dasharray="3 6"/>
+            <path d="M200 34 l 0 18 M146 52 l 10 14 M254 52 l -10 14" stroke="#E8A33D" stroke-width="2.4"/>
+            <!-- wizard -->
+            <g>
+              <path d="M104 192 q -6 -50 30 -56 q 34 -6 34 44 l 0 12 z" fill="#8FA6B8"/>
+              <circle cx="138" cy="122" r="15" fill="#E8C9A0"/>
+              <path d="M118 118 l 40 0 l -20 -44 z" fill="#6E8397"/>
+              <path d="M114 118 q 24 8 48 0" stroke-width="2.5"/>
+              <circle cx="132" cy="122" r="2.4" fill="#3A2E22"/><circle cx="145" cy="122" r="2.4" fill="#3A2E22"/>
+              <path d="M132 132 q 5 4 10 0" stroke-width="2"/>
+              <path d="M132 138 q 4 10 2 18 M144 138 q 2 10 6 16" stroke="#F8F1DE" stroke-width="2.5"/>
+              <path d="M160 158 q 22 -8 34 -26" stroke-width="3"/>
+            </g>
+            <!-- wand sparkles -->
+            <path d="M186 128 l 6 -6 M190 136 l 8 -2 M182 120 l 2 -8" stroke="#E8A33D" stroke-width="2.4"/>
+            <!-- ingredient jars: facts -->
+            <rect x="238" y="164" width="22" height="30" rx="5" fill="#A8B89A"/>
+            <rect x="266" y="170" width="20" height="24" rx="5" fill="#C97B4A"/>
+            <text x="249" y="184" font-size="10" fill="#3A2E22" stroke="none" text-anchor="middle" font-family="PingFang SC">15</text>
+            <!-- steam -->
+            <path d="M210 78 q 6 -8 0 -16 M226 82 q 6 -8 0 -16" stroke="#C9B88F" stroke-width="2.2"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span>7 天启动你的 AI 写作产线 · 范冰 XDash</span><span>05 / 06</span></div>
+</section>
+
+<!-- 06 · Closing charge -->
+<section class="slide">
+  <div class="center">
+    <div class="statement">今晚，<span class="n">30 分钟</span>：三问、三个文件夹、五份材料、一张案例卡——产线就开机了。</div>
+    <p class="lede">起草的快，是用素材的慢换来的。手里有粮，心中不慌。</p>
+  </div>
+  <div class="footer"><span>7 天启动你的 AI 写作产线 · 范冰 XDash</span><span>06 / 06</span></div>
+</section>
+
+<div class="keyboard-hint">← → 翻页 · 空格下一页</div>
+<script>
+const slides = [...document.querySelectorAll('.slide')];
+function go(d){ const y = window.scrollY, h = innerHeight; const i = Math.round(y/h); const n = Math.min(Math.max(i+d,0), slides.length-1); slides[n].scrollIntoView({behavior:'smooth'}); }
+addEventListener('keydown', e => {
+  if (['ArrowDown','ArrowRight','PageDown',' '].includes(e.key)) { e.preventDefault(); go(1); }
+  if (['ArrowUp','ArrowLeft','PageUp'].includes(e.key)) { e.preventDefault(); go(-1); }
+  if (e.key==='Home') slides[0].scrollIntoView({behavior:'smooth'});
+  if (e.key==='End') slides[slides.length-1].scrollIntoView({behavior:'smooth'});
+});
+</script>
+</body>
+</html>
