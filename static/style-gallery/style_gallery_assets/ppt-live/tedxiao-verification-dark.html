@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ted Xiao Dark · Verification Keynote Style PPT Template · Live Demo</title>
+<style>
+  /* ============ 设计令牌（取自 Ted Xiao Humanoid Hub 演讲幻灯片像素采样，投影偏暗已还原） ============ */
+  :root{
+    --bg:        #0B0E14;  /* 画布近黑蓝 */
+    --panel:     #141C2B;  /* 深色卡片 / 行带 */
+    --panel-2:   #1B2536;  /* 隔行深色带 */
+    --hairline:  #232E44;  /* 细分隔线 */
+    --title:     #F4F6F9;  /* 标题白 */
+    --body:      #C3CBD8;  /* 正文浅灰 */
+    --muted:     #7C8594;  /* 小 caps 灰 */
+    --faint:     #525C6B;  /* 脚注暗灰 */
+    --blue:      #7FB2F0;  /* 主蓝（条形/曲线） */
+    --blue-hi:   #A9CDF8;  /* 亮蓝（标题词） */
+    --pink:      #E97BA0;  /* 品红（对比侧） */
+    --orange:    #F2A95C;  /* 橙（实测条形） */
+    --orange-hi: #F8C07C;  /* 亮橙（标题词） */
+    --purple:    #A78BDB;  /* 紫 */
+    --purple-bg: #372A6E;  /* 紫色结论横幅 */
+    --teal:      #4FE0B4;  /* 青绿（大数字） */
+    --teal-hi:   #8FE8D2;  /* 亮青（标题词） */
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;background:#191C22;font-family:"Inter","Helvetica Neue","PingFang SC","Hiragino Sans GB",sans-serif;}
+  body{display:flex;align-items:center;justify-content:center;overflow:hidden;}
+
+  /* ============ 舞台：16:9，随窗口缩放 ============ */
+  #stage{position:relative;width:1280px;height:720px;flex:none;background:var(--bg);
+         box-shadow:0 24px 80px rgba(0,0,0,.55);}
+  .slide{position:absolute;inset:0;display:none;background:
+           radial-gradient(1200px 700px at 30% 18%, #101623 0%, var(--bg) 62%);
+         padding:44px 56px 56px;overflow:hidden;}
+  .slide.active{display:block;}
+
+  /* ============ 公共构件 ============ */
+  h1.title{font-size:40px;font-weight:800;color:var(--title);line-height:1.22;letter-spacing:-.01em;}
+  .caps{font-size:11px;font-weight:700;letter-spacing:.22em;color:var(--muted);text-transform:uppercase;}
+  .footnote{position:absolute;left:56px;bottom:24px;font-size:10.5px;color:var(--faint);letter-spacing:.02em;}
+  .pagenum{position:absolute;right:56px;bottom:22px;font-size:11.5px;color:var(--faint);}
+  .num-chip{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;
+            font-size:12px;font-weight:800;color:var(--bg);border-radius:4px;flex:none;}
+
+  /* ============ ① 封面 ============ */
+  .cover .caps{margin-top:120px;}
+  .cover h1{margin-top:26px;font-size:64px;font-weight:800;color:var(--title);line-height:1.16;letter-spacing:-.015em;}
+  .cover h1 .b{color:var(--blue-hi);} .cover h1 .o{color:var(--orange-hi);}
+  .cover .sub{margin-top:22px;font-size:18px;color:var(--muted);max-width:760px;line-height:1.6;}
+  .cover .who{position:absolute;left:56px;bottom:88px;}
+  .cover .who b{display:block;font-size:17px;color:var(--title);}
+  .cover .who span{display:block;margin-top:6px;font-size:12.5px;color:var(--faint);}
+  .cover .axis{position:absolute;left:56px;right:56px;bottom:52px;height:1px;background:var(--hairline);}
+  .cover .axis i{position:absolute;top:-4px;width:7px;height:7px;border-radius:50%;}
+  .cover .axis i.l{left:0;background:var(--blue);}
+  .cover .axis i.r{right:0;background:var(--pink);}
+
+  /* ============ ② 双曲线对比（Two Big Bets） ============ */
+  .bets .cols{display:flex;justify-content:space-between;margin-top:34px;}
+  .bets .col{width:44%;}
+  .bets .col h3{font-size:19px;font-weight:700;}
+  .bets .col.blue h3{color:var(--blue-hi);} .bets .col.pink h3{color:var(--pink);}
+  .bets .col p{margin-top:8px;font-size:13.5px;color:var(--body);}
+  .bets .col.pink{text-align:right;}
+  .bets svg{display:block;margin-top:6px;}
+  .bets .axis-labels{display:flex;justify-content:space-between;margin-top:10px;
+                     font-size:12.5px;color:var(--muted);letter-spacing:.04em;}
+
+  /* ============ ③ 公式 + 对数曲线 + 编号列表（Amdahl） ============ */
+  .amdahl .wrap{display:flex;gap:56px;margin-top:26px;}
+  .amdahl .left{width:56%;}
+  .amdahl .formula{font-size:27px;font-weight:700;color:var(--title);letter-spacing:.01em;}
+  .amdahl .formula em{font-style:normal;color:var(--orange-hi);}
+  .amdahl .vars{margin-top:10px;font-size:13px;color:var(--muted);}
+  .amdahl .vars b{color:var(--body);font-weight:600;}
+  .amdahl .legend{display:flex;gap:26px;margin-top:22px;font-size:12px;color:var(--body);}
+  .amdahl .legend i{display:inline-block;width:26px;height:3px;border-radius:2px;margin-right:8px;vertical-align:middle;}
+  .amdahl .takeaway{margin-top:18px;font-size:19px;font-weight:800;color:var(--title);}
+  .amdahl .takeaway em{font-style:normal;color:var(--orange-hi);}
+  .amdahl .right{flex:1;padding-top:8px;}
+  .amdahl .item{display:flex;gap:14px;margin-top:26px;}
+  .amdahl .item h4{font-size:17px;font-weight:800;}
+  .amdahl .item p{margin-top:7px;font-size:12.5px;line-height:1.6;color:var(--body);}
+  .amdahl .item:nth-child(2) h4{color:var(--orange-hi);} .amdahl .item:nth-child(2) .num-chip{background:var(--orange);}
+  .amdahl .item:nth-child(3) h4{color:var(--purple);}    .amdahl .item:nth-child(3) .num-chip{background:var(--purple);}
+  .amdahl .item:nth-child(4) h4{color:var(--teal-hi);}   .amdahl .item:nth-child(4) .num-chip{background:var(--teal);}
+
+  /* ============ ④ 对数刻度横条图（Time to Verify） ============ */
+  .ttv .chart{margin-top:22px;position:relative;}
+  .ttv .row{display:grid;grid-template-columns:170px 1fr;align-items:center;height:52px;}
+  .ttv .row .lab{font-size:13.5px;font-weight:600;}
+  .ttv .row .lab.c{color:var(--blue-hi);} .ttv .row .lab.m{color:var(--orange-hi);}
+  .ttv .lane{position:relative;height:100%;border-left:1px solid var(--hairline);}
+  .ttv .lane .grid{position:absolute;top:0;bottom:-26px;width:1px;background:#1A2334;}
+  .ttv .bar{position:absolute;top:15px;height:20px;border-radius:3px;}
+  .ttv .bar.c{background:var(--blue);} .ttv .bar.m{background:var(--orange);}
+  .ttv .note{position:absolute;top:16px;font-size:12px;color:var(--body);white-space:nowrap;}
+  .ttv .ticks{display:grid;grid-template-columns:170px 1fr;margin-top:8px;}
+  .ttv .ticks .scale{position:relative;height:16px;border-left:1px solid var(--hairline);}
+  .ttv .ticks .scale span{position:absolute;top:2px;transform:translateX(-50%);font-size:10.5px;color:var(--muted);}
+  .ttv .legend{display:flex;gap:14px;margin-top:16px;margin-left:170px;}
+  .ttv .legend .chip{font-size:11.5px;font-weight:600;padding:4px 14px;border-radius:4px;color:var(--title);}
+  .ttv .legend .chip.c{background:#24406B;color:var(--blue-hi);}
+  .ttv .legend .chip.m{background:#4A2F14;color:var(--orange-hi);}
+  .ttv .legend .cap{align-self:center;font-size:11px;color:var(--faint);margin-left:14px;}
+
+  /* ============ ⑤ 双栏对比 + 大数字（Robotics vs Physical Economy） ============ */
+  .vs .colheads{display:grid;grid-template-columns:190px 1fr 1fr;gap:28px;margin-top:30px;}
+  .vs .colheads .rule{height:2px;margin-bottom:12px;}
+  .vs .colheads h3{font-size:19px;font-weight:700;}
+  .vs .rows{margin-top:6px;}
+  .vs .rowline{display:grid;grid-template-columns:190px 1fr 1fr;gap:28px;padding:15px 0;align-items:center;}
+  .vs .rowline:nth-child(even){background:var(--panel);}
+  .vs .rowline .caps{padding-left:2px;}
+  .vs .rowline .cell{font-size:13.5px;line-height:1.55;color:var(--body);}
+  .vs .rowline .cell b{color:var(--title);font-weight:700;}
+  .vs .stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:28px;margin-top:26px;}
+  .vs .stat .rule{height:2px;background:var(--teal);margin-bottom:10px;}
+  .vs .stat .num{margin-top:8px;font-size:30px;font-weight:800;color:var(--teal);letter-spacing:-.01em;}
+  .vs .stat .cap{margin-top:6px;font-size:11.5px;line-height:1.55;color:var(--muted);}
+
+  /* ============ ⑥ 收益表格 + 紫色结论横幅（Gains by Field） ============ */
+  .gains table{width:100%;border-collapse:collapse;margin-top:24px;}
+  .gains th{font-size:10.5px;font-weight:700;letter-spacing:.18em;color:var(--muted);
+            text-transform:uppercase;text-align:left;padding:0 14px 12px 0;}
+  .gains td{padding:11px 14px 11px 0;font-size:12.5px;line-height:1.5;vertical-align:middle;}
+  .gains tr:nth-child(even) td{background:var(--panel);}
+  .gains td.f{color:var(--title);font-weight:700;font-size:13.5px;}
+  .gains td.b{color:var(--orange-hi);}
+  .gains td.a{color:var(--blue-hi);}
+  .gains td.r{color:var(--body);}
+  .gains .arrow{color:var(--faint);padding:0 2px;}
+  .gains .banner{margin-top:20px;background:var(--purple-bg);border-radius:4px;
+                 padding:15px 22px;font-size:14.5px;font-weight:600;color:#DCD2F5;text-align:center;}
+  .gains .banner b{color:#fff;}
+
+  /* ============ ⑦ 编号行动清单（Three Directions） ============ */
+  .plan .caps{margin-top:34px;}
+  .plan .item{display:flex;gap:16px;margin-top:30px;max-width:920px;}
+  .plan .item h4{font-size:18px;font-weight:800;}
+  .plan .item p{margin-top:7px;font-size:13px;line-height:1.65;color:var(--body);}
+  .plan .item.c1 h4{color:var(--blue-hi);}   .plan .item.c1 .num-chip{background:var(--blue);}
+  .plan .item.c2 h4{color:var(--orange-hi);} .plan .item.c2 .num-chip{background:var(--orange);}
+  .plan .item.c3 h4{color:var(--teal-hi);}   .plan .item.c3 .num-chip{background:var(--teal);}
+  .plan .band{margin-top:34px;background:var(--panel);border-left:3px solid var(--blue);
+              padding:16px 22px;font-size:14px;line-height:1.6;color:var(--body);max-width:920px;}
+  .plan .band b{color:var(--title);}
+
+  /* ============ ⑧ 金句结论页 ============ */
+  .closing{display:none;}
+  .closing.active{display:flex;flex-direction:column;justify-content:center;}
+  .closing .big{font-size:46px;font-weight:800;color:var(--title);line-height:1.35;max-width:1020px;letter-spacing:-.01em;}
+  .closing .big .b{color:var(--blue-hi);} .closing .big .o{color:var(--orange-hi);} .closing .big .t{color:var(--teal-hi);}
+  .closing cite{margin-top:36px;font-size:14px;font-style:normal;color:var(--muted);}
+  .closing .rule{width:64px;height:3px;background:var(--blue);margin-bottom:40px;}
+
+  /* ============ ⑨ 设计令牌标本 ============ */
+  .tokens{margin-top:30px;display:grid;grid-template-columns:repeat(6,1fr);gap:16px;}
+  .swatch{height:72px;border-radius:4px;position:relative;border:1px solid var(--hairline);}
+  .swatch + span{display:block;margin-top:8px;font-size:10.5px;line-height:1.5;color:var(--muted);}
+  .swatch + span b{color:var(--body);}
+  .type-spec{margin-top:44px;display:grid;grid-template-columns:1fr 1fr;gap:56px;}
+  .type-spec .row{padding:11px 0;border-bottom:1px solid var(--hairline);font-size:12px;color:var(--muted);}
+  .type-spec .row b{color:var(--title);margin-right:.6em;}
+
+  #hint{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);color:#666;font-size:12px;letter-spacing:.1em;}
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <!-- ① 封面 -->
+  <section class="slide cover active">
+    <div class="caps">Humanoid Hub Conference · Keynote · 2026</div>
+    <h1>The <span class="b">Verification</span><br>Bottleneck</h1>
+    <div class="sub">After AGI and general-purpose robots succeed, what still slows down invention —
+      and which research and business bets are worth making early.</div>
+    <div class="who"><b>Ted Xiao</b><span>Founding technical staff, Prometheus · former Google DeepMind</span></div>
+    <div class="axis"><i class="l"></i><i class="r"></i></div>
+    <div class="footnote">Humanoid Hub Conference · 风格模板演示</div>
+    <div class="pagenum">1</div>
+  </section>
+
+  <!-- ② 双曲线对比 -->
+  <section class="slide bets">
+    <h1 class="title">The Two Big Bets</h1>
+    <div class="cols">
+      <div class="col blue">
+        <h3>Recursive Self-Improvement in the Cloud</h3>
+        <p>Build AGI, then ask AGI to solve everything else</p>
+      </div>
+      <div class="col pink">
+        <h3>Ubiquitous Embodied Intelligence</h3>
+        <p>Society-scale general-purpose robots</p>
+      </div>
+    </div>
+    <svg viewBox="0 0 1168 300" width="1168" height="300">
+      <defs>
+        <linearGradient id="gB" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#7FB2F0" stop-opacity=".32"/><stop offset="1" stop-color="#7FB2F0" stop-opacity=".02"/>
+        </linearGradient>
+        <linearGradient id="gP" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#E97BA0" stop-opacity=".30"/><stop offset="1" stop-color="#E97BA0" stop-opacity=".02"/>
+        </linearGradient>
+      </defs>
+      <!-- blue bell -->
+      <path id="bellB" fill="url(#gB)" stroke="#7FB2F0" stroke-width="2"/>
+      <!-- pink bell -->
+      <path id="bellP" fill="url(#gP)" stroke="#E97BA0" stroke-width="2"/>
+      <!-- amber center box -->
+      <rect x="452" y="86" width="264" height="200" rx="3" fill="#3A2B15" opacity=".9"/>
+      <text x="584" y="172" text-anchor="middle" fill="#D9AD6E" font-size="23" font-weight="700">Building New</text>
+      <text x="584" y="206" text-anchor="middle" fill="#D9AD6E" font-size="23" font-weight="700">Physical Technology</text>
+      <!-- baseline -->
+      <line x1="20" y1="286" x2="584" y2="286" stroke="#E97BA0" stroke-width="1.4" opacity=".85"/>
+      <line x1="584" y1="286" x2="1148" y2="286" stroke="#7FB2F0" stroke-width="1.4" opacity=".85"/>
+    </svg>
+    <div class="axis-labels"><span>←&nbsp; Bits</span><span>Atoms &nbsp;→</span></div>
+    <div class="footnote">模板演示 · 版式取自 Ted Xiao「The Two Big Bets」页</div>
+    <div class="pagenum">2</div>
+  </section>
+
+  <!-- ③ Amdahl -->
+  <section class="slide amdahl">
+    <h1 class="title">Amdahl's Law for Innovation</h1>
+    <div class="wrap">
+      <div class="left">
+        <div class="formula">S = 1 / ((1 − <em>p</em>) + <em>p</em> / s)</div>
+        <div class="vars"><b>p</b>: proportion sped up&nbsp;&nbsp;&nbsp;&nbsp;<b>s</b>: speedup</div>
+        <div class="legend">
+          <span><i style="background:#8A94A3;"></i>p = 0.5 (max 2×)</span>
+          <span><i style="background:#F2A95C;"></i>p = 0.9 (max 10×)</span>
+          <span><i style="background:#7FB2F0;"></i>p = 0.99 (max 100×)</span>
+        </div>
+        <svg viewBox="0 0 640 300" width="640" height="300" style="margin-top:8px;">
+          <!-- axes -->
+          <line x1="56" y1="14" x2="56" y2="262" stroke="#232E44" stroke-width="1"/>
+          <line x1="56" y1="262" x2="612" y2="262" stroke="#232E44" stroke-width="1"/>
+          <!-- y ticks: 1x 10x 100x -->
+          <text x="46" y="266" text-anchor="end" fill="#7C8594" font-size="11">1×</text>
+          <text x="46" y="142" text-anchor="end" fill="#7C8594" font-size="11">10×</text>
+          <text x="46" y="20" text-anchor="end" fill="#7C8594" font-size="11">100×</text>
+          <text x="20" y="30" fill="#7C8594" font-size="12" font-style="italic">S</text>
+          <!-- x ticks: 1x 10x 100x 1kx 10kx -->
+          <g fill="#7C8594" font-size="11" text-anchor="middle">
+            <text x="56" y="282">1×</text><text x="195" y="282">10×</text>
+            <text x="334" y="282">100×</text><text x="473" y="282">1k×</text><text x="600" y="282">10k×</text>
+          </g>
+          <text x="606" y="300" fill="#7C8594" font-size="12" font-style="italic" text-anchor="end">s</text>
+          <!-- curves filled by JS -->
+          <path id="c50" fill="none" stroke="#8A94A3" stroke-width="2.5"/>
+          <path id="c90" fill="none" stroke="#F2A95C" stroke-width="2.5"/>
+          <path id="c99" fill="none" stroke="#7FB2F0" stroke-width="2.5"/>
+        </svg>
+        <div class="takeaway">Only shrinking <em>1 − p</em> raises the ceiling.</div>
+      </div>
+      <div class="right">
+        <div class="caps">1 − p can be inelastic</div>
+        <div class="item"><span class="num-chip">1</span>
+          <div><h4>Slow, Scarce Tests</h4>
+          <p>Battery-charging search: 500+ days<br>New drug: 10.5 years</p></div></div>
+        <div class="item"><span class="num-chip">2</span>
+          <div><h4>Noisy Results</h4>
+          <p>Amgen reproduced 6 of 53 landmark cancer studies</p></div></div>
+        <div class="item"><span class="num-chip">3</span>
+          <div><h4>Locked-Up Know-How</h4>
+          <p>Decentralized + distributed IP and systems</p></div></div>
+      </div>
+    </div>
+    <div class="footnote">Amdahl (1967) · Attia et al., Nature (2020) · BIO/Informa/QLS (2021) · Begley &amp; Ellis, Nature (2012)</div>
+    <div class="pagenum">3</div>
+  </section>
+
+  <!-- ④ Time to Verify -->
+  <section class="slide ttv">
+    <h1 class="title">Time to Verify</h1>
+    <div class="chart" id="ttvChart"></div>
+    <div class="legend">
+      <span class="chip c">computed</span><span class="chip m">measured</span>
+      <span class="cap">Bars: typical time to verify one answer, order of magnitude</span>
+    </div>
+    <div class="footnote">Seo et al. 2025 · Google DeepMind 2026 · OpenAI 2025 · Singh et al. 2026 · AutoEval 2025 · Anthropic 2026 · keeptrack.space Starship tracker · GE Aerospace</div>
+    <div class="pagenum">4</div>
+  </section>
+
+  <!-- ⑤ Robotics vs Physical Economy -->
+  <section class="slide vs">
+    <h1 class="title">Robotics Data vs. Broader Physical World Data</h1>
+    <div class="colheads">
+      <div></div>
+      <div><div class="rule" style="background:var(--pink);"></div><h3 style="color:var(--pink);">Robotics</h3></div>
+      <div><div class="rule" style="background:var(--teal);"></div><h3 style="color:var(--teal-hi);">The Physical Economy</h3></div>
+    </div>
+    <div class="rows">
+      <div class="rowline"><span class="caps">Offline data</span>
+        <div class="cell">Created from scratch, <b>up to 1M hours</b></div>
+        <div class="cell">Already exists: <b>decades of designs and test logs</b></div></div>
+      <div class="rowline"><span class="caps">On-policy data</span>
+        <div class="cell">The robot's own runs</div>
+        <div class="cell">New tests and production runs</div></div>
+      <div class="rowline"><span class="caps">The hard part</span>
+        <div class="cell"><b>Collecting it</b></div>
+        <div class="cell"><b>Accessing it</b></div></div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="rule"></div><div class="caps">Spread out</div>
+        <div class="num">5,100</div><div class="cap">suppliers behind ~80% of an ASML machine</div></div>
+      <div class="stat"><div class="rule"></div><div class="caps">Tacit</div>
+        <div class="num">$69M</div><div class="cap">to recover lost FOGBANK know-how</div></div>
+      <div class="stat"><div class="rule"></div><div class="caps">Guarded</div>
+        <div class="num">10 years</div><div class="cap">in prison in a TSMC trade-secret case</div></div>
+    </div>
+    <div class="footnote">Generalist AI (2026) · Dyna (2026) · Physical Intelligence (2025) · ASML (2023, Annual Report 2025) · GAO-09-385 (2009) · CNA/Focus Taiwan</div>
+    <div class="pagenum">5</div>
+  </section>
+
+  <!-- ⑥ Gains by Field -->
+  <section class="slide gains">
+    <h1 class="title">Verification Gains by Field</h1>
+    <table>
+      <tr><th style="width:15%;">Field</th><th style="width:27%;">Before</th><th style="width:4%;"></th>
+          <th style="width:29%;">After</th><th>Still needs the real world</th></tr>
+      <tr><td class="f">Aircraft Wings</td><td class="b">77 wings in the tunnel (767, 1980)</td><td class="arrow">→</td>
+          <td class="a">11 wings, and CFD matched (787, 2005)</td><td class="r">flight conditions CFD can't model</td></tr>
+      <tr><td class="f">Nuclear Weapons</td><td class="b">1,054 US explosive tests</td><td class="arrow">→</td>
+          <td class="a">none since 1992: simulation plus subcritical tests</td><td class="r">NIF, subcritical experiments</td></tr>
+      <tr><td class="f">Battery Charging</td><td class="b">500+ days to search 224 protocols</td><td class="arrow">→</td>
+          <td class="a">16 days with early prediction and Bayesian optimization</td><td class="r">building and cycling cells</td></tr>
+      <tr><td class="f">Weather</td><td class="b">hours on a supercomputer per ensemble</td><td class="arrow">→</td>
+          <td class="a">~8 min on one TPU; ECMWF operational since 2025</td><td class="r">~60M observations every 6 hours</td></tr>
+      <tr><td class="f">Protein Binders</td><td class="b">~12% hit rate in published campaigns</td><td class="arrow">→</td>
+          <td class="a">27–35% (2026)</td><td class="r">every design is still assayed</td></tr>
+      <tr><td class="f">Sequencing</td><td class="b">$95.3M per genome (2001)</td><td class="arrow">→</td>
+          <td class="a">$525 (2022)</td><td class="r">every sequence is still measured</td></tr>
+    </table>
+    <div class="banner">In chips, first-silicon success fell from ~30% to <b>5% (2026)</b> as design complexity grew faster than verification.</div>
+    <div class="footnote">Boeing Senate testimony (2006) · CRS (2025) · Attia et al. (2020) · GenCast (2024); ECMWF (2025) · Overath et al. (2025); Anthropic (2026) · NHGRI/OWID · Siemens/Wilson (2026)</div>
+    <div class="pagenum">6</div>
+  </section>
+
+  <!-- ⑦ 编号行动清单 -->
+  <section class="slide plan">
+    <h1 class="title">Three Directions Worth Building</h1>
+    <div class="caps">Research agenda</div>
+    <div class="item c1"><span class="num-chip">1</span>
+      <div><h4>Build more verifiers</h4>
+      <p>More RL environments, deeper coverage — and go on-site to learn what "good" actually means in each domain, not just academic benchmarks.</p></div></div>
+    <div class="item c2"><span class="num-chip">2</span>
+      <div><h4>Audit verifier trust</h4>
+      <p>Check the verifier in the conditions the model will actually face. A leaky verifier teaches the model to exploit the leak, not to do the task.</p></div></div>
+    <div class="item c3"><span class="num-chip">3</span>
+      <div><h4>Spend real tests wisely</h4>
+      <p>Real-world tests are capital-intensive and slow. Simulate what can be simulated; when measuring, pick the experiments whose results most improve the next round.</p></div></div>
+    <div class="band"><b>Deployment matters:</b> unlike the digital world, physical-world data is scarce and scattered —
+      systems must work in the field to keep collecting data, improving verifiers, and learning what the problem really is.</div>
+    <div class="footnote">模板演示 · 内容取自演讲第七部分「接下来该如何改进验证」</div>
+    <div class="pagenum">7</div>
+  </section>
+
+  <!-- ⑧ 金句结论 -->
+  <section class="slide closing">
+    <div class="rule"></div>
+    <div class="big"><span class="b">Verification speed</span> caps what post-training can reach —
+      and <span class="o">metrics</span> must measure the <span class="t">real world</span>, not the benchmark.</div>
+    <cite>Ted Xiao · Humanoid Hub Conference · 风格模板演示</cite>
+    <div class="footnote">模板演示 · 结论页版式</div>
+    <div class="pagenum">8</div>
+  </section>
+
+  <!-- ⑨ 设计令牌 -->
+  <section class="slide">
+    <h1 class="title">Design Tokens</h1>
+    <div class="tokens">
+      <div><div class="swatch" style="background:#0B0E14;"></div><span><b>--bg #0B0E14</b><br>近黑蓝画布</span></div>
+      <div><div class="swatch" style="background:#7FB2F0;"></div><span><b>--blue #7FB2F0</b><br>主蓝·计算侧</span></div>
+      <div><div class="swatch" style="background:#E97BA0;"></div><span><b>--pink #E97BA0</b><br>品红·对比侧</span></div>
+      <div><div class="swatch" style="background:#F2A95C;"></div><span><b>--orange #F2A95C</b><br>橙·实测侧</span></div>
+      <div><div class="swatch" style="background:#A78BDB;"></div><span><b>--purple #A78BDB</b><br>紫·风险项</span></div>
+      <div><div class="swatch" style="background:#4FE0B4;"></div><span><b>--teal #4FE0B4</b><br>青绿·大数字</span></div>
+    </div>
+    <div class="type-spec">
+      <div>
+        <div class="row"><b>标题 40px / 800</b>白色 grotesk 左上对齐，可给关键词上强调色</div>
+        <div class="row"><b>小 caps 11px / 700</b>#7C8594，全大写 + 字距 .22em，作栏目标签</div>
+        <div class="row"><b>大数字 30px / 800</b>#4FE0B4 青绿，下挂一行灰注</div>
+        <div class="row"><b>编号方块 22px</b>强调色实底深字，1/2/3 引导行动清单</div>
+      </div>
+      <div>
+        <div class="row"><b>正文 12–13.5px</b>#C3CBD8，行高 1.55–1.65，密排短句</div>
+        <div class="row"><b>行带 #141C2B</b>隔行深带托底，无描边；对比栏顶部 2px 色规</div>
+        <div class="row"><b>结论横幅</b>#372A6E 紫底或 #141C2B + 左侧 3px 色条</div>
+        <div class="row"><b>脚注 10.5px</b>#525C6B 左下来源串，右下页码</div>
+      </div>
+    </div>
+    <div class="footnote">取色自演讲幻灯片截图像素（投影偏暗，已按设计意图还原）· 字体 Inter / Helvetica Neue</div>
+    <div class="pagenum">9</div>
+  </section>
+
+</div>
+<div id="hint">← → 翻页 · <span id="pos">1</span> / 9</div>
+<script>
+  // 16:9 舞台等比缩放
+  const stage = document.getElementById('stage');
+  function fit(){
+    const s = Math.min(innerWidth/1280, innerHeight/720) * 0.96;
+    stage.style.transform = `scale(${s})`;
+  }
+  addEventListener('resize', fit); fit();
+
+  /* ---- ② 双钟形曲线 ---- */
+  function bellPath(cx, sigma, peakY, baseY, x0, x1){
+    const pts = [];
+    for(let x = x0; x <= x1; x += 4){
+      const g = Math.exp(-((x-cx)**2)/(2*sigma*sigma));
+      pts.push([x, baseY - (baseY-peakY)*g]);
+    }
+    return `M${x0},${baseY} L` + pts.map(p=>`${p[0]},${p[1].toFixed(1)}`).join(' L') + ` L${x1},${baseY} Z`;
+  }
+  document.getElementById('bellB').setAttribute('d', bellPath(265, 130, 60, 286, 20, 590));
+  document.getElementById('bellP').setAttribute('d', bellPath(905, 130, 60, 286, 580, 1148));
+
+  /* ---- ③ Amdahl 曲线（log-log：x: s∈[1,1e4], y: S∈[1,100]） ---- */
+  function amdahlPath(p){
+    const pts = [];
+    for(let i = 0; i <= 120; i++){
+      const ls = i/120 * 4;                    // log10(s): 0..4
+      const s = Math.pow(10, ls);
+      const S = 1 / ((1-p) + p/s);
+      const x = 56 + (ls/4) * 556;             // 56..612
+      const y = 262 - (Math.log10(S)/2) * 246; // 262..16
+      pts.push(`${x.toFixed(1)},${y.toFixed(1)}`);
+    }
+    return 'M' + pts.join(' L');
+  }
+  document.getElementById('c50').setAttribute('d', amdahlPath(0.5));
+  document.getElementById('c90').setAttribute('d', amdahlPath(0.9));
+  document.getElementById('c99').setAttribute('d', amdahlPath(0.99));
+
+  /* ---- ④ Time to Verify 量级横条图（刻度等距分档，与原版一致） ---- */
+  const TICKS = ['10 ms','1 s','1 min','1 hr','1 day','1 wk','1 mo','1 yr','10 yr'];
+  const SEG = 100 / (TICKS.length - 1); // 每档宽度 %
+  const tpos = i => i * SEG;
+  // [label, kind, 起始档, 结束档, note]
+  const TTV = [
+    ['Physics Simulation','c', 0, 1, 'Humanoid walking trains in 15 min on one GPU'],
+    ['Proof Checking','c',    1, 2, 'Lean-verified proofs for 9 of 353 open Erdős problems'],
+    ['Unit Tests','c',        2, 3, 'ICPC 2025 World Finals: 12 of 12 problems'],
+    ['FEA and CFD','c',       3, 4, '18% of generated CAD parts pass engineering checks'],
+    ['Robot Evaluation','m',  4, 5, '100+ human-hours to evaluate one policy'],
+    ['Wet-Lab Assays','m',    5, 6, 'Protein-binder validation takes weeks'],
+    ['Hardware Prototypes','m', 6, 7, '14 integrated Starship flights since April 2023'],
+    ['Certification','m',     7, 8, 'LEAP engine: 7 years from launch to certification'],
+  ];
+  const chart = document.getElementById('ttvChart');
+  const grids = TICKS.map((_,i)=>`<div class="grid" style="left:${tpos(i).toFixed(3)}%"></div>`).join('');
+  chart.innerHTML = TTV.map(([lab, kind, b0, b1, note])=>{
+    const l = tpos(b0), w = tpos(b1) - tpos(b0);
+    const noteLeft = l + w + 1.2;
+    const noteHtml = noteLeft < 58
+      ? `<span class="note" style="left:${noteLeft.toFixed(2)}%">${note}</span>`
+      : `<span class="note" style="left:${Math.max(1, l - 1.2).toFixed(2)}%;transform:translateX(-100%)">${note}</span>`;
+    return `<div class="row"><span class="lab ${kind}">${lab}</span>
+      <div class="lane">${grids}<div class="bar ${kind}" style="left:${l.toFixed(2)}%;width:${w.toFixed(2)}%"></div>${noteHtml}</div></div>`;
+  }).join('') + `<div class="ticks"><span></span><div class="scale">` +
+    TICKS.map((t,i)=>{
+      const tf = i===0 ? 'none' : (i===TICKS.length-1 ? 'translateX(-100%)' : 'translateX(-50%)');
+      return `<span style="left:${tpos(i).toFixed(3)}%;transform:${tf}">${t}</span>`;
+    }).join('') + `</div></div>`;
+
+  /* ---- 翻页 ---- */
+  const slides = [...document.querySelectorAll('.slide')];
+  let cur = Math.max(0, Math.min(slides.length-1,
+      (parseInt(new URLSearchParams(location.search).get('s'))||1) - 1));
+  function go(i){
+    cur = Math.max(0, Math.min(slides.length-1, i));
+    slides.forEach((s,k)=>s.classList.toggle('active', k===cur));
+    document.getElementById('pos').textContent = cur+1;
+  }
+  addEventListener('keydown', e=>{
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown') go(cur+1);
+    if(e.key==='ArrowLeft'||e.key==='PageUp') go(cur-1);
+    if(e.key==='Home') go(0);
+    if(e.key==='End') go(slides.length-1);
+  });
+  addEventListener('click', ()=>go(cur+1));
+  go(cur);
+</script>
+</body>
+</html>
