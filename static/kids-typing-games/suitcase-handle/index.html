@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0b1120">
+<meta name="description" content="拉杆 Handle Pull —— 用键盘升降行李箱拉杆的小游戏。把杆停在黄条里，越准分越高。">
+<meta property="og:title" content="拉杆 · Handle Pull">
+<meta property="og:description" content="用键盘升降行李箱拉杆的小游戏。按一下换向，把杆停在黄条里。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='6' y='3' width='20' height='4' rx='2' fill='%237dd3fc'/%3E%3Crect x='14' y='7' width='4' height='8' fill='%23cbd6e6'/%3E%3Crect x='4' y='15' width='24' height='14' rx='3' fill='%2331425f'/%3E%3C/svg%3E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>拉杆 · Handle Pull</title>
+<style>
+  :root{
+    --bg0:#0b1120; --bg1:#132043;
+    --ink:#eef2ff; --muted:#8b93b8;
+    --accent:#7dd3fc; --band:#fde68a;
+    --panel:rgba(10,17,38,.72);
+    --line:rgba(125,211,252,.22);
+    --chrome0:rgba(6,10,22,.82);
+    --chrome1:rgba(6,10,22,.30);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%;overflow:hidden}
+  body{
+    background:var(--bg0); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    user-select:none;-webkit-user-select:none;touch-action:manipulation;
+  }
+  #c{position:fixed;inset:0;width:100%;height:100%;display:block}
+
+  header{
+    position:fixed;top:0;left:0;right:0;z-index:6;
+    display:flex;align-items:center;gap:12px;
+    padding:10px 16px;
+    border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,var(--chrome0),var(--chrome1));
+    backdrop-filter:blur(6px);
+  }
+  .brand{font-weight:800;letter-spacing:.4px;font-size:15px;white-space:nowrap}
+  .brand b{color:var(--accent)}
+  .brand small{display:block;font-weight:500;font-size:10px;color:var(--muted);letter-spacing:2px}
+  .stats{display:flex;gap:16px;margin-left:auto;font-variant-numeric:tabular-nums}
+  .stat{display:flex;flex-direction:column;align-items:flex-end;line-height:1.15}
+  .stat .k{font-size:10px;color:var(--muted);letter-spacing:1.5px}
+  .stat .v{font-size:17px;font-weight:800}
+  #score{color:var(--band)}
+  #combo{color:var(--accent)}
+  #lives{color:#fda4af;letter-spacing:1px;font-size:15px}
+  .btns{display:flex;gap:8px;flex:none}
+  .btns button{
+    border:1px solid var(--line);background:var(--panel);color:var(--ink);
+    height:34px;min-width:34px;padding:0 10px;border-radius:10px;
+    font-size:13px;cursor:pointer;font-family:inherit;
+  }
+  .btns button:active{transform:scale(.94)}
+
+  #overlay{
+    position:fixed;inset:0;z-index:4;display:flex;align-items:center;justify-content:center;
+    padding:24px;text-align:center;
+    background:radial-gradient(700px 460px at 50% 45%,rgba(8,14,32,.30),rgba(6,9,20,.80));
+    backdrop-filter:blur(2px);
+    transition:opacity .22s ease;
+  }
+  #overlay.hide{opacity:0;pointer-events:none}
+  .card{max-width:430px;width:100%}
+  .card h1{font-size:30px;letter-spacing:1px;line-height:1.25}
+  .card h1 em{font-style:normal;color:var(--accent)}
+  .card .sub{margin-top:8px;font-size:13px;color:var(--muted);line-height:1.8}
+  .card .rules{
+    margin:18px 0;padding:14px 16px;text-align:left;
+    border:1px solid var(--line);border-radius:14px;background:var(--panel);
+    font-size:13px;line-height:1.95;color:#cdd5ee;
+  }
+  .card .rules b{color:var(--band)}
+  .card .rules kbd{
+    display:inline-block;min-width:52px;text-align:center;
+    padding:1px 8px;margin-right:8px;border-radius:7px;
+    border:1px solid var(--line);border-bottom-width:2px;
+    background:rgba(125,211,252,.10);color:var(--accent);
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;
+  }
+  .card .big{font-size:44px;font-weight:900;color:var(--band);font-variant-numeric:tabular-nums}
+  .card .big small{font-size:14px;color:var(--muted);font-weight:600;letter-spacing:2px}
+  .actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+  .actions button{
+    border:0;border-radius:13px;padding:13px 22px;font-size:14px;font-weight:800;
+    font-family:inherit;cursor:pointer;letter-spacing:.5px;
+  }
+  .actions .primary{background:linear-gradient(180deg,var(--accent-soft),var(--accent));color:var(--accent-ink);box-shadow:0 8px 24px var(--accent-glow)}
+  .actions .ghost{background:rgba(125,211,252,.10);color:var(--ink);border:1px solid var(--line)}
+  .actions button:active{transform:translateY(1px) scale(.99)}
+  .hint{margin-top:14px;font-size:11px;color:var(--muted);letter-spacing:1px}
+  #kidtip{
+    position:fixed;left:50%;bottom:clamp(16px,3vh,30px);transform:translateX(-50%);z-index:5;
+    background:rgba(255,255,255,.94);color:#1d4e8f;border-radius:24px;
+    padding:10px 24px;font-size:clamp(16px,3vh,24px);font-weight:800;
+    box-shadow:0 4px 18px rgba(31,94,150,.28);pointer-events:none;
+    transition:opacity .5s ease;white-space:nowrap;
+  }
+  #kidtip.gone{opacity:0}
+  body.kid .stats{display:none}
+  body.kid .btns button{height:40px;min-width:44px;font-size:17px;border-radius:12px}
+  body.kid .brand{font-size:16px}
+  @media (max-width:560px){
+    header{padding:8px 12px;gap:8px}
+    .brand{font-size:13px}
+    .brand small{display:none}
+    .stats{gap:11px}
+    .stat .v{font-size:15px}
+    .stat .k{font-size:9px}
+    .btns button{height:30px;min-width:30px;padding:0 8px;font-size:12px}
+    .card h1{font-size:26px}
+  }
+  @media (max-height:620px){
+    .card h1{font-size:24px}
+    .card .rules{margin:12px 0;padding:10px 12px;line-height:1.75}
+    .actions button{padding:10px 16px}
+  }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<header>
+  <div class="brand">拉杆 · <b>Handle Pull</b><small>SUITCASE TELESCOPE</small></div>
+  <div class="stats">
+    <div class="stat"><span class="k">得分</span><span class="v" id="score">0</span></div>
+    <div class="stat"><span class="k">连击</span><span class="v" id="combo">×1</span></div>
+    <div class="stat"><span class="k">命</span><span class="v" id="lives">♥♥♥</span></div>
+  </div>
+  <div class="btns">
+    <button id="skin" title="切换配色">配色</button>
+    <button id="mute" title="静音">🔊</button>
+  </div>
+</header>
+
+<div id="overlay">
+  <div class="card" id="card"></div>
+</div>
+
+<script>
+(() => {
+'use strict';
+
+/* ---------------- 主题 ---------------- */
+const THEMES = [
+  { name:'深夜机场',
+    bg:['#101c3a','#0b1120','#05070f'],
+    body:'#31425f', bodyDark:'#1a2538', bodyLight:'#4d698f', bodyHl:'#6c8bb4',
+    metal:'#cbd6e6', metalDark:'#8493aa',
+    accent:'#7dd3fc', band:'#fde68a', ink:'#eef2ff', muted:'#8b93b8',
+    line:'rgba(125,211,252,.22)' },
+  { name:'复古皮革',
+    bg:['#3a2419','#1a1210','#080504'],
+    body:'#96603a', bodyDark:'#54341c', bodyLight:'#c08a5f', bodyHl:'#d9a878',
+    metal:'#e6d3b3', metalDark:'#9a7f60',
+    accent:'#f0b429', band:'#ffd479', ink:'#f6ecdd', muted:'#b09a86',
+    line:'rgba(240,180,41,.24)' },
+  { name:'宝宝天空', light:true,
+    bg:['#bfe9ff','#dff5ff','#f4fdff'],
+    body:'#63bde9', bodyDark:'#3f95c9', bodyLight:'#94d9f6', bodyHl:'#c6f0ff',
+    metal:'#d3e4f2', metalDark:'#6d89a6',
+    accent:'#1f7ab8', band:'#ff9f1c', ink:'#123c5a', muted:'#5a7f9c',
+    line:'rgba(31,122,184,.26)',
+    chrome0:'rgba(255,255,255,.92)', chrome1:'rgba(255,255,255,.42)',
+    panel:'rgba(255,255,255,.88)' },
+  { name:'像素薄荷',
+    bg:['#0d4a3f','#062a24','#02120f'],
+    body:'#23896f', bodyDark:'#125142', bodyLight:'#3fb896', bodyHl:'#63d3b3',
+    metal:'#d6f5ea', metalDark:'#7fb9a8',
+    accent:'#a7ffd0', band:'#ffd166', ink:'#eafff8', muted:'#79a89b',
+    line:'rgba(167,255,208,.22)' },
+];
+
+const KID = new URLSearchParams(location.search).get('kid') === '1';
+
+const S = {
+  screen:'menu',        // menu | play | over
+  mode:'challenge',     // challenge | free
+  h:0, dir:1, speed:0.34,
+  score:0, combo:0, lives:3, hits:0,
+  target:null,
+  shake:0, bump:0, flash:0, flashColor:'#ff6b81',
+  muted:false, theme:0,
+  best: Number(localStorage.getItem('handlepull.best') || 0),
+  lastStage:0, time:0,
+};
+
+/* ---------------- 画布 ---------------- */
+const cvs = document.getElementById('c');
+const ctx = cvs.getContext('2d');
+let W = 0, H = 0, L = {};
+
+function resize(){
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  W = window.innerWidth;
+  H = window.innerHeight;
+  cvs.width = Math.round(W * dpr);
+  cvs.height = Math.round(H * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  layout();
+}
+
+let motes = [];
+
+function layout(){
+  const caseW = Math.min(W * 0.62, H * 0.40);
+  const caseH = caseW * 0.74;
+  const caseBottom = H * 0.86;
+  const caseTop = caseBottom - caseH;
+  const travel = Math.min(H * 0.40, caseH * 1.25);
+  L = {
+    caseW, caseH,
+    caseX: W / 2,
+    caseTop, caseBottom,
+    travel,
+    baseY: caseTop + caseH * 0.12,
+    Lt: travel / 3,
+  };
+  motes = Array.from({ length: 34 }, () => ({
+    x: Math.random() * W,
+    y: Math.random() * H,
+    r: 0.6 + Math.random() * 1.6,
+    sp: 4 + Math.random() * 12,
+    a: 0.05 + Math.random() * 0.18,
+  }));
+}
+
+const gripY = h => L.baseY - L.travel * h;
+
+/* ---------------- 音效 ---------------- */
+let ac = null;
+function actx(){
+  if (!ac){
+    try { ac = new (window.AudioContext || window.webkitAudioContext)(); }
+    catch(e){ ac = null; }
+  }
+  if (ac && ac.state === 'suspended') ac.resume();
+  return ac;
+}
+function tone(freq, dur, type, vol, when = 0, slideTo){
+  if (S.muted) return;
+  const a = actx(); if (!a) return;
+  const t0 = a.currentTime + when;
+  const o = a.createOscillator(), g = a.createGain();
+  o.type = type || 'square';
+  o.frequency.setValueAtTime(freq, t0);
+  if (slideTo) o.frequency.exponentialRampToValueAtTime(Math.max(40, slideTo), t0 + dur);
+  g.gain.setValueAtTime(0.0001, t0);
+  g.gain.linearRampToValueAtTime(vol, t0 + 0.008);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+  o.connect(g); g.connect(a.destination);
+  o.start(t0); o.stop(t0 + dur + 0.03);
+}
+const sfxClick  = st => { tone(340 + st * 120, 0.05, 'square', 0.045); tone(1250 + st * 180, 0.03, 'triangle', 0.028, 0.004); };
+const sfxSlide  = () => tone(190, 0.14, 'sawtooth', 0.022, 0, 330);
+const sfxHit    = () => { [660, 880, 1320].forEach((f, i) => tone(f, 0.13, 'triangle', 0.055, i * 0.045)); };
+const sfxMiss   = () => { tone(200, 0.22, 'sawtooth', 0.06, 0, 80); tone(120, 0.18, 'square', 0.04, 0.02, 70); };
+const sfxOver   = () => { [520, 400, 300, 210].forEach((f, i) => tone(f, 0.26, 'triangle', 0.05, i * 0.12)); };
+
+/* ---------------- 状态更新 ---------------- */
+function moveHandle(dt){
+  const prevStage = stageOf(S.h);
+  S.h += S.dir * S.speed * dt;
+  if (S.h >= 1){
+    S.h = 1; S.dir = -1; S.bump = 1; sfxClick(2);
+    if (KID){ spawnSparks(THEME().band, 18, 1.25); kidPraise(); }
+  }
+  else if (S.h <= 0){ S.h = 0; S.dir = 1; S.bump = 1; sfxClick(0); }
+  const curStage = stageOf(S.h);
+  if (curStage !== prevStage && S.h > 0 && S.h < 1){
+    sfxClick(curStage);
+    S.bump = Math.max(S.bump, 0.55);
+    spawnSparks(THEME().metal, 4, 0.6);
+  }
+  S.lastStage = curStage;
+}
+const stageOf = h => Math.min(3, Math.floor(h * 3 + 1e-9));
+
+let lastPraise = 0;
+function kidPraise(){
+  if (S.muted) return;
+  const now = performance.now();
+  if (now - lastPraise < 2600) return;
+  lastPraise = now;
+  let name = '宝贝';
+  try { name = localStorage.getItem('kids_typing_name') || '宝贝'; } catch(e){}
+  const words = ['好棒呀', '真厉害', '哇，拉得好长', '太高啦', '你真聪明'];
+  const text = name + '，' + words[Math.floor(Math.random() * words.length)];
+  try {
+    if (!('speechSynthesis' in window)) return;
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'zh-CN'; u.rate = 0.9; u.pitch = 1.3;
+    speechSynthesis.speak(u);
+  } catch(e){}
+}
+
+function newTarget(){
+  const lvl = S.hits;
+  const delta = Math.max(0.048, 0.128 - lvl * 0.0045);
+  let tc = 0, guard = 0;
+  do { tc = 0.20 + Math.random() * 0.60; }
+  while (Math.abs(tc - S.h) < 0.22 && ++guard < 40);
+  S.target = {
+    tc, delta,
+    ttl: Math.max(1250, 2800 - lvl * 70),
+    t: 0,
+    born: S.time,
+  };
+  S.speed = Math.min(1.75, 0.50 + lvl * 0.055);
+}
+
+function hitTarget(){
+  S.hits += 1;
+  S.combo += 1;
+  S.score += 10 + Math.min(40, S.combo * 2);
+  S.flash = 1; S.flashColor = THEME().band;
+  S.bump = 1;
+  sfxHit();
+  spawnSparks(THEME().band, 16, 1);
+  newTarget();
+}
+function failTarget(){
+  S.lives -= 1;
+  S.combo = 0;
+  S.shake = 1; S.flash = 1; S.flashColor = '#ff6b81';
+  sfxMiss();
+  if (S.lives <= 0){ gameOver(); return; }
+  newTarget();
+  S.target.t = 0;
+}
+
+function update(dt){
+  S.time += dt;
+  S.shake *= Math.pow(0.0025, dt);
+  S.bump  *= Math.pow(0.0008, dt);
+  S.flash *= Math.pow(0.004, dt);
+  for (const p of particles){
+    p.x += p.vx * dt; p.y += p.vy * dt;
+    p.vy += 620 * dt; p.vx *= Math.pow(0.15, dt);
+    p.life -= dt;
+  }
+  for (let i = particles.length - 1; i >= 0; i--) if (particles[i].life <= 0) particles.splice(i, 1);
+
+  if (S.screen === 'menu'){ S.speed = 0.34; moveHandle(dt); return; }
+  if (S.screen === 'over'){
+    if (!S.overShown && S.time - S.overAt > 0.45){ S.overShown = true; showOver(); }
+    return;
+  }
+  if (S.screen !== 'play') return;
+
+  moveHandle(dt);
+
+  if (S.mode === 'challenge' && S.target){
+    S.target.t += dt * 1000;
+    if (S.target.t >= S.target.ttl) failTarget();
+  }
+}
+
+/* ---------------- 粒子 ---------------- */
+const particles = [];
+function spawnSparks(color, n, power){
+  const y = gripY(S.h) - 6;
+  for (let i = 0; i < n; i++){
+    const a = -Math.PI / 2 + (Math.random() - 0.5) * 2.6;
+    const sp = (120 + Math.random() * 300) * power;
+    particles.push({
+      x: L.caseX + (Math.random() - 0.5) * L.caseW * 0.34,
+      y,
+      vx: Math.cos(a) * sp,
+      vy: Math.sin(a) * sp,
+      life: 0.35 + Math.random() * 0.5,
+      max: 0.85,
+      size: 1.4 + Math.random() * 2.4,
+      color,
+    });
+  }
+}
+
+/* ---------------- 绘制 ---------------- */
+const THEME = () => THEMES[S.theme];
+
+function roundRect(x, y, w, h, r){
+  const rr = Math.min(r, Math.abs(w) / 2, Math.abs(h) / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + rr, y);
+  ctx.arcTo(x + w, y, x + w, y + h, rr);
+  ctx.arcTo(x + w, y + h, x, y + h, rr);
+  ctx.arcTo(x, y + h, x, y, rr);
+  ctx.arcTo(x, y, x + w, y, rr);
+  ctx.closePath();
+}
+
+function drawBackground(t){
+  const g = ctx.createLinearGradient(0, 0, 0, H);
+  g.addColorStop(0, t.bg[0]);
+  g.addColorStop(0.55, t.bg[1]);
+  g.addColorStop(1, t.bg[2]);
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, W, H);
+
+  // 远处光斑
+  const glow = ctx.createRadialGradient(W * 0.5, H * 0.30, 10, W * 0.5, H * 0.30, Math.max(W, H) * 0.66);
+  glow.addColorStop(0, hexA(t.accent, 0.13));
+  glow.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 0, W, H);
+
+  // 斜向光束（浅色主题不画）
+  ctx.save();
+  if (t.light){ ctx.restore(); } else {
+  ctx.globalCompositeOperation = 'lighter';
+  for (let i = 0; i < 3; i++){
+    const bx = W * (0.18 + i * 0.32);
+    const beam = ctx.createLinearGradient(bx, -H * 0.2, bx + W * 0.28, H);
+    beam.addColorStop(0, hexA(t.accent, 0.055));
+    beam.addColorStop(0.6, hexA(t.accent, 0.012));
+    beam.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = beam;
+    ctx.beginPath();
+    ctx.moveTo(bx, -10);
+    ctx.lineTo(bx + W * 0.20, -10);
+    ctx.lineTo(bx + W * 0.48, H);
+    ctx.lineTo(bx + W * 0.10, H);
+    ctx.closePath();
+    ctx.fill();
+  }
+  ctx.restore();
+  }
+
+  // 浮尘
+  for (const m of motes){
+    const y = ((m.y - S.time * m.sp) % (H + 40) + H + 40) % (H + 40) - 20;
+    ctx.fillStyle = t.light ? hexA(t.muted, m.a * 1.2) : hexA(t.metal, m.a);
+    ctx.beginPath();
+    ctx.arc(m.x, y, m.r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // 地面
+  const gy = L.caseBottom + L.caseH * 0.06;
+  const fg = ctx.createLinearGradient(0, gy - 6, 0, H);
+  fg.addColorStop(0, hexA(t.metal, 0.06));
+  fg.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = fg;
+  ctx.fillRect(0, gy - 6, W, H - gy + 6);
+
+  ctx.strokeStyle = hexA(t.metal, 0.14);
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke();
+
+  // 行李箱阴影
+  const sh = ctx.createRadialGradient(L.caseX, gy + 8, 4, L.caseX, gy + 8, L.caseW * 0.72);
+  sh.addColorStop(0, t.light ? 'rgba(30,80,120,.20)' : 'rgba(0,0,0,.55)');
+  sh.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = sh;
+  ctx.beginPath();
+  ctx.ellipse(L.caseX, gy + 10, L.caseW * 0.66, L.caseH * 0.10, 0, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function drawTarget(t){
+  if (S.mode !== 'challenge' || !S.target || S.screen === 'over') return;
+  const { tc, delta, ttl } = S.target;
+  const elapsed = S.target.t;
+  const yTop = gripY(Math.min(1, tc + delta));
+  const yBot = gripY(Math.max(0, tc - delta));
+  const halfW = Math.min(W * 0.5, L.caseW * 1.05);
+  const x0 = L.caseX - halfW, x1 = L.caseX + halfW;
+  const pulse = 0.55 + 0.45 * Math.sin(S.time * 6);
+  const inside = Math.abs(S.h - tc) <= delta;
+
+  ctx.save();
+  const g = ctx.createLinearGradient(0, yTop, 0, yBot);
+  g.addColorStop(0, hexA(t.band, 0));
+  g.addColorStop(0.5, hexA(t.band, inside ? 0.30 : 0.16));
+  g.addColorStop(1, hexA(t.band, 0));
+  ctx.globalCompositeOperation = 'lighter';
+  ctx.fillStyle = g;
+  ctx.fillRect(x0, yTop, x1 - x0, yBot - yTop);
+  ctx.globalCompositeOperation = 'source-over';
+
+  ctx.strokeStyle = hexA(t.band, inside ? 0.95 : 0.5 + 0.22 * pulse);
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([9, 7]);
+  ctx.beginPath(); ctx.moveTo(x0, yTop); ctx.lineTo(x1, yTop); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x0, yBot); ctx.lineTo(x1, yBot); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // 剩余时间条
+  const left = Math.max(0, 1 - elapsed / ttl);
+  const bw = (x1 - x0 - 24) * left;
+  const by = yBot + 9;
+  ctx.fillStyle = hexA(t.band, 0.16);
+  ctx.beginPath(); roundRect(x0 + 12, by, x1 - x0 - 24, 3, 2); ctx.fill();
+  ctx.fillStyle = hexA(t.band, left < 0.3 ? 0.95 : 0.75);
+  ctx.beginPath(); roundRect(x0 + 12, by, Math.max(3, bw), 3, 2); ctx.fill();
+
+  // 目标刻度标签
+  ctx.fillStyle = hexA(t.band, 0.75);
+  ctx.font = '600 11px ui-monospace,SFMono-Regular,Menlo,monospace';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('STOP HERE', x0 + 12, yTop - 12);
+  ctx.restore();
+}
+
+function drawHandle(t){
+  const cx = L.caseX;
+  const w0 = Math.max(9, L.caseW * 0.062);
+  const w1 = w0 * 0.80;
+  const w2 = w0 * 0.62;
+  const Lt = L.Lt;
+  const tt = S.h * 3;
+
+  const f = [0, 1, 2].map(i => Math.max(0, Math.min(1, tt - i)));
+  const widths = [w0, w1, w2];
+  const heights = [Lt * f[0], Lt * f[1], Lt * f[2]];
+
+  let yBottom = L.baseY;
+  const tops = [];
+  for (let i = 0; i < 3; i++){
+    const yTop = yBottom - heights[i];
+    tops.push({ yTop, yBottom, w: widths[i], ext: f[i] });
+    yBottom = yTop;
+  }
+  const gripYPos = yBottom;
+
+  // 管身
+  for (let i = 0; i < 3; i++){
+    const { yTop, yBottom: yb, w } = tops[i];
+    if (yb - yTop < 0.6) continue;
+    const g = ctx.createLinearGradient(cx - w / 2, 0, cx + w / 2, 0);
+    g.addColorStop(0, t.metalDark);
+    g.addColorStop(0.26, t.metal);
+    g.addColorStop(0.58, '#ffffff');
+    g.addColorStop(0.86, t.metal);
+    g.addColorStop(1, t.metalDark);
+    ctx.fillStyle = g;
+    roundRect(cx - w / 2, yTop, w, yb - yTop, w / 2);
+    ctx.fill();
+    ctx.strokeStyle = hexA(t.metalDark, 0.45);
+    ctx.lineWidth = 0.8;
+    ctx.stroke();
+  }
+
+  // 关节套环
+  for (let i = 0; i < 2; i++){
+    if (tops[i].ext < 0.06) continue;
+    const { yTop, w } = tops[i];
+    ctx.fillStyle = hexA(t.metalDark, 0.95);
+    roundRect(cx - w / 2 - 1.5, yTop - 2.5, w + 3, 5, 2.5);
+    ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,.35)';
+    roundRect(cx - w / 2 - 1.5, yTop - 2.5, w + 3, 1.6, 1);
+    ctx.fill();
+  }
+
+  // 握把
+  const gw = Math.max(56, L.caseW * 0.30);
+  const gh = Math.max(12, w0 * 0.92);
+  const gy = gripYPos - gh;
+  const gg = ctx.createLinearGradient(0, gy, 0, gy + gh);
+  gg.addColorStop(0, t.metal);
+  gg.addColorStop(0.36, '#ffffff');
+  gg.addColorStop(1, t.metalDark);
+  ctx.fillStyle = gg;
+  roundRect(cx - gw / 2, gy, gw, gh, gh / 2);
+  ctx.fill();
+  ctx.strokeStyle = hexA(t.metalDark, 0.45);
+  ctx.lineWidth = 0.9;
+  ctx.stroke();
+
+  // 握把防滑线
+  ctx.strokeStyle = hexA(t.metalDark, 0.7);
+  ctx.lineWidth = 1;
+  for (let i = -2; i <= 2; i++){
+    const x = cx + i * (gw / 7);
+    ctx.beginPath();
+    ctx.moveTo(x, gy + gh * 0.26);
+    ctx.lineTo(x, gy + gh * 0.74);
+    ctx.stroke();
+  }
+
+  // 高光
+  ctx.fillStyle = 'rgba(255,255,255,.6)';
+  roundRect(cx - gw / 2 + 7, gy + gh * 0.18, gw - 14, Math.max(2, gh * 0.16), 2);
+  ctx.fill();
+
+  // 瞄准刻度（取样点 = 握把下沿）
+  if (S.screen === 'play' && S.mode === 'challenge'){
+    const py = gripYPos - 1;
+    ctx.strokeStyle = hexA(t.accent, 0.65 + 0.3 * Math.sin(S.time * 8));
+    ctx.lineWidth = 1.6;
+    const gap = gw / 2 + 5, len = 15;
+    ctx.beginPath();
+    ctx.moveTo(cx - gap - len, py); ctx.lineTo(cx - gap, py);
+    ctx.moveTo(cx + gap, py); ctx.lineTo(cx + gap + len, py);
+    ctx.stroke();
+    ctx.fillStyle = hexA(t.accent, 0.9);
+    [cx - gap - len - 3, cx + gap + len + 3].forEach(x => {
+      ctx.beginPath();
+      ctx.arc(x, py, 2.2, 0, Math.PI * 2);
+      ctx.fill();
+    });
+  }
+}
+
+function drawCase(t){
+  const bump = S.bump * 5;
+  const cx = L.caseX;
+  const w = L.caseW, h = L.caseH;
+  const x = cx - w / 2;
+  const y = L.caseTop + bump;
+  const r = Math.max(12, w * 0.075);
+
+  // 轮子（箱体之后被盖住上半部）
+  const rw = w * 0.085;
+  [-1, 1].forEach(s => {
+    const wx = cx + s * (w * 0.33);
+    const wy = y + h + rw * 0.12;
+    const wg = ctx.createRadialGradient(wx - rw * 0.3, wy - rw * 0.4, rw * 0.2, wx, wy, rw);
+    wg.addColorStop(0, '#3b4150');
+    wg.addColorStop(1, '#12151d');
+    ctx.fillStyle = wg;
+    ctx.beginPath();
+    ctx.ellipse(wx, wy, rw, rw * 1.02, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = hexA(t.metalDark, 0.55);
+    ctx.lineWidth = 1.2;
+    ctx.stroke();
+    ctx.fillStyle = hexA(t.metal, 0.7);
+    ctx.beginPath();
+    ctx.arc(wx, wy, rw * 0.26, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  // 箱体
+  const body = ctx.createLinearGradient(x, y, x + w * 0.75, y + h);
+  body.addColorStop(0, t.bodyHl || t.bodyLight);
+  body.addColorStop(0.34, t.bodyLight);
+  body.addColorStop(0.72, t.body);
+  body.addColorStop(1, t.bodyDark);
+  ctx.fillStyle = body;
+  roundRect(x, y, w, h, r);
+  ctx.fill();
+
+  // 顶面受光
+  const topLight = ctx.createLinearGradient(0, y, 0, y + h * 0.22);
+  topLight.addColorStop(0, 'rgba(255,255,255,.22)');
+  topLight.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.fillStyle = topLight;
+  roundRect(x, y, w, h * 0.22, r);
+  ctx.fill();
+
+  // 内描边
+  ctx.strokeStyle = 'rgba(255,255,255,.22)';
+  ctx.lineWidth = 1.4;
+  roundRect(x + 5, y + 5, w - 10, h - 10, Math.max(8, w * 0.055));
+  ctx.stroke();
+
+  // 竖向凹凸纹
+  ctx.save();
+  ctx.beginPath();
+  roundRect(x + 4, y + 4, w - 8, h - 8, Math.max(9, w * 0.06));
+  ctx.clip();
+  for (let i = 0; i < 5; i++){
+    const px = x + w * (0.13 + i * 0.185);
+    const lg = ctx.createLinearGradient(px - 6, 0, px + 6, 0);
+    lg.addColorStop(0, 'rgba(0,0,0,.15)');
+    lg.addColorStop(0.5, 'rgba(255,255,255,.10)');
+    lg.addColorStop(1, 'rgba(0,0,0,.15)');
+    ctx.fillStyle = lg;
+    ctx.fillRect(px - 6, y, 12, h);
+  }
+  ctx.restore();
+
+  // 顶部箱盖接缝 + 锁扣
+  ctx.strokeStyle = 'rgba(0,0,0,.22)';
+  ctx.lineWidth = 1.6;
+  ctx.beginPath();
+  ctx.moveTo(x + 6, y + h * 0.19);
+  ctx.lineTo(x + w - 6, y + h * 0.19);
+  ctx.stroke();
+  ctx.strokeStyle = 'rgba(255,255,255,.14)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(x + 6, y + h * 0.19 + 1.8);
+  ctx.lineTo(x + w - 6, y + h * 0.19 + 1.8);
+  ctx.stroke();
+
+  // 四角护角（裁进箱体轮廓内）
+  const cm = w * 0.115;
+  const corner = ctx.createLinearGradient(x, y, x + cm, y + cm);
+  corner.addColorStop(0, hexA(t.metal, 0.92));
+  corner.addColorStop(1, hexA(t.metalDark, 0.92));
+  ctx.save();
+  ctx.beginPath();
+  roundRect(x, y, w, h, r);
+  ctx.clip();
+  ctx.fillStyle = corner;
+  [[x - 2, y - 2], [x + w - cm + 2, y - 2], [x - 2, y + h - cm + 2], [x + w - cm + 2, y + h - cm + 2]].forEach(([bx, by]) => {
+    roundRect(bx, by, cm, cm, Math.max(6, cm * 0.32));
+    ctx.fill();
+  });
+  ctx.restore();
+
+  // 前袋 + 拉链
+  const pw = w * 0.60, ph = h * 0.38;
+  const px = cx - pw / 2, py = y + h * 0.46;
+  ctx.fillStyle = 'rgba(0,0,0,.16)';
+  roundRect(px, py, pw, ph, Math.max(7, w * 0.04));
+  ctx.fill();
+  ctx.strokeStyle = hexA(t.metal, 0.6);
+  ctx.setLineDash([5, 4]);
+  ctx.lineWidth = 1.2;
+  roundRect(px, py, pw, ph, Math.max(7, w * 0.04));
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // 顶部拉杆基座
+  const bw = w * 0.30;
+  ctx.fillStyle = hexA(t.bodyDark, 0.98);
+  roundRect(cx - bw / 2, y - 5, bw, Math.max(9, h * 0.06), 5);
+  ctx.fill();
+  ctx.fillStyle = hexA(t.metal, 0.7);
+  roundRect(cx - bw / 2 + 4, y - 3, bw - 8, 2.5, 1.5);
+  ctx.fill();
+
+  // 侧标牌
+  const lw = w * 0.17, lh = lw * 0.52;
+  ctx.fillStyle = hexA(t.metal, 0.9);
+  roundRect(x + w * 0.07, y + h * 0.09, lw, lh, 3);
+  ctx.fill();
+  ctx.fillStyle = hexA(t.bodyDark, 0.6);
+  roundRect(x + w * 0.07 + 3, y + h * 0.09 + lh * 0.42, lw - 6, 2, 1);
+  ctx.fill();
+
+
+}
+
+function drawParticles(){
+  for (const p of particles){
+    const a = Math.max(0, Math.min(1, p.life / p.max));
+    ctx.globalAlpha = a;
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size * (0.5 + a * 0.7), 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+}
+
+function render(){
+  const t = THEME();
+  ctx.clearRect(0, 0, W, H);
+  ctx.save();
+  if (S.shake > 0.01){
+    const m = S.shake * 9;
+    ctx.translate((Math.random() - 0.5) * m, (Math.random() - 0.5) * m);
+  }
+
+  drawBackground(t);
+  drawTarget(t);
+  drawHandle(t);
+  drawCase(t);
+  drawParticles();
+
+  if (S.flash > 0.01){
+    ctx.fillStyle = hexA(S.flashColor, S.flash * 0.16);
+    ctx.fillRect(-40, -40, W + 80, H + 80);
+  }
+  ctx.restore();
+
+  // 自由模式提示
+  if (S.screen === 'play' && S.mode === 'free' && !KID){
+    ctx.fillStyle = hexA(t.accent, 0.85);
+    ctx.font = '700 14px -apple-system,"PingFang SC",sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(KID ? '按一下 → 拉杆往上 / 再按一下 → 往下' : '自由模式 · 按一下换向，随便拉', W / 2, H - 26);
+  }
+}
+
+function hexA(hex, a){
+  if (hex.startsWith('rgba')) return hex;
+  const n = parseInt(hex.slice(1), 16);
+  return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`;
+}
+
+/* ---------------- HUD ---------------- */
+const $ = id => document.getElementById(id);
+const elScore = $('score'), elCombo = $('combo'), elLives = $('lives');
+const overlay = $('overlay'), card = $('card');
+
+function syncHUD(){
+  elScore.textContent = S.mode === 'challenge' ? S.score : '—';
+  elCombo.textContent = S.mode === 'challenge' ? '×' + Math.max(1, S.combo) : '—';
+  elLives.textContent = S.mode === 'challenge'
+    ? '♥'.repeat(Math.max(0, S.lives)) + '·'.repeat(Math.max(0, 3 - S.lives))
+    : '∞';
+}
+
+function mixHex(a, b, k){
+  const pa = parseInt(a.slice(1), 16), pb = parseInt(b.slice(1), 16);
+  const ch = i => Math.round(((pa >> i) & 255) * (1 - k) + ((pb >> i) & 255) * k);
+  return '#' + [16, 8, 0].map(i => ch(i).toString(16).padStart(2, '0')).join('');
+}
+
+function applyTheme(){
+  const t = THEME();
+  const r = document.documentElement.style;
+  r.setProperty('--bg0', t.bg[1]);
+  r.setProperty('--bg1', t.bg[0]);
+  r.setProperty('--ink', t.ink);
+  r.setProperty('--muted', t.muted);
+  r.setProperty('--accent', t.accent);
+  r.setProperty('--band', t.band);
+  r.setProperty('--line', t.line);
+  r.setProperty('--chrome0', t.chrome0 || 'rgba(6,10,22,.82)');
+  r.setProperty('--chrome1', t.chrome1 || 'rgba(6,10,22,.30)');
+  r.setProperty('--panel', t.panel || 'rgba(10,17,38,.72)');
+  const soft = mixHex(t.accent, '#ffffff', 0.38);
+  const ink = mixHex(t.accent, '#03121c', 0.82);
+  const n = parseInt(t.accent.slice(1), 16);
+  r.setProperty('--accent-soft', soft);
+  r.setProperty('--accent-ink', ink);
+  r.setProperty('--accent-glow', `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},0.28)`);
+  document.querySelector('meta[name=theme-color]').setAttribute('content', t.bg[1]);
+}
+
+function showCard(html){
+  card.innerHTML = html;
+  overlay.classList.remove('hide');
+}
+function hideCard(){ overlay.classList.add('hide'); }
+
+function showMenu(){
+  S.screen = 'menu';
+  S.h = 0; S.dir = 1; S.speed = 0.34; S.target = null;
+  showCard(`
+    <h1>拉杆<br><em>Handle Pull</em></h1>
+    <p class="sub">一只行李箱，一根伸缩拉杆。<br>拉杆一直在上下滑，你按键让它换向。</p>
+    <div class="rules">
+      <div><kbd>空格</kbd>按一下换向 —— 升 / 降</div>
+      <div><b>挑战</b>：把杆停在亮起的黄条里，停歪或超时掉一颗心</div>
+      <div><b>随便玩</b>：没有黄条没有分，纯拉杆</div>
+      <div>最高分：<b>${S.best}</b>　配色：<b>${THEME().name}</b></div>
+    </div>
+    <div class="actions">
+      <button class="primary" data-act="challenge">开始挑战</button>
+      <button class="ghost" data-act="free">随便玩玩</button>
+    </div>
+    <div class="hint">手机直接点屏幕也行</div>
+  `);
+  syncHUD();
+}
+
+function showOver(){
+  showCard(`
+    <h1>箱子收好了</h1>
+    <p class="sub">这一趟托运结束</p>
+    <div style="margin:16px 0">
+      <div class="big">${S.score}<small> 分</small></div>
+      <p class="sub">命中 ${S.hits} 次 · 最高分 ${S.best}</p>
+    </div>
+    <div class="actions">
+      <button class="primary" data-act="challenge">再来一局</button>
+      <button class="ghost" data-act="free">随便玩玩</button>
+    </div>
+  `);
+}
+
+/* ---------------- 流程 ---------------- */
+function startGame(mode){
+  S.mode = mode;
+  S.screen = 'play';
+  S.h = 0; S.dir = 1; S.speed = mode === 'challenge' ? 0.5 : 0.42;
+  S.score = 0; S.combo = 0; S.lives = 3; S.hits = 0;
+  S.target = null; S.overShown = false;
+  S.shake = 0; S.bump = 0; S.flash = 0;
+  particles.length = 0;
+  if (mode === 'challenge') newTarget();
+  hideCard();
+  syncHUD();
+  actx();
+  sfxSlide();
+}
+
+function gameOver(){
+  if (S.screen === 'over') return;
+  S.screen = 'over';
+  S.target = null;
+  S.overAt = S.time;
+  S.overShown = false;
+  if (S.score > S.best){
+    S.best = S.score;
+    localStorage.setItem('handlepull.best', String(S.best));
+  }
+  sfxOver();
+  syncHUD();
+}
+
+function press(){
+  if (S.screen === 'menu'){ startGame('challenge'); return; }
+  if (S.screen === 'over'){
+    if (!S.overShown) return;
+    startGame(S.mode);
+    return;
+  }
+
+  if (S.mode === 'free'){
+    const tipEl = document.getElementById('kidtip');
+    if (tipEl) tipEl.classList.add('gone');
+    S.dir *= -1;
+    S.bump = Math.max(S.bump, 0.5);
+    sfxClick(stageOf(S.h));
+    return;
+  }
+
+  const tg = S.target;
+  if (tg && Math.abs(S.h - tg.tc) <= tg.delta) hitTarget();
+  else failTarget();
+
+  S.dir *= -1;
+  syncHUD();
+}
+
+/* ---------------- 输入 ---------------- */
+window.addEventListener('keydown', e => {
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.key === 'Tab' || e.key === 'Escape') return;
+  if (e.repeat) return;
+  if (document.activeElement && document.activeElement.tagName === 'BUTTON') document.activeElement.blur();
+  if (e.key === ' ' || e.code === 'Space' || e.key === 'Enter' ||
+      e.key.startsWith('Arrow') || e.key.length === 1){
+    e.preventDefault();
+    press();
+  }
+}, { passive: false });
+
+cvs.addEventListener('pointerdown', e => { e.preventDefault(); press(); });
+
+overlay.addEventListener('click', e => {
+  const btn = e.target.closest('[data-act]');
+  if (!btn) return;
+  startGame(btn.dataset.act);
+});
+
+$('mute').addEventListener('click', e => {
+  e.stopPropagation();
+  S.muted = !S.muted;
+  localStorage.setItem('handlepull.muted', S.muted ? '1' : '0');
+  $('mute').textContent = S.muted ? '🔇' : '🔊';
+  if (!S.muted) tone(700, 0.06, 'triangle', 0.05);
+  e.currentTarget.blur();
+});
+
+$('skin').addEventListener('click', e => {
+  e.stopPropagation();
+  S.theme = (S.theme + 1) % THEMES.length;
+  localStorage.setItem('handlepull.theme', String(S.theme));
+  applyTheme();
+  if (S.screen === 'menu') showMenu();
+  tone(880, 0.05, 'triangle', 0.04);
+  e.currentTarget.blur();
+});
+
+window.addEventListener('resize', resize);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) last = performance.now(); });
+
+/* ---------------- 主循环 ---------------- */
+let last = performance.now();
+function frame(now){
+  const dt = Math.min(0.048, Math.max(0, (now - last) / 1000));
+  last = now;
+  update(dt);
+  render();
+  requestAnimationFrame(frame);
+}
+
+/* ---------------- 启动 ---------------- */
+S.muted = localStorage.getItem('handlepull.muted') === '1';
+S.theme = Number(localStorage.getItem('handlepull.theme') || 0) % THEMES.length;
+$('mute').textContent = S.muted ? '🔇' : '🔊';
+applyTheme();
+resize();
+
+if (KID){
+  document.body.classList.add('kid');
+  document.title = '🧳 行李箱拉杆 · 宝宝键盘乐园';
+  S.theme = Math.max(0, THEMES.findIndex(t => t.name === '宝宝天空'));
+  applyTheme();
+  const home = document.createElement('button');
+  home.textContent = '🏠';
+  home.title = '回家';
+  home.addEventListener('click', e => { e.stopPropagation(); location.href = '../'; });
+  document.querySelector('.btns').insertBefore(home, $('skin'));
+  const tip = document.createElement('div');
+  tip.id = 'kidtip';
+  tip.textContent = '按一下键盘，拉杆就升起来 🧳';
+  document.body.appendChild(tip);
+  startGame('free');
+} else {
+  showMenu();
+  syncHUD();
+}
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
