@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rebuild Pixel · 崔牛会重构大会风 PPT 模板 · Live Demo</title>
+<style>
+  /* ============ 设计令牌（取自 2026 崔牛会重构 Rebuild 大会演讲幻灯片像素采样） ============ */
+  :root{
+    --bg:        #F6F6F6;  /* 微灰白画布 */
+    --ink:       #101010;  /* 标题近黑 */
+    --body:      #3E3E3E;  /* 正文深灰 */
+    --gray:      #838383;  /* 说明灰 */
+    --faint:     #A6A6A6;  /* 脚注浅灰 */
+    --hairline:  #E4E4E4;  /* 细发线 */
+    --band:      #F2F4F7;  /* 隔行浅带 */
+    --card:      #FFFFFF;  /* 白卡 */
+    --blue:      #0033FF;  /* 标志纯蓝（数字/强调/色块） */
+    --yellow:    #FFDE1D;  /* 像素黄 */
+    --green:     #51CE66;  /* 像素绿 */
+    --red:       #FF3B30;  /* 像素红（封面） */
+    --bar-gray:  #98A2B3;  /* 中性灰条 */
+    --bar-light: #D0D5DD;  /* 浅灰条 */
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;background:#2A2A2E;font-family:"Helvetica Neue","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;}
+  body{display:flex;align-items:center;justify-content:center;overflow:hidden;}
+
+  /* ============ 舞台：16:9，随窗口缩放 ============ */
+  #stage{position:relative;width:1280px;height:720px;flex:none;background:var(--bg);
+         box-shadow:0 24px 80px rgba(0,0,0,.45);}
+  .slide{position:absolute;inset:0;display:none;background:var(--bg);
+         padding:46px 64px 56px;overflow:hidden;}
+  .slide.active{display:block;}
+
+  /* ============ 公共构件 ============ */
+  .dash{width:26px;height:5px;background:var(--blue);margin-bottom:18px;}
+  h1.title{font-size:32px;font-weight:800;color:var(--ink);line-height:1.35;letter-spacing:.01em;}
+  h1.title .b{color:var(--blue);}
+  .subtitle{margin-top:10px;font-size:14px;color:var(--gray);}
+  .footer{position:absolute;left:64px;bottom:26px;font-size:10.5px;color:var(--faint);}
+  .pagenum{position:absolute;right:64px;bottom:24px;font-size:11.5px;color:var(--faint);}
+  /* 像素装饰：右上黄阶梯、左下绿簇 */
+  .px{position:absolute;display:grid;grid-template-columns:repeat(4,14px);grid-auto-rows:14px;}
+  .px i{width:14px;height:14px;}
+  .px-stairs{top:0;right:0;}
+  .px-stairs i.on{background:var(--yellow);}
+  .px-cluster{bottom:0;left:0;}
+  .px-cluster i.on{background:var(--green);}
+
+  /* ============ ① 封面 ============ */
+  .cover{padding:130px 90px;}
+  .cover h1{font-size:52px;font-weight:800;color:var(--ink);line-height:1.4;letter-spacing:.01em;}
+  .cover h1 .thin{font-weight:400;}
+  .cover .who{margin-top:70px;}
+  .cover .who .dash{margin-bottom:14px;}
+  .cover .who b{display:block;font-size:19px;color:var(--ink);}
+  .cover .who span{display:block;margin-top:8px;font-size:13px;color:var(--gray);}
+  .cover .deco{position:absolute;display:grid;}
+  .cover .deco i{width:16px;height:16px;}
+  .cover .dx{right:150px;top:150px;grid-template-columns:repeat(5,16px);grid-auto-rows:16px;}
+  .cover .dx i.on{background:var(--blue);}
+  .cover .dp{left:120px;bottom:120px;grid-template-columns:repeat(3,16px);grid-auto-rows:16px;}
+  .cover .dp i.on{background:var(--red);}
+  .cover .dy{right:290px;bottom:210px;grid-template-columns:repeat(5,16px);grid-auto-rows:16px;}
+  .cover .dy i.on{background:var(--yellow);}
+  .cover .dd{right:130px;bottom:110px;grid-template-columns:repeat(3,16px);grid-auto-rows:16px;}
+  .cover .dd i.on{background:var(--green);}
+
+  /* ============ ② 编号清单页（01/02/03） ============ */
+  .nums{margin-top:26px;}
+  .nums .item{display:flex;align-items:baseline;gap:44px;padding:32px 4px;}
+  .nums .item + .item{border-top:1px solid var(--hairline);}
+  .nums .num{font-size:34px;font-weight:800;color:var(--blue);letter-spacing:.02em;width:64px;flex:none;}
+  .nums .txt{font-size:19px;font-weight:600;color:var(--ink);line-height:1.6;}
+  .nums .txt b{color:var(--blue);font-weight:800;}
+
+  /* ============ ③ 流程分工页 ============ */
+  .flow-card{margin-top:24px;background:var(--card);border:1px solid #ECECEC;border-radius:10px;
+             padding:26px 34px;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:18px;}
+  .flow-card .stage h5{font-size:13px;font-weight:600;color:var(--gray);}
+  .flow-card .role{display:flex;align-items:baseline;gap:10px;margin-top:14px;}
+  .flow-card .role b{font-size:18px;font-weight:800;color:var(--ink);}
+  .flow-card .role span{font-size:12px;color:var(--gray);}
+  .flow-card .arrow{align-self:center;color:var(--faint);font-size:15px;}
+  .timeline{display:flex;margin:34px 4px 0;}
+  .timeline .seg{flex:1;position:relative;border-top:2.5px solid var(--blue);}
+  .timeline .seg::before{content:"";position:absolute;top:-6px;left:0;width:10px;height:10px;
+                         border-radius:50%;background:var(--blue);}
+  .timeline .seg:last-child::after{content:"";position:absolute;top:-6px;right:0;width:10px;height:10px;
+                         border-radius:50%;background:var(--blue);}
+  .duties{display:flex;margin-top:18px;}
+  .duties .d{flex:1;padding-right:36px;}
+  .duties h4{font-size:19px;font-weight:800;color:var(--blue);}
+  .duties p{margin-top:12px;font-size:13.5px;line-height:1.75;color:var(--body);}
+  .micro{margin-top:34px;padding-top:18px;border-top:1px solid var(--hairline);
+         font-size:13px;color:var(--gray);display:flex;gap:14px;align-items:baseline;}
+  .micro b{color:var(--ink);}
+
+  /* ============ ④ 蓝卡 + 对照表 + 金句卡 ============ */
+  .duo{display:flex;gap:40px;margin-top:26px;}
+  .blue-card{width:400px;flex:none;background:var(--blue);border-radius:12px;color:#fff;
+             padding:30px 30px 26px;display:flex;flex-direction:column;}
+  .blue-card .tag{font-size:12.5px;opacity:.85;}
+  .blue-card .big{margin-top:18px;font-size:23px;font-weight:800;line-height:1.6;}
+  .blue-card .note{margin-top:auto;padding-top:22px;font-size:11.5px;line-height:1.7;opacity:.85;}
+  .cmp{flex:1;}
+  .cmp .heads{display:grid;grid-template-columns:110px 1fr 1fr;padding-bottom:12px;
+              border-bottom:1.5px solid var(--ink);font-size:13.5px;font-weight:600;}
+  .cmp .heads .now{color:var(--blue);font-weight:800;}
+  .cmp .r{display:grid;grid-template-columns:110px 1fr 1fr;padding:18px 0;align-items:baseline;}
+  .cmp .r + .r{border-top:1px solid var(--hairline);}
+  .cmp .r b{font-size:16px;font-weight:800;color:var(--ink);}
+  .cmp .r .old{font-size:13.5px;color:var(--gray);line-height:1.65;padding-right:20px;}
+  .cmp .r .new{font-size:13.5px;font-weight:700;color:var(--ink);line-height:1.65;}
+  .quote-card{margin-top:26px;background:var(--card);border:1px solid #ECECEC;border-radius:10px;
+              padding:24px 32px;}
+  .quote-card .q{font-size:19px;font-weight:800;color:var(--ink);}
+  .quote-card .a{margin-top:10px;font-size:12px;color:var(--gray);}
+
+  /* ============ ⑤ 章节页（大留白） ============ */
+  .section-slide .dash{margin-top:170px;}
+  .section-slide h1{font-size:44px;font-weight:800;color:var(--ink);margin-top:8px;}
+  .section-slide .subtitle{font-size:15px;margin-top:16px;}
+
+  /* ============ ⑥ 分工表格页 ============ */
+  .split-table{margin-top:24px;}
+  .split-table .hd,.split-table .r{display:grid;grid-template-columns:200px 1fr 1fr 1fr;}
+  .split-table .hd{padding-bottom:12px;font-size:12.5px;font-weight:600;color:var(--gray);}
+  .split-table .r{padding:16px 0;border-top:1px solid var(--hairline);align-items:center;}
+  .split-table .r.alt{background:var(--band);}
+  .split-table .task{font-size:15px;font-weight:800;color:var(--ink);}
+  .split-table .ai{font-size:13px;color:var(--body);}
+  .split-table .ai b{color:var(--blue);font-weight:700;}
+  .split-table .human{font-size:13px;font-weight:800;color:var(--ink);
+                      border-left:2.5px solid var(--blue);padding-left:14px;}
+  .split-table .human.blue-text{color:var(--blue);}
+  .takeaway{margin-top:34px;}
+  .takeaway .hint{font-size:12.5px;color:var(--gray);}
+  .takeaway .line{margin-top:14px;font-size:20px;font-weight:800;color:var(--ink);
+                  border-left:4px solid var(--blue);padding-left:18px;line-height:1.6;}
+  .takeaway .line b{color:var(--blue);}
+
+  /* ============ ⑦ 数据条形 + 大数字卡 ============ */
+  .bars{margin-top:36px;width:56%;}
+  .bar-row{display:grid;grid-template-columns:150px 86px 1fr;align-items:center;margin-bottom:30px;}
+  .bar-row .label{font-size:15.5px;font-weight:700;color:var(--ink);}
+  .bar-row .pct{font-size:13.5px;font-weight:700;color:var(--body);text-align:right;padding-right:16px;}
+  .bar-track{position:relative;height:40px;}
+  .bar-track::before{content:"";position:absolute;left:60%;top:-14px;bottom:-14px;width:1.5px;background:var(--ink);}
+  .bar-fill{position:absolute;top:0;height:100%;}
+  .stat-card{position:absolute;right:64px;top:150px;width:330px;background:var(--card);
+             border:1px solid #ECECEC;border-radius:12px;padding:28px 30px;}
+  .stat-card .cap{font-size:13px;color:var(--gray);}
+  .stat-card .num{margin-top:14px;font-size:46px;font-weight:800;color:var(--ink);}
+  .stat-card .num i{font-style:normal;font-size:22px;color:var(--blue);margin-right:6px;}
+  .stat-card .sub{margin-top:8px;font-size:12px;color:var(--gray);}
+  .verdict{margin-top:44px;width:56%;}
+  .verdict h3{font-size:20px;font-weight:800;color:var(--ink);border-left:4px solid var(--blue);padding-left:16px;}
+  .verdict p{margin-top:12px;padding-left:20px;font-size:13.5px;color:var(--body);}
+
+  /* ============ ⑧ 密集对照表 ============ */
+  .matrix{margin-top:20px;}
+  .matrix .hd{display:grid;grid-template-columns:1.1fr 1.5fr 1.5fr 1.5fr;}
+  .matrix .hd div{padding:10px 16px;font-size:13px;font-weight:700;color:#fff;background:var(--ink);}
+  .matrix .hd div.hot{background:var(--blue);}
+  .matrix .r{display:grid;grid-template-columns:1.1fr 1.5fr 1.5fr 1.5fr;border-top:1px solid #E9E9EF;}
+  .matrix .r:nth-child(odd){background:#fff;}
+  .matrix .r:nth-child(even){background:var(--band);}
+  .matrix .r > div{padding:13px 16px;font-size:12px;line-height:1.65;color:var(--body);}
+  .matrix .co b{display:block;font-size:15px;font-weight:800;color:var(--blue);}
+  .matrix .co span{font-size:11px;color:var(--gray);}
+  .matrix .hot-cell{color:var(--ink);font-weight:600;}
+  .matrix .foot{display:grid;grid-template-columns:1.1fr 3fr;padding:12px 16px;font-size:12px;color:var(--gray);}
+  .matrix .foot b{color:var(--blue);font-weight:700;margin-right:8px;}
+  .matrix-note{margin-top:12px;font-size:11px;color:var(--faint);}
+
+  /* ============ ⑨ 设计令牌 ============ */
+  .tokens{margin-top:30px;display:grid;grid-template-columns:repeat(6,1fr);gap:16px;}
+  .swatch{height:72px;border-radius:6px;border:1px solid var(--hairline);}
+  .swatch + span{display:block;margin-top:8px;font-size:10.5px;line-height:1.5;color:var(--gray);}
+  .swatch + span b{color:var(--ink);}
+  .type-spec{margin-top:42px;display:grid;grid-template-columns:1fr 1fr;gap:56px;}
+  .type-spec .row{padding:11px 0;border-bottom:1px solid var(--hairline);font-size:12px;color:var(--gray);}
+  .type-spec .row b{color:var(--ink);margin-right:.6em;}
+
+  #hint{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);color:#777;font-size:12px;letter-spacing:.1em;}
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <!-- ① 封面 -->
+  <section class="slide cover active">
+    <h1>从用 AI 到卖 AI<br><span class="thin">AI-Native Sales</span> 的一线实践与观察</h1>
+    <div class="who">
+      <div class="dash"></div>
+      <b>李思</b>
+      <span>Dify 商业化团队 · 合作伙伴生态与企业服务</span>
+    </div>
+    <div class="deco dx"><i class="on"></i><i></i><i></i><i></i><i class="on"></i><i></i><i class="on"></i><i></i><i class="on"></i><i></i><i></i><i></i><i class="on"></i><i></i><i></i><i></i><i class="on"></i><i></i><i class="on"></i><i></i><i class="on"></i><i></i><i></i><i></i><i class="on"></i></div>
+    <div class="deco dp"><i></i><i class="on"></i><i></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i class="on"></i><i></i></div>
+    <div class="deco dy"><i class="on"></i><i></i><i></i><i></i><i class="on"></i><i></i><i class="on"></i><i></i><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="on"></i><i></i><i class="on"></i><i></i><i class="on"></i><i></i><i></i><i></i><i class="on"></i></div>
+    <div class="deco dd"><i></i><i class="on"></i><i></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i class="on"></i><i></i></div>
+    <div class="footer">2026 中国企业 AI 大会 · 风格模板演示</div>
+    <div class="pagenum">1</div>
+  </section>
+
+  <!-- ② 编号三问 -->
+  <section class="slide">
+    <div class="dash"></div>
+    <h1 class="title">借助 AI 做销售，我常问自己三个问题</h1>
+    <div class="nums">
+      <div class="item"><span class="num">01</span>
+        <div class="txt"><b>接到任务：</b>这件事，为什么是要我做，而不是 AI 做？</div></div>
+      <div class="item"><span class="num">02</span>
+        <div class="txt"><b>模型更新：</b>我手上那个一直没解决的问题，现在能解决了吗？</div></div>
+      <div class="item"><span class="num">03</span>
+        <div class="txt"><b>看到新产品：</b>挺好的，但是不是用 Codex 也能实现？</div></div>
+    </div>
+    <div class="px px-stairs"><i></i><i></i><i></i><i class="on"></i><i></i><i></i><i class="on"></i><i class="on"></i><i></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div>
+    <div class="px px-cluster"><i class="on"></i><i class="on"></i><i></i><i></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i class="on"></i><i></i><i></i></div>
+    <div class="footer">2026 中国企业 AI 大会 · 风格模板演示</div>
+    <div class="pagenum">2</div>
+  </section>
+
+  <!-- ③ 流程分工 -->
+  <section class="slide">
+    <div class="dash"></div>
+    <h1 class="title">AI 和人的职责分工</h1>
+    <div class="flow-card">
+      <div class="stage"><h5>线索开发</h5>
+        <div class="role"><b>BDR</b><span>伙伴开发</span></div>
+        <div class="role"><b>SDR</b><span>主动外呼</span></div>
+        <div class="role"><b>MDR</b><span>集客筛选</span></div></div>
+      <div class="stage"><h5>选型与成交</h5>
+        <div class="role"><b>FAE</b><span>大中型企业</span></div>
+        <div class="role"><b>AE</b><span>中小型企业</span></div></div>
+      <div class="stage"><h5>启用与培训</h5>
+        <div class="role"><b>CSM</b><span>客户成功</span></div></div>
+      <div class="stage"><h5>续费与增购</h5>
+        <div class="role"><b>AM</b><span>客户管理</span></div>
+        <div class="role"><b>CSM</b><span>客户成功</span></div></div>
+    </div>
+    <div class="timeline"><div class="seg"></div><div class="seg"></div><div class="seg"></div></div>
+    <div class="duties">
+      <div class="d"><h4>相似初询，自动回复</h4><p>常见问题交给 Codex，特殊需求我来接。</p></div>
+      <div class="d"><h4>一次会谈，分写两份材料</h4><p>AI 起草客户回信、整理产研待答项。哪些话能对外承诺，我先核实。</p></div>
+      <div class="d"><h4>回访前，核对老问题</h4><p>AI 帮我查新版本回应了哪些老需求。要不要再联系，我来判断。</p></div>
+    </div>
+    <div class="micro"><b>微型客户</b><span>线上自学 → 自主决策 → 自助了解条款 → 自助或社群支持</span></div>
+    <div class="footer">图据《硅谷蓝图》第 5 章简绘，省略跨路径转介。蓝字为讲者实践，2026 年 11 月。</div>
+    <div class="pagenum">3</div>
+  </section>
+
+  <!-- ④ 蓝卡 + 对照 + 金句 -->
+  <section class="slide">
+    <div class="dash"></div>
+    <h1 class="title">「销售是一台现实世界的采集器」</h1>
+    <div class="duo">
+      <div class="blue-card">
+        <div class="tag">我在做的事</div>
+        <div class="big">客户拜访中坚持录音，把信息带回公司，放进数据库，一起做决策。</div>
+        <div class="note">「我只是被公司派到这个地方，去抓信息回来的人。」</div>
+      </div>
+      <div class="cmp">
+        <div class="heads"><div></div><div>以前</div><div class="now">现在</div></div>
+        <div class="r"><b>销售</b><div class="old">拿回单子</div><div class="new">单子之外，把一线需求带回来</div></div>
+        <div class="r"><b>产研</b><div class="old">等销售转述，听到的是二手信息</div><div class="new">直接查客户原话和健康度</div></div>
+        <div class="r"><b>市场</b><div class="old">离客户远，内容偏宏观，隔靴搔痒</div><div class="new">拿到一线素材，更及时，也更鲜明</div></div>
+      </div>
+    </div>
+    <div class="quote-card">
+      <div class="q">产品定义价值，销售验证价值，市场反馈再反过来改造产品。</div>
+      <div class="a">我在 2026 年 4 月写过：产品迭代真正的瓶颈，很多时候不是做不出功能，而是市场反馈进不了系统。</div>
+    </div>
+    <div class="footer">《做销售之后，我更深刻地理解 PMF、分销、产品迭代与组织协同》 2026.04</div>
+    <div class="pagenum">4</div>
+  </section>
+
+  <!-- ⑤ 章节页 -->
+  <section class="slide section-slide">
+    <div class="dash"></div>
+    <h1>把一封回信放回会里看</h1>
+    <div class="subtitle">我会请 AI 帮我复盘什么？</div>
+    <div class="px px-stairs"><i></i><i></i><i></i><i class="on"></i><i></i><i></i><i class="on"></i><i class="on"></i><i></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div>
+    <div class="px px-cluster"><i class="on"></i><i class="on"></i><i></i><i></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i class="on"></i><i></i><i></i></div>
+    <div class="footer">2026 中国企业 AI 大会 · 风格模板演示</div>
+    <div class="pagenum">5</div>
+  </section>
+
+  <!-- ⑥ 分工表格 -->
+  <section class="slide">
+    <div class="dash"></div>
+    <h1 class="title">Agent 可以替我发消息，但这真的好吗？</h1>
+    <div class="split-table">
+      <div class="hd"><div>我的工作</div><div>找依据</div><div>梳理与判断</div><div>完成这件事</div></div>
+      <div class="r"><div class="task">整理会后待办</div>
+        <div class="ai"><b>AI</b> 读取会议记录</div><div class="ai"><b>AI</b> 摘出要跟进的事</div><div class="ai"><b>AI</b> 列出待办清单</div></div>
+      <div class="r alt"><div class="task">写会后跟进邮件</div>
+        <div class="ai"><b>AI</b> 找出会上谈过的问题</div><div class="ai"><b>AI</b> 起草回信</div>
+        <div class="human blue-text">我改好措辞，发给客户</div></div>
+      <div class="r"><div class="task">答复客户的排期问题</div>
+        <div class="ai"><b>AI</b> 回查会上提到的时间</div><div class="human">我判断能承诺什么</div>
+        <div class="human">我说明哪些功能能用</div></div>
+    </div>
+    <div class="takeaway">
+      <div class="hint">看草稿时，我会想想，这封信如果被转给没参会的人，对方会怎么读？</div>
+      <div class="line">我会把<b>能确认的事</b>写清楚，把还要核实的地方单独说。</div>
+    </div>
+    <div class="footer">2026 中国企业 AI 大会 · 风格模板演示</div>
+    <div class="pagenum">6</div>
+  </section>
+
+  <!-- ⑦ 数据条形 + 大数字 -->
+  <section class="slide">
+    <div class="dash"></div>
+    <h1 class="title">CRM，SaaS 时代最大的赛道，正在被重新定价</h1>
+    <div class="subtitle">2025-12-31 → 2026-11-06 价格涨跌</div>
+    <div class="bars">
+      <div class="bar-row"><span class="label">Salesforce</span><span class="pct">-19.3%</span>
+        <div class="bar-track"><div class="bar-fill" style="right:40%;width:52%;background:var(--blue);"></div></div></div>
+      <div class="bar-row"><span class="label">软件板块 IGV</span><span class="pct">-6.4%</span>
+        <div class="bar-track"><div class="bar-fill" style="right:40%;width:17%;background:var(--bar-gray);"></div></div></div>
+      <div class="bar-row"><span class="label">标普 500</span><span class="pct">+7.8%</span>
+        <div class="bar-track"><div class="bar-fill" style="left:60%;width:21%;background:var(--bar-light);"></div></div></div>
+    </div>
+    <div class="stat-card">
+      <div class="cap">同期 Salesforce 季度营收</div>
+      <div class="num"><i>✦</i>11%</div>
+      <div class="sub">同比，含收购</div>
+    </div>
+    <div class="verdict">
+      <h3>客户还在付钱。</h3>
+      <p>投资人在问：新增的预算，会不会流向能直接把活干完的工具？</p>
+    </div>
+    <div class="footer">价格未含分红； Salesforce FY27 Q2 财报</div>
+    <div class="pagenum">7</div>
+  </section>
+
+  <!-- ⑧ 密集对照表 -->
+  <section class="slide">
+    <div class="dash"></div>
+    <h1 class="title">AI 能开出报价单，销售要回答「为什么值得买」</h1>
+    <div class="matrix">
+      <div class="hd"><div>公司与切入环节</div><div>客户买到的产品能力</div><div class="hot">公司要销售负责什么</div><div>招聘原文里的一个细节</div></div>
+      <div class="r"><div class="co"><b>Monaco</b><span>找潜客、约会面</span></div>
+        <div>找潜客、排外联计划，配真人销售帮创始人启动。</div>
+        <div class="hot-cell">打第一通电话，判断是否值得约见。新业务销售签单后主持客户启动会。</div>
+        <div>让陌生人愿意再听 30 秒。约到会后，把客户背景交给接手同事。</div></div>
+      <div class="r"><div class="co"><b>Aurasell</b><span>商机与报价</span></div>
+        <div>读通话、更新商机，按产品目录和定价规则出报价。</div>
+        <div class="hot-cell">帮多位决策人算清采购价值，谈妥条款，签下合同。</div>
+        <div>开发岗四周内约到多场合格会面，还要记录一种能复用的外联做法。</div></div>
+      <div class="r"><div class="co"><b>Reevo</b><span>商机交接</span></div>
+        <div>把外联、会议与商机放在一起，接手同事能查回客户原话。</div>
+        <div class="hot-cell">和创始人一起摸索有效的卖法，把市场反馈带回产品和工程团队。</div>
+        <div>资深销售要用 Reevo 卖 Reevo，至少 5 年 B2B SaaS 签单经验。</div></div>
+      <div class="r"><div class="co"><b>Attio</b><span>客户建档</span></div>
+        <div>按业务定义客户档案，分别管理买家、卖家和交易。</div>
+        <div class="hot-cell">问清客户尚未说清的需求，据此演示产品，争取新单。</div>
+        <div>面试含需求访谈和演示练习，至少 2 年技术型 SaaS 签单经验。</div></div>
+      <div class="r"><div class="co"><b>Day AI</b><span>商机跟进</span></div>
+        <div>把邮件、通话变成客户记忆，让 AI 客户经理据此维护商机。</div>
+        <div class="hot-cell">和创始人谈清自建还是采购，负责签约、留存和增购。</div>
+        <div>日常深度使用 AI，能用具体事实讲清自己如何达标。</div></div>
+      <div class="foot"><div>成熟平台对照</div>
+        <div><b>HubSpot</b>企业销售自己开发客户，判断这笔采购值不值。<br>
+        <b>salesforce</b>AI 专项销售要和业务、技术两方谈清如何接入现有架构。</div></div>
+    </div>
+    <div class="matrix-note">2026-11-13 核对公司官网与招聘页。点公司名或招聘细节可读原文，逐条中英对照见备注。</div>
+    <div class="footer">2026 中国企业 AI 大会 · 风格模板演示</div>
+    <div class="pagenum">8</div>
+  </section>
+
+  <!-- ⑨ 设计令牌 -->
+  <section class="slide">
+    <div class="dash"></div>
+    <h1 class="title">设计令牌</h1>
+    <div class="tokens">
+      <div><div class="swatch" style="background:#F6F6F6;"></div><span><b>--bg #F6F6F6</b><br>微灰白画布</span></div>
+      <div><div class="swatch" style="background:#0033FF;"></div><span><b>--blue #0033FF</b><br>标志纯蓝</span></div>
+      <div><div class="swatch" style="background:#101010;"></div><span><b>--ink #101010</b><br>标题近黑</span></div>
+      <div><div class="swatch" style="background:#FFDE1D;"></div><span><b>--yellow #FFDE1D</b><br>像素黄</span></div>
+      <div><div class="swatch" style="background:#51CE66;"></div><span><b>--green #51CE66</b><br>像素绿</span></div>
+      <div><div class="swatch" style="background:#F2F4F7;"></div><span><b>--band #F2F4F7</b><br>隔行浅带</span></div>
+    </div>
+    <div class="type-spec">
+      <div>
+        <div class="row"><b>标题 32px / 800</b>近黑、左上，上方 26×5px 蓝色 dash 是签名</div>
+        <div class="row"><b>大编号 34px / 800</b>#0033FF 纯蓝，01/02/03 引导条目</div>
+        <div class="row"><b>蓝色引语</b>条目前几个词上蓝加粗，后接黑字读完</div>
+        <div class="row"><b>大数字 46px / 800</b>白卡内，前挂蓝色小符号</div>
+      </div>
+      <div>
+        <div class="row"><b>正文 13–13.5px</b>#3E3E3E，行高 1.65–1.75</div>
+        <div class="row"><b>AI 蓝 / 人黑</b>分工表里 AI 做的事蓝字、人做的事黑粗 + 蓝竖条</div>
+        <div class="row"><b>像素装饰</b>右上黄阶梯、左下绿簇；封面四色像素符号</div>
+        <div class="row"><b>脚注 10.5px</b>#A6A6A6 左下来源，右下页码</div>
+      </div>
+    </div>
+    <div class="footer">取色自演讲幻灯片截图像素 · 字体 Helvetica Neue / PingFang SC</div>
+    <div class="pagenum">9</div>
+  </section>
+
+</div>
+<div id="hint">← → 翻页 · <span id="pos">1</span> / 9</div>
+<script>
+  const stage = document.getElementById('stage');
+  function fit(){
+    const s = Math.min(innerWidth/1280, innerHeight/720) * 0.96;
+    stage.style.transform = `scale(${s})`;
+  }
+  addEventListener('resize', fit); fit();
+
+  const slides = [...document.querySelectorAll('.slide')];
+  let cur = Math.max(0, Math.min(slides.length-1,
+      (parseInt(new URLSearchParams(location.search).get('s'))||1) - 1));
+  function go(i){
+    cur = Math.max(0, Math.min(slides.length-1, i));
+    slides.forEach((s,k)=>s.classList.toggle('active', k===cur));
+    document.getElementById('pos').textContent = cur+1;
+  }
+  addEventListener('keydown', e=>{
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown') go(cur+1);
+    if(e.key==='ArrowLeft'||e.key==='PageUp') go(cur-1);
+    if(e.key==='Home') go(0);
+    if(e.key==='End') go(slides.length-1);
+  });
+  addEventListener('click', ()=>go(cur+1));
+  go(cur);
+</script>
+</body>
+</html>

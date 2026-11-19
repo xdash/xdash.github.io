@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ted Xiao Dark 中文版 · 验证瓶颈演讲风 PPT 模板 · Live Demo</title>
+<style>
+  /* ============ 设计令牌（与英文版一致；字体与字距按中文重调） ============ */
+  :root{
+    --bg:        #0B0E14;
+    --panel:     #141C2B;
+    --panel-2:   #1B2536;
+    --hairline:  #232E44;
+    --title:     #F4F6F9;
+    --body:      #C3CBD8;
+    --muted:     #7C8594;
+    --faint:     #525C6B;
+    --blue:      #7FB2F0;
+    --blue-hi:   #A9CDF8;
+    --pink:      #E97BA0;
+    --orange:    #F2A95C;
+    --orange-hi: #F8C07C;
+    --purple:    #A78BDB;
+    --purple-bg: #372A6E;
+    --teal:      #4FE0B4;
+    --teal-hi:   #8FE8D2;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;background:#191C22;font-family:"Helvetica Neue","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;}
+  body{display:flex;align-items:center;justify-content:center;overflow:hidden;}
+
+  /* ============ 舞台：16:9，随窗口缩放 ============ */
+  #stage{position:relative;width:1280px;height:720px;flex:none;background:var(--bg);
+         box-shadow:0 24px 80px rgba(0,0,0,.55);}
+  .slide{position:absolute;inset:0;display:none;background:
+           radial-gradient(1200px 700px at 30% 18%, #101623 0%, var(--bg) 62%);
+         padding:44px 56px 56px;overflow:hidden;}
+  .slide.active{display:block;}
+
+  /* ============ 公共构件 ============ */
+  h1.title{font-size:38px;font-weight:800;color:var(--title);line-height:1.3;letter-spacing:.01em;}
+  .caps{font-size:11.5px;font-weight:700;letter-spacing:.34em;color:var(--muted);}
+  .footnote{position:absolute;left:56px;bottom:24px;font-size:10.5px;color:var(--faint);letter-spacing:.02em;}
+  .pagenum{position:absolute;right:56px;bottom:22px;font-size:11.5px;color:var(--faint);}
+  .num-chip{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;
+            font-size:12px;font-weight:800;color:var(--bg);border-radius:4px;flex:none;}
+
+  /* ============ ① 封面 ============ */
+  .cover .caps{margin-top:118px;}
+  .cover h1{margin-top:26px;font-size:60px;font-weight:800;color:var(--title);line-height:1.25;letter-spacing:.01em;}
+  .cover h1 .b{color:var(--blue-hi);} .cover h1 .o{color:var(--orange-hi);}
+  .cover .sub{margin-top:24px;font-size:16.5px;color:var(--muted);max-width:820px;line-height:1.75;}
+  .cover .who{position:absolute;left:56px;bottom:88px;}
+  .cover .who b{display:block;font-size:16.5px;color:var(--title);letter-spacing:.02em;}
+  .cover .who span{display:block;margin-top:6px;font-size:12.5px;color:var(--faint);}
+  .cover .axis{position:absolute;left:56px;right:56px;bottom:52px;height:1px;background:var(--hairline);}
+  .cover .axis i{position:absolute;top:-4px;width:7px;height:7px;border-radius:50%;}
+  .cover .axis i.l{left:0;background:var(--blue);}
+  .cover .axis i.r{right:0;background:var(--pink);}
+
+  /* ============ ② 双曲线对比（两大赌注） ============ */
+  .bets .cols{display:flex;justify-content:space-between;margin-top:32px;}
+  .bets .col{width:44%;}
+  .bets .col h3{font-size:19px;font-weight:700;}
+  .bets .col.blue h3{color:var(--blue-hi);} .bets .col.pink h3{color:var(--pink);}
+  .bets .col p{margin-top:8px;font-size:13px;color:var(--body);line-height:1.6;}
+  .bets .col.pink{text-align:right;}
+  .bets svg{display:block;margin-top:2px;}
+  .bets .axis-labels{display:flex;justify-content:space-between;margin-top:10px;
+                     font-size:12.5px;color:var(--muted);letter-spacing:.06em;}
+
+  /* ============ ③ 公式 + 对数曲线 + 编号列表（阿姆达尔） ============ */
+  .amdahl .wrap{display:flex;gap:52px;margin-top:24px;}
+  .amdahl .left{width:56%;}
+  .amdahl .formula{font-size:26px;font-weight:700;color:var(--title);letter-spacing:.01em;}
+  .amdahl .formula em{font-style:normal;color:var(--orange-hi);}
+  .amdahl .vars{margin-top:10px;font-size:12.5px;color:var(--muted);}
+  .amdahl .vars b{color:var(--body);font-weight:600;}
+  .amdahl .legend{display:flex;gap:24px;margin-top:20px;font-size:11.5px;color:var(--body);}
+  .amdahl .legend i{display:inline-block;width:24px;height:3px;border-radius:2px;margin-right:7px;vertical-align:middle;}
+  .amdahl .takeaway{margin-top:16px;font-size:18px;font-weight:800;color:var(--title);}
+  .amdahl .takeaway em{font-style:normal;color:var(--orange-hi);}
+  .amdahl .right{flex:1;padding-top:6px;}
+  .amdahl .item{display:flex;gap:14px;margin-top:24px;}
+  .amdahl .item h4{font-size:16.5px;font-weight:800;}
+  .amdahl .item p{margin-top:7px;font-size:12px;line-height:1.65;color:var(--body);}
+  .amdahl .item:nth-child(2) h4{color:var(--orange-hi);} .amdahl .item:nth-child(2) .num-chip{background:var(--orange);}
+  .amdahl .item:nth-child(3) h4{color:var(--purple);}    .amdahl .item:nth-child(3) .num-chip{background:var(--purple);}
+  .amdahl .item:nth-child(4) h4{color:var(--teal-hi);}   .amdahl .item:nth-child(4) .num-chip{background:var(--teal);}
+
+  /* ============ ④ 量级横条图（验证需要多久） ============ */
+  .ttv .chart{margin-top:20px;position:relative;}
+  .ttv .row{display:grid;grid-template-columns:160px 1fr;align-items:center;height:52px;}
+  .ttv .row .lab{font-size:13px;font-weight:600;}
+  .ttv .row .lab.c{color:var(--blue-hi);} .ttv .row .lab.m{color:var(--orange-hi);}
+  .ttv .lane{position:relative;height:100%;border-left:1px solid var(--hairline);}
+  .ttv .lane .grid{position:absolute;top:0;bottom:-26px;width:1px;background:#1A2334;}
+  .ttv .bar{position:absolute;top:15px;height:20px;border-radius:3px;}
+  .ttv .bar.c{background:var(--blue);} .ttv .bar.m{background:var(--orange);}
+  .ttv .note{position:absolute;top:16px;font-size:11.5px;color:var(--body);white-space:nowrap;}
+  .ttv .ticks{display:grid;grid-template-columns:160px 1fr;margin-top:8px;}
+  .ttv .ticks .scale{position:relative;height:16px;border-left:1px solid var(--hairline);}
+  .ttv .ticks .scale span{position:absolute;top:2px;transform:translateX(-50%);font-size:10.5px;color:var(--muted);}
+  .ttv .legend{display:flex;gap:14px;margin-top:16px;margin-left:160px;}
+  .ttv .legend .chip{font-size:11px;font-weight:600;padding:4px 14px;border-radius:4px;}
+  .ttv .legend .chip.c{background:#24406B;color:var(--blue-hi);}
+  .ttv .legend .chip.m{background:#4A2F14;color:var(--orange-hi);}
+  .ttv .legend .cap{align-self:center;font-size:10.5px;color:var(--faint);margin-left:14px;}
+
+  /* ============ ⑤ 双栏对比 + 大数字（机器人 vs 实体经济） ============ */
+  .vs .colheads{display:grid;grid-template-columns:180px 1fr 1fr;gap:28px;margin-top:28px;}
+  .vs .colheads .rule{height:2px;margin-bottom:12px;}
+  .vs .colheads h3{font-size:19px;font-weight:700;}
+  .vs .rows{margin-top:6px;}
+  .vs .rowline{display:grid;grid-template-columns:180px 1fr 1fr;gap:28px;padding:15px 0;align-items:center;}
+  .vs .rowline:nth-child(even){background:var(--panel);}
+  .vs .rowline .caps{padding-left:2px;}
+  .vs .rowline .cell{font-size:13px;line-height:1.6;color:var(--body);}
+  .vs .rowline .cell b{color:var(--title);font-weight:700;}
+  .vs .stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:28px;margin-top:26px;}
+  .vs .stat .rule{height:2px;background:var(--teal);margin-bottom:10px;}
+  .vs .stat .num{margin-top:8px;font-size:30px;font-weight:800;color:var(--teal);letter-spacing:0;}
+  .vs .stat .cap{margin-top:6px;font-size:11px;line-height:1.6;color:var(--muted);}
+
+  /* ============ ⑥ 收益表格 + 紫色结论横幅（各领域验证提速） ============ */
+  .gains table{width:100%;border-collapse:collapse;margin-top:22px;}
+  .gains th{font-size:10.5px;font-weight:700;letter-spacing:.3em;color:var(--muted);
+            text-align:left;padding:0 14px 12px 0;}
+  .gains td{padding:11px 14px 11px 0;font-size:12px;line-height:1.55;vertical-align:middle;}
+  .gains tr:nth-child(even) td{background:var(--panel);}
+  .gains td.f{color:var(--title);font-weight:700;font-size:13px;}
+  .gains td.b{color:var(--orange-hi);}
+  .gains td.a{color:var(--blue-hi);}
+  .gains td.r{color:var(--body);}
+  .gains .arrow{color:var(--faint);padding:0 2px;}
+  .gains .banner{margin-top:20px;background:var(--purple-bg);border-radius:4px;
+                 padding:15px 22px;font-size:13.5px;font-weight:600;color:#DCD2F5;text-align:center;line-height:1.6;}
+  .gains .banner b{color:#fff;}
+
+  /* ============ ⑦ 编号行动清单（三个方向） ============ */
+  .plan .caps{margin-top:32px;}
+  .plan .item{display:flex;gap:16px;margin-top:28px;max-width:960px;}
+  .plan .item h4{font-size:17px;font-weight:800;}
+  .plan .item p{margin-top:7px;font-size:12.5px;line-height:1.7;color:var(--body);}
+  .plan .item.c1 h4{color:var(--blue-hi);}   .plan .item.c1 .num-chip{background:var(--blue);}
+  .plan .item.c2 h4{color:var(--orange-hi);} .plan .item.c2 .num-chip{background:var(--orange);}
+  .plan .item.c3 h4{color:var(--teal-hi);}   .plan .item.c3 .num-chip{background:var(--teal);}
+  .plan .band{margin-top:32px;background:var(--panel);border-left:3px solid var(--blue);
+              padding:16px 22px;font-size:13px;line-height:1.7;color:var(--body);max-width:960px;}
+  .plan .band b{color:var(--title);}
+
+  /* ============ ⑧ 金句结论页 ============ */
+  .closing{display:none;}
+  .closing.active{display:flex;flex-direction:column;justify-content:center;}
+  .closing .big{font-size:40px;font-weight:800;color:var(--title);line-height:1.55;max-width:1060px;letter-spacing:.01em;}
+  .closing .big .b{color:var(--blue-hi);} .closing .big .o{color:var(--orange-hi);} .closing .big .t{color:var(--teal-hi);}
+  .closing cite{margin-top:36px;font-size:13.5px;font-style:normal;color:var(--muted);}
+  .closing .rule{width:64px;height:3px;background:var(--blue);margin-bottom:40px;}
+
+  /* ============ ⑨ 设计令牌标本 ============ */
+  .tokens{margin-top:28px;display:grid;grid-template-columns:repeat(6,1fr);gap:16px;}
+  .swatch{height:72px;border-radius:4px;position:relative;border:1px solid var(--hairline);}
+  .swatch + span{display:block;margin-top:8px;font-size:10.5px;line-height:1.5;color:var(--muted);}
+  .swatch + span b{color:var(--body);}
+  .type-spec{margin-top:42px;display:grid;grid-template-columns:1fr 1fr;gap:56px;}
+  .type-spec .row{padding:11px 0;border-bottom:1px solid var(--hairline);font-size:12px;color:var(--muted);}
+  .type-spec .row b{color:var(--title);margin-right:.6em;}
+
+  #hint{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);color:#666;font-size:12px;letter-spacing:.1em;}
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <!-- ① 封面 -->
+  <section class="slide cover active">
+    <div class="caps">HUMANOID HUB CONFERENCE · 主题演讲 · 2026</div>
+    <h1><span class="b">验证</span>瓶颈</h1>
+    <div class="sub">如果 AGI 和通用机器人都取得成功，一个物质丰富的世界是否就会自然到来？
+      是什么仍在拖慢发明——又有哪些研究和商业机会值得提前投入。</div>
+    <div class="who"><b>Ted Xiao</b><span>Prometheus 创始技术成员 · 前 Google DeepMind 研究员</span></div>
+    <div class="axis"><i class="l"></i><i class="r"></i></div>
+    <div class="footnote">Humanoid Hub Conference · 风格模板演示</div>
+    <div class="pagenum">1</div>
+  </section>
+
+  <!-- ② 双曲线对比 -->
+  <section class="slide bets">
+    <h1 class="title">两大赌注</h1>
+    <div class="cols">
+      <div class="col blue">
+        <h3>云端递归自我改进</h3>
+        <p>先造出 AGI，再让 AGI 解决其他问题</p>
+      </div>
+      <div class="col pink">
+        <h3>通用具身智能普及</h3>
+        <p>社会规模的通用机器人</p>
+      </div>
+    </div>
+    <svg viewBox="0 0 1168 300" width="1168" height="300">
+      <defs>
+        <linearGradient id="gB" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#7FB2F0" stop-opacity=".32"/><stop offset="1" stop-color="#7FB2F0" stop-opacity=".02"/>
+        </linearGradient>
+        <linearGradient id="gP" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#E97BA0" stop-opacity=".30"/><stop offset="1" stop-color="#E97BA0" stop-opacity=".02"/>
+        </linearGradient>
+      </defs>
+      <path id="bellB" fill="url(#gB)" stroke="#7FB2F0" stroke-width="2"/>
+      <path id="bellP" fill="url(#gP)" stroke="#E97BA0" stroke-width="2"/>
+      <rect x="452" y="86" width="264" height="200" rx="3" fill="#3A2B15" opacity=".9"/>
+      <text x="584" y="172" text-anchor="middle" fill="#D9AD6E" font-size="22" font-weight="700">发明新的</text>
+      <text x="584" y="206" text-anchor="middle" fill="#D9AD6E" font-size="22" font-weight="700">物理世界技术</text>
+      <line x1="20" y1="286" x2="584" y2="286" stroke="#E97BA0" stroke-width="1.4" opacity=".85"/>
+      <line x1="584" y1="286" x2="1148" y2="286" stroke="#7FB2F0" stroke-width="1.4" opacity=".85"/>
+    </svg>
+    <div class="axis-labels"><span>←&nbsp; 比特</span><span>原子 &nbsp;→</span></div>
+    <div class="footnote">模板演示 · 版式取自 Ted Xiao「The Two Big Bets」页</div>
+    <div class="pagenum">2</div>
+  </section>
+
+  <!-- ③ 阿姆达尔定律 -->
+  <section class="slide amdahl">
+    <h1 class="title">创新中的阿姆达尔定律</h1>
+    <div class="wrap">
+      <div class="left">
+        <div class="formula">S = 1 / ((1 − <em>p</em>) + <em>p</em> / s)</div>
+        <div class="vars"><b>p</b>：可加速环节原本的占比&nbsp;&nbsp;&nbsp;&nbsp;<b>s</b>：加速倍数</div>
+        <div class="legend">
+          <span><i style="background:#8A94A3;"></i>p = 0.5（上限 2×）</span>
+          <span><i style="background:#F2A95C;"></i>p = 0.9（上限 10×）</span>
+          <span><i style="background:#7FB2F0;"></i>p = 0.99（上限 100×）</span>
+        </div>
+        <svg viewBox="0 0 640 300" width="640" height="300" style="margin-top:6px;">
+          <line x1="56" y1="14" x2="56" y2="262" stroke="#232E44" stroke-width="1"/>
+          <line x1="56" y1="262" x2="612" y2="262" stroke="#232E44" stroke-width="1"/>
+          <text x="46" y="266" text-anchor="end" fill="#7C8594" font-size="11">1×</text>
+          <text x="46" y="142" text-anchor="end" fill="#7C8594" font-size="11">10×</text>
+          <text x="46" y="20" text-anchor="end" fill="#7C8594" font-size="11">100×</text>
+          <text x="20" y="30" fill="#7C8594" font-size="12" font-style="italic">S</text>
+          <g fill="#7C8594" font-size="11" text-anchor="middle">
+            <text x="56" y="282">1×</text><text x="195" y="282">10×</text>
+            <text x="334" y="282">100×</text><text x="473" y="282">1k×</text><text x="600" y="282">10k×</text>
+          </g>
+          <text x="606" y="300" fill="#7C8594" font-size="12" font-style="italic" text-anchor="end">s</text>
+          <path id="c50" fill="none" stroke="#8A94A3" stroke-width="2.5"/>
+          <path id="c90" fill="none" stroke="#F2A95C" stroke-width="2.5"/>
+          <path id="c99" fill="none" stroke="#7FB2F0" stroke-width="2.5"/>
+        </svg>
+        <div class="takeaway">只有压缩 <em>1 − p</em>，才能抬高整体上限。</div>
+      </div>
+      <div class="right">
+        <div class="caps">1 − P 可能压不动</div>
+        <div class="item"><span class="num-chip">1</span>
+          <div><h4>慢而稀缺的测试</h4>
+          <p>电池快充方案搜索：500 多天<br>新药研发：10.5 年</p></div></div>
+        <div class="item"><span class="num-chip">2</span>
+          <div><h4>结果噪声大</h4>
+          <p>安进尝试复现 53 项里程碑癌症研究，仅成功 6 项</p></div></div>
+        <div class="item"><span class="num-chip">3</span>
+          <div><h4>锁死的隐性知识</h4>
+          <p>诀窍分散在各企业的知识产权与系统里</p></div></div>
+      </div>
+    </div>
+    <div class="footnote">Amdahl（1967）· Attia et al., Nature（2020）· BIO/Informa/QLS（2021）· Begley &amp; Ellis, Nature（2012）</div>
+    <div class="pagenum">3</div>
+  </section>
+
+  <!-- ④ 验证需要多久 -->
+  <section class="slide ttv">
+    <h1 class="title">验证需要多久</h1>
+    <div class="chart" id="ttvChart"></div>
+    <div class="legend">
+      <span class="chip c">计算可验</span><span class="chip m">必须实测</span>
+      <span class="cap">横条：验证一个答案的典型耗时（数量级）</span>
+    </div>
+    <div class="footnote">Seo et al. 2025 · Google DeepMind 2026 · OpenAI 2025 · Singh et al. 2026 · AutoEval 2025 · Anthropic 2026 · keeptrack.space 星舰追踪 · GE Aerospace</div>
+    <div class="pagenum">4</div>
+  </section>
+
+  <!-- ⑤ 机器人数据 vs 实体经济 -->
+  <section class="slide vs">
+    <h1 class="title">机器人数据 vs 实体世界数据</h1>
+    <div class="colheads">
+      <div></div>
+      <div><div class="rule" style="background:var(--pink);"></div><h3 style="color:var(--pink);">机器人</h3></div>
+      <div><div class="rule" style="background:var(--teal);"></div><h3 style="color:var(--teal-hi);">实体经济</h3></div>
+    </div>
+    <div class="rows">
+      <div class="rowline"><span class="caps">离线数据</span>
+        <div class="cell">从零采集，<b>最多 100 万小时</b></div>
+        <div class="cell">早已存在：<b>数十年的设计图与测试记录</b></div></div>
+      <div class="rowline"><span class="caps">在线策略数据</span>
+        <div class="cell">机器人自己的运行</div>
+        <div class="cell">新的测试与生产运行</div></div>
+      <div class="rowline"><span class="caps">最难的部分</span>
+        <div class="cell"><b>采集</b></div>
+        <div class="cell"><b>获取权限</b></div></div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="rule"></div><div class="caps">分散</div>
+        <div class="num">5,100</div><div class="cap">家供应商，支撑一台 ASML 机器约 80% 的部件</div></div>
+      <div class="stat"><div class="rule"></div><div class="caps">隐性</div>
+        <div class="num">$69M</div><div class="cap">找回失传的 FOGBANK 工艺所花的代价</div></div>
+      <div class="stat"><div class="rule"></div><div class="caps">严防</div>
+        <div class="num">10 年</div><div class="cap">台积电商业机密案的刑期</div></div>
+    </div>
+    <div class="footnote">Generalist AI（2026）· Dyna（2026）· Physical Intelligence（2025）· ASML（2023、2025 年报）· GAO-09-385（2009）· CNA/Focus Taiwan</div>
+    <div class="pagenum">5</div>
+  </section>
+
+  <!-- ⑥ 各领域验证提速 -->
+  <section class="slide gains">
+    <h1 class="title">各领域的验证提速</h1>
+    <table>
+      <tr><th style="width:15%;">领域</th><th style="width:27%;">之前</th><th style="width:4%;"></th>
+          <th style="width:29%;">之后</th><th>仍离不开真实世界</th></tr>
+      <tr><td class="f">飞机机翼</td><td class="b">风洞里吹了 77 副机翼（767，1980）</td><td class="arrow">→</td>
+          <td class="a">只吹 11 副，CFD 与实测吻合（787，2005）</td><td class="r">CFD 无法模拟的飞行工况</td></tr>
+      <tr><td class="f">核武器</td><td class="b">美国 1,054 次爆炸试验</td><td class="arrow">→</td>
+          <td class="a">1992 年后为零：仿真 + 次临界实验</td><td class="r">NIF、次临界实验</td></tr>
+      <tr><td class="f">电池快充</td><td class="b">搜索 224 种充电协议要 500 多天</td><td class="arrow">→</td>
+          <td class="a">提前预测 + 贝叶斯优化，16 天</td><td class="r">电芯的制造与循环</td></tr>
+      <tr><td class="f">天气预报</td><td class="b">超算上跑一组集合预报要数小时</td><td class="arrow">→</td>
+          <td class="a">一块 TPU 约 8 分钟；ECMWF 2025 年起业务化</td><td class="r">每 6 小时约 6 千万条观测</td></tr>
+      <tr><td class="f">蛋白质结合体</td><td class="b">已发表活动的命中率约 12%</td><td class="arrow">→</td>
+          <td class="a">27–35%（2026）</td><td class="r">每个设计仍要逐个检测</td></tr>
+      <tr><td class="f">基因测序</td><td class="b">每个基因组 9,530 万美元（2001）</td><td class="arrow">→</td>
+          <td class="a">525 美元（2022）</td><td class="r">每条序列仍要实际测</td></tr>
+    </table>
+    <div class="banner">芯片领域，首次流片成功率从约 30% 跌至 <b>5%（2026）</b>——设计复杂度的增长超过了验证能力。</div>
+    <div class="footnote">波音参议院听证（2006）· CRS（2025）· Attia et al.（2020）· GenCast（2024）；ECMWF（2025）· Overath et al.（2025）；Anthropic（2026）· NHGRI/OWID · Siemens/Wilson（2026）</div>
+    <div class="pagenum">6</div>
+  </section>
+
+  <!-- ⑦ 编号行动清单 -->
+  <section class="slide plan">
+    <h1 class="title">三个值得投入的方向</h1>
+    <div class="caps">研究议程</div>
+    <div class="item c1"><span class="num-chip">1</span>
+      <div><h4>建更多 verifier</h4>
+      <p>增加 RL 环境的数量与覆盖——同时沉到具体领域，弄清实际应用里「什么算合格」，不能只盯学术 benchmark。</p></div></div>
+    <div class="item c2"><span class="num-chip">2</span>
+      <div><h4>检验 verifier 是否可信</h4>
+      <p>到模型实际工作的环境中检验它的判断。verifier 有漏洞，模型学会的就是钻漏洞，而不是把事做好。</p></div></div>
+    <div class="item c3"><span class="num-chip">3</span>
+      <div><h4>把真实测试花在刀刃上</h4>
+      <p>实测成本高、耗时长、次数有限。能可靠模拟的部分用合成数据补充；必须实测时，优先做结果最能指导下一轮设计或训练的实验。</p></div></div>
+    <div class="band"><b>部署至关重要：</b>与数字世界不同，物理世界的现成数据稀少而分散——系统必须投入实际工作，
+      才能持续收集数据、改进 verifier 和模型，并在使用中弄清真正要解决的问题。</div>
+    <div class="footnote">模板演示 · 内容取自演讲第七部分「接下来该如何改进验证」</div>
+    <div class="pagenum">7</div>
+  </section>
+
+  <!-- ⑧ 金句结论 -->
+  <section class="slide closing">
+    <div class="rule"></div>
+    <div class="big"><span class="b">验证的速度</span>，决定 post-training 的上限——<br>
+      而<span class="o">评测指标</span>必须量的是<span class="t">真实世界</span>，不是 benchmark。</div>
+    <cite>Ted Xiao · Humanoid Hub Conference · 风格模板演示</cite>
+    <div class="footnote">模板演示 · 结论页版式</div>
+    <div class="pagenum">8</div>
+  </section>
+
+  <!-- ⑨ 设计令牌 -->
+  <section class="slide">
+    <h1 class="title">设计令牌</h1>
+    <div class="tokens">
+      <div><div class="swatch" style="background:#0B0E14;"></div><span><b>--bg #0B0E14</b><br>近黑蓝画布</span></div>
+      <div><div class="swatch" style="background:#7FB2F0;"></div><span><b>--blue #7FB2F0</b><br>主蓝·计算侧</span></div>
+      <div><div class="swatch" style="background:#E97BA0;"></div><span><b>--pink #E97BA0</b><br>品红·对比侧</span></div>
+      <div><div class="swatch" style="background:#F2A95C;"></div><span><b>--orange #F2A95C</b><br>橙·实测侧</span></div>
+      <div><div class="swatch" style="background:#A78BDB;"></div><span><b>--purple #A78BDB</b><br>紫·风险项</span></div>
+      <div><div class="swatch" style="background:#4FE0B4;"></div><span><b>--teal #4FE0B4</b><br>青绿·大数字</span></div>
+    </div>
+    <div class="type-spec">
+      <div>
+        <div class="row"><b>标题 38px / 800</b>白色、左上对齐，关键词可上强调色；中文不加西文字距</div>
+        <div class="row"><b>小标签 11.5px / 700</b>#7C8594，汉字加宽字距（.34em）替代西文小 caps</div>
+        <div class="row"><b>大数字 30px / 800</b>#4FE0B4 青绿，下挂一行灰注</div>
+        <div class="row"><b>编号方块 22px</b>强调色实底深字，1/2/3 引导行动清单</div>
+      </div>
+      <div>
+        <div class="row"><b>正文 12–13px</b>#C3CBD8，行高 1.6–1.7，中英文之间加空格</div>
+        <div class="row"><b>行带 #141C2B</b>隔行深带托底，无描边；对比栏顶部 2px 色规</div>
+        <div class="row"><b>结论横幅</b>#372A6E 紫底或 #141C2B + 左侧 3px 色条</div>
+        <div class="row"><b>脚注 10.5px</b>#525C6B 左下来源串，右下页码；直角引号「」</div>
+      </div>
+    </div>
+    <div class="footnote">与英文版同套令牌 · 字体 Helvetica Neue（西文与数字）/ PingFang SC（中文）</div>
+    <div class="pagenum">9</div>
+  </section>
+
+</div>
+<div id="hint">← → 翻页 · <span id="pos">1</span> / 9</div>
+<script>
+  const stage = document.getElementById('stage');
+  function fit(){
+    const s = Math.min(innerWidth/1280, innerHeight/720) * 0.96;
+    stage.style.transform = `scale(${s})`;
+  }
+  addEventListener('resize', fit); fit();
+
+  /* ---- ② 双钟形曲线 ---- */
+  function bellPath(cx, sigma, peakY, baseY, x0, x1){
+    const pts = [];
+    for(let x = x0; x <= x1; x += 4){
+      const g = Math.exp(-((x-cx)**2)/(2*sigma*sigma));
+      pts.push([x, baseY - (baseY-peakY)*g]);
+    }
+    return `M${x0},${baseY} L` + pts.map(p=>`${p[0]},${p[1].toFixed(1)}`).join(' L') + ` L${x1},${baseY} Z`;
+  }
+  document.getElementById('bellB').setAttribute('d', bellPath(265, 130, 60, 286, 20, 590));
+  document.getElementById('bellP').setAttribute('d', bellPath(905, 130, 60, 286, 580, 1148));
+
+  /* ---- ③ 阿姆达尔曲线 ---- */
+  function amdahlPath(p){
+    const pts = [];
+    for(let i = 0; i <= 120; i++){
+      const ls = i/120 * 4;
+      const s = Math.pow(10, ls);
+      const S = 1 / ((1-p) + p/s);
+      const x = 56 + (ls/4) * 556;
+      const y = 262 - (Math.log10(S)/2) * 246;
+      pts.push(`${x.toFixed(1)},${y.toFixed(1)}`);
+    }
+    return 'M' + pts.join(' L');
+  }
+  document.getElementById('c50').setAttribute('d', amdahlPath(0.5));
+  document.getElementById('c90').setAttribute('d', amdahlPath(0.9));
+  document.getElementById('c99').setAttribute('d', amdahlPath(0.99));
+
+  /* ---- ④ 验证需要多久：量级横条图 ---- */
+  const TICKS = ['10 毫秒','1 秒','1 分钟','1 小时','1 天','1 周','1 个月','1 年','10 年'];
+  const SEG = 100 / (TICKS.length - 1);
+  const tpos = i => i * SEG;
+  const TTV = [
+    ['物理仿真','c', 0, 1, '人形机器人走路：一块 GPU 训练 15 分钟'],
+    ['数学证明检查','c', 1, 2, 'Lean 验证：353 个 Erdős 开放问题中拿下 9 个'],
+    ['单元测试','c', 2, 3, 'ICPC 2025 世界总决赛：12 题全对'],
+    ['有限元与 CFD','c', 3, 4, '生成的 CAD 零件仅 18% 通过工程检查'],
+    ['机器人评测','m', 4, 5, '评测一个策略要 100+ 人工小时'],
+    ['湿实验检测','m', 5, 6, '蛋白质结合体验证以周计'],
+    ['硬件原型','m', 6, 7, '星舰 2023 年 4 月以来 14 次整体试飞'],
+    ['适航认证','m', 7, 8, 'LEAP 发动机：从立项到取证 7 年'],
+  ];
+  const chart = document.getElementById('ttvChart');
+  const grids = TICKS.map((_,i)=>`<div class="grid" style="left:${tpos(i).toFixed(3)}%"></div>`).join('');
+  chart.innerHTML = TTV.map(([lab, kind, b0, b1, note])=>{
+    const l = tpos(b0), w = tpos(b1) - tpos(b0);
+    const noteLeft = l + w + 1.2;
+    const noteHtml = noteLeft < 58
+      ? `<span class="note" style="left:${noteLeft.toFixed(2)}%">${note}</span>`
+      : `<span class="note" style="left:${Math.max(1, l - 1.2).toFixed(2)}%;transform:translateX(-100%)">${note}</span>`;
+    return `<div class="row"><span class="lab ${kind}">${lab}</span>
+      <div class="lane">${grids}<div class="bar ${kind}" style="left:${l.toFixed(2)}%;width:${w.toFixed(2)}%"></div>${noteHtml}</div></div>`;
+  }).join('') + `<div class="ticks"><span></span><div class="scale">` +
+    TICKS.map((t,i)=>{
+      const tf = i===0 ? 'none' : (i===TICKS.length-1 ? 'translateX(-100%)' : 'translateX(-50%)');
+      return `<span style="left:${tpos(i).toFixed(3)}%;transform:${tf}">${t}</span>`;
+    }).join('') + `</div></div>`;
+
+  /* ---- 翻页 ---- */
+  const slides = [...document.querySelectorAll('.slide')];
+  let cur = Math.max(0, Math.min(slides.length-1,
+      (parseInt(new URLSearchParams(location.search).get('s'))||1) - 1));
+  function go(i){
+    cur = Math.max(0, Math.min(slides.length-1, i));
+    slides.forEach((s,k)=>s.classList.toggle('active', k===cur));
+    document.getElementById('pos').textContent = cur+1;
+  }
+  addEventListener('keydown', e=>{
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown') go(cur+1);
+    if(e.key==='ArrowLeft'||e.key==='PageUp') go(cur-1);
+    if(e.key==='Home') go(0);
+    if(e.key==='End') go(slides.length-1);
+  });
+  addEventListener('click', ()=>go(cur+1));
+  go(cur);
+</script>
+</body>
+</html>
