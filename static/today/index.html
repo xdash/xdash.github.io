@@ -126,13 +126,6 @@
   .overview-evidence a { color: #2b6cb0; }
   .overview-caveat, .overview-muted { color: #8a857a; font-size: 12px; }
   .overview-warnings { color: #a05a10; }
-  .usage-value { font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; }
-  .usage-meta { font-size: 11px; color: #8a857a; margin-top: 5px; }
-  .usage-row {
-    display: flex; justify-content: space-between; align-items: center; gap: 12px;
-    padding: 14px 0; border-top: 1px solid #f0eee7;
-  }
-  .usage-row .usage-value { font-size: 20px; flex-shrink: 0; }
   .fab-nav {
     position: fixed; right: 10px; top: 50%; transform: translateY(-50%);
     z-index: 20; display: flex; flex-direction: column; gap: 10px;
@@ -167,7 +160,6 @@
     <button id="tab-feed" class="active">信息流</button>
     <button id="tab-sh">上海 · 86 场</button>
     <button id="tab-xrank">X 涨粉</button>
-    <button id="tab-usage">用量</button>
   </div>
   <div class="daynav" id="daynav">
     <button id="prev" title="更早一天">‹</button>
@@ -185,9 +177,6 @@
 
 </div>
 <div id="view-xrank" class="view hidden">
-
-</div>
-<div id="view-usage" class="view hidden">
 
 </div>
 </main>
@@ -219,7 +208,6 @@ async function renderMarkdown(root){
 const viewFeed = document.getElementById('view-feed');
 const viewSh = document.getElementById('view-sh');
 const viewXrank = document.getElementById('view-xrank');
-const viewUsage = document.getElementById('view-usage');
 const loadmore = document.getElementById('loadmore');
 const dayIndex = JSON.parse(viewFeed.dataset.days);
 const days = dayIndex.map(item=>item.day);
@@ -227,8 +215,8 @@ const dayCounts = Object.fromEntries(dayIndex.map(item=>[item.day, item.count]))
 const sections = {};
 const dayRequests = {};
 const tabRequests = {};
-const tabViews = { sh: viewSh, xrank: viewXrank, usage: viewUsage };
-const tabPaths = { sh: 'shanghai.html', xrank: 'xrank.html', usage: 'usage.html' };
+const tabViews = { sh: viewSh, xrank: viewXrank };
+const tabPaths = { sh: 'shanghai.html', xrank: 'xrank.html' };
 viewFeed.querySelectorAll('.day[data-day]').forEach(el=>{ sections[el.dataset.day] = el; });
 
 async function loadDay(day){
@@ -365,16 +353,14 @@ async function loadTab(name){
     else if (dx > 0 && idx < days.length - 1) { idx++; show(true); }  // 右滑 → 上一天
   }, { passive: true });
 
-  /* tab 切换：信息流 / 上海 / X 涨粉 / 用量；加载成功后再显示视图 */
+  /* tab 切换：信息流 / 上海 / X 涨粉；加载成功后再显示视图 */
   const tabFeed = document.getElementById('tab-feed');
   const tabSh = document.getElementById('tab-sh');
   const tabXrank = document.getElementById('tab-xrank');
-  const tabUsage = document.getElementById('tab-usage');
   const daynav = document.getElementById('daynav');
   const TABS = { feed: [tabFeed, viewFeed], sh: [tabSh, viewSh],
-                 xrank: [tabXrank, viewXrank],
-                 usage: [tabUsage, viewUsage] };
-  const HASH = { feed: '#', sh: '#shanghai', xrank: '#xrank', usage: '#usage' };
+                 xrank: [tabXrank, viewXrank] };
+  const HASH = { feed: '#', sh: '#shanghai', xrank: '#xrank' };
   async function activate(name, scroll) {
     const operation = ++navigationOperation;
     if (!TABS[name]) name = 'feed';
@@ -412,14 +398,13 @@ async function loadTab(name){
   tabFeed.addEventListener('click', ()=>activate('feed'));
   tabSh.addEventListener('click', ()=>activate('sh'));
   tabXrank.addEventListener('click', ()=>activate('xrank'));
-  tabUsage.addEventListener('click', ()=>activate('usage'));
 
   /* 上一条/下一条浮动按钮：在当前可见视图的卡片间跳转，边界隐藏（占位隐藏保持位置固定） */
   const fabPrev = document.getElementById('fab-prev');
   const fabNext = document.getElementById('fab-next');
   let fabLastY = -1, fabLastIdx = 0;  // 上次跳转前的滚动位置与目标索引：边界卡顿时沿索引继续走
   function fabCards() {
-    const view = [viewFeed, viewSh, viewXrank, viewUsage].find(v => !v.classList.contains('hidden'));
+    const view = [viewFeed, viewSh, viewXrank].find(v => !v.classList.contains('hidden'));
     return view ? [...view.querySelectorAll('.card')].filter(c => c.offsetHeight > 0) : [];
   }
   function fabCur(cards) {
@@ -460,14 +445,13 @@ async function loadTab(name){
     await show(true);
   } else {
     await show(false);
-    if (location.hash === '#usage') await activate('usage');
-    else if (location.hash === '#shanghai') await activate('sh');
+    if (location.hash === '#shanghai') await activate('sh');
     else if (location.hash === '#xrank') await activate('xrank');
   }
   fabUpdate();
 
   async function prefetchTabs() {
-    for (const name of ['sh', 'xrank', 'usage']) {
+    for (const name of ['sh', 'xrank']) {
       try { await loadTab(name); } catch (error) {}
     }
   }
