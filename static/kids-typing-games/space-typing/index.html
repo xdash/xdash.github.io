@@ -121,7 +121,7 @@
       g2.gain.setValueAtTime(0.0001,at); g2.gain.exponentialRampToValueAtTime(n[3]*0.22,at+0.004);
       g2.gain.exponentialRampToValueAtTime(0.0001,at+n[2]*0.6); o2.connect(g2); g2.connect(c.destination); o2.start(at); o2.stop(at+n[2]+0.03);
     }); }
-  function wrongSound(){ tone(220,0.16,'sine',0.15); }
+
   // 定制鼓励：叫宝宝小名（大厅家长设置可改，默认辉哥）
   var KID_NAME = '辉哥';
   try { KID_NAME = localStorage.getItem('kids_typing_name') || '辉哥'; } catch(e){}
@@ -207,16 +207,19 @@
     var s=findStar(li);
     if(s){ collect(s); }
     else {
-      wrongSound();
       rocket.classList.remove('thrust'); void rocket.offsetWidth; rocket.classList.add('thrust');
       spawnStar(li);
       flashPrompt(String.fromCharCode(65+li)+' 星星来了，再按一次！<small>按字母键抓星星</small>');
     }
   }
 
+  var lastKeyT = 0;
   window.addEventListener('keydown',function(e){
     if(e.repeat) return;
     if(e.metaKey||e.ctrlKey||e.altKey) return;
+    var now = performance.now();
+    if(now - lastKeyT < 250) return;
+    lastKeyT = now;
     var k=e.key.toUpperCase();
     if(k.length===1 && k>='A' && k<='Z'){ e.preventDefault(); onLetter(k.charCodeAt(0)-65); }
   });

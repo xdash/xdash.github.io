@@ -159,7 +159,6 @@
       o2.connect(g2); g2.connect(c.destination); o2.start(at); o2.stop(at + n[2] + 0.03);
     });
   }
-  function wrongSound(){ tone(220, 0.16, 'sine', 0.15); }
 
   // 定制鼓励：叫宝宝小名（大厅家长设置可改，默认辉哥）
   var KID_NAME = '辉哥';
@@ -279,16 +278,19 @@
       popBalloon(b);
     } else {
       // 屏幕上没有这个字母：温和提示，不自动生成（免得宝宝找不到）
-      wrongSound();
       promptEl.classList.remove('shake'); void promptEl.offsetWidth; promptEl.classList.add('shake');
       flashMsg('没有 ' + String.fromCharCode(65+li) + ' 气球哦，看看屏幕上的气球');
     }
   }
 
+  var lastKeyT = 0;
   window.addEventListener('keydown', function(e){
     if(e.repeat) return;
     var k = e.key.toUpperCase();
     if(e.metaKey || e.ctrlKey || e.altKey) return;
+    var now = performance.now();
+    if(now - lastKeyT < 250) return;
+    lastKeyT = now;
     if(k.length===1 && k>='A' && k<='Z'){ e.preventDefault(); onKey(k.charCodeAt(0)-65); }
   });
   window.addEventListener('pointerdown', function(e){

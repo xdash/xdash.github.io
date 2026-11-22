@@ -89,7 +89,7 @@
       if (!anyHeldFlag) { anyHeldFlag = true; hint.textContent = '松开手，小车就慢慢停下来'; }
       Kid.tone(420, 0.18, { type: 'square', vol: 0.09, to: 520 });
     }
-  }, { allowRepeat: true });
+  });
 
   document.addEventListener('keyup', function (e) { delete held[e.code]; });
   window.addEventListener('blur', function () { held = {}; });

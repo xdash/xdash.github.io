@@ -17,7 +17,7 @@
 | `block-tower/` | 🏗️ 积木高楼 | 任意键叠一层，满 12 层倒塌 |
 | `blow-candles/` | 🕯️ 吹蜡烛 | 按住键吹灭三根蜡烛 |
 | `peekaboo-windows/` | 🐣 躲猫猫小窗户 | 任意键开一扇窗，动物探出头 |
-| `feed-bear/` | 🐻 喂小熊吃饭 | 任意键喂一口，十口吃饱 |
+| `feed-bear/` | 🐻 喂小动物吃饭 | 任意键喂一口，十口吃饱；每轮轮换小熊/羊驼/鸵鸟/小兔子/小猪/小鸡 |
 | `bubble-wrap/` | 🫧 泡泡纸 | 任意键戳泡泡 |
 | `car-ride/` | 🚗 小车兜风 | 按住键开车，松手滑行 |
 | `key-paint/` | 🌈 键盘画笔 | 任意键画一笔，可存 PNG |
@@ -32,7 +32,7 @@
 <script src="../common.js"></script>
 ```
 
-- `Kid.onKey(fn, { throttle, allowRepeat })`：统一按键入口，过滤 Cmd/Ctrl/Alt、可选忽略长按重复、可选限速
+- `Kid.onKey(fn, { throttle })`：统一按键入口，过滤 Cmd/Ctrl/Alt；全站取消连按（2026-11-22 用户指令）——长按重复一律无效，两次有效按键最小间隔 250ms（throttle 低于 250 会被抬到 250），被挡下的按键无任何效果与声音。错误场景一律不发音效（wrongSound/sfxMiss 已移除），只保留视觉提示
 - `Kid.tone(freq, dur, opts)` / `Kid.noise(dur, opts)`：WebAudio 合成；首次按键（用户手势）解锁，全部经压缩器限幅，防爆音
 - `Kid.speak(text)`：中文语音；静音时一并停用
 - `Kid.keyPos(e)`：按键 → 归一化屏幕坐标（键盘四行映射），让「按哪儿、屏幕哪儿有反应」有直觉

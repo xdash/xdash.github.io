@@ -158,15 +158,17 @@ window.Kid = (function () {
     return { x: Math.min(0.98, Math.max(0.02, g.x + (r() - 0.5) * 0.05)), y: Math.min(1, Math.max(0, g.y)) };
   }
 
-  // 统一按键入口：过滤组合键、可选忽略长按重复、可选限速（防宝宝连拍把画布打爆）
+  // 统一按键入口：过滤组合键；全站取消连按（2026-11-22 用户指令）——
+  // 长按重复一律无效，两次有效按键最小间隔 250ms，被挡下的按键不出任何效果与声音
   function onKey(handler, opts) {
     opts = opts || {};
     var last = 0;
+    var throttle = Math.max(opts.throttle || 0, 250);
     var fn = function (e) {
       if (e.metaKey || e.ctrlKey || e.altKey) return;
-      if (opts.allowRepeat === false && e.repeat) return;
+      if (e.repeat) return;
       var now = performance.now();
-      if (opts.throttle && now - last < opts.throttle) return;
+      if (now - last < throttle) return;
       last = now;
       if (opts.preventDefault !== false) e.preventDefault();
       handler(e);

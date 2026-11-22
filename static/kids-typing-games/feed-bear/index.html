@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐻</text></svg>">
 <meta name="theme-color" content="#ffe6b8">
-<title>🐻 喂小熊吃饭</title>
+<title>🐻 喂小动物吃饭</title>
 <link rel="stylesheet" href="../style.css">
 <style>
   body { background: linear-gradient(170deg, #fff1cf 0%, #ffe0a8 55%, #ffd08a 100%); }
@@ -47,6 +47,14 @@
     box-shadow: 0 4px 14px rgba(160,90,40,.26); white-space: nowrap; pointer-events: none;
   }
   .food { position: fixed; z-index: 30; font-size: clamp(26px, 6vh, 52px); pointer-events: none; will-change: transform; }
+  .critter { position: relative; display: flex; flex-direction: column; align-items: center;
+    transition: transform .45s cubic-bezier(.2,1.5,.5,1); transform-origin: 50% 100%; }
+  .critter.grow { transform: scale(1.16); }
+  .c-emoji { font-size: min(38vw, 34vh, 260px); line-height: 1;
+    filter: drop-shadow(0 10px 14px rgba(120,70,20,.25)); transition: transform .18s; }
+  .critter.eat .c-emoji { transform: scale(1.1) rotate(-3deg); }
+  .c-name { margin-top: 8px; font-size: clamp(18px, 3.4vh, 26px); font-weight: 800; color: #8a5533;
+    background: rgba(255,255,255,.85); border-radius: 18px; padding: 4px 16px; }
 </style>
 </head>
 <body>
@@ -66,6 +74,10 @@
       <div class="paw l"></div><div class="paw r"></div>
     </div>
   </div>
+  <div class="critter" id="critter" style="display:none">
+    <div class="c-emoji" id="cEmoji"></div>
+    <div class="c-name" id="cName"></div>
+  </div>
 </div>
 <div id="hint">按任何键，喂小熊吃一口 🍎</div>
 <script src="../common.js"></script>
@@ -73,11 +85,24 @@
 (function () {
   var bear = document.getElementById('bear');
   var mouth = document.getElementById('mouth');
+  var critter = document.getElementById('critter');
+  var cEmoji = document.getElementById('cEmoji');
+  var cName = document.getElementById('cName');
   var hint = document.getElementById('hint');
   var plates = document.getElementById('plates');
   Kid.mountChrome();
 
   var FOODS = ['🍎', '🍌', '🍪', '🥕', '🍇', '🍞', '🍊', '🥞', '🍓', '🍯'];
+  // css:true 用绘制的造型，其余用 emoji（鸵鸟没有专属 emoji，用最接近的渡渡鸟）
+  var ANIMALS = [
+    { name: '小熊', css: true },
+    { name: '羊驼', emoji: '🦙' },
+    { name: '鸵鸟', emoji: '🦤' },
+    { name: '小兔子', emoji: '🐰' },
+    { name: '小猪', emoji: '🐷' },
+    { name: '小鸡', emoji: '🐤' }
+  ];
+  var animalIdx = 0;
   var GOAL = 10;
   var eaten = 0;
   var flying = [];
@@ -85,7 +110,27 @@
 
   for (var i = 0; i < GOAL; i++) plates.appendChild(document.createElement('i'));
 
+  function currentAnimal() { return ANIMALS[animalIdx]; }
+  function activeFigure() { return currentAnimal().css ? bear : critter; }
+  function setupAnimal() {
+    var a = currentAnimal();
+    if (a.css) {
+      bear.style.display = '';
+      critter.style.display = 'none';
+    } else {
+      bear.style.display = 'none';
+      critter.style.display = 'flex';
+      cEmoji.textContent = a.emoji;
+      cName.textContent = a.name;
+    }
+    hint.textContent = '按任何键，喂' + a.name + '吃一口 🍎';
+  }
+
   function mouthPoint() {
+    if (!currentAnimal().css) {
+      var re = cEmoji.getBoundingClientRect();
+      return { x: re.left + re.width / 2, y: re.top + re.height * 0.55 };
+    }
     var r = mouth.getBoundingClientRect();
     return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
   }
@@ -104,7 +149,7 @@
     document.body.appendChild(node);
     flying.push({ node: node, t: 0, a: start, b: ctrl, c: end, dur: Kid.rand(620, 860), start: performance.now() });
 
-    bear.classList.add('eat');
+    activeFigure().classList.add('eat');
     mouthOpen = true;
     Kid.tone(660, 0.1, { to: 880, type: 'sine', vol: 0.1 });
     Kid.speak('啊——', { rate: 0.9 });
@@ -112,36 +157,38 @@
 
   function arrive(f) {
     if (f.node.parentNode) f.node.parentNode.removeChild(f.node);
-    bear.classList.remove('eat');
+    activeFigure().classList.remove('eat');
     mouthOpen = false;
     Kid.tone(180, 0.14, { to: 110, type: 'triangle', vol: 0.14 });
     Kid.noise(0.14, { filter: 'lowpass', freq: 800, vol: 0.14, decay: 2 });
     eaten++;
     plates.children[eaten - 1] && plates.children[eaten - 1].classList.add('on');
     if (eaten === GOAL) full();
-    else if (eaten % 3 === 0) Kid.speak(Kid.name() + '，' + Kid.praise() + '，小熊吃饱饱！');
+    else if (eaten % 3 === 0) Kid.speak(Kid.name() + '，' + Kid.praise() + '，' + currentAnimal().name + '吃饱饱！');
   }
 
   function full() {
-    bear.classList.add('grow');
+    var a = currentAnimal();
+    activeFigure().classList.add('grow');
     Kid.tone(120, 0.5, { to: 60, type: 'sawtooth', vol: 0.16 });
     setTimeout(function () {
       Kid.noise(0.36, { filter: 'lowpass', freq: 500, to: 140, vol: 0.22, decay: 1.4 });
-      Kid.speak('嗝——' + Kid.name() + '喂饱小熊啦！');
+      Kid.speak('嗝——' + Kid.name() + '喂饱' + a.name + '啦！');
     }, 260);
     Kid.confetti(document.body, 34, { x: 50, y: 46 });
-    hint.textContent = '🐻 小熊吃饱啦！摸摸肚子再来一轮';
+    hint.textContent = a.emoji ? a.emoji + ' ' + a.name + '吃饱啦！摸摸肚子再来一轮' : '🐻 ' + a.name + '吃饱啦！摸摸肚子再来一轮';
     setTimeout(function () {
-      bear.classList.remove('grow');
+      activeFigure().classList.remove('grow');
       eaten = 0;
       [].forEach.call(plates.children, function (p) { p.classList.remove('on'); });
-      hint.textContent = '按任何键，喂小熊吃一口 🍎';
+      animalIdx = (animalIdx + 1) % ANIMALS.length;
+      setupAnimal();
     }, 3400);
   }
 
   Kid.onKey(function () {
     feed();
-  }, { throttle: 170 });
+  });
 
   function tick(t) {
     for (var i = flying.length - 1; i >= 0; i--) {
@@ -158,7 +205,8 @@
   }
   requestAnimationFrame(tick);
 
-  setTimeout(function () { Kid.speak('按键盘，给小熊喂好吃的'); }, 900);
+  setupAnimal();
+  setTimeout(function () { Kid.speak('按键盘，给' + currentAnimal().name + '喂好吃的'); }, 900);
 })();
 </script>
 </body>

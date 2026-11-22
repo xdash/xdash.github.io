@@ -237,9 +237,13 @@
     })(songName);
   }
 
+  var lastKeyT = 0;
   window.addEventListener('keydown', function(e){
     if(e.repeat) return;
     if(e.metaKey||e.ctrlKey||e.altKey) return;
+    var now = performance.now();
+    if(now - lastKeyT < 250) return;
+    lastKeyT = now;
     var k = e.key.toUpperCase();
     for(var i=0;i<KEYS.length;i++){
       if(KEYS[i].key===k){ e.preventDefault(); playKey(i); return; }
